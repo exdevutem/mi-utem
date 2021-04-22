@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "258967137778",
+    "project_id": "mi-utem-inndev",
+    "storage_bucket": "mi-utem-inndev.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:258967137778:android:681c436bf8a34a1cb94f6b",
+        "android_client_info": {
+          "package_name": "cl.inndev.miutem"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "258967137778-0qvgh1nfcg5f7j177r34jgeveg314jnk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDtxJl0WOTOjr-IMFnC88id_7Zw8VjeJmA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "258967137778-0qvgh1nfcg5f7j177r34jgeveg314jnk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
