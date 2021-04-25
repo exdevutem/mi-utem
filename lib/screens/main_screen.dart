@@ -61,9 +61,9 @@ class _MainScreenState extends State<MainScreen> {
       _checkAndPerformUpdate(context);
     });
   }
-  
+
   @override
-  void dispose() { 
+  void dispose() {
     super.dispose();
   }
 
@@ -111,13 +111,21 @@ class _MainScreenState extends State<MainScreen> {
       /* floatingActionButton: FloatingActionButton(
         child: Icon(Icons.notifications, color: Colors.white),
         onPressed: () {
-          NotificationsService.notification.createNotification(content: NotificationContent(
-            id: 230,
-            channelKey: "basic_channel",
-            body: "Prueba de notificación",
-            title: "Esta es una notificación de prueba"
-          ),);
-        }
+          NotificationsService.notification.createNotification(
+            content: NotificationContent(
+              id: 230,
+              channelKey: "basic_channel",
+              body: "Prueba de notificación",
+              title: "Esta es una notificación de prueba",
+            ),
+            actionButtons: [
+              NotificationActionButton(
+                key: "AUTH",
+                label: "Autorizar"
+              )
+            ]
+          );
+        },
       ), */
       drawer: CustomDrawer(usuario: widget.usuario),
       body: SingleChildScrollView(

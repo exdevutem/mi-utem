@@ -3,9 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
-	<string>en</string>
-	<key>CFBundleDisplayName</key>
-	<string>Mi UTEM</string>
+	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -13,7 +11,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>mi_utem</string>
+	<string>Mi UTEM</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -21,15 +19,17 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>Mi UTEM quiere usar tu bluetooth para brindarte una mejor experiencia</string>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>Mi UTEM quiere usar tu bluetooth para brindarte una mejor experiencia</string>
 	<key>NSCameraUsageDescription</key>
-	<string>Mi UTEM necesita acceder a tu cámara para que puedas subir contenido desde ella.</string>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>Mi UTEM requiere acceder al micrófono por si quieres grabar video.</string>
+	<string>Mi UTEM quiere acceder a tu cámara para que puedas subir contenido</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Mi UTEM requiere acceder a tus imágenes para que puedas subir fotos a la app.</string>
+	<string>Mi UTEM quiere acceder a tus fotos para que puedas subir contenido</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
@@ -37,6 +37,8 @@
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
@@ -47,7 +49,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>io.flutter.embedded_views_preview</key>
-	<true/>
 </dict>
 </plist>

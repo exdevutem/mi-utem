@@ -3,9 +3,11 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>258967137778-k3ah7lnvu2sqbn87a0mdt85uue6503j1.apps.googleusercontent.com</string>
+	<string>258967137778-8kpk1fep150h6epdts4kagag7ei87eh1.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.258967137778-k3ah7lnvu2sqbn87a0mdt85uue6503j1</string>
+	<string>com.googleusercontent.apps.258967137778-8kpk1fep150h6epdts4kagag7ei87eh1</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>258967137778-giftnpoik76m1hngph5ull2bb7bl97vu.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
 	<string>AIzaSyCZPxaZdK1rVpYpn6D7vsshH5euOWPR6j0</string>
 	<key>GCM_SENDER_ID</key>
@@ -13,7 +15,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>cl.inndev.miutem</string>
+	<string>cl.utem.miutem</string>
 	<key>PROJECT_ID</key>
 	<string>mi-utem-inndev</string>
 	<key>STORAGE_BUCKET</key>
@@ -29,6 +31,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:258967137778:ios:e227bf6610a82a0fb94f6b</string>
+	<string>1:258967137778:ios:ba96864ef1a6b3b1b94f6b</string>
 </dict>
 </plist>

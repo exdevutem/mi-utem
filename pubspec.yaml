@@ -62,10 +62,10 @@ dependencies:
   flutter_windowmanager: ^0.0.2
   clipboard: ^0.1.2+8
   flutter_markdown: ^0.6.1
-  flutter_local_notifications: ^5.0.0+1
+
   awesome_notifications: 
     git:
-      url: git://github.com/aaqibism/awesome_notifications.git
+      url: git://github.com/rafaelsetragni/awesome_notifications.git
   get: ^4.1.4
   
 
@@ -80,6 +80,7 @@ dependency_overrides:
   integration_test: ^1.0.2+2
   args: ^2.0.0
   awesome_notifications: ^0.0.5+8
+  permission_handler: ^7.0.0
 
 dev_dependencies:
   flutter_test:
@@ -88,6 +89,7 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
+
     - assets/videos/login_bg.mp4
     - assets/images/login_bg.png
     - assets/images/utem_logo_color_blanco.png
