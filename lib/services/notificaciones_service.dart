@@ -28,22 +28,34 @@ class NotificationsService {
             defaultColor: MainTheme.primaryColor,
             ledColor: MainTheme.primaryColor)
       ]);
-          NotificationsService.notification.actionStream.listen((receivedNotification) {});
+      NotificationsService.notification.actionStream
+          .listen((receivedNotification) {});
 
-    NotificationsService.notification.createdStream.listen((ReceivedNotification notification) {
-      print("Notification created: "+(notification.title ?? notification.body ?? notification.id.toString()));
-    });
+      NotificationsService.notification.createdStream
+          .listen((ReceivedNotification notification) {
+        print("Notification created: " +
+            (notification.title ??
+                notification.body ??
+                notification.id.toString()));
+      });
 
-    NotificationsService.notification.displayedStream.listen((ReceivedNotification notification) {
-      print("Notification displayed: "+(notification.title ?? notification.body ?? notification.id.toString()));
-    });
+      NotificationsService.notification.displayedStream
+          .listen((ReceivedNotification notification) {
+        print("Notification displayed: " +
+            (notification.title ??
+                notification.body ??
+                notification.id.toString()));
+      });
 
-    NotificationsService.notification.dismissedStream.listen((ReceivedAction dismissedAction) {
-      print("Notification dismissed: "+(dismissedAction.title ?? dismissedAction.body ?? dismissedAction.id.toString()));
-    });
+      NotificationsService.notification.dismissedStream
+          .listen((ReceivedAction dismissedAction) {
+        print("Notification dismissed: " +
+            (dismissedAction.title ??
+                dismissedAction.body ??
+                dismissedAction.id.toString()));
+      });
       String fcmToken = await FirebaseMessaging.instance.getToken();
       print("Firebase token: $fcmToken");
-
     } catch (e) {
       print('Error ${e.toString()}');
     }
@@ -71,17 +83,87 @@ class NotificationsService {
   static Future<bool> requestUserPermissionIfNecessary() async {
     bool isAllowed = await notification.isNotificationAllowed();
     if (!isAllowed) {
-      isAllowed = await Get.defaultDialog(
-        title: "Activa las notificaciones",
-        onCancel: () async {
-          bool isAllowed = await notification.isNotificationAllowed();
-          Get.back(result: isAllowed);
-        },
-        onConfirm: () async {
-          await notification.requestPermissionToSendNotifications();
-          bool isAllowed = await notification.isNotificationAllowed();
-          Get.back(result: isAllowed);
-        },
+      isAllowed = await Get.dialog(
+        Center(
+          child: Stack(
+            children: [
+              SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: double.infinity,
+                      child: Card(
+                        margin: EdgeInsets.all(40),
+                        clipBehavior: Clip.antiAlias,
+                        child: Container(
+                          padding: EdgeInsets.all(20),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                "Activa las notificaciones",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18,
+                                ),
+                              ),
+                              Container(height: 20),
+                              Text(
+                                "🔔",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: 50,
+                                ),
+                              ),
+                              Container(height: 20),
+                              Text(
+                                "Necesitamos tu permiso para poder enviarte notificaciones. Nada de spam, lo prometemos.",
+                                textAlign: TextAlign.center,
+                              ),
+                              Container(height: 20),
+                              Wrap(
+                                spacing: 10,
+                                runSpacing: 10,
+                                crossAxisAlignment: WrapCrossAlignment.center,
+                                alignment: WrapAlignment.center,
+                                runAlignment: WrapAlignment.center,
+                                children: [
+                                  OutlinedButton(
+                                    onPressed: () async {
+                                      bool isAllowed = await notification
+                                          .isNotificationAllowed();
+                                      Get.back(result: isAllowed);
+                                    },
+                                    child: Text("No permitir"),
+                                  ),
+                                  TextButton(
+                                    onPressed: () async {
+                                      await notification
+                                          .requestPermissionToSendNotifications();
+                                      bool isAllowed = await notification
+                                          .isNotificationAllowed();
+                                      Get.back(result: isAllowed);
+                                    },
+                                    child: Text("Permitir"),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
       );
     }
     return isAllowed;

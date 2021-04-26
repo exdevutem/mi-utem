@@ -1,7 +1,6 @@
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mi_utem/widgets/custom_button.dart';
 
 final _formKey = GlobalKey<FormState>();
 
@@ -43,11 +42,11 @@ class ErrorDialog extends StatelessWidget {
                       ),
                   Padding(
                     padding: EdgeInsets.only(top: 20),
-                    child: CustomButton(
+                    child: TextButton(
                       onPressed: () async {
                         Get.back();
                       },
-                      text: "Entendido 😥",
+                      child: Text("Entendido 😥"),
                     )
                   )
                   

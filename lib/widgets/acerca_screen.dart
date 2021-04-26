@@ -11,7 +11,6 @@ import 'package:get/get.dart';
 import 'package:mi_utem/models/usuario.dart';
 import 'package:mi_utem/services/config_service.dart';
 import 'package:mi_utem/widgets/acerca_aplicacion_content.dart';
-import 'package:mi_utem/widgets/custom_button.dart';
 
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';

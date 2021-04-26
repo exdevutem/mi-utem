@@ -23,7 +23,6 @@ import 'package:mi_utem/services/config_service.dart';
 import 'package:mi_utem/themes/theme.dart';
 import 'package:mi_utem/widgets/acerca_dialog.dart';
 import 'package:mi_utem/widgets/acerca_screen.dart';
-import 'package:mi_utem/widgets/custom_button.dart';
 import 'package:mi_utem/widgets/error_dialog.dart';
 import 'package:mi_utem/widgets/footer_layout.dart';
 import 'package:mi_utem/widgets/loading_dialog.dart';
@@ -244,10 +243,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                     }
                                   },
                                 ),
-                                CustomButton(
+                                TextButton(
                                   onPressed: () => _login(),
-                                  color: Theme.of(context).primaryColor,
-                                  text: "Iniciar",
+                                  child: Text("Iniciar"),
                                 ),
                                 /* Container(height: 20),
                               GestureDetector(

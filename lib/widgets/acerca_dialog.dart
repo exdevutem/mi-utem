@@ -55,9 +55,8 @@ class _AcercaDialogState extends State<AcercaDialog> {
     return WillPopScope(
       onWillPop: () async => false,
       child: Center(
-        child: Stack(
-          children: [
-            SingleChildScrollView(
+        child: Stack(children: [
+          SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
@@ -68,52 +67,54 @@ class _AcercaDialogState extends State<AcercaDialog> {
                     margin: EdgeInsets.all(20),
                     clipBehavior: Clip.antiAlias,
                     child: Column(
-                        children: [
-                          AcercaAplicacionContent(
-                            preTitulo: "Antes de empezar...",
-                            titulo: "Bienvenido a Mi UTEM",
-                          ),
-                          FlatButton(
-                            child: Text(
-                              _isDisabled
-                                  ? "Podrás cerrar en $_timeLeft"
-                                  : "Saber más",
-                              style: TextStyle(color: Colors.white),
-                            ),
-                            color: Theme.of(context).primaryColor,
-                            disabledColor: Colors.grey,
-                            onPressed: _isDisabled
-                                ? null
-                                : () {
-                                    Get.back();
-                                    Get.to(AcercaScreen());
-                                  },
-                          ),
-                          if (!_isDisabled)
-                            OutlineButton(
+                      children: [
+                        AcercaAplicacionContent(
+                          preTitulo: "Antes de empezar...",
+                          titulo: "Bienvenido a Mi UTEM",
+                        ),
+                        Wrap(
+                          spacing: 10,
+                          runSpacing: 10,
+                          crossAxisAlignment: WrapCrossAlignment.center,
+                          alignment: WrapAlignment.center,
+                          runAlignment: WrapAlignment.center,
+                          children: [
+                            TextButton(
                               child: Text(
-                                "Cerrar",
-                                style: TextStyle(
-                                    color: Theme.of(context).primaryColor),
+                                _isDisabled
+                                    ? "Podrás cerrar en $_timeLeft"
+                                    : "Saber más",
+                                style: TextStyle(color: Colors.white),
                               ),
-                              color: Theme.of(context).primaryColor,
-                              borderSide: BorderSide(
-                                  color: Theme.of(context).primaryColor,
-                                  width: 2),
-                              onPressed: () {
-                                Get.back();
-                              },
+                              onPressed: _isDisabled
+                                  ? null
+                                  : () {
+                                      Get.back();
+                                      Get.to(AcercaScreen());
+                                    },
                             ),
-                          Container(height: 20),
-                        ],
-                      ),
+                          ],
+                        ),
+                        if (!_isDisabled)
+                          OutlinedButton(
+                            child: Text(
+                              "Cerrar",
+                              style: TextStyle(
+                                  color: Theme.of(context).primaryColor),
+                            ),
+                            onPressed: () {
+                              Get.back();
+                            },
+                          ),
+                        Container(height: 20),
+                      ],
                     ),
                   ),
+                ),
               ],
             ),
           ),
-          ]
-        ),
+        ]),
       ),
     );
   }

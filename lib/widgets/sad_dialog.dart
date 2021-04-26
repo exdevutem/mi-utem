@@ -3,7 +3,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mi_utem/widgets/acerca_screen.dart';
-import 'package:mi_utem/widgets/custom_button.dart';
 
 final _formKey = GlobalKey<FormState>();
 
@@ -98,12 +97,12 @@ class SadDialog extends StatelessWidget {
                   ),
                   Padding(
                       padding: EdgeInsets.only(top: 20),
-                      child: CustomButton(
+                      child: TextButton(
                         onPressed: () async {
                           Get.to(AcercaScreen());
                         },
-                        text: "Quiero saber más",
-                      ))
+                        child: Text("Quiero saber más"),
+                      ),)
                 ],
               ),
             ),
