@@ -20,6 +20,7 @@ import 'package:mi_utem/services/notificaciones_service.dart';
 import 'package:mi_utem/services/perfil_service.dart';
 import 'package:mi_utem/services/review_service.dart';
 import 'package:mi_utem/widgets/acerca_dialog.dart';
+import 'package:mi_utem/widgets/custom_alert_dialog.dart';
 import 'package:mi_utem/widgets/custom_drawer.dart';
 import 'package:mi_utem/widgets/noticias_carrusel.dart';
 //import 'package:new_version/new_version.dart';
@@ -108,25 +109,6 @@ class _MainScreenState extends State<MainScreen> {
       appBar: CustomAppBar(
         title: Text("Inicio"),
       ),
-      /* floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.notifications, color: Colors.white),
-        onPressed: () {
-          NotificationsService.notification.createNotification(
-            content: NotificationContent(
-              id: 230,
-              channelKey: "basic_channel",
-              body: "Prueba de notificación",
-              title: "Esta es una notificación de prueba",
-            ),
-            actionButtons: [
-              NotificationActionButton(
-                key: "AUTH",
-                label: "Autorizar"
-              )
-            ]
-          );
-        },
-      ), */
       drawer: CustomDrawer(usuario: widget.usuario),
       body: SingleChildScrollView(
         child: Column(

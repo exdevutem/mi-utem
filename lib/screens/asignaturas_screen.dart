@@ -74,12 +74,12 @@ class _AsignaturasScreenState extends State<AsignaturasScreen> {
                           );
                         },
                         title: Text(
-                          asignatura.nombre,
+                          asignatura.nombre ?? "",
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         ),
-                        subtitle: Text(asignatura.codigo),
-                        trailing: Text(asignatura.tipoHora),
+                        subtitle: Text(asignatura.codigo ?? ""),
+                        trailing: Text(asignatura.tipoHora ?? ""),
                       );
                     },
                     itemCount: _asignaturas.length,

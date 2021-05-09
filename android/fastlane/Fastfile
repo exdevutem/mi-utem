@@ -1,0 +1,98 @@
+update_fastlane
+
+default_platform(:android)
+
+platform :android do
+  lane :flutter do |options|
+    build_number = options[:build_number]
+    build_name = options[:build_name]
+
+    Dir.chdir "../.." do
+      sh("flutter", "clean")
+      sh("flutter", "packages", "get")
+      sh("flutter", "build", "appbundle", "--release", "--no-tree-shake-icons", "--build-name=#{build_name}", "--build-number=#{build_number}")
+    end
+  end
+
+  lane :upload do |options|
+    build_number = options[:build_number]
+    build_name = options[:build_name]
+
+    if options[:build] || options[:build_number] || options[:build_name]
+      flutter(build_number: options[:build_number], build_name: options[:build_name])
+    end
+
+    upload_to_track(
+      track: options[:track],
+      build_name: build_name,
+      build_number: build_number,
+    )
+  end
+
+
+  lane :playstore do |options|
+    build_number = options[:build_number]
+    build_name = options[:build_name]
+
+    if options[:build] || options[:build_number] || options[:build_name]
+      flutter(build_number: options[:build_number], build_name: options[:build_name])
+    end
+    
+    upload_to_track(
+      track: "beta",
+      track_promote_to: "production",
+      build_name: build_name,
+      build_number: build_number,
+    )
+  end
+
+  lane :upload_to_track do |options|
+    build_number = options[:build_number]
+    build_name = options[:build_name]
+    
+    track = "beta"
+    if options[:track]
+      track = options[:track]
+    end
+
+    track_promote_to = track
+    if options[:track_promote_to]
+      track_promote_to = options[:track_promote_to]
+    end
+
+    upload_to_play_store(
+      track: track,
+      track_promote_to: track_promote_to,
+      aab: "../build/app/outputs/bundle/release/app-release.aab",
+      version_name: build_name,
+      version_code: build_number,
+      skip_upload_screenshots: true,
+      skip_upload_metadata: true,
+      skip_upload_changelogs: true,
+      skip_upload_images: true
+    )
+
+    slack(
+      message: "🚀 Se ha lanzado correctamente la versión #{build_name} (#{build_number}) en Android",
+      slack_url: ENV["SLACK_URL"],
+      default_payloads: ["git_branch", "git_author", "last_git_commit", "last_git_commit_hash"],
+      attachment_properties: {
+        fields: [
+          {
+            title: "Track",
+            value: track
+          },
+          {
+            title: "Build name",
+            value: build_name
+          },
+          {
+            title: "Build number",
+            value: build_number
+          }
+        ]
+      },
+      use_webhook_configured_username_and_icon: true
+    )
+  end
+end

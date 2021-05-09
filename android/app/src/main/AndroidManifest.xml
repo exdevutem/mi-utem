@@ -9,7 +9,6 @@
         android:usesCleartextTraffic="true"
         android:allowBackup="false"
         android:requestLegacyExternalStorage="true"
-        android:usesCleartextTraffic="true"
         android:fullBackupContent="false">
         <activity
             android:name=".MainActivity"

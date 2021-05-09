@@ -11,6 +11,7 @@ import 'package:mi_utem/models/rut.dart';
 import 'package:mi_utem/models/usuario.dart';
 import 'package:mi_utem/themes/theme.dart';
 import 'package:mi_utem/utils/dio_miutem_client.dart';
+import 'package:mi_utem/widgets/custom_alert_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class NotificationsService {
@@ -83,86 +84,23 @@ class NotificationsService {
     bool isAllowed = await notification.isNotificationAllowed();
     if (!isAllowed) {
       isAllowed = await Get.dialog(
-        Center(
-          child: Stack(
-            children: [
-              SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      width: double.infinity,
-                      child: Card(
-                        margin: EdgeInsets.all(40),
-                        clipBehavior: Clip.antiAlias,
-                        child: Container(
-                          padding: EdgeInsets.all(20),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(
-                                "Activa las notificaciones",
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18,
-                                ),
-                              ),
-                              Container(height: 20),
-                              Text(
-                                "🔔",
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontSize: 50,
-                                ),
-                              ),
-                              Container(height: 20),
-                              Text(
-                                "Necesitamos tu permiso para poder enviarte notificaciones. Nada de spam, lo prometemos.",
-                                textAlign: TextAlign.center,
-                              ),
-                              Container(height: 20),
-                              Wrap(
-                                spacing: 10,
-                                runSpacing: 10,
-                                crossAxisAlignment: WrapCrossAlignment.center,
-                                alignment: WrapAlignment.center,
-                                runAlignment: WrapAlignment.center,
-                                children: [
-                                  OutlinedButton(
-                                    onPressed: () async {
-                                      bool isAllowed = await notification
-                                          .isNotificationAllowed();
-                                      Get.back(result: isAllowed);
-                                    },
-                                    child: Text("No permitir"),
-                                  ),
-                                  TextButton(
-                                    onPressed: () async {
-                                      await notification
-                                          .requestPermissionToSendNotifications();
-                                      bool isAllowed = await notification
-                                          .isNotificationAllowed();
-                                      Get.back(result: isAllowed);
-                                    },
-                                    child: Text("Permitir"),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
+        CustomAlertDialog(
+          titulo: "Activa las notificaciones",
+          emoji: "🔔",
+          descripcion: "Necesitamos tu permiso para poder enviarte notificaciones. Nada de spam, lo prometemos.",
+            onCancelar: () async {
+              bool isAllowed = await notification.isNotificationAllowed();
+              Get.back(result: isAllowed);
+              Get.back(result: isAllowed);
+            },
+            onConfirmar: () async {
+              await notification.requestPermissionToSendNotifications();
+              bool isAllowed = await notification.isNotificationAllowed();
+              Get.back(result: isAllowed);
+              Get.back(result: isAllowed);
+            },
+            cancelarTextoBoton: "No permitir",
+            confirmarTextoBoton: "Permitir",),
       );
     }
     return isAllowed;

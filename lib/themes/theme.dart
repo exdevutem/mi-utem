@@ -41,7 +41,7 @@ class MainTheme {
                 return primaryColor;
               },
             ),
-            padding: MaterialStateProperty.all(EdgeInsets.symmetric(vertical: 10, horizontal: 20)),
+            padding: MaterialStateProperty.all(EdgeInsets.symmetric(vertical: 5, horizontal: 20)),
             foregroundColor: MaterialStateProperty.all(Colors.white),
             shape: MaterialStateProperty.all(
               StadiumBorder(),
@@ -75,7 +75,7 @@ class MainTheme {
               }
               return primaryColor;
             }),
-            padding: MaterialStateProperty.all(EdgeInsets.symmetric(vertical: 10, horizontal: 20)),
+            padding: MaterialStateProperty.all(EdgeInsets.symmetric(vertical: 5, horizontal: 20)),
             shape: MaterialStateProperty.all(
               StadiumBorder(
                 side: BorderSide(width: 3),
