@@ -15,17 +15,13 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>$(MARKETING_VERSION)</string>
+	<string>$(FLUTTER_BUILD_NAME)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-	<key>NSBluetoothAlwaysUsageDescription</key>
-	<string>Mi UTEM quiere usar tu bluetooth para brindarte una mejor experiencia</string>
-	<key>NSBluetoothPeripheralUsageDescription</key>
-	<string>Mi UTEM quiere usar tu bluetooth para brindarte una mejor experiencia</string>
 	<key>NSCameraUsageDescription</key>
 	<string>Mi UTEM quiere acceder a tu cámara para que puedas subir contenido</string>
 	<key>NSPhotoLibraryUsageDescription</key>
