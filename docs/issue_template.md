@@ -6,12 +6,13 @@ Si incluyes nuevas dependencias, por favor, haz una lista de las necesarias.
 
 Si encuentras un bug o quieres mejorar alguna funcionalidad, ¿Por qué esta solución es mejor? 
 
-## Type of change
+## Tipo de cambio
 
-- [ ] Bug fix 
-- [ ] New feature 
-- [ ] Breaking change (cambio que puede romper la aplicación)
-- [ ] Docs
+- [ ] Corrección de error.
+- [ ] Nueva funcionalidad .
+- [ ] Breaking change (cambio que puede romper la aplicación).
+- [ ] Documentación.
+- [ ] Mejora de codigo existente (performance y/o estilo del codigo y/o otra mejora)
 
 
 # Checklist:
