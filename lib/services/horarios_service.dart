@@ -19,7 +19,7 @@ class HorarioService {
         options: DioMiUtemClient.cacheOptions
             .copyWith(
                 maxStale: Duration(hours: 3),
-                policy: refresh ? CachePolicy.refresh : CachePolicy.request)
+                policy: refresh ? CachePolicy.refresh : CachePolicy.forceCache)
             .toOptions(),
       );
 

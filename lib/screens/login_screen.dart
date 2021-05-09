@@ -23,11 +23,13 @@ import 'package:mi_utem/services/config_service.dart';
 import 'package:mi_utem/themes/theme.dart';
 import 'package:mi_utem/widgets/acerca_dialog.dart';
 import 'package:mi_utem/widgets/acerca_screen.dart';
+import 'package:mi_utem/widgets/custom_alert_dialog.dart';
 import 'package:mi_utem/widgets/error_dialog.dart';
 import 'package:mi_utem/widgets/footer_layout.dart';
 import 'package:mi_utem/widgets/loading_dialog.dart';
 import 'package:mi_utem/widgets/login_text_form_field.dart';
 import 'package:mi_utem/widgets/sad_dialog.dart';
+import 'package:permission_handler/permission_handler.dart';
 //import 'package:new_version/new_version.dart';
 import 'package:video_player/video_player.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -352,8 +354,6 @@ class _LoginScreenState extends State<LoginScreen> {
             FirebaseAnalytics().setUserProperty(
                 name: "rut", value: usuario.rut.numero.toString());
           }
-
-          Get.back();
 
           Get.offAll(MainScreen(usuario: usuario));
 

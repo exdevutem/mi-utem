@@ -66,6 +66,7 @@ dependencies:
       url: git://github.com/aaqibism/awesome_notifications.git
   get: ^4.1.4
   responsive_framework: ^0.1.0
+  permission_handler: ^7.1.0
 
 dependency_overrides:
   crypto: ^3.0.0
@@ -79,6 +80,7 @@ dependency_overrides:
   args: ^2.0.0
   awesome_notifications: ^0.0.5+8
   convert: ^3.0.0
+  permission_handler: ^7.1.0
 
 dev_dependencies:
   flutter_test:

@@ -18,14 +18,16 @@ class AcercaDialog extends StatefulWidget {
 }
 
 class _AcercaDialogState extends State<AcercaDialog> {
+  static const bool isProduction = bool.fromEnvironment('dart.vm.product');
+
   Timer _timer;
-  int _timeLeft = 30;
+  int _timeLeft;
   bool _isDisabled = true;
 
   @override
   void initState() {
     _isDisabled = true;
-    _timeLeft = 30;
+    _timeLeft = isProduction ? 30 : 3;
     _startTimer();
     super.initState();
   }

@@ -10,7 +10,7 @@ class DioMiUtemClient {
   static const String debugUrl = 'http://192.168.5.109:3000';
   static const String productionUrl = 'https://apiapp.utem.dev';
   
-  static const String url = isProduction ? productionUrl : debugUrl;
+  static const String url = isProduction ? productionUrl : productionUrl;
 
   static Dio get initDio => Dio(BaseOptions(
     baseUrl: url,
@@ -20,9 +20,9 @@ class DioMiUtemClient {
     baseUrl: url,
   ));
 
-  static CacheOptions get cacheOptions => CacheOptions(
-    store: HiveCacheStore('miutem'),
-    policy: CachePolicy.request,
+  static CacheOptions cacheOptions = CacheOptions(
+    store: MemCacheStore(),
+    policy: CachePolicy.forceCache,
     maxStale: const Duration(days: 7),
   );
 
@@ -37,7 +37,6 @@ class DioMiUtemClient {
           return handler.next(options);
         },
         onResponse: (response, handler) async {
-          print("response ${response.data}");
           return handler.next(response);
         },
         onError: (dioError, handler) async {
@@ -67,7 +66,7 @@ class DioMiUtemClient {
           }
         }
       ),
-      //DioCacheInterceptor(options: cacheOptions),
+      DioCacheInterceptor(options: cacheOptions),
     ],)
     ;
   

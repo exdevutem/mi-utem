@@ -16,7 +16,7 @@ class DioDocenteClient {
 
   static CacheOptions get cacheOptions => CacheOptions(
     store: HiveCacheStore('docentesutem'),
-    policy: CachePolicy.request,
+    policy: CachePolicy.forceCache,
     maxStale: const Duration(days: 7),
   );
   

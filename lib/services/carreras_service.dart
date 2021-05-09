@@ -15,7 +15,7 @@ class CarreraService {
         options: DioMiUtemClient.cacheOptions
             .copyWith(
                 maxStale: Duration(days: 0),
-                policy: refresh ? CachePolicy.refresh : CachePolicy.request)
+                policy: refresh ? CachePolicy.refresh : CachePolicy.forceCache)
             .toOptions(),
       );
 
@@ -37,7 +37,7 @@ class CarreraService {
         options: DioMiUtemClient.cacheOptions
             .copyWith(
                 maxStale: Duration(days: 7),
-                policy: refresh ? CachePolicy.refresh : CachePolicy.request)
+                policy: refresh ? CachePolicy.refresh : CachePolicy.forceCache)
             .toOptions(),
       );
 
