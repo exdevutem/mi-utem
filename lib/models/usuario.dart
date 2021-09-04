@@ -2,13 +2,13 @@ import 'package:mi_utem/models/rut.dart';
 import 'package:recase/recase.dart';
 
 class Usuario {
-  String nombre;
-  String nombres;
-  String apellidos;
-  String correo;
-  String sesion;
-  String fotoUrl;
-  Rut rut;
+  String? nombre;
+  String? nombres;
+  String? apellidos;
+  String? correo;
+  String? sesion;
+  String? fotoUrl;
+  Rut? rut;
 
   Usuario({
     this.correo,
@@ -20,7 +20,7 @@ class Usuario {
     this.rut
   });
 
-  factory Usuario.fromJson(Map<String, dynamic> json) {
+  factory Usuario.fromJson(Map<String, dynamic>? json) {
     if (json == null) {
       return Usuario();
     }
@@ -46,8 +46,8 @@ class Usuario {
     return list;
   }
 
-  String get nombreCompleto {
-    if (nombre != null && nombre.isNotEmpty) {
+  String? get nombreCompleto {
+    if (nombre != null && nombre!.isNotEmpty) {
       return nombre;
     } else {
       return "$nombres $apellidos";
@@ -57,7 +57,7 @@ class Usuario {
 
   String get iniciales => primeraLetraCadaPalabra(this.nombreCompleto);
 
-  String primeraLetraCadaPalabra(String sentence) {
+  String primeraLetraCadaPalabra(String? sentence) {
     if (sentence == null || sentence.isEmpty) {
       return "NN";
     } else {

@@ -8,10 +8,10 @@ class BloqueDiasCard extends StatelessWidget{
   final double alto;
 
   BloqueDiasCard({
-    Key key,
-    @required this.dia,
-    @required this.ancho,
-    @required this.alto
+    Key? key,
+    required this.dia,
+    required this.ancho,
+    required this.alto
   }) : super(key: key);
 
   @override

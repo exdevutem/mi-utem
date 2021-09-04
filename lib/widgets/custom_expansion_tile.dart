@@ -3,10 +3,10 @@ const Duration _kExpand = Duration(milliseconds: 200);
 
 class ExpansionTile extends StatefulWidget {
   const ExpansionTile({
-    Key key,
+    Key? key,
     this.headerBackgroundColor,
     this.leading,
-    @required this.title,
+    required this.title,
     this.backgroundColor,
     this.iconColor,
     this.onExpansionChanged,
@@ -16,14 +16,14 @@ class ExpansionTile extends StatefulWidget {
   })  : assert(initiallyExpanded != null),
         super(key: key);
 
-  final Widget leading;
+  final Widget? leading;
   final Widget title;
-  final ValueChanged<bool> onExpansionChanged;
+  final ValueChanged<bool>? onExpansionChanged;
   final List<Widget> children;
-  final Color backgroundColor;
-  final Color headerBackgroundColor;
-  final Color iconColor;
-  final Widget trailing;
+  final Color? backgroundColor;
+  final Color? headerBackgroundColor;
+  final Color? iconColor;
+  final Widget? trailing;
   final bool initiallyExpanded;
 
   @override
@@ -44,13 +44,13 @@ class _ExpansionTileState extends State<ExpansionTile>
   final ColorTween _iconColorTween = ColorTween();
   final ColorTween _backgroundColorTween = ColorTween();
 
-  AnimationController _controller;
-  Animation<double> _iconTurns;
-  Animation<double> _heightFactor;
-  Animation<Color> _borderColor;
-  Animation<Color> _headerColor;
-  Animation<Color> _iconColor;
-  Animation<Color> _backgroundColor;
+  late AnimationController _controller;
+  late Animation<double> _iconTurns;
+  late Animation<double> _heightFactor;
+  Animation<Color?>? _borderColor;
+  Animation<Color?>? _headerColor;
+  late Animation<Color?> _iconColor;
+  late Animation<Color?> _backgroundColor;
 
   bool _isExpanded = false;
 
@@ -92,12 +92,12 @@ class _ExpansionTileState extends State<ExpansionTile>
       PageStorage.of(context)?.writeState(context, _isExpanded);
     });
     if (widget.onExpansionChanged != null)
-      widget.onExpansionChanged(_isExpanded);
+      widget.onExpansionChanged!(_isExpanded);
   }
 
-  Widget _buildChildren(BuildContext context, Widget child) {
-    final Color borderSideColor = widget.headerBackgroundColor;
-    final Color titleColor = widget.iconColor;
+  Widget _buildChildren(BuildContext context, Widget? child) {
+    final Color? borderSideColor = widget.headerBackgroundColor;
+    final Color? titleColor = widget.iconColor;
 
     return Container(
       decoration: BoxDecoration(
@@ -120,7 +120,7 @@ class _ExpansionTileState extends State<ExpansionTile>
                 title: DefaultTextStyle(
                   style: Theme.of(context)
                       .textTheme
-                      .subhead
+                      .subhead!
                       .copyWith(color: titleColor),
                   child: widget.title,
                 ),
@@ -151,7 +151,7 @@ class _ExpansionTileState extends State<ExpansionTile>
     final ThemeData theme = Theme.of(context);
     _borderColorTween..end = theme.dividerColor;
     _headerColorTween
-      ..begin = theme.textTheme.subhead.color
+      ..begin = theme.textTheme.subhead!.color
       ..end = theme.accentColor;
     _iconColorTween
       ..begin = theme.unselectedWidgetColor

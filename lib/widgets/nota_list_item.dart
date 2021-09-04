@@ -5,12 +5,12 @@ import 'package:mi_utem/models/evaluacion.dart';
 import 'package:mi_utem/themes/theme.dart';
 
 class NotaListItem extends StatefulWidget {
-  final Evaluacion evaluacion;
+  final Evaluacion? evaluacion;
   final bool esSimulacion;
-  final Function onChanged;
+  final Function? onChanged;
 
   NotaListItem({
-    Key key,
+    Key? key,
     this.esSimulacion = false,
     this.evaluacion,
     this.onChanged
@@ -28,11 +28,11 @@ class _NotaListItemState extends State<NotaListItem> {
   @override
   void initState() {
     super.initState();
-    if (widget.evaluacion.porcentaje != null) {
-      _porcentajeController.text = widget.evaluacion.porcentaje.toString();
+    if (widget.evaluacion!.porcentaje != null) {
+      _porcentajeController.text = widget.evaluacion!.porcentaje.toString();
     }
-    if (widget.evaluacion.nota != null) {
-      _notaController.text = widget.evaluacion.nota?.toStringAsFixed(1) ?? "";
+    if (widget.evaluacion!.nota != null) {
+      _notaController.text = widget.evaluacion!.nota?.toStringAsFixed(1) ?? "";
     }
   }
 
@@ -55,7 +55,7 @@ class _NotaListItemState extends State<NotaListItem> {
             child: Center(
               child: Container(
                 width: 60,
-                child: Text(widget.evaluacion.etiqueta)
+                child: Text(widget.evaluacion!.etiqueta)
               ),
             ),
           ),
@@ -66,11 +66,11 @@ class _NotaListItemState extends State<NotaListItem> {
                 child: TextField(
                   controller: _notaController,
                   enabled: widget.esSimulacion,
-                  onChanged: (String valor) => widget.onChanged(valor, _porcentajeController.text),
+                  onChanged: (String valor) => widget.onChanged!(valor, _porcentajeController.text),
                   textAlign: TextAlign.center,
                   decoration: InputDecoration(
                     hintText: widget.esSimulacion ? "0.0" : "--",
-                    disabledBorder: MainTheme.theme.inputDecorationTheme.border.copyWith(
+                    disabledBorder: MainTheme.theme.inputDecorationTheme.border!.copyWith(
                       borderSide: BorderSide(
                         color: Colors.transparent,
                       )
@@ -88,12 +88,12 @@ class _NotaListItemState extends State<NotaListItem> {
                 child: TextField(
                   controller: _porcentajeController,
                   textAlign: TextAlign.center,
-                  onChanged: (String valor) => widget.onChanged(_notaController.text, valor),
+                  onChanged: (String valor) => widget.onChanged!(_notaController.text, valor),
                   enabled: widget.esSimulacion,
                   decoration: InputDecoration(
                     hintText: "Peso",
                     suffixText: "%",
-                    disabledBorder: MainTheme.theme.inputDecorationTheme.border.copyWith(
+                    disabledBorder: MainTheme.theme.inputDecorationTheme.border!.copyWith(
                       borderSide: BorderSide(
                         color: Colors.transparent,
                       )

@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
 class SemestreBoletinCard extends StatelessWidget{
-  final String semestre;
-  final int aprobados;
-  final int reprobados;
-  final int convalidados;
-  final double promedio;
-  final List ramos;
+  final String? semestre;
+  final int? aprobados;
+  final int? reprobados;
+  final int? convalidados;
+  final double? promedio;
+  final List? ramos;
 
   SemestreBoletinCard({
-    Key key,
+    Key? key,
     this.semestre,
     this.aprobados,
     this.reprobados,
@@ -125,7 +125,7 @@ class SemestreBoletinCard extends StatelessWidget{
                 new ListView.separated(
                   shrinkWrap: true,
                   physics: ClampingScrollPhysics(),
-                  itemCount: ramos.length,
+                  itemCount: ramos!.length,
                   separatorBuilder: (BuildContext context, int i) => Divider(indent: 20, endIndent: 20,),
                   itemBuilder: (BuildContext context, int i) {
                     return new Row(
@@ -134,17 +134,17 @@ class SemestreBoletinCard extends StatelessWidget{
                           Container(
                             padding: EdgeInsets.only(top: 5, bottom: 5),
                             width: MediaQuery.of(context).size.width * 0.5, 
-                            child: Text(ramos[i]["nombre"], textAlign: TextAlign.center,)
+                            child: Text(ramos![i]["nombre"], textAlign: TextAlign.center,)
                           ),
                           Container(
                             padding: EdgeInsets.only(top: 5, bottom: 5),
                             width: MediaQuery.of(context).size.width * 0.2, 
-                            child: Text(ramos[i]["estado"].substring(0,1), textAlign: TextAlign.center,)
+                            child: Text(ramos![i]["estado"].substring(0,1), textAlign: TextAlign.center,)
                           ),
                           Container(
                             padding: EdgeInsets.only(top: 5, bottom: 5),
                             width: MediaQuery.of(context).size.width * 0.1, 
-                            child: Text(ramos[i]["nota"].toString(), textAlign: TextAlign.center,)
+                            child: Text(ramos![i]["nota"].toString(), textAlign: TextAlign.center,)
                           ),
                         ]
                     );

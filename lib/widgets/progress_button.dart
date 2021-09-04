@@ -15,9 +15,9 @@ class _ProgressButtonState extends State<ProgressButton>
   bool _isPressed = false, _animatingReveal = false;
   int _state = 0;
   double _width = double.infinity;
-  Animation _animation;
+  late Animation _animation;
   GlobalKey _globalKey = GlobalKey();
-  AnimationController _controller;
+  late AnimationController _controller;
 
   @override
   void deactivate() {
@@ -58,7 +58,7 @@ class _ProgressButtonState extends State<ProgressButton>
   }
 
   void animateButton() {
-    double initialWidth = _globalKey.currentContext.size.width;
+    double initialWidth = _globalKey.currentContext!.size!.width;
 
     _controller =
         AnimationController(duration: Duration(milliseconds: 300), vsync: this);

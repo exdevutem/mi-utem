@@ -3,7 +3,6 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
-import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -14,24 +13,23 @@ import 'package:mi_utem/widgets/imagen_editor_modal.dart';
 
 class ProfilePhoto extends StatefulWidget {
   final double radius;
-  final Usuario usuario;
-  final Function(BuildContext, ImageProvider) onImageTap;
-  final Function() onTap;
+  final Usuario? usuario;
+  final Function(BuildContext, ImageProvider)? onImageTap;
+  final Function()? onTap;
   final double borderWidth;
   final Color borderColor;
   final bool editable;
-  final Function(String) onImage;
+  final Function(String)? onImage;
   ProfilePhoto(
-      {Key key,
+      {Key? key,
       this.onTap,
       this.onImageTap,
       this.radius = 25,
       this.borderColor = Colors.white,
       this.borderWidth = 0.0,
-      @required this.usuario,
+      required this.usuario,
       this.onImage,
-      this.editable = false
-      })
+      this.editable = false})
       : super(key: key);
 
   @override
@@ -54,17 +52,18 @@ class _ProfilePhotoState extends State<ProfilePhoto> {
       child: Stack(
         children: <Widget>[
           CircularProfileAvatar(
-            widget.usuario.fotoUrl ?? "",
-            onTap: () => widget.onTap != null && widget.onImageTap == null ? widget.onTap : null,
+            widget.usuario!.fotoUrl ?? "",
+            onTap: () => widget.onTap != null && widget.onImageTap == null
+                ? widget.onTap
+                : null,
             borderColor: widget.borderColor,
             borderWidth: widget.borderWidth,
             radius: widget.radius,
-            
             backgroundColor: MainTheme.primaryColor,
             imageBuilder: (context, imageProvider) => GestureDetector(
               onTap: () {
                 if (widget.onImageTap != null) {
-                  widget.onImageTap(context, imageProvider);
+                  widget.onImageTap!(context, imageProvider);
                 }
               },
               child: Container(
@@ -80,7 +79,7 @@ class _ProfilePhotoState extends State<ProfilePhoto> {
               ),
             ),
             initialsText: Text(
-              widget.usuario.iniciales,
+              widget.usuario!.iniciales,
               style: TextStyle(
                 fontSize: widget.radius * 0.5,
                 color: Colors.white,
@@ -91,37 +90,37 @@ class _ProfilePhotoState extends State<ProfilePhoto> {
             InkWell(
               onTap: () async {
                 try {
-                  final imagen = await picker.getImage(source: ImageSource.gallery);
+                  final imagen =
+                      await picker.getImage(source: ImageSource.gallery);
                   if (imagen != null) {
                     Uint8List imagenOriginalBytes =
                         File(imagen.path).readAsBytesSync();
 
-                      Uint8List imagenEditadaBytes = await Get.to(
-                        ImagenEditorModal(
-                          imagenInicial: imagenOriginalBytes,
-                          aspectRatio: 1,
-                        ),
-                      ); 
+                    Uint8List imagenEditadaBytes = await Get.to(
+                      ImagenEditorModal(
+                        imagenInicial: imagenOriginalBytes,
+                        aspectRatio: 1,
+                      ),
+                    );
 
                     String imagenEditadaBase64 =
                         base64Encode(imagenEditadaBytes);
 
-                    widget.onImage(imagenEditadaBase64);
-                    
+                    widget.onImage!(imagenEditadaBase64);
                   } else {
-                    Flushbar(
+                    /* Flushbar(
                       message: "No se pudo obtener la foto",
                       duration: Duration(seconds: 5),
                       flushbarStyle: FlushbarStyle.GROUNDED,
-                    )..show(context);
+                    )..show(context); */
                   }
                 } catch (e) {
                   print(e);
-                  Flushbar(
+                  /* Flushbar(
                     message: "Ocurrió un error cambiando la foto",
                     duration: Duration(seconds: 5),
                     flushbarStyle: FlushbarStyle.GROUNDED,
-                  )..show(context);
+                  )..show(context); */
                 }
               },
               borderRadius: BorderRadius.circular(25),

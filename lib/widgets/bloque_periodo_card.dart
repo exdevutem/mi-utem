@@ -3,19 +3,19 @@ import 'package:flutter/cupertino.dart';
 
 class BloquePeriodoCard extends StatelessWidget{
 
-  final String inicio;
-  final String intermedio;
-  final String fin;
+  final String? inicio;
+  final String? intermedio;
+  final String? fin;
   final double ancho;
   final double alto;
 
   BloquePeriodoCard({
-    Key key,
-    @required this.inicio,
-    @required this.intermedio,
-    @required this.fin,
-    @required this.ancho,
-    @required this.alto
+    Key? key,
+    required this.inicio,
+    required this.intermedio,
+    required this.fin,
+    required this.ancho,
+    required this.alto
   }) : super(key: key);
 
   @override
@@ -27,14 +27,14 @@ class BloquePeriodoCard extends StatelessWidget{
         ),
         child: Column(
           children: <Widget>[
-            Text(inicio,
+            Text(inicio!,
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: Colors.black54,
                 fontSize: 18,
                 fontWeight: FontWeight.bold
               )),
-            Text(intermedio,
+            Text(intermedio!,
               maxLines: 3,
               textAlign: TextAlign.center,
               style: TextStyle(
@@ -43,7 +43,7 @@ class BloquePeriodoCard extends StatelessWidget{
                 color: Colors.black54,
                 fontSize: 14
               )),
-            Text(fin,
+            Text(fin!,
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontWeight: FontWeight.bold,

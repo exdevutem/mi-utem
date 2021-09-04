@@ -3,15 +3,15 @@ import 'package:mdi/mdi.dart';
 
 class NoticiaCard extends StatelessWidget {
   const NoticiaCard({
-    Key key,
+    Key? key,
     this.titulo,
     this.subtitulo,
     this.imagenUrl,
     this.onTap
   }) : super(key: key);
 
-  final String titulo, subtitulo, imagenUrl;
-  final Function onTap;
+  final String? titulo, subtitulo, imagenUrl;
+  final Function? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +22,7 @@ class NoticiaCard extends StatelessWidget {
         child: Material(
           color: Colors.transparent,
           child: InkWell(
-            onTap: () => this.onTap(),
+            onTap: () => this.onTap!(),
             borderRadius: BorderRadius.all(Radius.circular(15)),
 
             child: Column(
@@ -30,7 +30,7 @@ class NoticiaCard extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 imagenUrl != null ? Image.network(
-                  imagenUrl,
+                  imagenUrl!,
                   height: 110,
                   fit: BoxFit.cover,
                 ) : Container(
@@ -47,7 +47,7 @@ class NoticiaCard extends StatelessWidget {
                     children: <Widget>[
                       Spacer(),
                       Text(
-                        titulo,
+                        titulo!,
                         maxLines: 3,
                         overflow: TextOverflow.ellipsis,
                         style: Theme.of(context).textTheme.bodyText1,

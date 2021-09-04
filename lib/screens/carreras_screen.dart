@@ -38,7 +38,7 @@ final dynamic carreras = [
 
 class CarrerasScreen extends StatefulWidget {
   CarrerasScreen({
-    Key key
+    Key? key
   }) : super(key: key);
 
   @override

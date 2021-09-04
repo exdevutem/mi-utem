@@ -54,7 +54,7 @@ class NotificationsService {
                 dismissedAction.body ??
                 dismissedAction.id.toString()));
       });
-      String fcmToken = await FirebaseMessaging.instance.getToken();
+      String? fcmToken = await FirebaseMessaging.instance.getToken();
       print("Firebase token: $fcmToken");
     } catch (e) {
       print('Error ${e.toString()}');
@@ -87,20 +87,22 @@ class NotificationsService {
         CustomAlertDialog(
           titulo: "Activa las notificaciones",
           emoji: "🔔",
-          descripcion: "Necesitamos tu permiso para poder enviarte notificaciones. Nada de spam, lo prometemos.",
-            onCancelar: () async {
-              bool isAllowed = await notification.isNotificationAllowed();
-              Get.back(result: isAllowed);
-              Get.back(result: isAllowed);
-            },
-            onConfirmar: () async {
-              await notification.requestPermissionToSendNotifications();
-              bool isAllowed = await notification.isNotificationAllowed();
-              Get.back(result: isAllowed);
-              Get.back(result: isAllowed);
-            },
-            cancelarTextoBoton: "No permitir",
-            confirmarTextoBoton: "Permitir",),
+          descripcion:
+              "Necesitamos tu permiso para poder enviarte notificaciones. Nada de spam, lo prometemos.",
+          onCancelar: () async {
+            bool isAllowed = await notification.isNotificationAllowed();
+            Get.back(result: isAllowed);
+            Get.back(result: isAllowed);
+          },
+          onConfirmar: () async {
+            await notification.requestPermissionToSendNotifications();
+            bool isAllowed = await notification.isNotificationAllowed();
+            Get.back(result: isAllowed);
+            Get.back(result: isAllowed);
+          },
+          cancelarTextoBoton: "No permitir",
+          confirmarTextoBoton: "Permitir",
+        ),
       );
     }
     return isAllowed;

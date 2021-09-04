@@ -3,12 +3,11 @@ import 'package:mi_utem/themes/theme.dart';
 
 class CustomAppBar extends AppBar {
   CustomAppBar({
-    Key key,
+    Key? key,
     this.leading,
     this.automaticallyImplyLeading = true,
     this.title,
     this.actions,
-
     this.bottom,
     this.elevation,
     this.shadowColor,
@@ -26,13 +25,14 @@ class CustomAppBar extends AppBar {
     this.bottomOpacity = 1.0,
     this.toolbarHeight,
     this.leadingWidth,
-  }) : assert(automaticallyImplyLeading != null),
+  })  : assert(automaticallyImplyLeading != null),
         assert(elevation == null || elevation >= 0.0),
         assert(primary != null),
         assert(titleSpacing != null),
         assert(toolbarOpacity != null),
         assert(bottomOpacity != null),
-        preferredSize = Size.fromHeight(toolbarHeight ?? kToolbarHeight + (bottom?.preferredSize?.height ?? 0.0)),
+        preferredSize = Size.fromHeight(toolbarHeight ??
+            kToolbarHeight + (bottom?.preferredSize.height ?? 0.0)),
         super(
           key: key,
           leading: leading,
@@ -61,8 +61,8 @@ class CustomAppBar extends AppBar {
                   MainTheme.utemAzul,
                   MainTheme.utemVerde,
                 ],
-              ),          
-            ),    
+              ),
+            ),
           ),
         );
 
@@ -111,7 +111,7 @@ class CustomAppBar extends AppBar {
   ///
   ///  * [Scaffold.appBar], in which an [AppBar] is usually placed.
   ///  * [Scaffold.drawer], in which the [Drawer] is usually placed.
-  final Widget leading;
+  final Widget? leading;
 
   /// Controls whether we should try to imply the leading widget if null.
   ///
@@ -150,7 +150,7 @@ class CustomAppBar extends AppBar {
   ///   ),
   /// )
   /// ```
-  final Widget title;
+  final Widget? title;
 
   /// Widgets to display in a row after the [title] widget.
   ///
@@ -161,7 +161,7 @@ class CustomAppBar extends AppBar {
   /// The [actions] become the trailing component of the [NavigationToolbar] built
   /// by this widget. The height of each action is constrained to be no bigger
   /// than the [toolbarHeight].
-  final List<Widget> actions;
+  final List<Widget>? actions;
 
   /// This widget is stacked behind the toolbar and the tab bar. It's height will
   /// be the same as the app bar's overall height.
@@ -181,7 +181,7 @@ class CustomAppBar extends AppBar {
   /// See also:
   ///
   ///  * [PreferredSize], which can be used to give an arbitrary widget a preferred size.
-  final PreferredSizeWidget bottom;
+  final PreferredSizeWidget? bottom;
 
   /// The z-coordinate at which to place this app bar relative to its parent.
   ///
@@ -192,20 +192,20 @@ class CustomAppBar extends AppBar {
   /// If this property is null, then [AppBarTheme.elevation] of
   /// [ThemeData.appBarTheme] is used. If that is also null, the default value
   /// is 4.
-  final double elevation;
+  final double? elevation;
 
   /// The color to paint the shadow below the app bar.
   ///
   /// If this property is null, then [AppBarTheme.shadowColor] of
   /// [ThemeData.appBarTheme] is used. If that is also null, the default value
   /// is fully opaque black.
-  final Color shadowColor;
+  final Color? shadowColor;
 
   /// The material's shape as well its shadow.
   ///
   /// A shadow is only displayed if the [elevation] is greater than
   /// zero.
-  final ShapeBorder shape;
+  final ShapeBorder? shape;
 
   /// The color to use for the app bar's material. Typically this should be set
   /// along with [brightness], [iconTheme], [textTheme].
@@ -213,7 +213,7 @@ class CustomAppBar extends AppBar {
   /// If this property is null, then [AppBarTheme.color] of
   /// [ThemeData.appBarTheme] is used. If that is also null, then
   /// [ThemeData.primaryColor] is used.
-  final Color backgroundColor;
+  final Color? backgroundColor;
 
   /// The brightness of the app bar's material. Typically this is set along
   /// with [backgroundColor], [iconTheme], [textTheme].
@@ -221,7 +221,7 @@ class CustomAppBar extends AppBar {
   /// If this property is null, then [AppBarTheme.brightness] of
   /// [ThemeData.appBarTheme] is used. If that is also null, then
   /// [ThemeData.primaryColorBrightness] is used.
-  final Brightness brightness;
+  final Brightness? brightness;
 
   /// The color, opacity, and size to use for app bar icons. Typically this
   /// is set along with [backgroundColor], [brightness], [textTheme].
@@ -229,7 +229,7 @@ class CustomAppBar extends AppBar {
   /// If this property is null, then [AppBarTheme.iconTheme] of
   /// [ThemeData.appBarTheme] is used. If that is also null, then
   /// [ThemeData.primaryIconTheme] is used.
-  final IconThemeData iconTheme;
+  final IconThemeData? iconTheme;
 
   /// The color, opacity, and size to use for the icons that appear in the app
   /// bar's [actions]. This should only be used when the [actions] should be
@@ -239,7 +239,7 @@ class CustomAppBar extends AppBar {
   /// If this property is null, then [AppBarTheme.actionsIconTheme] of
   /// [ThemeData.appBarTheme] is used. If that is also null, then this falls
   /// back to [iconTheme].
-  final IconThemeData actionsIconTheme;
+  final IconThemeData? actionsIconTheme;
 
   /// The typographic styles to use for text in the app bar. Typically this is
   /// set along with [brightness] [backgroundColor], [iconTheme].
@@ -247,7 +247,7 @@ class CustomAppBar extends AppBar {
   /// If this property is null, then [AppBarTheme.textTheme] of
   /// [ThemeData.appBarTheme] is used. If that is also null, then
   /// [ThemeData.primaryTextTheme] is used.
-  final TextTheme textTheme;
+  final TextTheme? textTheme;
 
   /// Whether this app bar is being displayed at the top of the screen.
   ///
@@ -261,7 +261,7 @@ class CustomAppBar extends AppBar {
   /// If this property is null, then [AppBarTheme.centerTitle] of
   /// [ThemeData.appBarTheme] is used. If that is also null, then value is
   /// adapted to the current [TargetPlatform].
-  final bool centerTitle;
+  final bool? centerTitle;
 
   /// Whether the title should be wrapped with header [Semantics].
   ///
@@ -303,10 +303,10 @@ class CustomAppBar extends AppBar {
   /// Defines the height of the toolbar component of an [AppBar].
   ///
   /// By default, the value of `toolbarHeight` is [kToolbarHeight].
-  final double toolbarHeight;
+  final double? toolbarHeight;
 
   /// Defines the width of [leading] widget.
   ///
   /// By default, the value of `leadingWidth` is 56.0.
-  final double leadingWidth;
+  final double? leadingWidth;
 }

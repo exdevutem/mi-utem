@@ -11,15 +11,15 @@ import 'package:mi_utem/widgets/custom_app_bar.dart';
 import 'package:mi_utem/widgets/pull_to_refresh.dart';
 
 class AsignaturasScreen extends StatefulWidget {
-  AsignaturasScreen({Key key}) : super(key: key);
+  AsignaturasScreen({Key? key}) : super(key: key);
 
   @override
   _AsignaturasScreenState createState() => _AsignaturasScreenState();
 }
 
 class _AsignaturasScreenState extends State<AsignaturasScreen> {
-  Future<List<Asignatura>> _futureAsignaturas;
-  List<Asignatura> _asignaturas;
+  Future<List<Asignatura>>? _futureAsignaturas;
+  late List<Asignatura> _asignaturas;
 
   @override
   void initState() {
@@ -47,7 +47,7 @@ class _AsignaturasScreenState extends State<AsignaturasScreen> {
       appBar: CustomAppBar(
         title: Text("Asignaturas"),
       ),
-      body: FutureBuilder(
+      body: FutureBuilder<List<Asignatura>>(
         future: _futureAsignaturas,
         builder: (context, snapshot) {
           if (snapshot.hasError) {
@@ -55,8 +55,8 @@ class _AsignaturasScreenState extends State<AsignaturasScreen> {
                 texto: "Ocurrió un error al obtener las asignaturas",
                 error: snapshot.error);
           } else {
-            if (snapshot.hasData) {
-              if (snapshot.data.length > 0) {
+            if (snapshot.hasData && snapshot.data != null) {
+              if (snapshot.data!.length > 0) {
                 return PullToRefresh(
                   onRefresh: () async {
                     await _onRefresh();
