@@ -2,9 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
-import 'package:diagonal_scrollview/diagonal_scrollview.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_statusbar/flutter_statusbar.dart';
 import 'package:mi_utem/models/asignatura.dart';
 import 'package:mi_utem/models/horario.dart';
 import 'package:mi_utem/models/usuario.dart';
@@ -23,7 +21,7 @@ import 'package:vector_math/vector_math_64.dart';
 
 class HorarioScreen extends StatefulWidget {
   HorarioScreen({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -39,21 +37,21 @@ class _HorarioScreenState extends State<HorarioScreen> {
   final CustomAppBar appBar = CustomAppBar(
     title: Text("Horario"),
   );
-  Future<Horario> _horarioFuture;
-  Horario _horario;
-  TransformationController _controller;
+  Future<Horario>? _horarioFuture;
+  Horario? _horario;
+  TransformationController? _controller;
 
-  RemoteConfig _remoteConfig;
+  RemoteConfig? _remoteConfig;
 
   @override
   void initState() {
     super.initState();
     _remoteConfig = ConfigService.config;
 
-    double zoom = _remoteConfig.getDouble(ConfigService.HORARIO_ZOOM);
+    double zoom = _remoteConfig!.getDouble(ConfigService.HORARIO_ZOOM);
     _controller = TransformationController();
-    _controller.value = Matrix4.identity();
-    _controller.value.setDiagonal(Vector4(zoom, zoom, zoom, 1));
+    _controller!.value = Matrix4.identity();
+    _controller!.value.setDiagonal(Vector4(zoom, zoom, zoom, 1));
 
     ReviewService.addScreen("HorarioScreen");
     FirebaseAnalytics().setCurrentScreen(screenName: 'HorarioScreen');
@@ -107,7 +105,7 @@ class _HorarioScreenState extends State<HorarioScreen> {
     List<Widget> filaWidgets = [Container()];
 
     // Primera fila de los días
-    for (String dia in horario.dias) {
+    for (String dia in horario.dias as Iterable<String>) {
       filaWidgets.add(BloqueDiasCard(
         dia: dia,
         alto: _diasHeight,
@@ -120,9 +118,9 @@ class _HorarioScreenState extends State<HorarioScreen> {
     for (num i = 0; i < horario.horarioEnlazado.length; i++) {
       filaWidgets = [];
       if ((i % 2) == 0) {
-        List<BloqueHorario> periodo = horario.horarioEnlazado[i];
+        List<BloqueHorario> periodo = horario.horarioEnlazado[i as int];
         for (num j = 0; j < periodo.length; j++) {
-          BloqueHorario bloque = horario.horarioEnlazado[i][j];
+          BloqueHorario bloque = horario.horarioEnlazado[i][j as int];
           if (j == 0) {
             filaWidgets.add(BloquePeriodoCard(
               inicio: horario.horasInicio[i ~/ 2],
@@ -159,40 +157,40 @@ class _HorarioScreenState extends State<HorarioScreen> {
       body: FutureBuilder(
         future: _horarioFuture,
         builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            DioError dioError;
+          if (snapshot.hasError || !snapshot.hasData) {
+            DioError? dioError;
 
             if (snapshot.error is DioError) {
-              dioError = snapshot.error;
+              dioError = snapshot.error as DioError?;
             }
 
-            if (dioError != null && dioError.response.statusCode == 404) {
+            if (dioError != null && dioError.response!.statusCode == 404) {
               return CustomErrorWidget(
-                  emoji: "🤔",
-                  texto: "Parece que no se encontró el horario",
-                  error: snapshot.error);
+                emoji: "🤔",
+                texto: "Parece que no se encontró el horario",
+                error: snapshot.error,
+              );
             }
             return CustomErrorWidget(
-                texto: "Ocurrió un error al obtener el horario",
-                error: snapshot.error);
+              texto: "Ocurrió un error al obtener el horario",
+              error: snapshot.error,
+            );
           } else {
             if (snapshot.hasData) {
-              Horario horario = _horario;
-              if (snapshot.hasData) {
-                return PullToRefresh(
-                  onRefresh: () async {
-                    await _onRefresh();
-                  },
-                  
-                  child: InteractiveViewer(
-                    transformationController: _controller,
-                    maxScale: 1,
-                    minScale: 0.1,
-                    alignPanAxis: false,
-                    clipBehavior: Clip.none,
-                    constrained: false,
-                    onInteractionUpdate: (interaction) {
-                     /*  print("onInteractionUpdate focalPoint ${interaction.focalPoint.toString()}");
+              Horario? horario = _horario;
+              return PullToRefresh(
+                onRefresh: () async {
+                  await _onRefresh();
+                },
+                child: InteractiveViewer(
+                  transformationController: _controller,
+                  maxScale: 1,
+                  minScale: 0.1,
+                  alignPanAxis: false,
+                  clipBehavior: Clip.none,
+                  constrained: false,
+                  onInteractionUpdate: (interaction) {
+                    /*  print("onInteractionUpdate focalPoint ${interaction.focalPoint.toString()}");
                       print("onInteractionUpdate horizontalScale ${interaction.horizontalScale.toString()}");
                       print("onInteractionUpdate localFocalPoint ${interaction.localFocalPoint.toString()}");
                       print("onInteractionUpdate verticalScale ${interaction.verticalScale.toString()}");
@@ -211,19 +209,18 @@ class _HorarioScreenState extends State<HorarioScreen> {
                        [0. 0, 0, 1]]
                       
                       */
-                      if (interaction.scale >= 0.8) {
-                        print("HEY");
-                      }
-                    },
-                    child: SafeArea(
-                      child: Table(
-                        defaultColumnWidth: FixedColumnWidth(_childWidth),
-                        children: _getChildren(horario),
-                      ),
+                    if (interaction.scale >= 0.8) {
+                      print("HEY");
+                    }
+                  },
+                  child: SafeArea(
+                    child: Table(
+                      defaultColumnWidth: FixedColumnWidth(_childWidth),
+                      children: _getChildren(horario!),
                     ),
                   ),
-                );
-              }
+                ),
+              );
             } else {
               return Container(
                 padding: EdgeInsets.all(20),

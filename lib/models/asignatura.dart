@@ -5,24 +5,24 @@ import 'package:mi_utem/themes/theme.dart';
 import 'package:recase/recase.dart';
 
 class Asignatura {
-   String nombre;
-   String codigo;
-   String tipoHora;
-   String estado;
-   String docente;
-   String seccion;
-   Color colorAsignatura;
+   String? nombre;
+   String? codigo;
+   String? tipoHora;
+   String? estado;
+   String? docente;
+   String? seccion;
+   Color? colorAsignatura;
    List<Evaluacion> evaluaciones;
-   num notaExamen;
-   num notaPresentacion;
-   num notaFinal;
-   Asistencia asistencia;
-   List<Usuario> estudiantes;
-   String tipoAsignatura;
-   num intentos;
-   String horario;
-   String sala;
-   String tipoSala;
+   num? notaExamen;
+   num? notaPresentacion;
+   num? notaFinal;
+   Asistencia? asistencia;
+   List<Usuario>? estudiantes;
+   String? tipoAsignatura;
+   num? intentos;
+   String? horario;
+   String? sala;
+   String? tipoSala;
 
 
   Asignatura({
@@ -46,7 +46,7 @@ class Asignatura {
     this.tipoSala
   });
 
-  factory Asignatura.fromJson(Map<String, dynamic> json) {
+  factory Asignatura.fromJson(Map<String, dynamic>? json) {
     if (json == null) {
       return Asignatura();
     }
@@ -99,7 +99,7 @@ class Asignatura {
     double presentacion = 0;
     for (var evaluacion in evaluaciones) {
       if (evaluacion.nota != null && evaluacion.porcentaje != null) {
-        presentacion +=  evaluacion.nota * (evaluacion.porcentaje / 100);
+        presentacion +=  evaluacion.nota! * (evaluacion.porcentaje! / 100);
       }   
     }
 
@@ -158,7 +158,7 @@ class Asignatura {
 
   num get notaFinalCalculada {
     if (puedeDarExamen && notaExamen != null) {
-      return notaPresentacionCalculada * 0.6 + notaExamen * 0.4;
+      return notaPresentacionCalculada * 0.6 + notaExamen! * 0.4;
      
     } else {
       return notaPresentacionCalculada;
@@ -179,7 +179,7 @@ class Asistencia {
     this.sinRegistro = 0,
   });
 
-  factory Asistencia.fromJson(Map<String, dynamic> json) {
+  factory Asistencia.fromJson(Map<String, dynamic>? json) {
     if (json == null) {
       return Asistencia();
     }

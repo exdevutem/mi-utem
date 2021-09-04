@@ -22,14 +22,14 @@ import 'package:mi_utem/widgets/profile_photo.dart';
 
 class CustomDrawer extends StatefulWidget {
   final Usuario usuario;
-  CustomDrawer({Key key, @required this.usuario}) : super(key: key);
+  CustomDrawer({Key? key, required this.usuario}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _CustomDrawerState();
 }
 
 class _CustomDrawerState extends State<CustomDrawer> {
-  RemoteConfig _remoteConfig;
+  RemoteConfig? _remoteConfig;
 
   @override
   void initState() {
@@ -37,7 +37,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
     _remoteConfig = ConfigService.config;
   }
 
-  Widget _getScreen(String nombre) {
+  Widget? _getScreen(String? nombre) {
     switch (nombre) {
       case "Perfil":
         return UsuarioScreen();
@@ -59,8 +59,8 @@ class _CustomDrawerState extends State<CustomDrawer> {
     }
   }
 
-  List get _menu {
-    return jsonDecode(_remoteConfig.getString(ConfigService.DRAWER_MENU)).where((e) => e['mostrar'] == true).toList();
+  List? get _menu {
+    return jsonDecode(_remoteConfig!.getString(ConfigService.DRAWER_MENU)).where((e) => e['mostrar'] == true).toList();
   }
 
   @override
@@ -102,7 +102,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                       ),
                     ),
                   ),
-                  for (var e in _menu)
+                  for (var e in _menu!)
                     ListTile(
                       leading: Icon(IconData(e["icono"]["codePoint"], fontFamily: e["icono"]["fontFamily"], fontPackage: e["icono"]["fontPackage"])),
                       title: Text(e["nombre"]),

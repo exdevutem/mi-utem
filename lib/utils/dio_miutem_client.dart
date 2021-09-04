@@ -6,15 +6,15 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class DioMiUtemClient {
   static const bool isProduction = bool.fromEnvironment('dart.vm.product');
-  
-  static const String debugUrl = 'http://192.168.5.109:3000';
+
+  static const String debugUrl = 'http://192.168.5.130:3300';
   static const String productionUrl = 'https://apiapp.utem.dev';
-  
-  static const String url = isProduction ? productionUrl : productionUrl;
+
+  static const String url = isProduction ? productionUrl : debugUrl;
 
   static Dio get initDio => Dio(BaseOptions(
-    baseUrl: url,
-  ));
+        baseUrl: url,
+      ));
 
   static Dio baseDio = Dio(BaseOptions(
     baseUrl: url,
@@ -27,22 +27,20 @@ class DioMiUtemClient {
   );
 
   static Dio get authDio => baseDio
-    ..interceptors.addAll([
-      InterceptorsWrapper(
-        onRequest: (options, handler) async {
+    ..interceptors.addAll(
+      [
+        InterceptorsWrapper(onRequest: (options, handler) async {
           SharedPreferences prefs = await SharedPreferences.getInstance();
           var sesion = prefs.getString('sesion');
           options.headers.addAll({"Authorization": "Bearer $sesion"});
 
           return handler.next(options);
-        },
-        onResponse: (response, handler) async {
+        }, onResponse: (response, handler) async {
           return handler.next(response);
-        },
-        onError: (dioError, handler) async {
+        }, onError: (dioError, handler) async {
           print("onError");
           if (dioError.response?.statusCode == 401) {
-            RequestOptions options = dioError.response.requestOptions;
+            RequestOptions options = dioError.response!.requestOptions;
 
             baseDio.interceptors.requestLock.lock();
             baseDio.interceptors.responseLock.lock();
@@ -51,12 +49,10 @@ class DioMiUtemClient {
             baseDio.interceptors.responseLock.unlock();
 
             if (ok) {
-              Response response = await baseDio.request(
-                options.path,
-                cancelToken: options.cancelToken,
-                data: options.data,
-                queryParameters: options.queryParameters
-              );
+              Response response = await baseDio.request(options.path,
+                  cancelToken: options.cancelToken,
+                  data: options.data,
+                  queryParameters: options.queryParameters);
               handler.resolve(response);
             } else {
               return handler.next(dioError);
@@ -64,21 +60,20 @@ class DioMiUtemClient {
           } else {
             return handler.next(dioError);
           }
-        }
-      ),
-      DioCacheInterceptor(options: cacheOptions),
-    ],)
-    ;
-  
+        }),
+        DioCacheInterceptor(options: cacheOptions),
+      ],
+    );
+
   static Future<bool> refreshSesion() async {
     String uri = "/v1/usuarios/refresh";
-    
+
     try {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       final FlutterSecureStorage storage = new FlutterSecureStorage();
 
-      String correo = prefs.getString("correo");
-      String contrasenia = await storage.read(key: "contrasenia");
+      String? correo = prefs.getString("correo");
+      String? contrasenia = await storage.read(key: "contrasenia");
 
       if (correo != null && contrasenia != null) {
         dynamic data = {'usuario': correo, 'contrasenia': contrasenia};
@@ -87,8 +82,8 @@ class DioMiUtemClient {
 
         Usuario usuario = Usuario.fromJson(response.data);
 
-        prefs.setString('sesion', usuario.sesion);
-      
+        prefs.setString('sesion', usuario.sesion!);
+
         return true;
       } else {
         return false;

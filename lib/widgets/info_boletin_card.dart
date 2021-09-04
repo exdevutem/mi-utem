@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
 class InfoBoletinCard extends StatelessWidget{
-  final String inicio;
-  final String termino;
-  final String plan;
-  final String estado;
-  final String ingreso;
+  final String? inicio;
+  final String? termino;
+  final String? plan;
+  final String? estado;
+  final String? ingreso;
 
   InfoBoletinCard({
-    Key key,
+    Key? key,
     this.inicio,
     this.termino,
     this.plan,

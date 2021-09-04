@@ -31,7 +31,7 @@ class AsignaturasService {
     }
   }
 
-  static Future<Asignatura> getDetalleAsignatura(String codigo,
+  static Future<Asignatura> getDetalleAsignatura(String? codigo,
       [bool refresh = false]) async {
     String uri = "/v1/asignaturas/$codigo";
 
@@ -54,7 +54,7 @@ class AsignaturasService {
     }
   }
 
-  static Future<Asignatura> getNotasByCodigoAsignatura(String codigo,
+  static Future<Asignatura?> getNotasByCodigoAsignatura(String? codigo,
       [bool refresh = false]) async {
     String uri = "/v1/notas";
 
@@ -64,18 +64,24 @@ class AsignaturasService {
         uri,
         options: DioMiUtemClient.cacheOptions
             .copyWith(
-                maxStale: Duration(hours: 3),
+                maxStale: Duration(seconds: 5),
                 policy: refresh ? CachePolicy.refresh : CachePolicy.forceCache)
             .toOptions(),
         queryParameters: query,
       );
 
       List<Asignatura> asignaturas = Asignatura.fromJsonList(response.data);
-      Asignatura asignatura = asignaturas.firstWhere((a) => a.codigo == codigo);
-
-      return asignatura;
+      if (asignaturas.length > 0) {
+        Asignatura asignatura =
+            asignaturas.firstWhere((a) => a.codigo == codigo);
+        return asignatura;
+      } else {
+        return null;
+      }
     } on DioError catch (e) {
       print(e.message);
+      throw e;
+    } catch (e) {
       throw e;
     }
   }

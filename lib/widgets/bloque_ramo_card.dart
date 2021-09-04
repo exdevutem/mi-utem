@@ -12,10 +12,7 @@ class BloqueRamoCard extends StatelessWidget {
   BloqueHorario bloque;
 
   BloqueRamoCard(
-      {Key key,
-      @required this.bloque,
-      @required this.ancho,
-      @required this.alto})
+      {Key? key, required this.bloque, required this.ancho, required this.alto})
       : super(key: key);
 
   @override
@@ -37,9 +34,11 @@ class BloqueRamoCard extends StatelessWidget {
                 color: Colors.transparent,
                 child: InkWell(
                   onTap: () {
-                    Get.to(
-                      AsignaturaScreen(asignatura: bloque.asignatura),
-                    );
+                    if (bloque.asignatura != null) {
+                      Get.to(
+                        AsignaturaScreen(asignatura: bloque.asignatura!),
+                      );
+                    }
                   },
                   borderRadius: BorderRadius.all(Radius.circular(15)),
                   child: Padding(
@@ -47,10 +46,10 @@ class BloqueRamoCard extends StatelessWidget {
                     child: Column(
                       children: <Widget>[
                         Text(
-                            "${bloque.asignatura.codigo}/${bloque.asignatura.seccion}",
+                            "${bloque.asignatura!.codigo}/${bloque.asignatura!.seccion}",
                             textAlign: TextAlign.center,
                             style: TextStyle(color: colorTexto, fontSize: 12)),
-                        Text(bloque.asignatura.nombre.toUpperCase(),
+                        Text(bloque.asignatura!.nombre!.toUpperCase(),
                             maxLines: 3,
                             textAlign: TextAlign.center,
                             style: TextStyle(
@@ -59,7 +58,7 @@ class BloqueRamoCard extends StatelessWidget {
                                 wordSpacing: 1,
                                 color: colorTexto,
                                 fontSize: 14)),
-                        Text(bloque.sala,
+                        Text(bloque.sala!,
                             textAlign: TextAlign.center,
                             maxLines: 2,
                             style: TextStyle(color: colorTexto, fontSize: 12))
@@ -69,12 +68,12 @@ class BloqueRamoCard extends StatelessWidget {
                   ),
                 ),
               ),
-              color: bloque.asignatura.colorAsignatura,
+              color: bloque.asignatura!.colorAsignatura,
             )
           : Container(
               margin: EdgeInsets.all(5.0),
               child: DottedBorder(
-                  color: Colors.grey[400],
+                  color: Colors.grey[400]!,
                   strokeWidth: 2,
                   borderType: BorderType.RRect,
                   radius: Radius.circular(15.0),

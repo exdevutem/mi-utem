@@ -1,22 +1,22 @@
 class Rut {
-  int numero;
-  String dv;
+  int? numero;
+  String? dv;
 
   Rut(
     this.numero,
     this.dv);
 
-  Rut.deEntero(int rut) {
+  Rut.deEntero(int? rut) {
     this.numero = rut;
     this.dv = calcularDv(rut);
   }
 
   Rut.deString(String rut) {
-    this.numero = int.parse(separarRutYDv(rut)[0]);
+    this.numero = int.parse(separarRutYDv(rut)[0]!);
     this.dv = separarRutYDv(rut)[1];
   }
 
-  static List<String> separarRutYDv(String rutCompleto) {
+  static List<String?> separarRutYDv(String rutCompleto) {
 		String limpio = limpiar(rutCompleto);
 		if (limpio.length == 0) {
       return [null, null];
@@ -29,7 +29,7 @@ class Rut {
 		return [rut, dv];
   }
 
-  static String calcularDv(int numero) {
+  static String calcularDv(int? numero) {
     int suma = 0;
 		int multiplicador = 2;
 		String rut = numero.toString();

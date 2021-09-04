@@ -14,7 +14,7 @@ import 'package:mi_utem/services/perfil_service.dart';
 import 'package:package_info/package_info.dart';
 
 class SplashScreen extends StatefulWidget {
-  SplashScreen({Key key}) : super(key: key);
+  SplashScreen({Key? key}) : super(key: key);
 
   @override
   _SplashScreenState createState() => _SplashScreenState();
@@ -41,7 +41,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   bool _terminoAnimacion = false;
-  Widget _ruta;
+  Widget? _ruta;
 
   void _onEndAnimacion() async {
     _terminoAnimacion = true;
@@ -106,11 +106,13 @@ class _SplashScreenState extends State<SplashScreen> {
                   ),
                 ),
               ),
-              FutureBuilder(
+              FutureBuilder<PackageInfo>(
                 future: PackageInfo.fromPlatform(),
                 builder: (context, snapshot) {
-                  if (!snapshot.hasError && snapshot.hasData) {
-                    PackageInfo packageInfo = snapshot.data;
+                  if (!snapshot.hasError &&
+                      snapshot.hasData &&
+                      snapshot.data != null) {
+                    PackageInfo packageInfo = snapshot.data!;
                     return Container(
                       padding: EdgeInsets.all(10),
                       child: Text(

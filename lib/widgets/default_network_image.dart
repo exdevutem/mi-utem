@@ -6,7 +6,7 @@ import 'package:mi_utem/widgets/image_view_screen.dart';
 
 
 class DefaultNetworkImage extends StatelessWidget {
-  final String url;
+  final String? url;
 
   DefaultNetworkImage({
     this.url,

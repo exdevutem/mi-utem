@@ -14,10 +14,10 @@ class DocentesService {
     String baseUrl = "https://mi.utem.cl/static/interdocs/fotos/";
     List<String> formatos = [".jpg", ".jpeg", ".png", ".gif"];
 
-    String imageUrl = "$baseUrl${usuario.rut.numero}${formatos[0]}";
+    String imageUrl = "$baseUrl${usuario.rut!.numero}${formatos[0]}";
 
     for (var formato in formatos) {
-      String actualImageUrl = "$baseUrl${usuario.rut.numero}$formato";
+      String actualImageUrl = "$baseUrl${usuario.rut!.numero}$formato";
       final imageResponse =
         await http.head(Uri.parse(actualImageUrl));
 
@@ -54,7 +54,7 @@ class DocentesService {
     }
   }
 
-  static Future<Usuario> traerUnDocente(String nombre) async {
+  static Future<Usuario> traerUnDocente(String? nombre) async {
     String uri = "/docentes/buscar";
     
     try {
@@ -74,7 +74,7 @@ class DocentesService {
     }
   }
 
-  static Future<Usuario> asignarUnDocente(String nombreDocente, String codigoAsignatura, String nombreAsignatura) async {
+  static Future<Usuario> asignarUnDocente(String? nombreDocente, String? codigoAsignatura, String? nombreAsignatura) async {
     String uri = "/docentes/asignar";
     
     try {

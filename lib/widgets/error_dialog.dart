@@ -5,11 +5,11 @@ import 'package:get/get.dart';
 final _formKey = GlobalKey<FormState>();
 
 class ErrorDialog extends StatelessWidget {
-  final Widget contenido;
+  final Widget? contenido;
   final Widget mensaje;
   ErrorDialog({
     this.contenido,
-    @required this.mensaje,
+    required this.mensaje,
   });
 
   @override

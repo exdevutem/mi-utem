@@ -24,14 +24,14 @@ if (flutterVersionName == null) {
 apply plugin: 'com.android.application'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
+def keystoreFile
 def keystoreProperties = new Properties()
 def keystorePropertiesFile = rootProject.file("keystores/key.properties")
-if (keystorePropertiesFile.exists()) {
-    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
-}
+
+
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 30
     lintOptions {
         disable 'InvalidPackage'
     }
@@ -46,24 +46,25 @@ android {
         versionName flutterVersionName
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+}
 
-    signingConfigs {
-        release {
-            keyAlias keystoreProperties['keyAlias']
-            keyPassword keystoreProperties['keyPassword']
-            storeFile file(keystoreProperties['storeFile'])
-            storePassword keystoreProperties['storePassword']
-        }
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+    keystoreFile = file(keystoreProperties['storeFile'])
+    android.signingConfig.release = {
+        keyAlias keystoreProperties['keyAlias']
+        keyPassword keystoreProperties['keyPassword']
+        storeFile keystoreFile
+        storePassword keystoreProperties['storePassword']
     }
 
-    buildTypes {
-        release {
-            shrinkResources true
-            minifyEnabled true
-            signingConfig signingConfigs.release
-            useProguard true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
+    android.buildTypes.release = {
+        shrinkResources true
+        minifyEnabled true
+        signingConfig android.signingConfigs.release
+        useProguard true
+        proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+    
     }
 }
 

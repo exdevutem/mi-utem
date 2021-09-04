@@ -2,7 +2,6 @@ import 'dart:core';
 
 import 'package:clipboard/clipboard.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mi_utem/models/asignatura.dart';
@@ -22,17 +21,18 @@ import 'package:url_launcher/url_launcher.dart';
 
 class UsuarioScreen extends StatefulWidget {
   final int tipo;
-  final Map<String, dynamic> query;
-  final Asignatura asignatura;
-  UsuarioScreen({Key key, this.tipo = 0, this.query, this.asignatura}) : super(key: key);
+  final Map<String, dynamic>? query;
+  final Asignatura? asignatura;
+  UsuarioScreen({Key? key, this.tipo = 0, this.query, this.asignatura})
+      : super(key: key);
 
   @override
   _UsuarioScreenState createState() => _UsuarioScreenState();
 }
 
 class _UsuarioScreenState extends State<UsuarioScreen> {
-  Future<Usuario> _usuarioFuture;
-  Usuario _usuario;
+  Future<Usuario>? _usuarioFuture;
+  Usuario? _usuario;
 
   @override
   void initState() {
@@ -48,11 +48,15 @@ class _UsuarioScreenState extends State<UsuarioScreen> {
       if (widget.tipo == 2) {
         print(widget.query);
         if (widget.asignatura == null) {
-          usuario = await DocentesService.traerUnDocente(widget.query["nombre"]);
+          usuario =
+              await DocentesService.traerUnDocente(widget.query!["nombre"]);
         } else {
-          usuario = await DocentesService.asignarUnDocente(widget.query["nombre"], widget.asignatura.codigo, widget.asignatura.nombre);
+          usuario = await DocentesService.asignarUnDocente(
+              widget.query!["nombre"],
+              widget.asignatura!.codigo,
+              widget.asignatura!.nombre);
         }
-        
+
         setState(() {
           _usuario = usuario;
         });
@@ -83,21 +87,21 @@ class _UsuarioScreenState extends State<UsuarioScreen> {
         _usuario = usuario;
       });
 
-      return usuario;
+      return;
     } catch (e) {
       Get.back();
       print("Error cambiando la imagen ${e.toString()}");
-      Flushbar(
+      /* Flushbar(
         message: "No se pudo cambiar la foto",
         duration: Duration(seconds: 3),
-      )..show(context);
+      )..show(context); */
     }
   }
 
   List<Widget> get _datosPersonales {
     List<Widget> lista = [];
     if (_usuario != null) {
-      if (_usuario.nombre != null && _usuario.nombre.isNotEmpty) {
+      if (_usuario!.nombre != null && _usuario!.nombre!.isNotEmpty) {
         lista.add(ListTile(
           title: Text(
             "Nombre",
@@ -106,7 +110,7 @@ class _UsuarioScreenState extends State<UsuarioScreen> {
             ),
           ),
           subtitle: Text(
-            _usuario.nombreCompleto,
+            _usuario!.nombreCompleto!,
             style: TextStyle(
               color: Colors.grey[900],
               fontSize: 18,
@@ -114,7 +118,7 @@ class _UsuarioScreenState extends State<UsuarioScreen> {
           ),
         ));
       } else {
-        if (_usuario.nombres != null && _usuario.nombres.isNotEmpty) {
+        if (_usuario!.nombres != null && _usuario!.nombres!.isNotEmpty) {
           lista.add(
             ListTile(
               title: Text(
@@ -124,7 +128,7 @@ class _UsuarioScreenState extends State<UsuarioScreen> {
                 ),
               ),
               subtitle: Text(
-                _usuario.nombres,
+                _usuario!.nombres!,
                 style: TextStyle(
                   color: Colors.grey[900],
                   fontSize: 18,
@@ -134,7 +138,7 @@ class _UsuarioScreenState extends State<UsuarioScreen> {
           );
         }
 
-        if (_usuario.apellidos != null && _usuario.apellidos.isNotEmpty) {
+        if (_usuario!.apellidos != null && _usuario!.apellidos!.isNotEmpty) {
           lista.add(Divider(height: 1));
           lista.add(
             ListTile(
@@ -145,7 +149,7 @@ class _UsuarioScreenState extends State<UsuarioScreen> {
                 ),
               ),
               subtitle: Text(
-                _usuario.apellidos,
+                _usuario!.apellidos!,
                 style: TextStyle(
                   color: Colors.grey[900],
                   fontSize: 18,
@@ -156,7 +160,7 @@ class _UsuarioScreenState extends State<UsuarioScreen> {
         }
       }
 
-      if (_usuario.correo != null && _usuario.correo.isNotEmpty) {
+      if (_usuario!.correo != null && _usuario!.correo!.isNotEmpty) {
         lista.add(Divider(height: 1));
         lista.add(ListTile(
           title: Text(
@@ -165,18 +169,22 @@ class _UsuarioScreenState extends State<UsuarioScreen> {
               color: Colors.grey,
             ),
           ),
-          onLongPress: widget.tipo != 0 ? () async {
-            await FlutterClipboard.copy(_usuario.correo);
-            Flushbar(
-              message: "Correo copiado al portapapeles",
-              duration: Duration(seconds: 3),
-            )..show(context);
-          } : null,
-          onTap: widget.tipo != 0 ? () async {
-            await launch("mailto:${_usuario.correo}");
-          } : null,
+          onLongPress: widget.tipo != 0
+              ? () async {
+                  await FlutterClipboard.copy(_usuario!.correo!);
+                  /* Flushbar(
+                    message: "Correo copiado al portapapeles",
+                    duration: Duration(seconds: 3),
+                  )..show(context); */
+                }
+              : null,
+          onTap: widget.tipo != 0
+              ? () async {
+                  await launch("mailto:${_usuario!.correo}");
+                }
+              : null,
           subtitle: Text(
-            _usuario.correo,
+            _usuario!.correo!,
             style: TextStyle(
               color: Colors.grey[900],
               fontSize: 18,
@@ -185,7 +193,7 @@ class _UsuarioScreenState extends State<UsuarioScreen> {
         ));
       }
 
-      if (widget.tipo == 0 && _usuario.rut != null) {
+      if (widget.tipo == 0 && _usuario!.rut != null) {
         lista.add(Divider(height: 1));
         lista.add(ListTile(
           title: Text(
@@ -195,7 +203,7 @@ class _UsuarioScreenState extends State<UsuarioScreen> {
             ),
           ),
           subtitle: Text(
-            _usuario.rut.formateado(true),
+            _usuario!.rut!.formateado(true),
             style: TextStyle(
               color: Colors.grey[900],
               fontSize: 18,
@@ -212,7 +220,7 @@ class _UsuarioScreenState extends State<UsuarioScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
-        title: Text(widget.tipo == 0 ? "Perfil" : widget.query["nombre"]),
+        title: Text(widget.tipo == 0 ? "Perfil" : widget.query!["nombre"]),
       ),
       body: FutureBuilder(
         future: _usuarioFuture,
@@ -242,20 +250,19 @@ class _UsuarioScreenState extends State<UsuarioScreen> {
                     ),
                     Center(
                       child: ProfilePhoto(
-                        usuario: _usuario,
-                        radius: 60,
-                        editable: widget.tipo == 0,
-                        onImage: widget.tipo == 0
-                            ? (image) {
-                                _changeFoto(image);
-                              }
-                            : null,
-                        onImageTap: (context, imageProvider) {
-                          Get.to(
-                            ImageViewScreen(imagen: imageProvider),
-                          );
-                        }
-                      ),
+                          usuario: _usuario,
+                          radius: 60,
+                          editable: widget.tipo == 0,
+                          onImage: widget.tipo == 0
+                              ? (image) {
+                                  _changeFoto(image);
+                                }
+                              : null,
+                          onImageTap: (context, imageProvider) {
+                            Get.to(
+                              ImageViewScreen(imagen: imageProvider),
+                            );
+                          }),
                     ),
                   ],
                 ),

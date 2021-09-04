@@ -7,7 +7,7 @@ import 'package:mi_utem/widgets/loading_indicator.dart';
 
 class AcercaAplicacionContent extends StatefulWidget {
   final String titulo;
-  final String preTitulo;
+  final String? preTitulo;
 
   AcercaAplicacionContent({this.titulo = "Aplicación", this.preTitulo});
 
@@ -16,7 +16,7 @@ class AcercaAplicacionContent extends StatefulWidget {
 }
 
 class _AcercaAplicacionContentState extends State<AcercaAplicacionContent> {
-  RemoteConfig _remoteConfig;
+  RemoteConfig? _remoteConfig;
 
   @override
   void initState() {
@@ -29,7 +29,7 @@ class _AcercaAplicacionContentState extends State<AcercaAplicacionContent> {
     return Column(
       children: <Widget>[
         CachedNetworkImage(
-          imageUrl: _remoteConfig.getString(ConfigService.MIUTEM_PORTADA),
+          imageUrl: _remoteConfig!.getString(ConfigService.MIUTEM_PORTADA),
           width: double.infinity,
           fit: BoxFit.cover,
         ),
@@ -37,16 +37,16 @@ class _AcercaAplicacionContentState extends State<AcercaAplicacionContent> {
           padding: EdgeInsets.all(20),
           child: Column(
             children: <Widget>[
-              if (widget.preTitulo != null && widget.preTitulo.isNotEmpty)
+              if (widget.preTitulo != null && widget.preTitulo!.isNotEmpty)
                 Text(
-                  widget.preTitulo,
+                  widget.preTitulo!,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 14,
                     color: Colors.grey[700],
                   ),
                 ),
-              if (widget.preTitulo != null && widget.preTitulo.isNotEmpty)
+              if (widget.preTitulo != null && widget.preTitulo!.isNotEmpty)
                 Container(height: 5),
               Text(
                 widget.titulo,
@@ -67,7 +67,7 @@ class _AcercaAplicacionContentState extends State<AcercaAplicacionContent> {
                     color: Colors.grey[700],
                   ),
                 ),
-                data: _remoteConfig
+                data: _remoteConfig!
                     .getString(
                       ConfigService.MIUTEM_DESCRIPCION,
                     )

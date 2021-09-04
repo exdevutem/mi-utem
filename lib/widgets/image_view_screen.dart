@@ -3,8 +3,8 @@ import 'package:get/get.dart';
 import 'package:photo_view/photo_view.dart';
 
 class ImageViewScreen extends StatefulWidget {
-  final ImageProvider imagen;
-  ImageViewScreen({Key key, ImageProvider this.imagen}) : super(key: key);
+  final ImageProvider? imagen;
+  ImageViewScreen({Key? key, ImageProvider? this.imagen}) : super(key: key);
 
   @override
   _ImageViewScreenState createState() => _ImageViewScreenState();

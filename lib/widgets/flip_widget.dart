@@ -9,7 +9,7 @@ class FlipController {
   static const front = "Front";
   static const rear = "Rear";
 
-  Function([SwipeDirection]) flip;
+  Function([SwipeDirection])? flip;
   String actualFace = front;
 
   void dispose() {
@@ -20,26 +20,26 @@ class FlipController {
 
 class FlipWidget extends StatefulWidget {
   final Widget front, back;
-  final FlipController controller;
-  final Function(SwipeDirection) onFlip;
+  final FlipController? controller;
+  final Function(SwipeDirection?)? onFlip;
 
-  FlipWidget({Key key, @required this.front, @required this.back, this.controller, this.onFlip}) : super(key: key);
+  FlipWidget({Key? key, required this.front, required this.back, this.controller, this.onFlip}) : super(key: key);
 
   @override
   _FlipWidgetState createState() => _FlipWidgetState();
 }
 
 class _FlipWidgetState extends State<FlipWidget> with SingleTickerProviderStateMixin {
-  Animation _animation;
-  AnimationController _animationController;
-  SwipeDirection _direction;
+  late Animation _animation;
+  late AnimationController _animationController;
+  SwipeDirection? _direction;
   bool _showFront = true;
 
   @override
   void initState() {
     _animationController = AnimationController(duration: Duration(milliseconds: 400), vsync: this);
     _animation = Tween(begin: 0.0, end: 1.0).animate(_animationController);
-    FlipController _flipController = widget.controller;
+    FlipController? _flipController = widget.controller;
     if (_flipController != null) {
       _flipController.flip = _flip;
       _flipController.actualFace = _showFront ? FlipController.front : FlipController.rear;
@@ -50,7 +50,7 @@ class _FlipWidgetState extends State<FlipWidget> with SingleTickerProviderStateM
 
   _flip([SwipeDirection direction = SwipeDirection.right]) {
     if (widget.controller != null) {
-      widget.controller.actualFace = !_showFront ? FlipController.front : FlipController.rear;
+      widget.controller!.actualFace = !_showFront ? FlipController.front : FlipController.rear;
     }
     setState(() {
       _direction = direction;
@@ -62,7 +62,7 @@ class _FlipWidgetState extends State<FlipWidget> with SingleTickerProviderStateM
       _animationController.reverse();
     }
     if (widget.onFlip != null) {
-      widget.onFlip(direction);
+      widget.onFlip!(direction);
     }
   }
 
@@ -70,7 +70,7 @@ class _FlipWidgetState extends State<FlipWidget> with SingleTickerProviderStateM
   Widget build(BuildContext context) {
     return AnimatedBuilder(
       animation: _animationController,
-      builder: (BuildContext context, Widget child) {
+      builder: (BuildContext context, Widget? child) {
         bool isFront = _animationController.value < .5;
         return SimpleGestureDetector(
           onHorizontalSwipe: _flip,
