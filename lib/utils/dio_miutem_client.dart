@@ -7,7 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class DioMiUtemClient {
   static const bool isProduction = bool.fromEnvironment('dart.vm.product');
 
-  static const String debugUrl = 'http://192.168.5.130:3300';
+  static const String debugUrl = 'http://192.168.5.130:3000';
   static const String productionUrl = 'https://apiapp.utem.dev';
 
   static const String url = isProduction ? productionUrl : debugUrl;
