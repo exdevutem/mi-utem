@@ -105,12 +105,14 @@ class _HorarioScreenState extends State<HorarioScreen> {
     List<Widget> filaWidgets = [Container()];
 
     // Primera fila de los días
-    for (String dia in horario.dias as Iterable<String>) {
-      filaWidgets.add(BloqueDiasCard(
-        dia: dia,
-        alto: _diasHeight,
-        ancho: _childWidth,
-      ));
+    if (horario.dias != null) {
+      for (dynamic dia in horario.dias!) {
+        filaWidgets.add(BloqueDiasCard(
+          dia: dia,
+          alto: _diasHeight,
+          ancho: _childWidth,
+        ));
+      }
     }
     filas.add(TableRow(children: filaWidgets));
 
