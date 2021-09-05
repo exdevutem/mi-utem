@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_masked_text/flutter_masked_text.dart';
 import 'package:mi_utem/models/asignatura.dart';
 import 'package:mi_utem/models/evaluacion.dart';
-import 'package:mi_utem/models/usuario.dart';
 import 'package:mi_utem/services/asignaturas_service.dart';
 import 'package:mi_utem/services/config_service.dart';
 import 'package:mi_utem/themes/theme.dart';
@@ -12,7 +11,6 @@ import 'package:mi_utem/widgets/custom_error_widget.dart';
 import 'package:mi_utem/widgets/loading_indicator.dart';
 import 'package:mi_utem/widgets/nota_list_item.dart';
 import 'package:mi_utem/widgets/pull_to_refresh.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class AsignaturaNotasTab extends StatefulWidget {
   final Asignatura asignatura;
@@ -51,8 +49,8 @@ class _AsignaturaNotasTabState extends State<AsignaturaNotasTab> {
       [bool refresh = false]) async {
     try {
       setState(() {
-        _futureAsignatura = AsignaturasService.getNotasByCodigoAsignatura(
-            widget.asignatura.codigo, refresh);
+        _futureAsignatura =
+            AsignaturasService.getNotasByCodigoAsignatura("INFB8104", refresh);
       });
 
       Asignatura? asignatura = await _futureAsignatura;
