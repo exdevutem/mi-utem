@@ -1,11 +1,7 @@
-import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
-import 'package:mi_utem/models/asignatura.dart';
 import 'package:mi_utem/models/horario.dart';
-import 'package:mi_utem/models/usuario.dart';
 import 'package:mi_utem/utils/dio_miutem_client.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class HorarioService {
   static final Dio _dio = DioMiUtemClient.authDio;
@@ -18,7 +14,7 @@ class HorarioService {
         uri,
         options: DioMiUtemClient.cacheOptions
             .copyWith(
-                maxStale: Duration(hours: 3),
+                maxStale: Duration(days: 30),
                 policy: refresh ? CachePolicy.refresh : CachePolicy.forceCache)
             .toOptions(),
       );

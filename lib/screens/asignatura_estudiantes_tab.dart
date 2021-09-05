@@ -1,17 +1,12 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:mi_utem/models/asignatura.dart';
-import 'package:mi_utem/models/evaluacion.dart';
 import 'package:mi_utem/models/usuario.dart';
 import 'package:mi_utem/services/asignaturas_service.dart';
-import 'package:mi_utem/themes/theme.dart';
-import 'package:mi_utem/widgets/asistencia_chart.dart';
 import 'package:mi_utem/widgets/custom_error_widget.dart';
 import 'package:mi_utem/widgets/loading_indicator.dart';
-import 'package:mi_utem/widgets/nota_list_item.dart';
 import 'package:mi_utem/widgets/profile_photo.dart';
 import 'package:mi_utem/widgets/pull_to_refresh.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class AsignaturaEstudiantesTab extends StatefulWidget {
   final Asignatura? asignatura;
@@ -74,15 +69,15 @@ class _AsignaturaEstudiantesTabState extends State<AsignaturaEstudiantesTab> {
                 itemBuilder: (context, i) {
                   Usuario estudiante = _asignatura.estudiantes![i];
                   return ListTile(
-                      onTap: () {
-                        FirebaseAnalytics().logEvent(
-                            name: 'asignatura_estudiante_click',
-                            parameters: null);
-                      },
-                      leading: ProfilePhoto(usuario: estudiante),
-                      title:
-                          Text("${estudiante.nombres} ${estudiante.apellidos}"),
-                      subtitle: Text(estudiante.correo!));
+                    onTap: () {
+                      FirebaseAnalytics().logEvent(
+                          name: 'asignatura_estudiante_click',
+                          parameters: null);
+                    },
+                    leading: ProfilePhoto(usuario: estudiante),
+                    title: Text(estudiante.nombreCompleto ?? "Sin nombre"),
+                    subtitle: Text(estudiante.correo!),
+                  );
                 },
               ),
             );

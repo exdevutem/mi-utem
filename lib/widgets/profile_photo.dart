@@ -8,7 +8,6 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mi_utem/models/usuario.dart';
 import 'package:mi_utem/themes/theme.dart';
-import 'package:mi_utem/widgets/image_view_screen.dart';
 import 'package:mi_utem/widgets/imagen_editor_modal.dart';
 
 class ProfilePhoto extends StatefulWidget {
@@ -108,19 +107,25 @@ class _ProfilePhotoState extends State<ProfilePhoto> {
 
                     widget.onImage!(imagenEditadaBase64);
                   } else {
-                    /* Flushbar(
-                      message: "No se pudo obtener la foto",
-                      duration: Duration(seconds: 5),
-                      flushbarStyle: FlushbarStyle.GROUNDED,
-                    )..show(context); */
+                    Get.snackbar(
+                      "Error",
+                      "No se pudo obtener la foto",
+                      colorText: Colors.white,
+                      backgroundColor: Get.theme.primaryColor,
+                      snackPosition: SnackPosition.BOTTOM,
+                      margin: EdgeInsets.all(20),
+                    );
                   }
                 } catch (e) {
                   print(e);
-                  /* Flushbar(
-                    message: "Ocurrió un error cambiando la foto",
-                    duration: Duration(seconds: 5),
-                    flushbarStyle: FlushbarStyle.GROUNDED,
-                  )..show(context); */
+                  Get.snackbar(
+                    "Error",
+                    "No se pudo cambiar la foto",
+                    colorText: Colors.white,
+                    backgroundColor: Get.theme.primaryColor,
+                    snackPosition: SnackPosition.BOTTOM,
+                    margin: EdgeInsets.all(20),
+                  );
                 }
               },
               borderRadius: BorderRadius.circular(25),

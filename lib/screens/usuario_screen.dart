@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mi_utem/models/asignatura.dart';
 import 'package:mi_utem/models/usuario.dart';
-import 'package:mi_utem/services/autenticacion_service.dart';
 import 'package:mi_utem/services/docentes_service.dart';
 import 'package:mi_utem/services/perfil_service.dart';
 import 'package:mi_utem/services/review_service.dart';
@@ -16,7 +15,6 @@ import 'package:mi_utem/widgets/image_view_screen.dart';
 import 'package:mi_utem/widgets/loading_dialog.dart';
 import 'package:mi_utem/widgets/loading_indicator.dart';
 import 'package:mi_utem/widgets/profile_photo.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class UsuarioScreen extends StatefulWidget {
@@ -91,10 +89,14 @@ class _UsuarioScreenState extends State<UsuarioScreen> {
     } catch (e) {
       Get.back();
       print("Error cambiando la imagen ${e.toString()}");
-      /* Flushbar(
-        message: "No se pudo cambiar la foto",
-        duration: Duration(seconds: 3),
-      )..show(context); */
+      Get.snackbar(
+        "Error",
+        "No se pudo cambiar la foto",
+        colorText: Colors.white,
+        backgroundColor: Get.theme.primaryColor,
+        snackPosition: SnackPosition.BOTTOM,
+        margin: EdgeInsets.all(20),
+      );
     }
   }
 
@@ -172,10 +174,14 @@ class _UsuarioScreenState extends State<UsuarioScreen> {
           onLongPress: widget.tipo != 0
               ? () async {
                   await FlutterClipboard.copy(_usuario!.correo!);
-                  /* Flushbar(
-                    message: "Correo copiado al portapapeles",
-                    duration: Duration(seconds: 3),
-                  )..show(context); */
+                  Get.snackbar(
+                    "¡Copiado!",
+                    "Correo copiado al portapapeles",
+                    colorText: Colors.white,
+                    backgroundColor: Get.theme.primaryColor,
+                    snackPosition: SnackPosition.BOTTOM,
+                    margin: EdgeInsets.all(20),
+                  );
                 }
               : null,
           onTap: widget.tipo != 0
