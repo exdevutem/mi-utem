@@ -7,12 +7,7 @@ class Horario {
   List<dynamic>? dias;
   List<Periodo>? periodos;
 
-  Horario({
-    this.asignaturas,
-    this.horario,
-    this.dias,
-    this.periodos
-  });
+  Horario({this.asignaturas, this.horario, this.dias, this.periodos});
 
   factory Horario.fromJson(Map<String, dynamic>? json) {
     if (json == null) {
@@ -52,13 +47,6 @@ class Horario {
   List<List<BloqueHorario>> get horarioEnlazado {
     List<List<BloqueHorario>> horarioNuevo = [];
 
-    List<Color> colores = Colors.primaries.toList()..shuffle();
-
-    for (num i = 0; i < asignaturas!.length; i++) {
-      var asignatura = asignaturas![i as int];
-      asignatura.colorAsignatura = colores[i];
-    }
-
     for (List<BloqueHorario> fila in horario!) {
       List<BloqueHorario> filaNueva = [];
       for (BloqueHorario bloque in fila) {
@@ -81,23 +69,18 @@ class Periodo {
   String? horaIntermedio;
   String? horaTermino;
 
-  Periodo({
-    this.numero,
-    this.horaInicio,
-    this.horaIntermedio,
-    this.horaTermino
-  });
+  Periodo(
+      {this.numero, this.horaInicio, this.horaIntermedio, this.horaTermino});
 
   factory Periodo.fromJson(Map<String, dynamic>? json) {
     if (json == null) {
       return Periodo();
     }
     return Periodo(
-      numero: json["numero"],
-      horaInicio: json["horaInicio"],
-      horaIntermedio: json["horaIntermedio"],
-      horaTermino: json["horaTermino"]
-    );
+        numero: json["numero"],
+        horaInicio: json["horaInicio"],
+        horaIntermedio: json["horaIntermedio"],
+        horaTermino: json["horaTermino"]);
   }
 
   static List<Periodo> fromJsonList(dynamic json) {
@@ -128,10 +111,9 @@ class BloqueHorario {
       return BloqueHorario();
     }
     return BloqueHorario(
-      asignatura: json['asignatura'],
-      sala: json['sala'],
-      codigo: json['codigo']
-    );
+        asignatura: json['asignatura'],
+        sala: json['sala'],
+        codigo: json['codigo']);
   }
 
   static List<List<BloqueHorario>>? fromJsonMatrix(dynamic json) {

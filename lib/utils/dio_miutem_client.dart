@@ -10,7 +10,7 @@ class DioMiUtemClient {
   static const String debugUrl = 'http://192.168.5.130:3000';
   static const String productionUrl = 'https://apiapp.utem.dev';
 
-  static const String url = isProduction ? productionUrl : debugUrl;
+  static const String url = isProduction ? productionUrl : productionUrl;
 
   static Dio get initDio => Dio(BaseOptions(
         baseUrl: url,
