@@ -14,6 +14,7 @@ import 'package:mi_utem/widgets/custom_app_bar.dart';
 import 'package:mi_utem/widgets/custom_error_widget.dart';
 import 'package:mi_utem/widgets/loading_indicator.dart';
 import 'package:mi_utem/widgets/pull_to_refresh.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vector_math/vector_math_64.dart';
 
 class HorarioScreen extends StatefulWidget {
@@ -153,6 +154,13 @@ class _HorarioScreenState extends State<HorarioScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appBar,
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.taxi_alert_sharp),
+        onPressed: () async {
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          prefs.remove('coloresAsignaturas');
+        },
+      ),
       body: FutureBuilder(
         future: _horarioFuture,
         builder: (context, snapshot) {
