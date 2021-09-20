@@ -49,8 +49,8 @@ class _AsignaturaNotasTabState extends State<AsignaturaNotasTab> {
       [bool refresh = false]) async {
     try {
       setState(() {
-        _futureAsignatura =
-            AsignaturasService.getNotasByCodigoAsignatura("INFB8104", refresh);
+        _futureAsignatura = AsignaturasService.getNotasByCodigoAsignatura(
+            widget.asignatura.codigo, refresh);
       });
 
       Asignatura? asignatura = await _futureAsignatura;

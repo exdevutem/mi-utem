@@ -10,29 +10,32 @@ class Usuario {
   String? fotoUrl;
   Rut? rut;
 
-  Usuario({
-    this.correo,
-    this.sesion,
-    this.nombres,
-    this.nombre,
-    this.fotoUrl,
-    this.apellidos,
-    this.rut
-  });
+  Usuario(
+      {this.correo,
+      this.sesion,
+      this.nombres,
+      this.nombre,
+      this.fotoUrl,
+      this.apellidos,
+      this.rut});
 
   factory Usuario.fromJson(Map<String, dynamic>? json) {
     if (json == null) {
       return Usuario();
     }
     return Usuario(
-      rut: json['rut'] != null ? Rut.deEntero(json['rut']) : null,
-      correo: json['correo'],
-      sesion: json['sesion'],
-      fotoUrl: json['fotoUrl'],
-      nombres: json['nombres'] != null ? ReCase(json['nombres']).titleCase : null,
-      nombre: json['nombreCompleto'] != null ? ReCase(json['nombreCompleto']).titleCase : null,
-      apellidos: json['apellidos'] != null ? ReCase(json['apellidos']).titleCase : null
-    );
+        rut: json['rut'] != null ? Rut.deEntero(json['rut']) : null,
+        correo: json['correo'],
+        sesion: json['sesion'],
+        fotoUrl: json['fotoUrl'],
+        nombres:
+            json['nombres'] != null ? ReCase(json['nombres']).titleCase : null,
+        nombre: json['nombreCompleto'] != null
+            ? ReCase(json['nombreCompleto']).titleCase
+            : null,
+        apellidos: json['apellidos'] != null
+            ? ReCase(json['apellidos']).titleCase
+            : null);
   }
 
   static List<Usuario> fromJsonList(dynamic json) {
@@ -50,9 +53,18 @@ class Usuario {
     if (nombre != null && nombre!.isNotEmpty) {
       return nombre;
     } else {
-      return "$nombres $apellidos";
+      String completo = '';
+      if (nombres != null && nombres!.isNotEmpty) {
+        completo += nombres!;
+      }
+      if (apellidos != null && apellidos!.isNotEmpty) {
+        if (completo.isNotEmpty) {
+          completo += ' ';
+        }
+        completo += apellidos!;
+      }
+      return completo;
     }
-    
   }
 
   String get iniciales => primeraLetraCadaPalabra(this.nombreCompleto);
@@ -70,5 +82,4 @@ class Usuario {
       return letters.join("");
     }
   }
-
 }
