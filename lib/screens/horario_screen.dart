@@ -1,3 +1,7 @@
+import 'dart:developer';
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:dio/dio.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
@@ -14,6 +18,9 @@ import 'package:mi_utem/widgets/custom_app_bar.dart';
 import 'package:mi_utem/widgets/custom_error_widget.dart';
 import 'package:mi_utem/widgets/loading_indicator.dart';
 import 'package:mi_utem/widgets/pull_to_refresh.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:screenshot/screenshot.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vector_math/vector_math_64.dart';
 
@@ -27,19 +34,47 @@ class HorarioScreen extends StatefulWidget {
 }
 
 class _HorarioScreenState extends State<HorarioScreen> {
-  final double _childWidth = 150.0;
-  final double _childHeight = 150.0;
-  final double _diasHeight = 50.0;
-  final double _periodosWidth = 150.0;
+  final double _classBlockWidth = 290.0;
+  final double _classBlockHeight = 180.0;
+  final double _dayBlockHeight = 50.0;
+  final double _dayBlockWidth = 320.0;
+  final double _periodBlockHeight = 200.0;
+  final double _periodBlockWidth = 65.0;
+  final bool _dayActive = true;
+  final bool _periodActive = true;
 
-  final CustomAppBar appBar = CustomAppBar(
-    title: Text("Horario"),
-  );
   Future<Horario>? _horarioFuture;
   Horario? _horario;
   TransformationController? _controller;
-
   RemoteConfig? _remoteConfig;
+  ScreenshotController _screenshotController = ScreenshotController();
+
+  CustomAppBar get _appBar => CustomAppBar(
+        title: Text("Horario"),
+        actions: [
+          if (_horario != null)
+            IconButton(
+              onPressed: () {
+                _screenshotController
+                    .capture(delay: const Duration(milliseconds: 10))
+                    .then((Uint8List? image) async {
+                  if (image != null) {
+                    final directory = await getApplicationDocumentsDirectory();
+                    final imagePath =
+                        await File('${directory.path}/horario.png').create();
+                    await imagePath.writeAsBytes(image);
+
+                    /// Share Plugin
+                    await Share.shareFiles([imagePath.path]);
+                  }
+                }).catchError((onError) {
+                  print(onError);
+                });
+              },
+              icon: Icon(Icons.share),
+            )
+        ],
+      );
 
   @override
   void initState() {
@@ -90,25 +125,33 @@ class _HorarioScreenState extends State<HorarioScreen> {
   List<TableRow> _getChildren(Horario horario) {
     List<TableRow> filas = [];
 
-    /* for (List<BloqueHorario> dia in horario.horarioEnlazado) {
-      BloqueHorario bloqueAuxiliar = bloque;
-      int periodo = int.parse(bloque.numero);
-      int dia = int.parse(bloque.dia);
-      if ((periodo % 2) == 0) {
-        matriz[(periodo ~/ 2) - 1][dia - 1] = bloqueAuxiliar;
-      }
-    } */
-
     // Container vacio para la esquina superior izquierda
-    List<Widget> filaWidgets = [Container()];
+    List<Widget> filaWidgets = [
+      Container(
+        decoration: BoxDecoration(
+          color: Color(0xFFF5F5F5),
+          border: Border(
+            right: BorderSide(
+              color: Color(0xFFBDBDBD),
+              style: BorderStyle.solid,
+              width: 1,
+            ),
+          ),
+        ),
+        height: _dayBlockHeight,
+        width: _periodBlockWidth,
+      )
+    ];
 
     // Primera fila de los días
     if (horario.dias != null) {
       for (dynamic dia in horario.dias!) {
+        log('dia: $dia');
         filaWidgets.add(BloqueDiasCard(
-          dia: dia,
-          alto: _diasHeight,
-          ancho: _childWidth,
+          day: dia,
+          height: _dayBlockHeight,
+          width: _dayBlockWidth,
+          active: _dayActive,
         ));
       }
     }
@@ -126,16 +169,17 @@ class _HorarioScreenState extends State<HorarioScreen> {
               inicio: horario.horasInicio[i ~/ 2],
               intermedio: horario.horasIntermedio[i ~/ 2],
               fin: horario.horasTermino[i ~/ 2],
-              alto: _childHeight,
-              ancho: _periodosWidth,
+              height: _periodBlockHeight,
+              width: _periodBlockWidth,
+              active: _periodActive,
             ));
           }
 
           print("bloque ${bloque.codigo} ${bloque.asignatura}");
 
           filaWidgets.add(BloqueRamoCard(
-            alto: _childHeight,
-            ancho: _childWidth,
+            height: _classBlockHeight,
+            width: _classBlockWidth,
             bloque: bloque,
           ));
         }
@@ -153,14 +197,7 @@ class _HorarioScreenState extends State<HorarioScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar,
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.taxi_alert_sharp),
-        onPressed: () async {
-          SharedPreferences prefs = await SharedPreferences.getInstance();
-          prefs.remove('coloresAsignaturas');
-        },
-      ),
+      appBar: _appBar,
       body: FutureBuilder(
         future: _horarioFuture,
         builder: (context, snapshot) {
@@ -197,33 +234,20 @@ class _HorarioScreenState extends State<HorarioScreen> {
                   clipBehavior: Clip.none,
                   constrained: false,
                   onInteractionUpdate: (interaction) {
-                    /*  print("onInteractionUpdate focalPoint ${interaction.focalPoint.toString()}");
-                      print("onInteractionUpdate horizontalScale ${interaction.horizontalScale.toString()}");
-                      print("onInteractionUpdate localFocalPoint ${interaction.localFocalPoint.toString()}");
-                      print("onInteractionUpdate verticalScale ${interaction.verticalScale.toString()}");
-                      print("onInteractionUpdate pointerCount ${interaction.pointerCount.toString()}");
-                      print("onInteractionUpdate rotation ${interaction.rotation.toString()}");
-                      print("onInteractionUpdate scale ${interaction.scale.toString()}");
-                      print("onInteractionUpdate matrix");
-                      print("onInteractionUpdate matrix[0] ${_controller.value.row0}");
-                      print("onInteractionUpdate matrix[1] ${_controller.value.row1}");
-                      print("onInteractionUpdate matrix[2] ${_controller.value.row2}");
-                      print("onInteractionUpdate matrix[3] ${_controller.value.row3}");
-                      
-                      [[escala, 0, 0, -posY],
-                       [0, escala, 0, -posX],
-                       [0, 0, escala, 0],
-                       [0. 0, 0, 1]]
-                      
-                      */
                     if (interaction.scale >= 0.8) {
                       print("HEY");
                     }
                   },
-                  child: SafeArea(
-                    child: Table(
-                      defaultColumnWidth: FixedColumnWidth(_childWidth),
-                      children: _getChildren(horario!),
+                  child: Screenshot(
+                    controller: _screenshotController,
+                    child: SafeArea(
+                      child: Table(
+                        defaultColumnWidth: FixedColumnWidth(_classBlockWidth),
+                        columnWidths: {
+                          0: FixedColumnWidth(_periodBlockWidth),
+                        },
+                        children: _getChildren(horario!),
+                      ),
                     ),
                   ),
                 ),
