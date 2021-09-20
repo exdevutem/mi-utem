@@ -64,6 +64,10 @@ dependencies:
   simple_gesture_detector: ^0.2.0
   url_launcher: ^6.0.10
   video_player: ^2.1.0
+  screenshot: ^1.2.3
+  image_gallery_saver: ^1.6.9
+  share_plus: ^2.1.4
+  path_provider: ^2.0.2
 
 dependency_overrides:
   image_picker: ^0.8.4
