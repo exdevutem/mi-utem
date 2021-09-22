@@ -46,7 +46,7 @@ class ReviewService {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       for (String screen in screens) {
-        String isoDate = prefs.getString("review$screen");
+        String? isoDate = prefs.getString("review$screen");
         if (isoDate != null && isoDate.isNotEmpty) {
           DateTime date = DateTime.parse(isoDate);
           DateTime maxDate = DateTime.now().subtract(maxScreen);
@@ -61,7 +61,7 @@ class ReviewService {
           return false;
         }
       }
-      String lastRequestIsoDate = prefs.getString("reviewLastRequest");
+      String? lastRequestIsoDate = prefs.getString("reviewLastRequest");
       if (lastRequestIsoDate != null && lastRequestIsoDate.isNotEmpty) {
         DateTime lastRequestDate = DateTime.parse(lastRequestIsoDate);
         DateTime minDate = DateTime.now().subtract(minRequest);

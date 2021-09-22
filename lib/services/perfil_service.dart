@@ -15,15 +15,15 @@ class PerfilService {
   static Future<Usuario> getLocalUsuario() async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      String sesion = prefs.getString("sesion");
-      String nombres = prefs.getString("nombres");
-      String apellidos = prefs.getString("apellidos");
-      String nombre = prefs.getString("nombre");
-      String fotoUrl = prefs.getString("fotoUrl");
-      Rut rut = prefs.getInt("rut") != null
+      String? sesion = prefs.getString("sesion");
+      String? nombres = prefs.getString("nombres");
+      String? apellidos = prefs.getString("apellidos");
+      String? nombre = prefs.getString("nombre");
+      String? fotoUrl = prefs.getString("fotoUrl");
+      Rut? rut = prefs.getInt("rut") != null
           ? Rut.deEntero(prefs.getInt("rut"))
           : null;
-      String correo = prefs.getString("correo");
+      String? correo = prefs.getString("correo");
 
       return Usuario(
           sesion: sesion,
@@ -63,7 +63,7 @@ class PerfilService {
   }
 
   static Future<void> deleteFcmToken() async {
-    String fcmToken = await FirebaseMessaging.instance.getToken();
+    String? fcmToken = await FirebaseMessaging.instance.getToken();
     CollectionReference usuariosCollection =
         FirebaseFirestore.instance.collection('usuarios');
 
@@ -86,14 +86,14 @@ class PerfilService {
 
   static Future<void> saveFcmToken() async {
     try {
-      String fcmToken = await FirebaseMessaging.instance.getToken();
+      String? fcmToken = await FirebaseMessaging.instance.getToken();
       Usuario usuario = await PerfilService.getLocalUsuario();
       CollectionReference usuariosCollection =
           FirebaseFirestore.instance.collection('usuarios');
 
       await PerfilService.deleteFcmToken();
 
-      usuariosCollection.doc(usuario.rut.numero.toString()).set(
+      usuariosCollection.doc(usuario.rut!.numero.toString()).set(
         {
           "fcmTokens": FieldValue.arrayUnion([fcmToken]),
         },

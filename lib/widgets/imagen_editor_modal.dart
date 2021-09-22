@@ -8,15 +8,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'package:image_editor/image_editor.dart';
-import 'package:image_editor_pro/image_editor_pro.dart';
 
 class ImagenEditorModal extends StatefulWidget {
-  final Uint8List imagenInicial;
-  final double maxSize;
-  final double aspectRatio;
+  final Uint8List? imagenInicial;
+  final double? maxSize;
+  final double? aspectRatio;
 
   ImagenEditorModal(
-      {Key key, this.imagenInicial, this.maxSize, this.aspectRatio})
+      {Key? key, this.imagenInicial, this.maxSize, this.aspectRatio})
       : super(key: key);
 
   @override
@@ -24,7 +23,7 @@ class ImagenEditorModal extends StatefulWidget {
 }
 
 class _ImagenEditorModalState extends State<ImagenEditorModal> {
-  Uint8List _imagen;
+  Uint8List? _imagen;
 
   final GlobalKey<ExtendedImageEditorState> editorKey =
       GlobalKey<ExtendedImageEditorState>();
@@ -38,7 +37,7 @@ class _ImagenEditorModalState extends State<ImagenEditorModal> {
     AspectRatioItem(text: '9*16', value: CropAspectRatios.ratio9_16)
   ];
   */
-  double _aspectRatio;
+  double? _aspectRatio;
 
   @override
   void initState() {
@@ -125,16 +124,16 @@ class _ImagenEditorModalState extends State<ImagenEditorModal> {
             onTap: (int index) async {
               switch (index) {
                 case 0:
-                  editorKey.currentState.flip();
+                  editorKey.currentState!.flip();
                   break;
                 case 1:
-                  editorKey.currentState.rotate(right: false);
+                  editorKey.currentState!.rotate(right: false);
                   break;
                 case 2:
-                  editorKey.currentState.reset();
+                  editorKey.currentState!.reset();
                   break;
                 default:
-                  Uint8List imagen = await _cropImage();
+                  Uint8List? imagen = await _cropImage();
                   Get.back(result: imagen);
               }
             },
@@ -142,12 +141,12 @@ class _ImagenEditorModalState extends State<ImagenEditorModal> {
         ),
       ),
       body: ExtendedImage.memory(
-        _imagen,
+        _imagen!,
         fit: BoxFit.contain,
         mode: ExtendedImageMode.editor,
         enableLoadState: true,
         extendedImageEditorKey: editorKey,
-        initEditorConfigHandler: (ExtendedImageState state) {
+        initEditorConfigHandler: (ExtendedImageState? state) {
           return EditorConfig(
             maxScale: 8.0,
             initCropRectType: InitCropRectType.imageRect,
@@ -162,11 +161,11 @@ class _ImagenEditorModalState extends State<ImagenEditorModal> {
     );
   }
 
-  Future<Uint8List> _cropImage() async {
-    ExtendedImageEditorState state = editorKey.currentState;
-    EditActionDetails action = editorKey.currentState.editAction;
+  Future<Uint8List?> _cropImage() async {
+    ExtendedImageEditorState state = editorKey.currentState!;
+    EditActionDetails action = editorKey.currentState!.editAction!;
 
-    final Rect rect = state.getCropRect();
+    final Rect? rect = state.getCropRect();
 
     Uint8List data = state.rawImageData;
 
@@ -177,7 +176,7 @@ class _ImagenEditorModalState extends State<ImagenEditorModal> {
 
     ImageEditorOption option = ImageEditorOption();
 
-    if (action.needCrop) option.addOption(ClipOption.fromRect(rect));
+    if (action.needCrop) option.addOption(ClipOption.fromRect(rect!));
 
     if (action.needFlip)
       option.addOption(
@@ -185,14 +184,14 @@ class _ImagenEditorModalState extends State<ImagenEditorModal> {
 
     if (widget.maxSize != null) {
       double ratio;
-      if (rect.width > widget.maxSize && rect.width > rect.height) {
-        ratio = widget.maxSize / rect.width;
+      if (rect!.width > widget.maxSize! && rect.width > rect.height) {
+        ratio = widget.maxSize! / rect.width;
         option.addOption(
           ScaleOption(
               (rect.width * ratio).floor(), (rect.height * ratio).floor()),
         );
-      } else if (rect.height > widget.maxSize && rect.height > rect.width) {
-        ratio = widget.maxSize / height;
+      } else if (rect.height > widget.maxSize! && rect.height > rect.width) {
+        ratio = widget.maxSize! / rect.height;
         option.addOption(
           ScaleOption(
               (rect.width * ratio).floor(), (rect.height * ratio).floor()),

@@ -1,7 +1,7 @@
 class Evaluacion {
   String etiqueta;
-  num porcentaje;
-  num nota;
+  num? porcentaje;
+  num? nota;
 
   Evaluacion({
     this.etiqueta = "Nota",
@@ -9,7 +9,7 @@ class Evaluacion {
     this.nota,
   });
 
-  factory Evaluacion.fromJson(Map<String, dynamic> json) {
+  factory Evaluacion.fromJson(Map<String, dynamic>? json) {
     if (json == null) {
       return Evaluacion();
     }

@@ -7,12 +7,15 @@ import 'package:mi_utem/themes/theme.dart';
 import 'package:mi_utem/widgets/loading_indicator.dart';
 
 class PullToRefresh extends StatelessWidget {
-  final Widget child;
-  final Function onRefresh;
+  final Widget? child;
+  final Future Function() onRefresh;
   final bool opacityEffect;
 
   const PullToRefresh(
-      {Key key, this.child, this.onRefresh, this.opacityEffect = false})
+      {Key? key,
+      this.child,
+      required this.onRefresh,
+      this.opacityEffect = false})
       : super(key: key);
 
   static double _offsetToArmed = 60;
@@ -64,7 +67,7 @@ class PullToRefresh extends StatelessWidget {
           ),
         ],
       ),
-      child: child,
+      child: child!,
     );
   }
 }

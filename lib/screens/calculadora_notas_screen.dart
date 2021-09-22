@@ -13,10 +13,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mi_utem/widgets/custom_app_bar.dart';
 
 class CalculadoraNotasScreen extends StatefulWidget {
-  final Asignatura asignaturaInicial;
+  final Asignatura? asignaturaInicial;
 
   CalculadoraNotasScreen({
-    Key key,
+    Key? key,
     this.asignaturaInicial,
   }) : super(key: key);
 
@@ -30,7 +30,7 @@ class _CalculadoraNotasScreenState extends State<CalculadoraNotasScreen> {
   MaskedTextController _presentacionController =
       new MaskedTextController(mask: '0.0');
 
-  Asignatura _asignatura;
+  Asignatura? _asignatura;
 
   @override
   void initState() {
@@ -39,10 +39,10 @@ class _CalculadoraNotasScreenState extends State<CalculadoraNotasScreen> {
     FirebaseAnalytics().setCurrentScreen(screenName: 'CalculadoraNotasScreen');
     setState(() {
       _examenController.text =
-          widget.asignaturaInicial.notaExamen?.toStringAsFixed(1) ?? "";
+          widget.asignaturaInicial!.notaExamen?.toStringAsFixed(1) ?? "";
       _presentacionController.text = widget
-              .asignaturaInicial.notaPresentacionCalculada
-              ?.toStringAsFixed(1) ??
+              .asignaturaInicial?.notaPresentacionCalculada
+              .toStringAsFixed(1) ??
           "";
       _asignatura = widget.asignaturaInicial;
     });
@@ -50,11 +50,12 @@ class _CalculadoraNotasScreenState extends State<CalculadoraNotasScreen> {
 
   void _onCambioNota(String nota, String porcentaje, int i) {
     setState(() {
-      _asignatura.notaExamen = null;
-      _asignatura.evaluaciones[i].nota = num.tryParse(nota);
-      _examenController.text = _asignatura.notaExamen?.toStringAsFixed(1) ?? "";
+      _asignatura!.notaExamen = null;
+      _asignatura!.evaluaciones[i].nota = num.tryParse(nota);
+      _examenController.text =
+          _asignatura!.notaExamen?.toStringAsFixed(1) ?? "";
       _presentacionController.text =
-          _asignatura.notaPresentacionCalculada?.toStringAsFixed(1) ?? "";
+          _asignatura?.notaPresentacionCalculada.toStringAsFixed(1) ?? "";
       _asignatura = _asignatura;
     });
   }
@@ -98,8 +99,8 @@ class _CalculadoraNotasScreenState extends State<CalculadoraNotasScreen> {
                       Column(
                         children: <Widget>[
                           Text(
-                            _asignatura.notaFinalCalculada
-                                    ?.toStringAsFixed(1) ??
+                            _asignatura?.notaFinalCalculada
+                                    .toStringAsFixed(1) ??
                                 "--",
                             style: TextStyle(
                               fontSize: 40,
@@ -107,7 +108,7 @@ class _CalculadoraNotasScreenState extends State<CalculadoraNotasScreen> {
                             ),
                           ),
                           Text(
-                            _asignatura.estadoCalculado,
+                            _asignatura!.estadoCalculado,
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
@@ -139,27 +140,28 @@ class _CalculadoraNotasScreenState extends State<CalculadoraNotasScreen> {
                                   controller: _examenController,
                                   textAlign: TextAlign.center,
                                   onChanged: (String valor) {
-                                    num nota = num.tryParse(valor);
+                                    num? nota = num.tryParse(valor);
                                     if (valor.isEmpty || nota == null) {
                                       nota = 0;
                                     }
                                     setState(() {
-                                      _asignatura.notaExamen = nota;
+                                      _asignatura!.notaExamen = nota;
                                     });
                                   },
-                                  enabled: _asignatura.puedeDarExamen,
+                                  enabled: _asignatura!.puedeDarExamen,
                                   decoration: InputDecoration(
-                                    hintText: _asignatura.puedeDarExamen
-                                        ? "≥${_asignatura.examenMinimoCalculado?.toStringAsFixed(1)}" ??
-                                            ""
+                                    hintText: (_asignatura != null &&
+                                            _asignatura!.puedeDarExamen)
+                                        ? "≥${_asignatura!.examenMinimoCalculado.toStringAsFixed(1)}"
                                         : "",
-                                    filled: !_asignatura.puedeDarExamen,
+                                    filled: !(_asignatura != null &&
+                                        _asignatura!.puedeDarExamen),
                                     fillColor: Colors.grey.withOpacity(0.2),
                                     disabledBorder: MainTheme
-                                        .theme.inputDecorationTheme.border
+                                        .theme.inputDecorationTheme.border!
                                         .copyWith(
                                             borderSide: BorderSide(
-                                      color: Colors.grey[300],
+                                      color: Colors.grey[300]!,
                                     )),
                                   ),
                                   keyboardType: TextInputType.numberWithOptions(
@@ -185,7 +187,7 @@ class _CalculadoraNotasScreenState extends State<CalculadoraNotasScreen> {
                                   decoration: InputDecoration(
                                     hintText: "Nota",
                                     disabledBorder: MainTheme
-                                        .theme.inputDecorationTheme.border
+                                        .theme.inputDecorationTheme.border!
                                         .copyWith(
                                             borderSide: BorderSide(
                                       color: Colors.transparent,
@@ -231,7 +233,7 @@ class _CalculadoraNotasScreenState extends State<CalculadoraNotasScreen> {
                     shrinkWrap: true,
                     physics: ClampingScrollPhysics(),
                     itemBuilder: (context, i) {
-                      Evaluacion evaluacion = _asignatura.evaluaciones[i];
+                      Evaluacion evaluacion = _asignatura!.evaluaciones[i];
                       return NotaListItem(
                         evaluacion: evaluacion,
                         esSimulacion: true,
@@ -240,7 +242,7 @@ class _CalculadoraNotasScreenState extends State<CalculadoraNotasScreen> {
                         },
                       );
                     },
-                    itemCount: _asignatura.evaluaciones.length,
+                    itemCount: _asignatura!.evaluaciones.length,
                   ),
                 ),
               ],

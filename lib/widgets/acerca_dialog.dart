@@ -6,11 +6,10 @@ import 'package:mi_utem/themes/theme.dart';
 import 'package:mi_utem/widgets/acerca_aplicacion_content.dart';
 import 'package:mi_utem/widgets/acerca_screen.dart';
 import 'package:mi_utem/widgets/loading_indicator.dart';
-import 'package:timer_button/timer_button.dart';
 
 class AcercaDialog extends StatefulWidget {
   AcercaDialog({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -20,8 +19,8 @@ class AcercaDialog extends StatefulWidget {
 class _AcercaDialogState extends State<AcercaDialog> {
   static const bool isProduction = bool.fromEnvironment('dart.vm.product');
 
-  Timer _timer;
-  int _timeLeft;
+  late Timer _timer;
+  late int _timeLeft;
   bool _isDisabled = true;
 
   @override

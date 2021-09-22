@@ -1,34 +1,25 @@
-import 'dart:convert';
-import 'dart:io';
-
-import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
-import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:gradient_widgets/gradient_widgets.dart';
-import 'package:in_app_update/in_app_update.dart';
 import 'package:mdi/mdi.dart';
 import 'package:mi_utem/models/usuario.dart';
 import 'package:mi_utem/screens/asignaturas_screen.dart';
 import 'package:mi_utem/screens/horario_screen.dart';
 import 'package:mi_utem/services/config_service.dart';
-import 'package:mi_utem/services/notificaciones_service.dart';
 import 'package:mi_utem/services/perfil_service.dart';
 import 'package:mi_utem/services/review_service.dart';
-import 'package:mi_utem/widgets/acerca_dialog.dart';
-import 'package:mi_utem/widgets/custom_alert_dialog.dart';
-import 'package:mi_utem/widgets/custom_drawer.dart';
-import 'package:mi_utem/widgets/noticias_carrusel.dart';
 //import 'package:new_version/new_version.dart';
 import 'package:mi_utem/widgets/custom_app_bar.dart';
+import 'package:mi_utem/widgets/custom_drawer.dart';
+import 'package:mi_utem/widgets/noticias_carrusel.dart';
 
 class MainScreen extends StatefulWidget {
   final Usuario usuario;
-  MainScreen({Key key, @required this.usuario}) : super(key: key);
+  MainScreen({Key? key, required this.usuario}) : super(key: key);
 
   @override
   _MainScreenState createState() => _MainScreenState();
@@ -37,7 +28,7 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   int _a = 0;
 
-  RemoteConfig _remoteConfig;
+  RemoteConfig? _remoteConfig;
 
   @override
   void initState() {
@@ -58,7 +49,7 @@ class _MainScreenState extends State<MainScreen> {
 
     ReviewService.addScreen("MainScreen");
     ReviewService.checkAndRequestReview();
-    SchedulerBinding.instance.addPostFrameCallback((_) {
+    SchedulerBinding.instance!.addPostFrameCallback((_) {
       _checkAndPerformUpdate(context);
     });
   }
@@ -149,7 +140,7 @@ class _MainScreenState extends State<MainScreen> {
                                   overflow: TextOverflow.ellipsis,
                                   style: Theme.of(context)
                                       .textTheme
-                                      .headline3
+                                      .headline3!
                                       .copyWith(
                                         color: Colors.white,
                                       ),
@@ -192,7 +183,7 @@ class _MainScreenState extends State<MainScreen> {
                                   overflow: TextOverflow.ellipsis,
                                   style: Theme.of(context)
                                       .textTheme
-                                      .headline3
+                                      .headline3!
                                       .copyWith(
                                         color: Colors.white,
                                       ),
@@ -223,11 +214,15 @@ class _MainScreenState extends State<MainScreen> {
                 });
                 if (_a >= 11) {
                   _a = 0;
-                  if (_remoteConfig.getBool(ConfigService.EG_HABILITADOS)) {
-                    Flushbar(
-                      message: _remoteConfig.getString(ConfigService.PRONTO_EG),
-                      duration: Duration(seconds: 3),
-                    )..show(context);
+                  if (_remoteConfig!.getBool(ConfigService.EG_HABILITADOS)) {
+                    Get.snackbar(
+                      "Error",
+                      _remoteConfig!.getString(ConfigService.PRONTO_EG),
+                      colorText: Colors.white,
+                      backgroundColor: Get.theme.primaryColor,
+                      snackPosition: SnackPosition.BOTTOM,
+                      margin: EdgeInsets.all(20),
+                    );
                     FirebaseAnalytics().logEvent(name: "pronto_eg");
                   }
                 }
@@ -240,7 +235,8 @@ class _MainScreenState extends State<MainScreen> {
                   children: <Widget>[
                     Icon(
                       IconData(
-                          _remoteConfig.getInt(ConfigService.HOME_PRONTO_ICONO),
+                          _remoteConfig!
+                              .getInt(ConfigService.HOME_PRONTO_ICONO),
                           fontFamily: 'MaterialIcons'),
                       size: 150,
                       color: Colors.grey,
@@ -249,7 +245,7 @@ class _MainScreenState extends State<MainScreen> {
                       height: 20,
                     ),
                     Text(
-                      _remoteConfig.getString(ConfigService.HOME_PRONTO_TEXTO),
+                      _remoteConfig!.getString(ConfigService.HOME_PRONTO_TEXTO),
                       style: TextStyle(color: Colors.grey, fontSize: 16),
                     )
                   ],

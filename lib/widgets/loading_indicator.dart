@@ -3,7 +3,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class LoadingIndicator extends StatelessWidget {
   final Color color;
-  final AnimationController controller;
+  final AnimationController? controller;
   final EdgeInsetsGeometry padding;
 
   LoadingIndicator({

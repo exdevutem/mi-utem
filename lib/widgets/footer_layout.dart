@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 
 class FooterLayout extends StatelessWidget {
   const FooterLayout({
-    Key key,
-    @required this.body,
-    @required this.footer,
+    Key? key,
+    required this.body,
+    required this.footer,
   }) : super(key: key);
 
   final Widget body;

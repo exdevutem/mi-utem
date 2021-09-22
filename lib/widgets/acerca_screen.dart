@@ -22,7 +22,7 @@ import 'package:mi_utem/widgets/custom_app_bar.dart';
 
 class AcercaScreen extends StatefulWidget {
   AcercaScreen({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -30,7 +30,7 @@ class AcercaScreen extends StatefulWidget {
 }
 
 class _AcercaScreenState extends State<AcercaScreen> {
-  RemoteConfig _remoteConfig;
+  RemoteConfig? _remoteConfig;
 
   @override
   void initState() {
@@ -67,13 +67,13 @@ class _AcercaScreenState extends State<AcercaScreen> {
                           width: 150,
                           height: 150,
                           child: DefaultNetworkImage(
-                            url: _remoteConfig.getString(
+                            url: _remoteConfig!.getString(
                               ConfigService.CLUB_LOGO,
                             ),
                           )),
                       Container(height: 20),
                       Text(
-                        _remoteConfig.getString(
+                        _remoteConfig!.getString(
                           ConfigService.CLUB_NOMBRE,
                         ),
                         textAlign: TextAlign.center,
@@ -93,14 +93,14 @@ class _AcercaScreenState extends State<AcercaScreen> {
                             color: Colors.grey[700],
                           ),
                         ),
-                        data: _remoteConfig.getString(
+                        data: _remoteConfig!.getString(
                           ConfigService.CLUB_DESCRIPCION,
                         ),
                       ),
                       Container(height: 20),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: jsonDecode(_remoteConfig.getString(
+                        children: jsonDecode(_remoteConfig!.getString(
                           ConfigService.CLUB_REDES,
                         ))
                             .map<Widget>(
@@ -170,7 +170,7 @@ class _AcercaScreenState extends State<AcercaScreen> {
                         ),
                       ),
                       Container(height: 10),
-                      ...jsonDecode(_remoteConfig.getString(
+                      ...jsonDecode(_remoteConfig!.getString(
                         ConfigService.MIUTEM_DESARROLLADORES,
                       ))
                           .map<Widget>(

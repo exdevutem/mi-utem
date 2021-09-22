@@ -7,7 +7,7 @@ class MainTheme {
   static Color get primaryColor => Color(0xFF009d9b);
   static Color get primaryLightColor => Color(0xFF45bbbc);
   static Color get primaryDarkColor => Color(0xFF007f7b);
-  static Color get disabledColor => Colors.grey[400];
+  static Color? get disabledColor => Colors.grey[400];
 
   static Color get inscritoColor => Color(0xff021A8E);
   static Color get reprobadoColor => Color(0xffF55753);
@@ -58,7 +58,7 @@ class MainTheme {
                 };
                 if (states.any(interactiveStates.contains)) {
                   return BorderSide(
-                    color: disabledColor,
+                    color: disabledColor!,
                   );
                 }
                 return BorderSide(

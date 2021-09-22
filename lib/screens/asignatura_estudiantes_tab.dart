@@ -1,24 +1,18 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_masked_text/flutter_masked_text.dart';
 import 'package:mi_utem/models/asignatura.dart';
-import 'package:mi_utem/models/evaluacion.dart';
 import 'package:mi_utem/models/usuario.dart';
 import 'package:mi_utem/services/asignaturas_service.dart';
-import 'package:mi_utem/themes/theme.dart';
-import 'package:mi_utem/widgets/asistencia_chart.dart';
 import 'package:mi_utem/widgets/custom_error_widget.dart';
 import 'package:mi_utem/widgets/loading_indicator.dart';
-import 'package:mi_utem/widgets/nota_list_item.dart';
 import 'package:mi_utem/widgets/profile_photo.dart';
 import 'package:mi_utem/widgets/pull_to_refresh.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class AsignaturaEstudiantesTab extends StatefulWidget {
-  final Asignatura asignatura;
+  final Asignatura? asignatura;
 
   AsignaturaEstudiantesTab({
-    Key key,
+    Key? key,
     this.asignatura,
   }) : super(key: key);
 
@@ -27,19 +21,20 @@ class AsignaturaEstudiantesTab extends StatefulWidget {
 }
 
 class _AsignaturaEstudiantesTabState extends State<AsignaturaEstudiantesTab> {
-  Future<Asignatura> _futureAsignatura;
-  Asignatura _asignatura;
+  Future<Asignatura>? _futureAsignatura;
+  late Asignatura _asignatura;
 
   @override
   void initState() {
     super.initState();
-    FirebaseAnalytics().setCurrentScreen(screenName: 'AsignaturaEstudiantesTab');
+    FirebaseAnalytics()
+        .setCurrentScreen(screenName: 'AsignaturaEstudiantesTab');
     _futureAsignatura = _getDetalleAsignatura();
   }
 
   Future<Asignatura> _getDetalleAsignatura([bool refresh = false]) async {
-    Asignatura asignatura = await AsignaturasService
-        .getDetalleAsignatura(widget.asignatura.codigo, refresh);
+    Asignatura asignatura = await AsignaturasService.getDetalleAsignatura(
+        widget.asignatura!.codigo, refresh);
 
     setState(() {
       _asignatura = asignatura;
@@ -60,29 +55,32 @@ class _AsignaturaEstudiantesTabState extends State<AsignaturaEstudiantesTab> {
         if (snapshot.hasError) {
           return CustomErrorWidget(
               texto: "Ocurrió un error trayendo a los estudiantes",
-              error: snapshot.error
-            );
+              error: snapshot.error);
         } else {
           if (snapshot.hasData) {
             return PullToRefresh(
-                  onRefresh: () async {
-                    await _onRefresh();
-                  },
-                  child: ListView.separated(
-              itemCount: _asignatura.estudiantes.length,
-              separatorBuilder: (context, index) => Divider(height: 5, indent: 20, endIndent: 20),
-              itemBuilder: (context, i) {
-                Usuario estudiante = _asignatura.estudiantes[i];
-                return ListTile(
-                  onTap: () {
-                    FirebaseAnalytics().logEvent(name: 'asignatura_estudiante_click', parameters: null);
-                  },
-                  leading: ProfilePhoto(usuario: estudiante),
-                  title: Text("${estudiante.nombres} ${estudiante.apellidos}"),
-                  subtitle: Text(estudiante.correo)
-                );
+              onRefresh: () async {
+                await _onRefresh();
               },
-            ),);
+              child: ListView.separated(
+                itemCount: _asignatura.estudiantes!.length,
+                separatorBuilder: (context, index) =>
+                    Divider(height: 5, indent: 20, endIndent: 20),
+                itemBuilder: (context, i) {
+                  Usuario estudiante = _asignatura.estudiantes![i];
+                  return ListTile(
+                    onTap: () {
+                      FirebaseAnalytics().logEvent(
+                          name: 'asignatura_estudiante_click',
+                          parameters: null);
+                    },
+                    leading: ProfilePhoto(usuario: estudiante),
+                    title: Text(estudiante.nombreCompleto ?? "Sin nombre"),
+                    subtitle: Text(estudiante.correo!),
+                  );
+                },
+              ),
+            );
           } else {
             return Center(
               child: LoadingIndicator(),

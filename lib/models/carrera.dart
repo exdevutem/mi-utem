@@ -2,10 +2,10 @@ import 'package:mi_utem/models/rut.dart';
 import 'package:recase/recase.dart';
 
 class Carrera {
-  String nombre;
-  String estado;
-  String codigo;
-  String plan;
+  String? nombre;
+  String? estado;
+  String? codigo;
+  String? plan;
 
   Carrera({
     this.nombre,
@@ -14,7 +14,7 @@ class Carrera {
     this.plan
   });
 
-  factory Carrera.fromJson(Map<String, dynamic> json) {
+  factory Carrera.fromJson(Map<String, dynamic>? json) {
     if (json == null) {
       return Carrera();
     }

@@ -12,14 +12,14 @@ import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
 
 class NoticiasCarrusel extends StatefulWidget {
-  NoticiasCarrusel({Key key}) : super(key: key);
+  NoticiasCarrusel({Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _NoticiasCarruselState();
 }
 
 class _NoticiasCarruselState extends State<NoticiasCarrusel> {
-  Future<List<Noticia>> _noticiasFuture;
+  Future<List<Noticia>>? _noticiasFuture;
 
   @override
   void initState() {
@@ -50,8 +50,8 @@ class _NoticiasCarruselState extends State<NoticiasCarrusel> {
               texto: "Ocurrió un error al obtener las noticias",
               error: snapshot.error);
         } else {
-          if (snapshot.hasData && snapshot.data.length > 0) {
-            List<Noticia> noticias = snapshot.data;
+          if (snapshot.hasData && snapshot.data!.length > 0) {
+            List<Noticia> noticias = snapshot.data!;
             return CarouselSlider.builder(
               options: CarouselOptions(
                 autoPlay: true,
@@ -65,7 +65,7 @@ class _NoticiasCarruselState extends State<NoticiasCarrusel> {
                 imagenUrl: noticias[i].featuredMedia?.guid,
                 onTap: () {
                   FirebaseAnalytics().logEvent(name: "noticia_click");
-                  _launchURL(noticias[i].link);
+                  _launchURL(noticias[i].link!);
                 },
               ),
               itemCount: noticias.length,
