@@ -1,10 +1,7 @@
-import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:mi_utem/models/asignatura.dart';
-import 'package:mi_utem/models/usuario.dart';
 import 'package:mi_utem/utils/dio_miutem_client.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class AsignaturasService {
   static final Dio _dio = DioMiUtemClient.authDio;
@@ -31,7 +28,7 @@ class AsignaturasService {
     }
   }
 
-  static Future<Asignatura> getDetalleAsignatura(String codigo,
+  static Future<Asignatura> getDetalleAsignatura(String? codigo,
       [bool refresh = false]) async {
     String uri = "/v1/asignaturas/$codigo";
 
@@ -54,7 +51,7 @@ class AsignaturasService {
     }
   }
 
-  static Future<Asignatura> getNotasByCodigoAsignatura(String codigo,
+  static Future<Asignatura?> getNotasByCodigoAsignatura(String? codigo,
       [bool refresh = false]) async {
     String uri = "/v1/notas";
 
@@ -64,18 +61,24 @@ class AsignaturasService {
         uri,
         options: DioMiUtemClient.cacheOptions
             .copyWith(
-                maxStale: Duration(hours: 3),
+                maxStale: Duration(days: 7),
                 policy: refresh ? CachePolicy.refresh : CachePolicy.forceCache)
             .toOptions(),
         queryParameters: query,
       );
 
       List<Asignatura> asignaturas = Asignatura.fromJsonList(response.data);
-      Asignatura asignatura = asignaturas.firstWhere((a) => a.codigo == codigo);
-
-      return asignatura;
+      if (asignaturas.length > 0) {
+        Asignatura asignatura =
+            asignaturas.firstWhere((a) => a.codigo == codigo);
+        return asignatura;
+      } else {
+        return null;
+      }
     } on DioError catch (e) {
       print(e.message);
+      throw e;
+    } catch (e) {
       throw e;
     }
   }

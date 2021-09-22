@@ -17,7 +17,7 @@ import 'package:mi_utem/widgets/loading_indicator.dart';
 
 class CredencialScreen extends StatefulWidget {
   CredencialScreen({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -25,9 +25,9 @@ class CredencialScreen extends StatefulWidget {
 }
 
 class _CredencialScreenState extends State<CredencialScreen> {
-  Future _future;
-  Usuario _usuario;
-  Carrera _carreraActiva;
+  Future? _future;
+  Usuario? _usuario;
+  Carrera? _carreraActiva;
   FlipController _flipController = FlipController();
 
   @override
@@ -76,7 +76,7 @@ class _CredencialScreenState extends State<CredencialScreen> {
           IconButton(
             icon: Icon(_flipController.actualFace == FlipController.front ? Icons.info : Mdi.accountCircle),
             onPressed: () {
-              _flipController.flip();
+              _flipController.flip!();
               
             },
           ),
@@ -92,13 +92,13 @@ class _CredencialScreenState extends State<CredencialScreen> {
                 error: snapshot.error);
           } else {
             if (snapshot.hasData) {
-              if (_usuario.rut != null &&
-                  _carreraActiva.nombre != null &&
-                  _carreraActiva.nombre.isNotEmpty) {
+              if (_usuario!.rut != null &&
+                  _carreraActiva!.nombre != null &&
+                  _carreraActiva!.nombre!.isNotEmpty) {
                 FirebaseAnalytics().setUserProperty(
-                    name: "carreraActiva", value: _carreraActiva.nombre);
+                    name: "carreraActiva", value: _carreraActiva!.nombre!);
                 FirebaseAnalytics().setUserProperty(
-                    name: "estadoCarreraActiva", value: _carreraActiva.estado);
+                    name: "estadoCarreraActiva", value: _carreraActiva!.estado!);
 
                 return Center(
                   child: SafeArea(

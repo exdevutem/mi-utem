@@ -8,11 +8,11 @@ class AvanceRamoCard extends StatelessWidget{
   final String nota;
 
   AvanceRamoCard({
-    Key key,
-    @required this.nombre,
-    @required this.sub,
-    @required this.nivel,
-    @required this.nota
+    Key? key,
+    required this.nombre,
+    required this.sub,
+    required this.nivel,
+    required this.nota
   }): super(key:key);
   
 

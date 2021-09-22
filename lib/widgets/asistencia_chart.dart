@@ -1,4 +1,5 @@
 import 'dart:math';
+
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
 import 'package:mi_utem/models/asignatura.dart';
@@ -9,17 +10,17 @@ extension StringExtension on Color {
 }
 
 class AsistenciaChart extends StatelessWidget {
-  final Asistencia asistencia;
+  final Asistencia? asistencia;
 
   AsistenciaChart({this.asistencia});
 
-
   List<charts.Series<GaugeSegment, String>> _procesarDatos() {
-    
     final data = [
-      new GaugeSegment('Asistido', asistencia.asistidos, charts.Color.fromHex(code: MainTheme.aprobadoColor.toHex())),
+      new GaugeSegment('Asistido', asistencia!.asistidos as int,
+          charts.Color.fromHex(code: MainTheme.aprobadoColor.toHex())),
       //new GaugeSegment('No asistido', asistencia.noAsistidos, charts.Color.fromHex(code: MainTheme.reprobadoColor.toHex())),
-      new GaugeSegment('Sin registro', asistencia.sinRegistro, charts.Color.fromHex(code: MainTheme.disabledColor.toHex())),
+      new GaugeSegment('Sin registro', asistencia!.sinRegistro as int,
+          charts.Color.fromHex(code: MainTheme.disabledColor!.toHex())),
     ];
 
     return [
@@ -35,8 +36,6 @@ class AsistenciaChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(asistencia.asistidos);
-    print(asistencia.sinRegistro);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
@@ -44,13 +43,13 @@ class AsistenciaChart extends StatelessWidget {
           child: Align(
             alignment: Alignment.topCenter,
             heightFactor: 0.6,
-            child: Container(
+            child: SizedBox(
               height: 200,
-              child: charts.PieChart(
+              width: 200,
+              child: charts.PieChart<String>(
                 _procesarDatos(),
                 defaultInteractions: true,
                 animate: true,
-
                 defaultRenderer: new charts.ArcRendererConfig(
                   arcWidth: 40,
                   startAngle: pi,
@@ -67,13 +66,13 @@ class AsistenciaChart extends StatelessWidget {
             Container(
               decoration: BoxDecoration(
                 color: MainTheme.aprobadoColor,
-                borderRadius: BorderRadius.circular(15)
+                borderRadius: BorderRadius.circular(15),
               ),
               height: 15,
-              width: 15
+              width: 15,
             ),
             Container(width: 10),
-            Text("Asistidos (${asistencia.asistidos})"),
+            Text("Asistidos (${asistencia!.asistidos})"),
           ],
         ),
         Container(height: 5),
@@ -82,15 +81,13 @@ class AsistenciaChart extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              decoration: BoxDecoration(
-                color: MainTheme.reprobadoColor,
-                borderRadius: BorderRadius.circular(15)
-              ),
-              height: 15,
-              width: 15
-            ),
+                decoration: BoxDecoration(
+                    color: MainTheme.reprobadoColor,
+                    borderRadius: BorderRadius.circular(15)),
+                height: 15,
+                width: 15),
             Container(width: 10),
-            Text("No asistidos (${asistencia.noAsistidos})"),
+            Text("No asistidos (${asistencia!.noAsistidos})"),
           ],
         ),
         Container(height: 5),
@@ -99,20 +96,17 @@ class AsistenciaChart extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              decoration: BoxDecoration(
-                color: MainTheme.disabledColor,
-                borderRadius: BorderRadius.circular(15)
-              ),
-              height: 15,
-              width: 15
-            ),
+                decoration: BoxDecoration(
+                    color: MainTheme.disabledColor,
+                    borderRadius: BorderRadius.circular(15)),
+                height: 15,
+                width: 15),
             Container(width: 10),
-            Text("Sin registro (${asistencia.sinRegistro})"),
+            Text("Sin registro (${asistencia!.sinRegistro})"),
           ],
         ),
       ],
     );
-    
   }
 }
 

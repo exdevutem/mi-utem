@@ -12,9 +12,10 @@ class AutenticacionService {
 
   static final String versionCorrecta = "2.5.2";
 
-  static Future<Usuario> login(String correo, String contrasenia, [bool guardar = false]) async {
+  static Future<Usuario> login(String? correo, String? contrasenia,
+      [bool guardar = false]) async {
     String uri = "/v1/usuarios/login";
-    
+
     try {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       final FlutterSecureStorage storage = new FlutterSecureStorage();
@@ -25,23 +26,39 @@ class AutenticacionService {
 
       Usuario usuario = Usuario.fromJson(response.data);
 
-      prefs.setString('sesion', usuario.sesion);
-      prefs.setString('nombres', usuario.nombres);
-      prefs.setString('apellidos', usuario.apellidos);
-      prefs.setString('nombre', usuario.nombre);
-      prefs.setString('fotoUrl', usuario.fotoUrl);
-      prefs.setString('correo', usuario.correo);
+      prefs.setString('sesion', usuario.sesion!);
+      if (usuario.nombres != null) {
+        prefs.setString('nombres', usuario.nombres!);
+      }
+      if (usuario.apellidos != null) {
+        prefs.setString('apellidos', usuario.apellidos!);
+      }
+      if (usuario.nombre != null) {
+        prefs.setString('nombre', usuario.nombre!);
+      }
+      if (usuario.fotoUrl != null) {
+        prefs.setString('fotoUrl', usuario.fotoUrl!);
+      }
+      if (usuario.correo != null) {
+        prefs.setString('correo', usuario.correo!);
+      }
+      if (usuario.rut?.numero != null) {
+        prefs.setInt('rut', usuario.rut!.numero!);
+      }
+
       prefs.setString('version', versionCorrecta);
-      prefs.setInt('rut', usuario.rut?.numero);
+
       prefs.setBool('esAntiguo', true);
-      
+
       if (guardar) {
         await storage.write(key: "contrasenia", value: contrasenia);
       }
-      
+
       return usuario;
     } on DioError catch (e) {
       print(e.message);
+      throw e;
+    } catch (e) {
       throw e;
     }
   }
@@ -64,9 +81,13 @@ class AutenticacionService {
   static Future<bool> isLoggedIn() async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      String sesion = prefs.getString("sesion");
-      String version = prefs.getString("version");
-      bool isLoggedIn = sesion != null && sesion.isNotEmpty && version != null && version.isNotEmpty && version == versionCorrecta;
+      String? sesion = prefs.getString("sesion");
+      String? version = prefs.getString("version");
+      bool isLoggedIn = sesion != null &&
+          sesion.isNotEmpty &&
+          version != null &&
+          version.isNotEmpty &&
+          version == versionCorrecta;
 
       if (!isLoggedIn) {
         await logOut();
@@ -93,10 +114,10 @@ class AutenticacionService {
       prefs.remove("rut");
       prefs.remove("version");
       await storage.deleteAll();
-      await DioMiUtemClient.cacheOptions.store.clean();
+      await DioMiUtemClient.cacheOptions.store!.clean();
       await PerfilService.deleteFcmToken();
     } catch (e) {
-      print(e.message);
+      print(e.toString());
       throw e;
     }
   }

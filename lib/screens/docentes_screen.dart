@@ -16,16 +16,16 @@ import 'package:mi_utem/widgets/profile_photo.dart';
 import 'package:mi_utem/widgets/pull_to_refresh.dart';
 
 class DocentesScreen extends StatefulWidget {
-  DocentesScreen({Key key}) : super(key: key);
+  DocentesScreen({Key? key}) : super(key: key);
 
   @override
   _DocentesScreenState createState() => _DocentesScreenState();
 }
 
 class _DocentesScreenState extends State<DocentesScreen> {
-  Future<List<Usuario>> _futureDocentes;
-  List<Usuario> _docentes;
-  Debounce d;
+  Future<List<Usuario>>? _futureDocentes;
+  late List<Usuario> _docentes;
+  late Debounce d;
 
   TextEditingController _controller = TextEditingController();
 
@@ -45,7 +45,7 @@ class _DocentesScreenState extends State<DocentesScreen> {
       _futureDocentes = null;
       _futureDocentes = DocentesService.buscarDocentes(nombre);
     });
-    List<Usuario> docentes = await _futureDocentes;
+    List<Usuario> docentes = await _futureDocentes!;
     setState(() {
       _docentes = docentes;
     });
@@ -79,7 +79,6 @@ class _DocentesScreenState extends State<DocentesScreen> {
                 decoration: InputDecoration(
                   hintText: "Escribe para buscar un docente",
                   prefixIcon: Icon(Icons.search),
-                  
                 ),
                 keyboardType: TextInputType.name,
                 onSubmitted: (query) {
@@ -95,7 +94,7 @@ class _DocentesScreenState extends State<DocentesScreen> {
             ),
             Container(height: 20),
             _futureDocentes != null
-                ? FutureBuilder(
+                ? FutureBuilder<List<Usuario>>(
                     future: _futureDocentes,
                     builder: (context, snapshot) {
                       if (snapshot.hasError) {
@@ -104,8 +103,8 @@ class _DocentesScreenState extends State<DocentesScreen> {
                           error: snapshot.error,
                         );
                       } else {
-                        if (snapshot.hasData) {
-                          if (snapshot.data.length > 0) {
+                        if (snapshot.hasData && snapshot.data != null) {
+                          if (snapshot.data!.length > 0) {
                             return ListView.separated(
                               physics: ScrollPhysics(),
                               shrinkWrap: true,
@@ -120,16 +119,16 @@ class _DocentesScreenState extends State<DocentesScreen> {
                                     editable: false,
                                   ),
                                   title: Text(
-                                    docente.nombreCompleto,
+                                    docente.nombreCompleto!,
                                     maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
                                   ),
-                                  subtitle: Text(docente.correo),
+                                  subtitle: Text(docente.correo!),
                                   onTap: () async {
                                     await Get.to(
                                       UsuarioScreen(
-                                            tipo: 2,
-                                            query: {"nombre": docente.nombre}),
+                                          tipo: 2,
+                                          query: {"nombre": docente.nombre}),
                                     );
                                   },
                                 );

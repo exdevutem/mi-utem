@@ -17,15 +17,15 @@ import 'package:simple_gesture_detector/simple_gesture_detector.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class CredencialCard extends StatefulWidget {
-  final Usuario usuario;
-  final Carrera carrera;
-  final FlipController controller;
-  final Function(SwipeDirection) onFlip;
+  final Usuario? usuario;
+  final Carrera? carrera;
+  final FlipController? controller;
+  final Function(SwipeDirection?)? onFlip;
 
   CredencialCard(
-      {Key key,
-      @required this.usuario,
-      @required this.carrera,
+      {Key? key,
+      required this.usuario,
+      required this.carrera,
       this.controller,
       this.onFlip})
       : super(key: key);
@@ -35,7 +35,7 @@ class CredencialCard extends StatefulWidget {
 }
 
 class _CredencialCardState extends State<CredencialCard> {
-  RemoteConfig _remoteConfig;
+  RemoteConfig? _remoteConfig;
 
   @override
   void initState() {
@@ -91,7 +91,7 @@ class _CredencialCardState extends State<CredencialCard> {
               child: Column(
                 children: [
                   Text(
-                    widget.usuario.nombreCompleto,
+                    widget.usuario!.nombreCompleto!,
                     maxLines: 2,
                     style: TextStyle(
                       fontSize: 18,
@@ -101,7 +101,7 @@ class _CredencialCardState extends State<CredencialCard> {
                     textAlign: TextAlign.center,
                   ),
                   Text(
-                    widget.usuario.rut?.formateado(true) ?? "Sin RUT",
+                    widget.usuario!.rut?.formateado(true) ?? "Sin RUT",
                     style: TextStyle(fontSize: 18),
                     textAlign: TextAlign.center,
                   ),
@@ -109,10 +109,10 @@ class _CredencialCardState extends State<CredencialCard> {
                   Divider(height: 1),
                   Spacer(),
                   Text(
-                    widget.carrera?.nombre == null ||
-                            widget.carrera.nombre.isEmpty
+                    (widget.carrera?.nombre == null ||
+                            widget.carrera!.nombre!.isEmpty
                         ? "Sin carrera"
-                        : widget.carrera?.nombre,
+                        : widget.carrera?.nombre!)!,
                     maxLines: 3,
                     style: TextStyle(
                       color: MainTheme.primaryDarkColor,
@@ -120,8 +120,8 @@ class _CredencialCardState extends State<CredencialCard> {
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  if (widget.usuario.rut != null || true) Spacer(),
-                  if (widget.usuario.rut != null || true)
+                  if (widget.usuario!.rut != null || true) Spacer(),
+                  if (widget.usuario!.rut != null || true)
                     Column(
                       children: [
                         Container(
@@ -140,7 +140,7 @@ class _CredencialCardState extends State<CredencialCard> {
                           ),
                           child: BarCodeImage(
                             params: Code39BarCodeParams(
-                              widget.usuario.rut.numero.toString(),
+                              widget.usuario!.rut!.numero.toString(),
                               lineWidth:
                                   MediaQuery.of(context).size.width / 250,
                               barHeight: 50,
@@ -160,7 +160,7 @@ class _CredencialCardState extends State<CredencialCard> {
                               fontSize: 12,
                             ),
                           ),
-                          data: _remoteConfig.getString(
+                          data: _remoteConfig!.getString(
                             ConfigService.CREDENCIAL_BARRAS,
                           ),
                         ),
@@ -243,7 +243,7 @@ class _CredencialCardState extends State<CredencialCard> {
                       ),
                       Container(width: 20),
                       CachedNetworkImage(
-                        imageUrl: _remoteConfig
+                        imageUrl: _remoteConfig!
                             .getString(ConfigService.CREDENCIAL_SIBUTEM_LOGO),
                         height: 70,
                       )
@@ -264,7 +264,7 @@ class _CredencialCardState extends State<CredencialCard> {
                           color: MainTheme.primaryDarkColor,
                         ),
                       ),
-                      data: _remoteConfig.getString(
+                      data: _remoteConfig!.getString(
                         ConfigService.CREDENCIAL_DISCLAIMER,
                       ),
                     ),
@@ -283,9 +283,9 @@ class _CredencialCardState extends State<CredencialCard> {
                         ),
                       ),
                       onTapLink: (text, href, title) {
-                        launch(href);
+                        launch(href!);
                       },
-                      data: _remoteConfig
+                      data: _remoteConfig!
                           .getString(
                             ConfigService.CREDENCIAL_INFO,
                           )
@@ -306,10 +306,11 @@ class _CredencialCardState extends State<CredencialCard> {
     return AspectRatio(
       aspectRatio: 53.98 / 85.60,
       child: FlipWidget(
-          front: _buildFront(),
-          back: _buildRear(),
-          controller: widget.controller,
-          onFlip: widget.onFlip),
+        front: _buildFront(),
+        back: _buildRear(),
+        controller: widget.controller,
+        onFlip: widget.onFlip,
+      ),
     );
   }
 }

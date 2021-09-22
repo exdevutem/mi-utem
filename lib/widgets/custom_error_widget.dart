@@ -7,10 +7,10 @@ import 'package:mi_utem/screens/asignatura_screen.dart';
 class CustomErrorWidget extends StatelessWidget {
   final String emoji;
   final String texto;
-  final Object error;
+  final Object? error;
 
   CustomErrorWidget(
-      {Key key,
+      {Key? key,
       this.emoji = "😕",
       this.texto = "Ocurrió un error inesperado",
       this.error})

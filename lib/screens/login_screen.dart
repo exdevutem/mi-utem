@@ -6,7 +6,6 @@ import 'package:dio/dio.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flare_flutter/flare_actor.dart';
-import 'package:flushbar/flushbar.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -36,18 +35,18 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
-  LoginScreen({Key key}) : super(key: key);
+  LoginScreen({Key? key}) : super(key: key);
 
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  String _correo, _contrasenia;
-  GlobalKey<FormState> _formKey;
-  VideoPlayerController _controller;
+  String? _correo, _contrasenia;
+  GlobalKey<FormState>? _formKey;
+  late VideoPlayerController _controller;
 
-  RemoteConfig _remoteConfig;
+  RemoteConfig? _remoteConfig;
 
   @override
   void initState() {
@@ -76,7 +75,7 @@ class _LoginScreenState extends State<LoginScreen> {
         setState(() {});
       });
 
-    SchedulerBinding.instance.addPostFrameCallback((_) {
+    SchedulerBinding.instance!.addPostFrameCallback((_) {
       _checkAndPerformUpdate(context);
     });
   }
@@ -118,7 +117,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   String get _creditText {
-    List<dynamic> texts = jsonDecode(_remoteConfig.getString(
+    List<dynamic> texts = jsonDecode(_remoteConfig!.getString(
       ConfigService.CREDITOS,
     ));
 
@@ -311,8 +310,8 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> _login() async {
-    if (_formKey.currentState.validate()) {
-      _formKey.currentState.save();
+    if (_formKey!.currentState!.validate()) {
+      _formKey!.currentState!.save();
       if (_correo == "error@utem.cl") {
         Get.dialog(
           ErrorDialog(
@@ -333,10 +332,14 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         );
       } else if (_correo == "test@utem.cl" && _contrasenia == "test") {
-        Flushbar(
-          message: "Usuario o contraseña incorrecta",
-          duration: Duration(seconds: 3),
-        )..show(context);
+        Get.snackbar(
+          "Error",
+          "Usuario o contraseña incorrecta",
+          colorText: Colors.white,
+          backgroundColor: Get.theme.primaryColor,
+          snackPosition: SnackPosition.BOTTOM,
+          margin: EdgeInsets.all(20),
+        );
       } else {
         Get.dialog(
           LoadingDialog(),
@@ -349,10 +352,10 @@ class _LoginScreenState extends State<LoginScreen> {
               await AutenticacionService.login(_correo, _contrasenia, true);
 
           FirebaseAnalytics().logLogin();
-          FirebaseAnalytics().setUserId(usuario.correo);
+          FirebaseAnalytics().setUserId(usuario.correo!);
           if (usuario.rut != null) {
             FirebaseAnalytics().setUserProperty(
-                name: "rut", value: usuario.rut.numero.toString());
+                name: "rut", value: usuario.rut!.numero.toString());
           }
 
           Get.offAll(MainScreen(usuario: usuario));
@@ -363,9 +366,10 @@ class _LoginScreenState extends State<LoginScreen> {
             );
           }
         } on DioError catch (e) {
+          print(e.message);
           Get.back();
-          if (e.response.statusCode == 403) {
-            if (e.response.data["codigoInterno"].toString() == "4") {
+          if (e.response?.statusCode == 403) {
+            if (e.response?.data["codigoInterno"]?.toString() == "4") {
               Get.dialog(
                 ErrorDialog(
                   mensaje: RichText(
@@ -433,13 +437,18 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               );
             } else {
-              Flushbar(
-                message: "Usuario o contraseña incorrecta",
-                duration: Duration(seconds: 3),
-              )..show(context);
+              Get.snackbar(
+                "Error",
+                "Usuario o contraseña incorrecta",
+                colorText: Colors.white,
+                backgroundColor: Get.theme.primaryColor,
+                snackPosition: SnackPosition.BOTTOM,
+                margin: EdgeInsets.all(20),
+              );
             }
-          } else if (e.response.statusCode.toString().startsWith("5")) {
-            print(e.response.data);
+          } else if (e.response?.statusCode != null &&
+              e.response!.statusCode.toString().startsWith("5")) {
+            print(e.response?.data);
             Get.dialog(
               ErrorDialog(
                 contenido: Container(
@@ -459,19 +468,27 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             );
           } else {
-            print(e.response.data);
-            Flushbar(
-              message: "Ocurrió un error inesperado 😢",
-              duration: Duration(seconds: 3),
-            )..show(context);
+            print(e.response?.data);
+            Get.snackbar(
+              "Error",
+              "Ocurrió un error inesperado 😢",
+              colorText: Colors.white,
+              backgroundColor: Get.theme.primaryColor,
+              snackPosition: SnackPosition.BOTTOM,
+              margin: EdgeInsets.all(20),
+            );
           }
         } catch (e) {
           print(e.toString());
           Get.back();
-          Flushbar(
-            message: "Ocurrió un error inesperado 😢",
-            duration: Duration(seconds: 3),
-          )..show(context);
+          Get.snackbar(
+            "Error",
+            "Ocurrió un error inesperado 😢",
+            colorText: Colors.white,
+            backgroundColor: Get.theme.primaryColor,
+            snackPosition: SnackPosition.BOTTOM,
+            margin: EdgeInsets.all(20),
+          );
         }
       }
     }

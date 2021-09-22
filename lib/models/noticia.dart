@@ -1,9 +1,9 @@
 import 'package:html/parser.dart';
 
 class Noticia {
-  int id, featuredMediaId;
-  String titulo, subtitulo, link;
-  FeaturedMedia featuredMedia;
+  int? id, featuredMediaId;
+  String? titulo, subtitulo, link;
+  FeaturedMedia? featuredMedia;
     
     
   Noticia(
@@ -25,8 +25,8 @@ class Noticia {
   factory Noticia.fromJson(Map<String, dynamic> json) {
     return Noticia(
       json['id'],
-      parse(json['title']['rendered']).body.text.trim(),
-      parse(json['excerpt']['rendered']).body.text.trim(),
+      parse(json['title']['rendered']).body!.text.trim(),
+      parse(json['excerpt']['rendered']).body!.text.trim(),
       json['link'],
       json['featured_media']
     );
@@ -42,8 +42,8 @@ class Noticia {
 }
 
 class FeaturedMedia {
-  int id;
-  String guid;
+  int? id;
+  String? guid;
     
     
   FeaturedMedia({

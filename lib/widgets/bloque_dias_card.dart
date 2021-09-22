@@ -1,42 +1,54 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
-class BloqueDiasCard extends StatelessWidget{
-
-  final String dia;
-  final double ancho;
-  final double alto;
+class BloqueDiasCard extends StatelessWidget {
+  final String day;
+  final double width;
+  final double height;
+  final bool active;
 
   BloqueDiasCard({
-    Key key,
-    @required this.dia,
-    @required this.ancho,
-    @required this.alto
+    Key? key,
+    required this.day,
+    required this.width,
+    required this.height,
+    required this.active,
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     return Container(
-      child: Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15.0),
+      decoration: BoxDecoration(
+        color: Color(0xFFF5F5F5),
+        border: Border(
+          right: BorderSide(
+            color: Color(0xFFBDBDBD),
+            style: BorderStyle.solid,
+            width: 1,
+          ),
+          bottom: BorderSide(
+            color: Color(0xFFBDBDBD),
+            style: BorderStyle.solid,
+            width: 1,
+          ),
         ),
-        child: Column(
-          children: <Widget>[
-            Text(dia.trim(),
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.black54,
-                fontSize: 16,
-                fontWeight: FontWeight.bold
-              ))
-          ],
-          mainAxisAlignment: MainAxisAlignment.center,
-        ),
-        color: Colors.blueGrey[200],
       ),
-      height: alto,
-      width: ancho,
+      height: height,
+      width: width,
+      child: Column(
+        children: <Widget>[
+          Text(
+            day.trim(),
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Color(0xFF363636),
+              fontSize: 24,
+              fontWeight: active ? FontWeight.bold : FontWeight.normal,
+            ),
+          ),
+        ],
+        mainAxisAlignment: MainAxisAlignment.center,
+      ),
     );
   }
 }

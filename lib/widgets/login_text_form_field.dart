@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class LoginTextFormField extends StatefulWidget {
   LoginTextFormField({
-    Key key,
+    Key? key,
     this.hintText,
     this.labelText,
     this.icon,
@@ -13,11 +13,11 @@ class LoginTextFormField extends StatefulWidget {
     this.keyboardType
   }) : super(key: key);
 
-  final String hintText, labelText;
-  final TextInputType keyboardType;
-  final TextCapitalization textCapitalization;
-  final IconData icon;
-  final Function onSaved, validator;
+  final String? hintText, labelText;
+  final TextInputType? keyboardType;
+  final TextCapitalization? textCapitalization;
+  final IconData? icon;
+  final Function? onSaved, validator;
   final bool obscureText;
 
   @override
@@ -25,17 +25,17 @@ class LoginTextFormField extends StatefulWidget {
 }
 
 class _LoginTextFormFieldState extends State<LoginTextFormField> {
-  String _valor;
-  FocusNode _focusNode;
-  TextEditingController _controller;
-  GlobalKey _key;
+  String? _valor;
+  FocusNode? _focusNode;
+  TextEditingController? _controller;
+  GlobalKey? _key;
   bool _error = false;
 
   @override
   void initState() {
     super.initState();
     _focusNode = new FocusNode();
-    _focusNode.addListener(() => setState(() {}));
+    _focusNode!.addListener(() => setState(() {}));
   }
 
   @override
@@ -47,7 +47,7 @@ class _LoginTextFormFieldState extends State<LoginTextFormField> {
           color: Colors.white
         ),
         controller: _controller,
-        textCapitalization: widget.textCapitalization,
+        textCapitalization: widget.textCapitalization!,
         obscureText: widget.obscureText,
         decoration: InputDecoration(
           enabledBorder: OutlineInputBorder(
@@ -80,7 +80,7 @@ class _LoginTextFormFieldState extends State<LoginTextFormField> {
           ),
           contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 20),
           labelStyle: TextStyle(
-            color: _focusNode.hasFocus ? Theme.of(context).primaryColor : (_error ? Theme.of(context).errorColor : Color(0x80FFFFFF))
+            color: _focusNode!.hasFocus ? Theme.of(context).primaryColor : (_error ? Theme.of(context).errorColor : Color(0x80FFFFFF))
           ),
           errorStyle: TextStyle(color: Colors.red),
           hintStyle: TextStyle(
@@ -88,7 +88,7 @@ class _LoginTextFormFieldState extends State<LoginTextFormField> {
           ),
           prefixIcon: Icon(
             widget.icon,
-            color: _focusNode.hasFocus ? Theme.of(context).primaryColor : (_error ? Theme.of(context).errorColor : Colors.white)
+            color: _focusNode!.hasFocus ? Theme.of(context).primaryColor : (_error ? Theme.of(context).errorColor : Colors.white)
           ),
           
           hintText: widget.hintText,
@@ -98,9 +98,9 @@ class _LoginTextFormFieldState extends State<LoginTextFormField> {
         
         keyboardType: widget.keyboardType,
         
-        onSaved: (String value) => widget.onSaved(value),
-        validator: (String value) {
-          String errorMsg = widget.validator(value);
+        onSaved: (String? value) => widget.onSaved!(value),
+        validator: (String? value) {
+          String? errorMsg = widget.validator!(value);
           if (errorMsg != null) {
             setState(() {
               _error = true;

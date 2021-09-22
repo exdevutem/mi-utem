@@ -2,19 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:mi_utem/models/asignatura.dart';
 
 class Horario {
-  List<Asignatura> asignaturas;
-  List<List<BloqueHorario>> horario;
-  List<dynamic> dias;
-  List<Periodo> periodos;
+  List<Asignatura>? asignaturas;
+  List<List<BloqueHorario>>? horario;
+  List<dynamic>? dias;
+  List<Periodo>? periodos;
 
-  Horario({
-    this.asignaturas,
-    this.horario,
-    this.dias,
-    this.periodos
-  });
+  Horario({this.asignaturas, this.horario, this.dias, this.periodos});
 
-  factory Horario.fromJson(Map<String, dynamic> json) {
+  factory Horario.fromJson(Map<String, dynamic>? json) {
     if (json == null) {
       return Horario();
     }
@@ -37,32 +32,25 @@ class Horario {
     return list;
   }
 
-  List<String> get horasInicio {
-    return periodos.map((periodo) => periodo.horaInicio).toList();
+  List<String?> get horasInicio {
+    return periodos!.map((periodo) => periodo.horaInicio).toList();
   }
 
-  List<String> get horasIntermedio {
-    return periodos.map((periodo) => periodo.horaIntermedio).toList();
+  List<String?> get horasIntermedio {
+    return periodos!.map((periodo) => periodo.horaIntermedio).toList();
   }
 
-  List<String> get horasTermino {
-    return periodos.map((periodo) => periodo.horaTermino).toList();
+  List<String?> get horasTermino {
+    return periodos!.map((periodo) => periodo.horaTermino).toList();
   }
 
   List<List<BloqueHorario>> get horarioEnlazado {
     List<List<BloqueHorario>> horarioNuevo = [];
 
-    List<Color> colores = Colors.primaries.toList()..shuffle();
-
-    for (num i = 0; i < asignaturas.length; i++) {
-      var asignatura = asignaturas[i];
-      asignatura.colorAsignatura = colores[i];
-    }
-
-    for (List<BloqueHorario> fila in horario) {
+    for (List<BloqueHorario> fila in horario!) {
       List<BloqueHorario> filaNueva = [];
       for (BloqueHorario bloque in fila) {
-        for (Asignatura asignatura in asignaturas) {
+        for (Asignatura asignatura in asignaturas!) {
           if (bloque.codigo == asignatura.codigo) {
             bloque.asignatura = asignatura;
           }
@@ -76,28 +64,23 @@ class Horario {
 }
 
 class Periodo {
-  String numero;
-  String horaInicio;
-  String horaIntermedio;
-  String horaTermino;
+  String? numero;
+  String? horaInicio;
+  String? horaIntermedio;
+  String? horaTermino;
 
-  Periodo({
-    this.numero,
-    this.horaInicio,
-    this.horaIntermedio,
-    this.horaTermino
-  });
+  Periodo(
+      {this.numero, this.horaInicio, this.horaIntermedio, this.horaTermino});
 
-  factory Periodo.fromJson(Map<String, dynamic> json) {
+  factory Periodo.fromJson(Map<String, dynamic>? json) {
     if (json == null) {
       return Periodo();
     }
     return Periodo(
-      numero: json["numero"],
-      horaInicio: json["horaInicio"],
-      horaIntermedio: json["horaIntermedio"],
-      horaTermino: json["horaTermino"]
-    );
+        numero: json["numero"],
+        horaInicio: json["horaInicio"],
+        horaIntermedio: json["horaIntermedio"],
+        horaTermino: json["horaTermino"]);
   }
 
   static List<Periodo> fromJsonList(dynamic json) {
@@ -113,9 +96,9 @@ class Periodo {
 }
 
 class BloqueHorario {
-  Asignatura asignatura;
-  String sala;
-  String codigo;
+  Asignatura? asignatura;
+  String? sala;
+  String? codigo;
 
   BloqueHorario({
     this.asignatura,
@@ -123,18 +106,17 @@ class BloqueHorario {
     this.codigo,
   });
 
-  factory BloqueHorario.fromJson(Map<String, dynamic> json) {
+  factory BloqueHorario.fromJson(Map<String, dynamic>? json) {
     if (json == null) {
       return BloqueHorario();
     }
     return BloqueHorario(
-      asignatura: json['asignatura'],
-      sala: json['sala'],
-      codigo: json['codigo']
-    );
+        asignatura: json['asignatura'],
+        sala: json['sala'],
+        codigo: json['codigo']);
   }
 
-  static List<List<BloqueHorario>> fromJsonMatrix(dynamic json) {
+  static List<List<BloqueHorario>>? fromJsonMatrix(dynamic json) {
     if (json == null) {
       return null;
     }
