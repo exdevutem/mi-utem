@@ -72,6 +72,22 @@ platform :android do
       skip_upload_images: true
     )
 
+    notificate(
+      track: options[:track],
+      build_name: build_name,
+      build_number: build_number,
+    )
+  end
+
+  lane :notificate  do |options|
+    build_number = options[:build_number]
+    build_name = options[:build_name]
+    
+    track = "beta"
+    if options[:track]
+      track = options[:track]
+    end
+
     slack(
       message: "🚀 Se ha lanzado correctamente la versión #{build_name} (#{build_number}) en Android",
       slack_url: ENV["SLACK_URL"],

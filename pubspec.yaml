@@ -18,7 +18,10 @@ dependencies:
       url: git://github.com/venosyd/barcode.flutter.git
   cached_network_image: ^3.1.0
   carousel_slider: ^4.0.0
-  charts_flutter: ^0.11.0
+  charts_flutter:
+    git:
+      url: https://github.com/google/charts
+      path: charts_flutter
   circular_profile_avatar: ^2.0.5
   clipboard: ^0.1.2+8
   cloud_firestore: ^1.0.5
