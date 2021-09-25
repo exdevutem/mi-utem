@@ -9,44 +9,34 @@ class CarreraService {
   static Future<List<Carrera>> getCarreras([bool refresh = false]) async {
     String uri = "/v1/carreras";
 
-    try {
-      Response response = await _dio.get(
-        uri,
-        options: DioMiUtemClient.cacheOptions
-            .copyWith(
-                maxStale: Duration(days: 0),
-                policy: refresh ? CachePolicy.refresh : CachePolicy.forceCache)
-            .toOptions(),
-      );
+    Response response = await _dio.get(
+      uri,
+      options: DioMiUtemClient.cacheOptions
+          .copyWith(
+              maxStale: Duration(days: 0),
+              policy: refresh ? CachePolicy.refresh : CachePolicy.forceCache)
+          .toOptions(),
+    );
 
-      List<Carrera> carreras = Carrera.fromJsonList(response.data);
+    List<Carrera> carreras = Carrera.fromJsonList(response.data);
 
-      return carreras;
-    } on DioError catch (e) {
-      print(e.message);
-      throw e;
-    }
+    return carreras;
   }
 
   static Future<Carrera> getCarreraActiva([bool refresh = false]) async {
     String uri = "/v1/carreras/activa";
 
-    try {
-      Response response = await _dio.get(
-        uri,
-        options: DioMiUtemClient.cacheOptions
-            .copyWith(
-                maxStale: Duration(days: 7),
-                policy: refresh ? CachePolicy.refresh : CachePolicy.forceCache)
-            .toOptions(),
-      );
+    Response response = await _dio.get(
+      uri,
+      options: DioMiUtemClient.cacheOptions
+          .copyWith(
+              maxStale: Duration(days: 7),
+              policy: refresh ? CachePolicy.refresh : CachePolicy.forceCache)
+          .toOptions(),
+    );
 
-      Carrera activa = Carrera.fromJson(response.data);
+    Carrera activa = Carrera.fromJson(response.data);
 
-      return activa;
-    } on DioError catch (e) {
-      print(e.message);
-      throw e;
-    }
+    return activa;
   }
 }

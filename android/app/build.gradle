@@ -28,7 +28,10 @@ def keystoreFile
 def keystoreProperties = new Properties()
 def keystorePropertiesFile = rootProject.file("keystores/key.properties")
 
-
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+    keystoreFile = file(keystoreProperties['storeFile'])
+}
 
 android {
     compileSdkVersion 30
@@ -46,27 +49,29 @@ android {
         versionName flutterVersionName
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
-}
 
-if (keystorePropertiesFile.exists()) {
-    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
-    keystoreFile = file(keystoreProperties['storeFile'])
-    android.signingConfig.release = {
-        keyAlias keystoreProperties['keyAlias']
-        keyPassword keystoreProperties['keyPassword']
-        storeFile keystoreFile
-        storePassword keystoreProperties['storePassword']
+    signingConfigs {
+        release {
+            setProperty("keyAlias", keystorePropertiesFile.exists() ? keystoreProperties['keyAlias'] : null)
+            setProperty("keyPassword", keystorePropertiesFile.exists() ? keystoreProperties['keyPassword'] : null)
+            setProperty("storeFile", keystorePropertiesFile.exists() ? keystoreFile : null)
+            setProperty("storePassword", keystorePropertiesFile.exists() ? keystoreProperties['storePassword'] : null)
+        }
     }
 
-    android.buildTypes.release = {
-        shrinkResources true
-        minifyEnabled true
-        signingConfig android.signingConfigs.release
-        useProguard true
-        proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+    buildTypes {
+        release {
+            shrinkResources true
+            minifyEnabled true
+            setProperty("signingConfig", keystorePropertiesFile.exists() ? android.signingConfigs.release : null)
+            useProguard true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
     
     }
 }
+
+
 
 flutter {
     source '../..'
