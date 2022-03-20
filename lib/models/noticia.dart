@@ -32,7 +32,7 @@ class Noticia {
     );
   }
 
-  static List<Noticia> fromJsonList(List<dynamic> json) {
+  static List<Noticia> (List<dynamic> json) {
     List<Noticia> lista = [];
     for (var elemento in json) {
       lista.add(Noticia.fromJson(elemento));
