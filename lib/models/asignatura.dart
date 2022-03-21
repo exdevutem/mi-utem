@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:mi_utem/models/evaluacion.dart';
-import 'package:mi_utem/models/usuario.dart';
 import 'package:mi_utem/themes/theme.dart';
 import 'package:recase/recase.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -20,7 +19,7 @@ class Asignatura {
   num? notaPresentacion;
   num? notaFinal;
   Asistencia? asistencia;
-  List<Usuario>? estudiantes;
+  // List<Usuario>? estudiantes;
   String? tipoAsignatura;
   num? intentos;
   String? horario;
@@ -40,7 +39,7 @@ class Asignatura {
     this.seccion,
     this.notaExamen,
     this.asistencia,
-    this.estudiantes,
+    // this.estudiantes,
     this.tipoAsignatura,
     this.sala,
     this.horario,
@@ -84,18 +83,23 @@ class Asignatura {
       docente:
           json['docente'] != null ? ReCase(json['docente']).titleCase : null,
       seccion: json['seccion'],
-      evaluaciones: Evaluacion.fromJsonList(json['evaluaciones']),
-      notaFinal: json['notaFinal'],
-      notaPresentacion: json['notaPresentacion'],
-      notaExamen: json['notaExamen'],
-      estudiantes: Usuario.fromJsonList(json["estudiantes"]),
-      asistencia: Asistencia.fromJson(json["asistencia"]),
+      evaluaciones: json['evaluaciones'] != null
+          ? Evaluacion.fromJsonList(json['evaluaciones'])
+          : [],
+      notaFinal: json['notaFinal'] != null ? json['notaFinal'] : null,
+      notaPresentacion:
+          json['notaPresentacion'] != null ? json['notaPresentacion'] : null,
+      notaExamen: json['notaExamen'] != null ? json['notaExamen'] : null,
+      // estudiantes: Usuario.fromJsonList(json["estudiantes"]),
+      asistencia: json['asistenciaAlDia'] != null
+          ? Asistencia(asistidos: json['asistenciaAlDia'])
+          : null,
       tipoAsignatura: json['tipoAsignatura'] != null
-          ? ReCase(json['tipoAsignatura']).titleCase
+          ? ReCase(json['tipoAsignatura'].toString()).titleCase
           : null,
       sala: json['sala'] != null ? ReCase(json['sala']).titleCase : null,
       horario: json['horario'],
-      intentos: json['intentos'] ?? 0,
+      intentos: json['intentos'] != null ? int.parse(json['intentos']) : 0,
       tipoSala:
           json['tipoSala'] != null ? ReCase(json['tipoSala']).titleCase : null,
     );

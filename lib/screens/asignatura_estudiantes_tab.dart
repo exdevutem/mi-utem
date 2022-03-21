@@ -1,11 +1,9 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:mi_utem/models/asignatura.dart';
-import 'package:mi_utem/models/usuario.dart';
 import 'package:mi_utem/services/asignaturas_service.dart';
 import 'package:mi_utem/widgets/custom_error_widget.dart';
 import 'package:mi_utem/widgets/loading_indicator.dart';
-import 'package:mi_utem/widgets/profile_photo.dart';
 import 'package:mi_utem/widgets/pull_to_refresh.dart';
 
 class AsignaturaEstudiantesTab extends StatefulWidget {
@@ -63,20 +61,21 @@ class _AsignaturaEstudiantesTabState extends State<AsignaturaEstudiantesTab> {
                 await _onRefresh();
               },
               child: ListView.separated(
-                itemCount: _asignatura.estudiantes!.length,
+                // itemCount: _asignatura.estudiantes?.length,
+                itemCount: 0,
                 separatorBuilder: (context, index) =>
                     Divider(height: 5, indent: 20, endIndent: 20),
                 itemBuilder: (context, i) {
-                  Usuario estudiante = _asignatura.estudiantes![i];
+                  // Usuario estudiante = _asignatura.estudiantes![i];
                   return ListTile(
                     onTap: () {
                       FirebaseAnalytics.instance.logEvent(
                           name: 'asignatura_estudiante_click',
                           parameters: null);
                     },
-                    leading: ProfilePhoto(usuario: estudiante),
-                    title: Text(estudiante.nombreCompleto ?? "Sin nombre"),
-                    subtitle: Text(estudiante.correo!),
+                    // leading: ProfilePhoto(usuario: estudiante),
+                    // title: Text(estudiante.nombreCompleto ?? "Sin nombre"),
+                    // subtitle: Text(estudiante.correo!),
                   );
                 },
               ),

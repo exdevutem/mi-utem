@@ -2,12 +2,15 @@ import 'package:dio/dio.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:mi_utem/models/asignatura.dart';
 import 'package:mi_utem/utils/dio_miutem_client.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AsignaturasService {
   static final Dio _dio = DioMiUtemClient.authDio;
 
   static Future<List<Asignatura>> getAsignaturas([bool refresh = false]) async {
-    String uri = "/v1/asignaturas";
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    String carreraId = prefs.getString('carreraId')!;
+    String uri = "/v1/carreras/$carreraId/asignaturas";
 
     try {
       Response response = await _dio.get(

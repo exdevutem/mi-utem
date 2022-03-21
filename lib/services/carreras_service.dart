@@ -24,7 +24,7 @@ class CarreraService {
   }
 
   static Future<Carrera> getCarreraActiva([bool refresh = false]) async {
-    String uri = "/v1/carreras/activa";
+    String uri = "/v1/carreras";
 
     Response response = await _dio.get(
       uri,
@@ -35,7 +35,9 @@ class CarreraService {
           .toOptions(),
     );
 
-    Carrera activa = Carrera.fromJson(response.data);
+    List<Carrera> carreras = Carrera.fromJsonList(response.data);
+    Carrera activa = carreras
+        .firstWhere((carrera) => carrera.estado!.toLowerCase() == "regular");
 
     return activa;
   }

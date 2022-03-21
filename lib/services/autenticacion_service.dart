@@ -1,8 +1,8 @@
-import 'dart:developer';
-
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:mi_utem/models/carrera.dart';
 import 'package:mi_utem/models/usuario.dart';
+import 'package:mi_utem/services/carreras_service.dart';
 import 'package:mi_utem/services/perfil_service.dart';
 import 'package:mi_utem/utils/dio_miutem_client.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -24,7 +24,6 @@ class AutenticacionService {
 
       Response response = await _dio.post(uri, data: data);
 
-      log('RESPONSE: ${response.statusCode}');
       Usuario usuario = Usuario();
       if (response.statusCode == 200) {
         usuario = Usuario.fromJson(response.data);
@@ -52,6 +51,10 @@ class AutenticacionService {
 
         if (guardar) {
           await storage.write(key: "contrasenia", value: contrasenia);
+        }
+        Carrera carrera = await CarreraService.getCarreraActiva();
+        if (carrera.id != null) {
+          prefs.setString('carreraId', carrera.id!);
         }
       }
       return usuario;

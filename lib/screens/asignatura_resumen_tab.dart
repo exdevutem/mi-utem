@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mi_utem/models/asignatura.dart';
 import 'package:mi_utem/screens/usuario_screen.dart';
-import 'package:mi_utem/services/asignaturas_service.dart';
 import 'package:mi_utem/widgets/asistencia_chart.dart';
 import 'package:mi_utem/widgets/custom_error_widget.dart';
 import 'package:mi_utem/widgets/loading_indicator.dart';
@@ -35,14 +34,14 @@ class _AsignaturaResumenTabState extends State<AsignaturaResumenTab> {
   }
 
   Future<Asignatura> _getDetalleAsignatura([bool refresh = false]) async {
-    Asignatura asignatura = await AsignaturasService.getDetalleAsignatura(
-        widget.asignatura!.codigo, refresh);
+    // Asignatura asignatura = await AsignaturasService.getDetalleAsignatura(
+    //     widget.asignatura!.codigo, refresh);
 
     setState(() {
-      _asignatura = asignatura;
+      _asignatura = widget.asignatura!;
     });
 
-    return asignatura;
+    return widget.asignatura!;
   }
 
   Future<void> _onRefresh() async {

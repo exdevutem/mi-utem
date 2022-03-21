@@ -2,15 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mdi/mdi.dart';
 import 'package:mi_utem/models/asignatura.dart';
-import 'package:mi_utem/screens/asignatura_estudiantes_tab.dart';
 import 'package:mi_utem/screens/asignatura_notas_tab.dart';
 import 'package:mi_utem/screens/asignatura_resumen_tab.dart';
 import 'package:mi_utem/screens/calculadora_notas_screen.dart';
-import 'package:mi_utem/services/asignaturas_service.dart';
 import 'package:mi_utem/services/review_service.dart';
-import 'package:mi_utem/themes/theme.dart';
 import 'package:mi_utem/widgets/custom_app_bar.dart';
-import 'package:mi_utem/widgets/loading_indicator.dart';
 
 class AsignaturaScreen extends StatefulWidget {
   final Asignatura asignatura;
@@ -39,7 +35,7 @@ class _AsignaturaScreenState extends State<AsignaturaScreen>
       AsignaturaResumenTab(asignatura: widget.asignatura),
       AsignaturaNotasTab(
           asignatura: widget.asignatura, onNotas: _onAsignaturaConNotas),
-      AsignaturaEstudiantesTab(asignatura: widget.asignatura),
+      // AsignaturaEstudiantesTab(asignatura: widget.asignatura),
     ];
     _tabController =
         TabController(length: _tabs.length, vsync: this, initialIndex: 1);
@@ -85,7 +81,7 @@ class _AsignaturaScreenState extends State<AsignaturaScreen>
           tabs: [
             Tab(text: "Resumen"),
             Tab(text: "Notas"),
-            Tab(text: "Estudiantes"),
+            // Tab(text: "Estudiantes"),
           ].sublist(0, _tabs.length),
         ),
       ),
