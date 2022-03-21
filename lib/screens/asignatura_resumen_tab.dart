@@ -29,7 +29,8 @@ class _AsignaturaResumenTabState extends State<AsignaturaResumenTab> {
   @override
   void initState() {
     super.initState();
-    FirebaseAnalytics().setCurrentScreen(screenName: 'AsignaturaResumenTab');
+    FirebaseAnalytics.instance
+        .setCurrentScreen(screenName: 'AsignaturaResumenTab');
     _futureAsignatura = _getDetalleAsignatura();
   }
 

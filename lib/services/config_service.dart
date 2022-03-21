@@ -17,20 +17,22 @@ class ConfigService {
   static const String CREDENCIAL_BARRAS = 'miutem_credencial_barras_detalle';
   static const String CREDENCIAL_DISCLAIMER = 'miutem_credencial_disclaimer';
   static const String CREDENCIAL_INFO = 'miutem_credencial_info';
-  static const String CREDENCIAL_SIBUTEM_LOGO = 'miutem_credencial_sibutem_logo_url';
+  static const String CREDENCIAL_SIBUTEM_LOGO =
+      'miutem_credencial_sibutem_logo_url';
   static const String CALCULADORA_MOSTRAR = 'miutem_calculadora_mostrar';
   static const String HORARIO_ZOOM = 'miutem_horario_zoom';
   static const String HOME_PRONTO_ICONO = 'miutem_home_pronto_icono';
   static const String HOME_PRONTO_TEXTO = 'miutem_home_pronto_texto';
   static const String PRONTO_EG = 'miutem_eg_pronto_texto';
   static const String EG_HABILITADOS = 'miutem_eg_habilitados';
-  static const String DRAWER_MENU  = 'miutem_drawer_menu';
+  static const String DRAWER_MENU = 'miutem_drawer_menu';
 
   static final defaults = <String, dynamic>{
-    CREDITOS:
-        jsonEncode(['Hecho con ❤ por el *Club de Desarrollo Experimental* junto a SISEI']),
+    CREDITOS: jsonEncode(
+        ['Hecho con ❤ por el *Club de Desarrollo Experimental* junto a SISEI']),
     CLUB_NOMBRE: "Club de Desarrollo Experimental",
-    CLUB_DESCRIPCION: "El Club de Desarrollo Experimental es una iniciativa de estudiantes y para estudiantes de la UTEM que busca realzar el lado tecnológico que debería tener la universidad, impulsando y desarrollando ideas y proyectos de caracter innovador.",
+    CLUB_DESCRIPCION:
+        "El Club de Desarrollo Experimental es una iniciativa de estudiantes y para estudiantes de la UTEM que busca realzar el lado tecnológico que debería tener la universidad, impulsando y desarrollando ideas y proyectos de caracter innovador.",
     CLUB_LOGO:
         "https://user-images.githubusercontent.com/16374322/114324335-737b6b80-9af7-11eb-841d-9d14aca0f988.png",
     CLUB_REDES: jsonEncode([
@@ -59,8 +61,10 @@ class ConfigService {
         "url": "https://www.linkedin.com/company/exdevutem/"
       }
     ]),
-    MIUTEM_DESCRIPCION: "Esta aplicación surgió a principios del 2019 como un proyecto independiente **creado completamente por estudiantes** del Club de Desarrollo Experimental (ExDev) de la UTEM ❤️.  \nActualmente nos encontramos trabajando **junto al equipo de SISEI** para que esta aplicación se convierta en la aplicación institucional oficial de la universidad 🎉  \nToda la información corresponde a datos referenciales, y debe ser validada por la Dirección General de Docencia.",
-    MIUTEM_PORTADA: "https://user-images.githubusercontent.com/16374322/114324046-16cb8100-9af6-11eb-9a95-11da425e2fbd.png",
+    MIUTEM_DESCRIPCION:
+        "Esta aplicación surgió a principios del 2019 como un proyecto independiente **creado completamente por estudiantes** del Club de Desarrollo Experimental (ExDev) de la UTEM ❤️.  \nActualmente nos encontramos trabajando **junto al equipo de SISEI** para que esta aplicación se convierta en la aplicación institucional oficial de la universidad 🎉  \nToda la información corresponde a datos referenciales, y debe ser validada por la Dirección General de Docencia.",
+    MIUTEM_PORTADA:
+        "https://user-images.githubusercontent.com/16374322/114324046-16cb8100-9af6-11eb-9a95-11da425e2fbd.png",
     MIUTEM_DESARROLLADORES: jsonEncode([
       {
         "nombre": "Sebastián Albornoz Medina",
@@ -191,78 +195,79 @@ class ConfigService {
       }
     ]),
     CREDENCIAL_BARRAS: "Código de barras compatible con Sistema de Bibliotecas",
-    CREDENCIAL_INFO: "**Mayor información:** \n\n [biblioteca.utem.cl](https://biblioteca.utem.cl/)\n\nEn caso de dudas con su credencial, consultar a su biblioteca o al correo electrónico [**credenciales@utem.cl**](mailto:credenciales@utem.cl)",
-    CREDENCIAL_DISCLAIMER: "**Esta credencial virtual es generada automáticamente y es de uso personal e intransferible. El atraso en la devolución de libros y revistas será sancionado por la biblioteca.**",
-    CREDENCIAL_SIBUTEM_LOGO: "https://user-images.githubusercontent.com/16374322/114325090-42ea0080-9afc-11eb-9cc8-ef4846d4ad8f.jpg",
+    CREDENCIAL_INFO:
+        "**Mayor información:** \n\n [biblioteca.utem.cl](https://biblioteca.utem.cl/)\n\nEn caso de dudas con su credencial, consultar a su biblioteca o al correo electrónico [**credenciales@utem.cl**](mailto:credenciales@utem.cl)",
+    CREDENCIAL_DISCLAIMER:
+        "**Esta credencial virtual es generada automáticamente y es de uso personal e intransferible. El atraso en la devolución de libros y revistas será sancionado por la biblioteca.**",
+    CREDENCIAL_SIBUTEM_LOGO:
+        "https://user-images.githubusercontent.com/16374322/114325090-42ea0080-9afc-11eb-9cc8-ef4846d4ad8f.jpg",
     CALCULADORA_MOSTRAR: true,
     HORARIO_ZOOM: 0.5,
     HOME_PRONTO_ICONO: Icons.pregnant_woman.codePoint,
     HOME_PRONTO_TEXTO: "Se están gestando nuevas funciones 😎",
     PRONTO_EG: "Este recurso no esta disponible",
     EG_HABILITADOS: true,
-    DRAWER_MENU: jsonEncode(
-      [
-        {
-          "nombre": "Perfil",
-          "icono": {
-            "codePoint": Icons.person.codePoint,
-            "fontFamily": 'MaterialIcons'
-          },
-          "mostrar": true, 
-          "esNuevo": false
+    DRAWER_MENU: jsonEncode([
+      {
+        "nombre": "Perfil",
+        "icono": {
+          "codePoint": Icons.person.codePoint,
+          "fontFamily": 'MaterialIcons'
         },
-        {
-          "nombre": "Asignaturas",
-          "icono": {
-            "codePoint": Icons.book.codePoint,
-            "fontFamily": 'MaterialIcons'
-          },
-          "mostrar": true,
-          "esNuevo": false
+        "mostrar": true,
+        "esNuevo": false
+      },
+      {
+        "nombre": "Asignaturas",
+        "icono": {
+          "codePoint": Icons.book.codePoint,
+          "fontFamily": 'MaterialIcons'
         },
-        {
-          "nombre": "Horario",
-          "icono": {
-            "codePoint": Mdi.clockTimeEight.codePoint,
-            "fontFamily": 'Material Design Icons',
-            "fontPackage": "mdi"
-          },
-          "mostrar": true, 
-          "esNuevo": false
+        "mostrar": true,
+        "esNuevo": false
+      },
+      {
+        "nombre": "Horario",
+        "icono": {
+          "codePoint": Mdi.clockTimeEight.codePoint,
+          "fontFamily": 'Material Design Icons',
+          "fontPackage": "mdi"
         },
-        {
-          "nombre": "Credencial",
-          "icono": {
-            "codePoint": Mdi.cardAccountDetails.codePoint,
-            "fontFamily": 'Material Design Icons',
-            "fontPackage": "mdi"
-          },
-          "mostrar": true, 
-          "esNuevo": true
+        "mostrar": true,
+        "esNuevo": false
+      },
+      {
+        "nombre": "Credencial",
+        "icono": {
+          "codePoint": Mdi.cardAccountDetails.codePoint,
+          "fontFamily": 'Material Design Icons',
+          "fontPackage": "mdi"
         },
-        {
-          "nombre": "Docentes",
-          "icono": {
-            "codePoint": Mdi.accountTie.codePoint,
-            "fontFamily": 'Material Design Icons',
-            "fontPackage": "mdi"
-          },
-          "mostrar": true, 
-          "esNuevo": true
+        "mostrar": true,
+        "esNuevo": true
+      },
+      {
+        "nombre": "Docentes",
+        "icono": {
+          "codePoint": Mdi.accountTie.codePoint,
+          "fontFamily": 'Material Design Icons',
+          "fontPackage": "mdi"
         },
-      ]
-    ),
+        "mostrar": true,
+        "esNuevo": true
+      },
+    ]),
   };
 
   static ConfigService? _instance;
 
-  static RemoteConfig? _remoteConfig;
+  static FirebaseRemoteConfig? _remoteConfig;
 
-  static RemoteConfig? get config => _remoteConfig;
+  static FirebaseRemoteConfig? get config => _remoteConfig;
 
   static Future<ConfigService?> getInstance() async {
     if (_instance == null) {
-      _remoteConfig = RemoteConfig.instance;
+      _remoteConfig = FirebaseRemoteConfig.instance;
       await initialise();
     } else {
       await update();

@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 import 'dart:math';
 
 import 'package:dio/dio.dart';
@@ -13,8 +12,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:get/get.dart';
-import 'package:in_app_update/in_app_update.dart';
-import 'package:mi_utem/models/rut.dart';
 import 'package:mi_utem/models/usuario.dart';
 import 'package:mi_utem/screens/main_screen.dart';
 import 'package:mi_utem/services/autenticacion_service.dart';
@@ -22,17 +19,12 @@ import 'package:mi_utem/services/config_service.dart';
 import 'package:mi_utem/themes/theme.dart';
 import 'package:mi_utem/widgets/acerca_dialog.dart';
 import 'package:mi_utem/widgets/acerca_screen.dart';
-import 'package:mi_utem/widgets/custom_alert_dialog.dart';
 import 'package:mi_utem/widgets/error_dialog.dart';
-import 'package:mi_utem/widgets/footer_layout.dart';
 import 'package:mi_utem/widgets/loading_dialog.dart';
 import 'package:mi_utem/widgets/login_text_form_field.dart';
-import 'package:mi_utem/widgets/sad_dialog.dart';
-import 'package:permission_handler/permission_handler.dart';
+import 'package:url_launcher/url_launcher.dart';
 //import 'package:new_version/new_version.dart';
 import 'package:video_player/video_player.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
   LoginScreen({Key? key}) : super(key: key);
@@ -43,10 +35,10 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   String? _correo, _contrasenia;
-  GlobalKey<FormState>? _formKey;
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   late VideoPlayerController _controller;
 
-  RemoteConfig? _remoteConfig;
+  FirebaseRemoteConfig? _remoteConfig;
 
   @override
   void initState() {
@@ -63,8 +55,7 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
 
-    FirebaseAnalytics().setCurrentScreen(screenName: 'LoginScreen');
-    _formKey = GlobalKey<FormState>();
+    FirebaseAnalytics.instance.setCurrentScreen(screenName: 'LoginScreen');
     _correo = null;
     _contrasenia = null;
     _controller = VideoPlayerController.asset('assets/videos/login_bg.mp4')
@@ -126,6 +117,15 @@ class _LoginScreenState extends State<LoginScreen> {
     return texts[random.nextInt(texts.length)];
   }
 
+  BoxDecoration get _backgroundDecoration {
+    return BoxDecoration(
+      image: DecorationImage(
+        image: AssetImage('assets/images/login_bg.png'),
+        fit: BoxFit.cover,
+      ),
+    );
+  }
+
   @override
   void dispose() {
     super.dispose();
@@ -143,12 +143,7 @@ class _LoginScreenState extends State<LoginScreen> {
             alignment: Alignment.center,
             children: <Widget>[
               Container(
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage('assets/images/login_bg.png'),
-                    fit: BoxFit.cover,
-                  ),
-                ),
+                decoration: _backgroundDecoration,
               ),
               ClipRect(
                 child: OverflowBox(
@@ -159,24 +154,19 @@ class _LoginScreenState extends State<LoginScreen> {
                     fit: BoxFit.cover,
                     alignment: Alignment.center,
                     child: Container(
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage('assets/images/login_bg.png'),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                      width: size == null ? 1960 : size.width,
-                      height: size == null ? 1080 : size.height,
+                      decoration: _backgroundDecoration,
+                      width: size.width,
+                      height: size.height,
                       child: VideoPlayer(_controller),
                     ),
                   ),
                 ),
               ),
               Container(
-                decoration: BoxDecoration(color: Color(0x80000000)),
+                color: Color(0x80000000),
               ),
               Container(
-                height: MediaQuery.of(context).size.height,
+                height: Get.height,
                 child: LayoutBuilder(
                   builder: (BuildContext context, BoxConstraints constraints) {
                     return SingleChildScrollView(
@@ -248,17 +238,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                   onPressed: () => _login(),
                                   child: Text("Iniciar"),
                                 ),
-                                /* Container(height: 20),
-                              GestureDetector(
-                                child: Text(
-                                  "¿Olvidaste tu contraseña?",
-                                  style: TextStyle(
-                                    decoration: TextDecoration.underline,
-                                    color: Colors.grey[300],
-                                  ),
-                                ),
-                                onTap: () {},
-                              ), */
                                 Container(height: constraints.maxHeight * 0.1),
                                 if (!isKeyboardVisible)
                                   Expanded(
@@ -351,10 +330,10 @@ class _LoginScreenState extends State<LoginScreen> {
           Usuario usuario =
               await AutenticacionService.login(_correo, _contrasenia, true);
 
-          FirebaseAnalytics().logLogin();
-          FirebaseAnalytics().setUserId(usuario.correo!);
+          FirebaseAnalytics.instance.logLogin();
+          FirebaseAnalytics.instance.setUserId(id: usuario.correo);
           if (usuario.rut != null) {
-            FirebaseAnalytics().setUserProperty(
+            FirebaseAnalytics.instance.setUserProperty(
                 name: "rut", value: usuario.rut!.numero.toString());
           }
 

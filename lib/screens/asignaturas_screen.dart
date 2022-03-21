@@ -4,10 +4,9 @@ import 'package:get/get.dart';
 import 'package:mi_utem/models/asignatura.dart';
 import 'package:mi_utem/screens/asignatura_screen.dart';
 import 'package:mi_utem/services/asignaturas_service.dart';
-import 'package:mi_utem/themes/theme.dart';
+import 'package:mi_utem/widgets/custom_app_bar.dart';
 import 'package:mi_utem/widgets/custom_error_widget.dart';
 import 'package:mi_utem/widgets/loading_indicator.dart';
-import 'package:mi_utem/widgets/custom_app_bar.dart';
 import 'package:mi_utem/widgets/pull_to_refresh.dart';
 
 class AsignaturasScreen extends StatefulWidget {
@@ -24,7 +23,8 @@ class _AsignaturasScreenState extends State<AsignaturasScreen> {
   @override
   void initState() {
     super.initState();
-    FirebaseAnalytics().setCurrentScreen(screenName: 'AsignaturasScreen');
+    FirebaseAnalytics.instance
+        .setCurrentScreen(screenName: 'AsignaturasScreen');
     _futureAsignaturas = _getAsignaturas();
   }
 

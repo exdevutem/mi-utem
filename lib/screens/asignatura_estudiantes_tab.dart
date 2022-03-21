@@ -27,7 +27,7 @@ class _AsignaturaEstudiantesTabState extends State<AsignaturaEstudiantesTab> {
   @override
   void initState() {
     super.initState();
-    FirebaseAnalytics()
+    FirebaseAnalytics.instance
         .setCurrentScreen(screenName: 'AsignaturaEstudiantesTab');
     _futureAsignatura = _getDetalleAsignatura();
   }
@@ -70,7 +70,7 @@ class _AsignaturaEstudiantesTabState extends State<AsignaturaEstudiantesTab> {
                   Usuario estudiante = _asignatura.estudiantes![i];
                   return ListTile(
                     onTap: () {
-                      FirebaseAnalytics().logEvent(
+                      FirebaseAnalytics.instance.logEvent(
                           name: 'asignatura_estudiante_click',
                           parameters: null);
                     },

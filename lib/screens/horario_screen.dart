@@ -21,7 +21,6 @@ import 'package:mi_utem/widgets/pull_to_refresh.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vector_math/vector_math_64.dart';
 
 class HorarioScreen extends StatefulWidget {
@@ -46,7 +45,7 @@ class _HorarioScreenState extends State<HorarioScreen> {
   Future<Horario>? _horarioFuture;
   Horario? _horario;
   TransformationController? _controller;
-  RemoteConfig? _remoteConfig;
+  FirebaseRemoteConfig? _remoteConfig;
   ScreenshotController _screenshotController = ScreenshotController();
 
   CustomAppBar get _appBar => CustomAppBar(
@@ -87,7 +86,7 @@ class _HorarioScreenState extends State<HorarioScreen> {
     _controller!.value.setDiagonal(Vector4(zoom, zoom, zoom, 1));
 
     ReviewService.addScreen("HorarioScreen");
-    FirebaseAnalytics().setCurrentScreen(screenName: 'HorarioScreen');
+    FirebaseAnalytics.instance.setCurrentScreen(screenName: 'HorarioScreen');
     _horarioFuture = _getHorario();
     _getHorarioActualizado();
     SystemChrome.setPreferredOrientations([

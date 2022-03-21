@@ -28,7 +28,7 @@ void main() async {
 }
 
 class MiUtem extends StatelessWidget {
-  FirebaseAnalytics analytics = FirebaseAnalytics();
+  FirebaseAnalytics analytics = FirebaseAnalytics.instance;
 
   @override
   Widget build(BuildContext context) {

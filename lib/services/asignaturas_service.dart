@@ -14,7 +14,7 @@ class AsignaturasService {
         uri,
         options: DioMiUtemClient.cacheOptions
             .copyWith(
-                maxStale: Duration(days: 7),
+                maxStale: Nullable(Duration(days: 7)),
                 policy: refresh ? CachePolicy.refresh : CachePolicy.forceCache)
             .toOptions(),
       );
@@ -37,7 +37,7 @@ class AsignaturasService {
         uri,
         options: DioMiUtemClient.cacheOptions
             .copyWith(
-                maxStale: Duration(days: 7),
+                maxStale: Nullable(Duration(days: 7)),
                 policy: refresh ? CachePolicy.refresh : CachePolicy.forceCache)
             .toOptions(),
       );
@@ -61,7 +61,7 @@ class AsignaturasService {
         uri,
         options: DioMiUtemClient.cacheOptions
             .copyWith(
-                maxStale: Duration(days: 7),
+                maxStale: Nullable(Duration(days: 7)),
                 policy: refresh ? CachePolicy.refresh : CachePolicy.forceCache)
             .toOptions(),
         queryParameters: query,

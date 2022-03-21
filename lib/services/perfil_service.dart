@@ -1,11 +1,8 @@
-import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:mi_utem/models/rut.dart';
 import 'package:mi_utem/models/usuario.dart';
-import 'package:mi_utem/services/notificaciones_service.dart';
 import 'package:mi_utem/utils/dio_miutem_client.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -15,7 +12,7 @@ class PerfilService {
   static Future<Usuario> getLocalUsuario() async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? sesion = prefs.getString("sesion");
+      String? token = prefs.getString("token");
       String? nombres = prefs.getString("nombres");
       String? apellidos = prefs.getString("apellidos");
       String? nombre = prefs.getString("nombre");
@@ -26,7 +23,7 @@ class PerfilService {
       String? correo = prefs.getString("correo");
 
       return Usuario(
-          sesion: sesion,
+          token: token,
           nombres: nombres,
           fotoUrl: fotoUrl,
           nombre: nombre,

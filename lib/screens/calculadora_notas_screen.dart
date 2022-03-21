@@ -3,14 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_masked_text/flutter_masked_text.dart';
 import 'package:mi_utem/models/asignatura.dart';
 import 'package:mi_utem/models/evaluacion.dart';
-import 'package:mi_utem/models/usuario.dart';
-import 'package:mi_utem/services/asignaturas_service.dart';
 import 'package:mi_utem/services/review_service.dart';
 import 'package:mi_utem/themes/theme.dart';
-import 'package:mi_utem/widgets/loading_indicator.dart';
-import 'package:mi_utem/widgets/nota_list_item.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mi_utem/widgets/custom_app_bar.dart';
+import 'package:mi_utem/widgets/nota_list_item.dart';
 
 class CalculadoraNotasScreen extends StatefulWidget {
   final Asignatura? asignaturaInicial;
@@ -36,7 +32,8 @@ class _CalculadoraNotasScreenState extends State<CalculadoraNotasScreen> {
   void initState() {
     super.initState();
     ReviewService.addScreen("CalculadoraNotasScreen");
-    FirebaseAnalytics().setCurrentScreen(screenName: 'CalculadoraNotasScreen');
+    FirebaseAnalytics.instance
+        .setCurrentScreen(screenName: 'CalculadoraNotasScreen');
     setState(() {
       _examenController.text =
           widget.asignaturaInicial!.notaExamen?.toStringAsFixed(1) ?? "";

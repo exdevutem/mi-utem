@@ -7,10 +7,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 class DioMiUtemClient {
   static const bool isProduction = bool.fromEnvironment('dart.vm.product');
 
-  static const String debugUrl = 'http://192.168.5.130:3000';
+  static const String debugUrl = 'http://192.168.43.164:3000';
   static const String productionUrl = 'https://apiapp.utem.dev';
 
-  static const String url = isProduction ? productionUrl : productionUrl;
+  static const String url = isProduction ? productionUrl : debugUrl;
 
   static Dio get initDio => Dio(BaseOptions(
         baseUrl: url,
@@ -31,8 +31,8 @@ class DioMiUtemClient {
       [
         InterceptorsWrapper(onRequest: (options, handler) async {
           SharedPreferences prefs = await SharedPreferences.getInstance();
-          var sesion = prefs.getString('sesion');
-          options.headers.addAll({"Authorization": "Bearer $sesion"});
+          var token = prefs.getString('token');
+          options.headers.addAll({"Authorization": "Bearer $token"});
 
           return handler.next(options);
         }, onResponse: (response, handler) async {
@@ -82,7 +82,7 @@ class DioMiUtemClient {
 
         Usuario usuario = Usuario.fromJson(response.data);
 
-        prefs.setString('sesion', usuario.sesion!);
+        prefs.setString('token', usuario.token!);
 
         return true;
       } else {

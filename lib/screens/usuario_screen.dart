@@ -35,7 +35,7 @@ class _UsuarioScreenState extends State<UsuarioScreen> {
   @override
   void initState() {
     ReviewService.addScreen("UsuarioScreen");
-    FirebaseAnalytics().setCurrentScreen(screenName: 'UsuarioScreen');
+    FirebaseAnalytics.instance.setCurrentScreen(screenName: 'UsuarioScreen');
     super.initState();
     _usuarioFuture = _getUsuario();
   }
