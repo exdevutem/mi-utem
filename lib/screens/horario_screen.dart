@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -143,43 +142,38 @@ class _HorarioScreenState extends State<HorarioScreen> {
     ];
 
     // Primera fila de los días
-    if (horario.dias != null) {
-      for (dynamic dia in horario.dias!) {
-        log('dia: $dia');
-        filaWidgets.add(BloqueDiasCard(
-          day: dia,
-          height: _dayBlockHeight,
-          width: _dayBlockWidth,
-          active: _dayActive,
-        ));
-      }
+    for (dynamic dia in horario.diasHorario) {
+      filaWidgets.add(BloqueDiasCard(
+        day: dia,
+        height: _dayBlockHeight,
+        width: _dayBlockWidth,
+        active: _dayActive,
+      ));
     }
     filas.add(TableRow(children: filaWidgets));
 
     // Se llena el resto
-    for (num i = 0; i < horario.horarioEnlazado.length; i++) {
+    for (num bloque = 0; bloque < horario.horarioEnlazado.length; bloque++) {
       filaWidgets = [];
-      if ((i % 2) == 0) {
-        List<BloqueHorario> periodo = horario.horarioEnlazado[i as int];
-        for (num j = 0; j < periodo.length; j++) {
-          BloqueHorario bloque = horario.horarioEnlazado[i][j as int];
-          if (j == 0) {
-            filaWidgets.add(BloquePeriodoCard(
-              inicio: horario.horasInicio[i ~/ 2],
-              intermedio: horario.horasIntermedio[i ~/ 2],
-              fin: horario.horasTermino[i ~/ 2],
-              height: _periodBlockHeight,
-              width: _periodBlockWidth,
-              active: _periodActive,
-            ));
-          }
 
-          print("bloque ${bloque.codigo} ${bloque.asignatura}");
+      if ((bloque % 2) == 0) {
+        filaWidgets.add(BloquePeriodoCard(
+          inicio: horario.horasInicio[bloque ~/ 2],
+          intermedio: horario.horasIntermedio[bloque ~/ 2],
+          fin: horario.horasTermino[bloque ~/ 2],
+          height: _periodBlockHeight,
+          width: _periodBlockWidth,
+          active: _periodActive,
+        ));
+        List<BloqueHorario> bloquePorDias =
+            horario.horarioEnlazado[bloque as int];
+        for (num dia = 0; dia < bloquePorDias.length; dia++) {
+          BloqueHorario _bloque = horario.horarioEnlazado[bloque][dia as int];
 
           filaWidgets.add(BloqueRamoCard(
             height: _classBlockHeight,
             width: _classBlockWidth,
-            bloque: bloque,
+            bloque: _bloque,
           ));
         }
         filas.add(TableRow(children: filaWidgets));

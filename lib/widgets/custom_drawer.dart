@@ -8,7 +8,6 @@ import 'package:mdi/mdi.dart';
 import 'package:mi_utem/models/usuario.dart';
 import 'package:mi_utem/screens/asignaturas_screen.dart';
 import 'package:mi_utem/screens/credencial_screen.dart';
-import 'package:mi_utem/screens/docentes_screen.dart';
 import 'package:mi_utem/screens/horario_screen.dart';
 import 'package:mi_utem/screens/login_screen.dart';
 import 'package:mi_utem/screens/usuario_screen.dart';
@@ -50,9 +49,9 @@ class _CustomDrawerState extends State<CustomDrawer> {
       case "Credencial":
         return CredencialScreen();
         break;
-      case "Docentes":
-        return DocentesScreen();
-        break;
+      // case "Docentes":
+      //   return DocentesScreen();
+      //   break;
       default:
         return null;
     }

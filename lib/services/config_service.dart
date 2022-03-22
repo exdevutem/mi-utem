@@ -246,16 +246,16 @@ class ConfigService {
         "mostrar": true,
         "esNuevo": true
       },
-      {
-        "nombre": "Docentes",
-        "icono": {
-          "codePoint": Mdi.accountTie.codePoint,
-          "fontFamily": 'Material Design Icons',
-          "fontPackage": "mdi"
-        },
-        "mostrar": true,
-        "esNuevo": true
-      },
+      // {
+      //   "nombre": "Docentes",
+      //   "icono": {
+      //     "codePoint": Mdi.accountTie.codePoint,
+      //     "fontFamily": 'Material Design Icons',
+      //     "fontPackage": "mdi"
+      //   },
+      //   "mostrar": true,
+      //   "esNuevo": true
+      // },
     ]),
   };
 
