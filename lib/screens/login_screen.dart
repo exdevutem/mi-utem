@@ -289,8 +289,8 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> _login() async {
-    if (_formKey!.currentState!.validate()) {
-      _formKey!.currentState!.save();
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
       if (_correo == "error@utem.cl") {
         Get.dialog(
           ErrorDialog(

@@ -1,10 +1,6 @@
-import 'package:badges/badges.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:mi_utem/models/asignatura.dart';
-import 'package:mi_utem/screens/usuario_screen.dart';
-import 'package:mi_utem/widgets/asistencia_chart.dart';
 import 'package:mi_utem/widgets/custom_error_widget.dart';
 import 'package:mi_utem/widgets/loading_indicator.dart';
 import 'package:mi_utem/widgets/pull_to_refresh.dart';
@@ -111,36 +107,36 @@ class _AsignaturaResumenTabState extends State<AsignaturaResumenTab> {
                               title: Text("Docente"),
                               subtitle:
                                   Text(_asignatura.docente ?? "Sin docente"),
-                              trailing: _asignatura.docente != null
-                                  ? Badge(
-                                      shape: BadgeShape.square,
-                                      borderRadius: BorderRadius.circular(10),
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 6, vertical: 3),
-                                      elevation: 0,
-                                      badgeContent: Text(
-                                        'Nuevo',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 10,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    )
-                                  : null,
-                              onTap: _asignatura.docente != null
-                                  ? () async {
-                                      await Get.to(
-                                        UsuarioScreen(
-                                          tipo: 2,
-                                          query: {
-                                            "nombre": _asignatura.docente
-                                          },
-                                          asignatura: widget.asignatura,
-                                        ),
-                                      );
-                                    }
-                                  : null,
+                              // trailing: _asignatura.docente != null
+                              //     ? Badge(
+                              //         shape: BadgeShape.square,
+                              //         borderRadius: BorderRadius.circular(10),
+                              //         padding: EdgeInsets.symmetric(
+                              //             horizontal: 6, vertical: 3),
+                              //         elevation: 0,
+                              //         badgeContent: Text(
+                              //           'Nuevo',
+                              //           style: TextStyle(
+                              //             color: Colors.white,
+                              //             fontSize: 10,
+                              //             fontWeight: FontWeight.bold,
+                              //           ),
+                              //         ),
+                              //       )
+                              //     : null,
+                              // onTap: _asignatura.docente != null
+                              //     ? () async {
+                              //         await Get.to(
+                              //           UsuarioScreen(
+                              //             tipo: 2,
+                              //             query: {
+                              //               "nombre": _asignatura.docente
+                              //             },
+                              //             asignatura: widget.asignatura,
+                              //           ),
+                              //         );
+                              //       }
+                              //     : null,
                             ),
                             Divider(height: 5, indent: 20, endIndent: 20),
                             ListTile(
@@ -171,24 +167,24 @@ class _AsignaturaResumenTabState extends State<AsignaturaResumenTab> {
                         ),
                       ),
                     ),
-                    Card(
-                      child: Container(
-                        padding: EdgeInsets.all(20),
-                        child: Column(
-                          children: [
-                            Container(
-                              width: double.infinity,
-                              child: Text(
-                                "Asistencia".toUpperCase(),
-                                style: Theme.of(context).textTheme.headline4,
-                                textAlign: TextAlign.left,
-                              ),
-                            ),
-                            AsistenciaChart(asistencia: _asignatura.asistencia),
-                          ],
-                        ),
-                      ),
-                    ),
+                    // Card(
+                    //   child: Container(
+                    //     padding: EdgeInsets.all(20),
+                    //     child: Column(
+                    //       children: [
+                    //         Container(
+                    //           width: double.infinity,
+                    //           child: Text(
+                    //             "Asistencia".toUpperCase(),
+                    //             style: Theme.of(context).textTheme.headline4,
+                    //             textAlign: TextAlign.left,
+                    //           ),
+                    //         ),
+                    //         AsistenciaChart(asistencia: _asignatura.asistencia),
+                    //       ],
+                    //     ),
+                    //   ),
+                    // ),
                   ],
                 ),
               ),

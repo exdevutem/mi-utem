@@ -192,60 +192,25 @@ class _HorarioScreenState extends State<HorarioScreen> {
     return Scaffold(
       appBar: _appBar,
       body: FutureBuilder(
-        future: _horarioFuture,
-        builder: (context, snapshot) {
-          if (snapshot.hasError || !snapshot.hasData) {
-            DioError? dioError;
+          future: _horarioFuture,
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              DioError? dioError;
 
-            if (snapshot.error is DioError) {
-              dioError = snapshot.error as DioError?;
+              if (snapshot.error is DioError) {
+                dioError = snapshot.error as DioError?;
+              }
+
+              if (dioError != null && dioError.response!.statusCode == 404) {
+                return CustomErrorWidget(
+                  emoji: "🤔",
+                  texto: "Parece que no se encontró el horario",
+                  error: snapshot.error,
+                );
+              }
             }
 
-            if (dioError != null && dioError.response!.statusCode == 404) {
-              return CustomErrorWidget(
-                emoji: "🤔",
-                texto: "Parece que no se encontró el horario",
-                error: snapshot.error,
-              );
-            }
-            return CustomErrorWidget(
-              texto: "Ocurrió un error al obtener el horario",
-              error: snapshot.error,
-            );
-          } else {
-            if (snapshot.hasData) {
-              Horario? horario = _horario;
-              return PullToRefresh(
-                onRefresh: () async {
-                  await _onRefresh();
-                },
-                child: InteractiveViewer(
-                  transformationController: _controller,
-                  maxScale: 1,
-                  minScale: 0.1,
-                  alignPanAxis: false,
-                  clipBehavior: Clip.none,
-                  constrained: false,
-                  onInteractionUpdate: (interaction) {
-                    if (interaction.scale >= 0.8) {
-                      print("HEY");
-                    }
-                  },
-                  child: Screenshot(
-                    controller: _screenshotController,
-                    child: SafeArea(
-                      child: Table(
-                        defaultColumnWidth: FixedColumnWidth(_classBlockWidth),
-                        columnWidths: {
-                          0: FixedColumnWidth(_periodBlockWidth),
-                        },
-                        children: _getChildren(horario!),
-                      ),
-                    ),
-                  ),
-                ),
-              );
-            } else {
+            if (!snapshot.hasData) {
               return Container(
                 padding: EdgeInsets.all(20),
                 child: Column(
@@ -260,9 +225,39 @@ class _HorarioScreenState extends State<HorarioScreen> {
                 ),
               );
             }
-          }
-        },
-      ),
+
+            Horario? horario = _horario;
+            return PullToRefresh(
+              onRefresh: () async {
+                await _onRefresh();
+              },
+              child: InteractiveViewer(
+                transformationController: _controller,
+                maxScale: 1,
+                minScale: 0.1,
+                alignPanAxis: false,
+                clipBehavior: Clip.none,
+                constrained: false,
+                onInteractionUpdate: (interaction) {
+                  if (interaction.scale >= 0.8) {
+                    print("HEY");
+                  }
+                },
+                child: Screenshot(
+                  controller: _screenshotController,
+                  child: SafeArea(
+                    child: Table(
+                      defaultColumnWidth: FixedColumnWidth(_classBlockWidth),
+                      columnWidths: {
+                        0: FixedColumnWidth(_periodBlockWidth),
+                      },
+                      children: _getChildren(horario!),
+                    ),
+                  ),
+                ),
+              ),
+            );
+          }),
     );
   }
 }
