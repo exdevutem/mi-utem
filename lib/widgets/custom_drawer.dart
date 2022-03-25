@@ -81,7 +81,9 @@ class _CustomDrawerState extends State<CustomDrawer> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   UserAccountsDrawerHeader(
-                    accountEmail: Text(widget.usuario.correo ?? ""),
+                    accountEmail: Text(widget.usuario.correoUtem ??
+                        widget.usuario.correoPersonal ??
+                        ""),
                     accountName: Text(
                       widget.usuario.nombreCompleto ?? "",
                       style:

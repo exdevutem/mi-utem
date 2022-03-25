@@ -331,7 +331,7 @@ class _LoginScreenState extends State<LoginScreen> {
               await AutenticacionService.login(_correo, _contrasenia, true);
 
           FirebaseAnalytics.instance.logLogin();
-          FirebaseAnalytics.instance.setUserId(id: usuario.correo);
+          FirebaseAnalytics.instance.setUserId(id: usuario.correoUtem);
           if (usuario.rut != null) {
             FirebaseAnalytics.instance.setUserProperty(
                 name: "rut", value: usuario.rut!.numero.toString());

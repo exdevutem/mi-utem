@@ -40,8 +40,11 @@ class AutenticacionService {
         if (usuario.fotoUrl != null) {
           prefs.setString('fotoUrl', usuario.fotoUrl!);
         }
-        if (usuario.correo != null) {
-          prefs.setString('correo', usuario.correo!);
+        if (usuario.correoUtem != null) {
+          prefs.setString('correoUtem', usuario.correoUtem!);
+        }
+        if (usuario.correoPersonal != null) {
+          prefs.setString('correoUtem', usuario.correoPersonal!);
         }
         if (usuario.rut?.numero != null) {
           prefs.setInt('rut', usuario.rut!.numero!);

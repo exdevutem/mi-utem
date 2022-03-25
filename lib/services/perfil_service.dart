@@ -20,7 +20,8 @@ class PerfilService {
       Rut? rut = prefs.getInt("rut") != null
           ? Rut.deEntero(prefs.getInt("rut"))
           : null;
-      String? correo = prefs.getString("correo");
+      String? correoUtem = prefs.getString("correoUtem");
+      String? correoPersonal = prefs.getString("correoPersonal");
 
       return Usuario(
           token: token,
@@ -29,7 +30,8 @@ class PerfilService {
           nombre: nombre,
           apellidos: apellidos,
           rut: rut,
-          correo: correo);
+          correoUtem: correoUtem,
+          correoPersonal: correoPersonal);
     } catch (e) {
       print(e);
       throw e;

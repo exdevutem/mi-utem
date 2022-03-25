@@ -118,7 +118,9 @@ class _DocentesScreenState extends State<DocentesScreen> {
                                     maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
                                   ),
-                                  subtitle: Text(docente.correo!),
+                                  subtitle: Text(docente.correoUtem ??
+                                      docente.correoPersonal ??
+                                      ""),
                                   onTap: () async {
                                     await Get.to(
                                       UsuarioScreen(
