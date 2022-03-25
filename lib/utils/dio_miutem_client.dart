@@ -66,23 +66,24 @@ class DioMiUtemClient {
     );
 
   static Future<bool> refreshSesion() async {
-    String uri = "/v1/usuarios/refresh";
+    String uri = "/v1/auth";
 
     try {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       final FlutterSecureStorage storage = new FlutterSecureStorage();
 
-      String? correo = prefs.getString("correo");
+      String? correo = prefs.getString("correoUtem");
       String? contrasenia = await storage.read(key: "contrasenia");
 
       if (correo != null && contrasenia != null) {
-        dynamic data = {'usuario': correo, 'contrasenia': contrasenia};
+        dynamic data = {'correo': correo, 'contrasenia': contrasenia};
 
         Response response = await DioMiUtemClient.initDio.post(uri, data: data);
 
-        Usuario usuario = Usuario.fromJson(response.data);
-
-        prefs.setString('token', usuario.token!);
+        if (response.statusCode == 200) {
+          Usuario usuario = Usuario.fromJson(response.data);
+          prefs.setString('token', usuario.token!);
+        }
 
         return true;
       } else {
