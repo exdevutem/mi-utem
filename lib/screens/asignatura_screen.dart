@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mdi/mdi.dart';
 import 'package:mi_utem/models/asignatura.dart';
+import 'package:mi_utem/screens/asignatura_estudiantes_tab.dart';
 import 'package:mi_utem/screens/asignatura_notas_tab.dart';
 import 'package:mi_utem/screens/asignatura_resumen_tab.dart';
 import 'package:mi_utem/screens/calculadora_notas_screen.dart';
@@ -35,8 +36,11 @@ class _AsignaturaScreenState extends State<AsignaturaScreen>
       AsignaturaResumenTab(asignatura: widget.asignatura),
       AsignaturaNotasTab(
           asignatura: widget.asignatura, onNotas: _onAsignaturaConNotas),
-      // AsignaturaEstudiantesTab(asignatura: widget.asignatura),
     ];
+    if (widget.asignatura.estudiantes != null &&
+        widget.asignatura.estudiantes!.length > 0) {
+      _tabs.add(AsignaturaEstudiantesTab(asignatura: widget.asignatura));
+    }
     _tabController =
         TabController(length: _tabs.length, vsync: this, initialIndex: 1);
     _tabController!.addListener(() {

@@ -54,9 +54,12 @@ class AsignaturasService {
     }
   }
 
-  static Future<Asignatura?> getNotasByCodigoAsignatura(String? codigo,
+  static Future<Asignatura?> getNotasByCodigoAsignatura(
+      String? codigo, String? asignaturaId,
       [bool refresh = false]) async {
-    String uri = "/v1/notas";
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String carreraId = prefs.getString('carreraId')!;
+    String uri = "/v1/carreras/$carreraId/asignaturas/$asignaturaId/notas";
 
     try {
       Map<String, dynamic> query = {"semestre": false};

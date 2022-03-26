@@ -2,11 +2,13 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:mi_utem/models/evaluacion.dart';
+import 'package:mi_utem/models/usuario.dart';
 import 'package:mi_utem/themes/theme.dart';
 import 'package:recase/recase.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Asignatura {
+  String? id;
   String? nombre;
   String? codigo;
   String? tipoHora;
@@ -19,7 +21,7 @@ class Asignatura {
   num? notaPresentacion;
   num? notaFinal;
   Asistencia? asistencia;
-  // List<Usuario>? estudiantes;
+  List<Usuario>? estudiantes;
   String? tipoAsignatura;
   num? intentos;
   String? horario;
@@ -27,6 +29,7 @@ class Asignatura {
   String? tipoSala;
 
   Asignatura({
+    this.id,
     this.nombre,
     this.codigo,
     this.colorAsignatura,
@@ -39,7 +42,7 @@ class Asignatura {
     this.seccion,
     this.notaExamen,
     this.asistencia,
-    // this.estudiantes,
+    this.estudiantes,
     this.tipoAsignatura,
     this.sala,
     this.horario,
@@ -75,6 +78,7 @@ class Asignatura {
     }
 
     var asignaturaParseada = Asignatura(
+      id: json['id'],
       codigo: json['codigo'],
       nombre: json['nombre'] != null ? ReCase(json['nombre']).titleCase : null,
       tipoHora:

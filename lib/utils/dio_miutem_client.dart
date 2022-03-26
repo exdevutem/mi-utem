@@ -1,16 +1,17 @@
 import 'package:dio/dio.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:mi_utem/models/usuario.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DioMiUtemClient {
   static const bool isProduction = bool.fromEnvironment('dart.vm.product');
+  static String debugUrl =
+      dotenv.env['MI_UTEM_API_DEBUG'] ?? "https://api-mi-utem.herokuapp.com/";
+  static const String productionUrl = 'https://api-mi-utem.herokuapp.com/';
 
-  static const String debugUrl = 'http://192.168.1.169:3000';
-  static const String productionUrl = 'https://apiapp.utem.dev';
-
-  static const String url = isProduction ? productionUrl : debugUrl;
+  static String url = isProduction ? productionUrl : debugUrl;
 
   static Dio get initDio => Dio(BaseOptions(
         baseUrl: url,
