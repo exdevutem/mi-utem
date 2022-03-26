@@ -86,3 +86,4 @@ flutter:
     - assets/animations/monito.flr
     - assets/animations/utem.flr
     - assets/images/sibutem.jpg
+    - .env
