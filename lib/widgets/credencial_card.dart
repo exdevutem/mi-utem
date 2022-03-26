@@ -1,11 +1,8 @@
-import 'dart:math';
-
 import 'package:barcode_flutter/barcode_flutter.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
-import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:mi_utem/models/carrera.dart';
 import 'package:mi_utem/models/usuario.dart';
@@ -35,7 +32,7 @@ class CredencialCard extends StatefulWidget {
 }
 
 class _CredencialCardState extends State<CredencialCard> {
-  RemoteConfig? _remoteConfig;
+  FirebaseRemoteConfig? _remoteConfig;
 
   @override
   void initState() {

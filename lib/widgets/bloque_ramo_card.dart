@@ -1,9 +1,7 @@
 import 'package:dotted_border/dotted_border.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:get/get.dart';
+import 'package:flutter/material.dart';
 import 'package:mi_utem/models/horario.dart';
-import 'package:mi_utem/screens/asignatura_screen.dart';
 
 class BloqueRamoCard extends StatelessWidget {
   final Color colorTexto = Colors.white;
@@ -42,24 +40,22 @@ class BloqueRamoCard extends StatelessWidget {
         padding: EdgeInsets.all(10),
         child: InkWell(
           onTap: () {
-            if (bloque.asignatura != null) {
-              Get.to(
-                AsignaturaScreen(asignatura: bloque.asignatura!),
-              );
-            }
+            // if (bloque.asignatura != null) {
+            //   Get.to(
+            //     AsignaturaScreen(asignatura: bloque.asignatura!),
+            //   );
+            // }
           },
           child: Container(
             decoration: BoxDecoration(
-              color: bloque.asignatura != null
-                  ? bloque.asignatura!.colorAsignatura
-                  : Color(0xFFF1F1F1),
+              color: bloque.codigo != null ? Colors.teal : Color(0xFFF1F1F1),
               borderRadius: BorderRadius.circular(15),
             ),
             child: bloque.asignatura != null
                 ? Column(
                     children: <Widget>[
                       Text(
-                        "${bloque.asignatura!.codigo}/${bloque.asignatura!.seccion}",
+                        "${bloque.codigo}",
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: colorTexto,
@@ -67,7 +63,7 @@ class BloqueRamoCard extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        bloque.asignatura!.nombre!.toUpperCase(),
+                        bloque.asignatura!.toUpperCase(),
                         maxLines: 3,
                         textAlign: TextAlign.center,
                         style: TextStyle(
@@ -79,7 +75,7 @@ class BloqueRamoCard extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        bloque.sala!,
+                        bloque.sala != null ? bloque.sala! : "Sin sala",
                         textAlign: TextAlign.center,
                         maxLines: 2,
                         style: TextStyle(

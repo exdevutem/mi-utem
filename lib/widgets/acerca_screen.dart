@@ -1,24 +1,19 @@
 import 'dart:convert';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
-import 'package:flare_flutter/flare_actor.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:mi_utem/models/usuario.dart';
 import 'package:mi_utem/services/config_service.dart';
 import 'package:mi_utem/widgets/acerca_aplicacion_content.dart';
-
-import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:mi_utem/widgets/custom_app_bar.dart';
 import 'package:mi_utem/widgets/default_network_image.dart';
 import 'package:mi_utem/widgets/image_view_screen.dart';
 import 'package:mi_utem/widgets/profile_photo.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:mi_utem/widgets/custom_app_bar.dart';
 
 class AcercaScreen extends StatefulWidget {
   AcercaScreen({
@@ -30,7 +25,7 @@ class AcercaScreen extends StatefulWidget {
 }
 
 class _AcercaScreenState extends State<AcercaScreen> {
-  RemoteConfig? _remoteConfig;
+  FirebaseRemoteConfig? _remoteConfig;
 
   @override
   void initState() {
@@ -113,7 +108,7 @@ class _AcercaScreenState extends State<AcercaScreen> {
                                 child: InkWell(
                                   customBorder: CircleBorder(),
                                   onTap: () async {
-                                    FirebaseAnalytics().logEvent(
+                                    FirebaseAnalytics.instance.logEvent(
                                       name: "acerca_club_social_click",
                                       parameters: {
                                         "red": red['nombre'],
@@ -183,7 +178,7 @@ class _AcercaScreenState extends State<AcercaScreen> {
                                           nombres: creador['nombre'],
                                           fotoUrl: creador['fotoUrl']),
                                       onImageTap: (context, imageProvider) {
-                                        FirebaseAnalytics().logEvent(
+                                        FirebaseAnalytics.instance.logEvent(
                                           name: "acerca_person_image_click",
                                           parameters: {
                                             "persona": creador['nombre'],
@@ -232,7 +227,7 @@ class _AcercaScreenState extends State<AcercaScreen> {
                                                     customBorder:
                                                         CircleBorder(),
                                                     onTap: () async {
-                                                      FirebaseAnalytics()
+                                                      FirebaseAnalytics.instance
                                                           .logEvent(
                                                         name:
                                                             "acerca_person_social_click",

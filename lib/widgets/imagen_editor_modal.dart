@@ -6,7 +6,6 @@ import 'package:extended_image/extended_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import 'package:image_editor/image_editor.dart';
 
 class ImagenEditorModal extends StatefulWidget {
@@ -72,52 +71,28 @@ class _ImagenEditorModalState extends State<ImagenEditorModal> {
                   Icons.flip,
                   color: Colors.white,
                 ),
-                title: Text(
-                  'Voltear',
-                  style: TextStyle(
-                    fontSize: 10.0,
-                    color: Colors.white,
-                  ),
-                ),
+                label: 'Voltear',
               ),
               BottomNavigationBarItem(
                 icon: Icon(
                   Icons.rotate_left,
                   color: Colors.white,
                 ),
-                title: Text(
-                  'Rotar',
-                  style: TextStyle(
-                    fontSize: 10.0,
-                    color: Colors.white,
-                  ),
-                ),
+                label: 'Rotar',
               ),
               BottomNavigationBarItem(
                 icon: Icon(
                   Icons.restore,
                   color: Colors.white,
                 ),
-                title: Text(
-                  'Restaurar',
-                  style: TextStyle(
-                    fontSize: 10.0,
-                    color: Colors.white,
-                  ),
-                ),
+                label: 'Restaurar',
               ),
               BottomNavigationBarItem(
                 icon: Icon(
                   Icons.check,
                   color: Colors.white,
                 ),
-                title: Text(
-                  'Listo',
-                  style: TextStyle(
-                    fontSize: 10.0,
-                    color: Colors.white,
-                  ),
-                ),
+                label: 'Listo',
               ),
             ],
             elevation: 0,

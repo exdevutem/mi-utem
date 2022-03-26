@@ -13,7 +13,7 @@ class CarreraService {
       uri,
       options: DioMiUtemClient.cacheOptions
           .copyWith(
-              maxStale: Duration(days: 0),
+              maxStale: Nullable(Duration(days: 0)),
               policy: refresh ? CachePolicy.refresh : CachePolicy.forceCache)
           .toOptions(),
     );
@@ -24,18 +24,20 @@ class CarreraService {
   }
 
   static Future<Carrera> getCarreraActiva([bool refresh = false]) async {
-    String uri = "/v1/carreras/activa";
+    String uri = "/v1/carreras";
 
     Response response = await _dio.get(
       uri,
       options: DioMiUtemClient.cacheOptions
           .copyWith(
-              maxStale: Duration(days: 7),
+              maxStale: Nullable(Duration(days: 7)),
               policy: refresh ? CachePolicy.refresh : CachePolicy.forceCache)
           .toOptions(),
     );
 
-    Carrera activa = Carrera.fromJson(response.data);
+    List<Carrera> carreras = Carrera.fromJsonList(response.data);
+    Carrera activa = carreras
+        .firstWhere((carrera) => carrera.estado!.toLowerCase() == "regular");
 
     return activa;
   }

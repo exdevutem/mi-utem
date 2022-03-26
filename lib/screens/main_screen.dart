@@ -28,7 +28,7 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   int _a = 0;
 
-  RemoteConfig? _remoteConfig;
+  FirebaseRemoteConfig? _remoteConfig;
 
   @override
   void initState() {
@@ -45,7 +45,7 @@ class _MainScreenState extends State<MainScreen> {
       ),
     );
 
-    FirebaseAnalytics().logEvent(name: "home");
+    FirebaseAnalytics.instance.logEvent(name: "home");
 
     ReviewService.addScreen("MainScreen");
     ReviewService.checkAndRequestReview();
@@ -223,7 +223,7 @@ class _MainScreenState extends State<MainScreen> {
                       snackPosition: SnackPosition.BOTTOM,
                       margin: EdgeInsets.all(20),
                     );
-                    FirebaseAnalytics().logEvent(name: "pronto_eg");
+                    FirebaseAnalytics.instance.logEvent(name: "pronto_eg");
                   }
                 }
               },

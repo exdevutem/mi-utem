@@ -4,8 +4,6 @@ import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 import 'package:mdi/mdi.dart';
 import 'package:mi_utem/models/carrera.dart';
 import 'package:mi_utem/models/usuario.dart';
-import 'package:mi_utem/models/usuario.dart';
-import 'package:mi_utem/services/autenticacion_service.dart';
 import 'package:mi_utem/services/carreras_service.dart';
 import 'package:mi_utem/services/perfil_service.dart';
 import 'package:mi_utem/services/review_service.dart';
@@ -33,7 +31,7 @@ class _CredencialScreenState extends State<CredencialScreen> {
   @override
   void initState() {
     ReviewService.addScreen("CredencialScreen");
-    FirebaseAnalytics().setCurrentScreen(screenName: 'CredencialScreen');
+    FirebaseAnalytics.instance.setCurrentScreen(screenName: 'CredencialScreen');
     _secureScreen();
     _future = _getData();
     super.initState();
@@ -48,7 +46,7 @@ class _CredencialScreenState extends State<CredencialScreen> {
   }
 
   @override
-  void dispose() { 
+  void dispose() {
     _desecureScreen();
     super.dispose();
   }
@@ -74,10 +72,11 @@ class _CredencialScreenState extends State<CredencialScreen> {
         title: Text("Credencial universitaria"),
         actions: [
           IconButton(
-            icon: Icon(_flipController.actualFace == FlipController.front ? Icons.info : Mdi.accountCircle),
+            icon: Icon(_flipController.actualFace == FlipController.front
+                ? Icons.info
+                : Mdi.accountCircle),
             onPressed: () {
               _flipController.flip!();
-              
             },
           ),
         ],
@@ -95,10 +94,11 @@ class _CredencialScreenState extends State<CredencialScreen> {
               if (_usuario!.rut != null &&
                   _carreraActiva!.nombre != null &&
                   _carreraActiva!.nombre!.isNotEmpty) {
-                FirebaseAnalytics().setUserProperty(
+                FirebaseAnalytics.instance.setUserProperty(
                     name: "carreraActiva", value: _carreraActiva!.nombre!);
-                FirebaseAnalytics().setUserProperty(
-                    name: "estadoCarreraActiva", value: _carreraActiva!.estado!);
+                FirebaseAnalytics.instance.setUserProperty(
+                    name: "estadoCarreraActiva",
+                    value: _carreraActiva!.estado!);
 
                 return Center(
                   child: SafeArea(

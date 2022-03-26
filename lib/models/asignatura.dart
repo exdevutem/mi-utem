@@ -8,6 +8,7 @@ import 'package:recase/recase.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Asignatura {
+  String? id;
   String? nombre;
   String? codigo;
   String? tipoHora;
@@ -28,6 +29,7 @@ class Asignatura {
   String? tipoSala;
 
   Asignatura({
+    this.id,
     this.nombre,
     this.codigo,
     this.colorAsignatura,
@@ -76,6 +78,7 @@ class Asignatura {
     }
 
     var asignaturaParseada = Asignatura(
+      id: json['id'],
       codigo: json['codigo'],
       nombre: json['nombre'] != null ? ReCase(json['nombre']).titleCase : null,
       tipoHora:
@@ -84,18 +87,23 @@ class Asignatura {
       docente:
           json['docente'] != null ? ReCase(json['docente']).titleCase : null,
       seccion: json['seccion'],
-      evaluaciones: Evaluacion.fromJsonList(json['evaluaciones']),
-      notaFinal: json['notaFinal'],
-      notaPresentacion: json['notaPresentacion'],
-      notaExamen: json['notaExamen'],
-      estudiantes: Usuario.fromJsonList(json["estudiantes"]),
-      asistencia: Asistencia.fromJson(json["asistencia"]),
+      evaluaciones: json['evaluaciones'] != null
+          ? Evaluacion.fromJsonList(json['evaluaciones'])
+          : [],
+      notaFinal: json['notaFinal'] != null ? json['notaFinal'] : null,
+      notaPresentacion:
+          json['notaPresentacion'] != null ? json['notaPresentacion'] : null,
+      notaExamen: json['notaExamen'] != null ? json['notaExamen'] : null,
+      // estudiantes: Usuario.fromJsonList(json["estudiantes"]),
+      asistencia: json['asistenciaAlDia'] != null
+          ? Asistencia(asistidos: json['asistenciaAlDia'])
+          : null,
       tipoAsignatura: json['tipoAsignatura'] != null
-          ? ReCase(json['tipoAsignatura']).titleCase
+          ? ReCase(json['tipoAsignatura'].toString()).titleCase
           : null,
       sala: json['sala'] != null ? ReCase(json['sala']).titleCase : null,
       horario: json['horario'],
-      intentos: json['intentos'] ?? 0,
+      intentos: json['intentos'] != null ? int.parse(json['intentos']) : 0,
       tipoSala:
           json['tipoSala'] != null ? ReCase(json['tipoSala']).titleCase : null,
     );
