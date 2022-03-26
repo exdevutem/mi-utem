@@ -1,10 +1,10 @@
 class Evaluacion {
-  String etiqueta;
+  String descripcion;
   num? porcentaje;
   num? nota;
 
   Evaluacion({
-    this.etiqueta = "Nota",
+    this.descripcion = "Nota",
     this.porcentaje,
     this.nota,
   });
@@ -15,6 +15,7 @@ class Evaluacion {
     }
     return Evaluacion(
       porcentaje: json['porcentaje'],
+      descripcion: json['descripcion'],
       nota: json['nota'],
     );
   }
@@ -29,6 +30,4 @@ class Evaluacion {
     }
     return list;
   }
-
-
 }

@@ -5,14 +5,16 @@ class Usuario {
   String? nombre;
   String? nombres;
   String? apellidos;
-  String? correo;
-  String? sesion;
+  String? correoUtem;
+  String? correoPersonal;
+  String? token;
   String? fotoUrl;
   Rut? rut;
 
   Usuario(
-      {this.correo,
-      this.sesion,
+      {this.correoUtem,
+      this.correoPersonal,
+      this.token,
       this.nombres,
       this.nombre,
       this.fotoUrl,
@@ -25,8 +27,9 @@ class Usuario {
     }
     return Usuario(
         rut: json['rut'] != null ? Rut.deEntero(json['rut']) : null,
-        correo: json['correo'],
-        sesion: json['sesion'],
+        correoUtem: json['correoUtem'],
+        correoPersonal: json['correoPersonal'],
+        token: json['token'],
         fotoUrl: json['fotoUrl'],
         nombres:
             json['nombres'] != null ? ReCase(json['nombres']).titleCase : null,

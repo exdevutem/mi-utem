@@ -35,13 +35,14 @@ class _AsignaturaNotasTabState extends State<AsignaturaNotasTab> {
   late Future<Asignatura?> _futureAsignatura;
   Asignatura? _asignatura;
 
-  RemoteConfig? _remoteConfig;
+  FirebaseRemoteConfig? _remoteConfig;
 
   @override
   void initState() {
     super.initState();
     _remoteConfig = ConfigService.config;
-    FirebaseAnalytics().setCurrentScreen(screenName: 'AsignaturaNotasTab');
+    FirebaseAnalytics.instance
+        .setCurrentScreen(screenName: 'AsignaturaNotasTab');
     _futureAsignatura = _getNotasByCodigoAsignatura();
   }
 
@@ -50,7 +51,7 @@ class _AsignaturaNotasTabState extends State<AsignaturaNotasTab> {
     try {
       setState(() {
         _futureAsignatura = AsignaturasService.getNotasByCodigoAsignatura(
-            widget.asignatura.codigo, refresh);
+            widget.asignatura.codigo, widget.asignatura.id, refresh);
       });
 
       Asignatura? asignatura = await _futureAsignatura;

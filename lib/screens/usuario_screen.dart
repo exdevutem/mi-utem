@@ -35,7 +35,7 @@ class _UsuarioScreenState extends State<UsuarioScreen> {
   @override
   void initState() {
     ReviewService.addScreen("UsuarioScreen");
-    FirebaseAnalytics().setCurrentScreen(screenName: 'UsuarioScreen');
+    FirebaseAnalytics.instance.setCurrentScreen(screenName: 'UsuarioScreen');
     super.initState();
     _usuarioFuture = _getUsuario();
   }
@@ -162,7 +162,7 @@ class _UsuarioScreenState extends State<UsuarioScreen> {
         }
       }
 
-      if (_usuario!.correo != null && _usuario!.correo!.isNotEmpty) {
+      if (_usuario!.correoUtem != null && _usuario!.correoUtem!.isNotEmpty) {
         lista.add(Divider(height: 1));
         lista.add(ListTile(
           title: Text(
@@ -173,7 +173,7 @@ class _UsuarioScreenState extends State<UsuarioScreen> {
           ),
           onLongPress: widget.tipo != 0
               ? () async {
-                  await FlutterClipboard.copy(_usuario!.correo!);
+                  await FlutterClipboard.copy(_usuario!.correoUtem!);
                   Get.snackbar(
                     "¡Copiado!",
                     "Correo copiado al portapapeles",
@@ -186,11 +186,48 @@ class _UsuarioScreenState extends State<UsuarioScreen> {
               : null,
           onTap: widget.tipo != 0
               ? () async {
-                  await launch("mailto:${_usuario!.correo}");
+                  await launch("mailto:${_usuario!.correoUtem}");
                 }
               : null,
           subtitle: Text(
-            _usuario!.correo!,
+            _usuario!.correoUtem ?? "",
+            style: TextStyle(
+              color: Colors.grey[900],
+              fontSize: 18,
+            ),
+          ),
+        ));
+      }
+      if (_usuario!.correoPersonal != null &&
+          _usuario!.correoPersonal!.isNotEmpty) {
+        lista.add(Divider(height: 1));
+        lista.add(ListTile(
+          title: Text(
+            "Correo",
+            style: TextStyle(
+              color: Colors.grey,
+            ),
+          ),
+          onLongPress: widget.tipo != 0
+              ? () async {
+                  await FlutterClipboard.copy(_usuario!.correoPersonal!);
+                  Get.snackbar(
+                    "¡Copiado!",
+                    "Correo copiado al portapapeles",
+                    colorText: Colors.white,
+                    backgroundColor: Get.theme.primaryColor,
+                    snackPosition: SnackPosition.BOTTOM,
+                    margin: EdgeInsets.all(20),
+                  );
+                }
+              : null,
+          onTap: widget.tipo != 0
+              ? () async {
+                  await launch("mailto:${_usuario!.correoPersonal}");
+                }
+              : null,
+          subtitle: Text(
+            _usuario!.correoPersonal ?? "",
             style: TextStyle(
               color: Colors.grey[900],
               fontSize: 18,

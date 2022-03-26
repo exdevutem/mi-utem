@@ -1,8 +1,7 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:mi_utem/models/usuario.dart';
@@ -26,7 +25,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    FirebaseAnalytics().setCurrentScreen(screenName: 'SplashScreen');
+    FirebaseAnalytics.instance.setCurrentScreen(screenName: 'SplashScreen');
 
     SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(

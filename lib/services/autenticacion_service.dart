@@ -1,8 +1,8 @@
-import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:mi_utem/models/rut.dart';
+import 'package:mi_utem/models/carrera.dart';
 import 'package:mi_utem/models/usuario.dart';
+import 'package:mi_utem/services/carreras_service.dart';
 import 'package:mi_utem/services/perfil_service.dart';
 import 'package:mi_utem/utils/dio_miutem_client.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -14,46 +14,52 @@ class AutenticacionService {
 
   static Future<Usuario> login(String? correo, String? contrasenia,
       [bool guardar = false]) async {
-    String uri = "/v1/usuarios/login";
+    String uri = "/v1/auth";
 
     try {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       final FlutterSecureStorage storage = new FlutterSecureStorage();
 
-      dynamic data = {'usuario': correo, 'contrasenia': contrasenia};
+      dynamic data = {'correo': correo, 'contrasenia': contrasenia};
 
       Response response = await _dio.post(uri, data: data);
 
-      Usuario usuario = Usuario.fromJson(response.data);
+      Usuario usuario = Usuario();
+      if (response.statusCode == 200) {
+        usuario = Usuario.fromJson(response.data);
+        prefs.setString('token', usuario.token!);
+        if (usuario.nombres != null) {
+          prefs.setString('nombres', usuario.nombres!);
+        }
+        if (usuario.apellidos != null) {
+          prefs.setString('apellidos', usuario.apellidos!);
+        }
+        if (usuario.nombre != null) {
+          prefs.setString('nombre', usuario.nombre!);
+        }
+        if (usuario.fotoUrl != null) {
+          prefs.setString('fotoUrl', usuario.fotoUrl!);
+        }
+        if (usuario.correoUtem != null) {
+          prefs.setString('correoUtem', usuario.correoUtem!);
+        }
+        if (usuario.correoPersonal != null) {
+          prefs.setString('correoUtem', usuario.correoPersonal!);
+        }
+        if (usuario.rut?.numero != null) {
+          prefs.setInt('rut', usuario.rut!.numero!);
+        }
+        prefs.setString('version', versionCorrecta);
+        prefs.setBool('esAntiguo', true);
 
-      prefs.setString('sesion', usuario.sesion!);
-      if (usuario.nombres != null) {
-        prefs.setString('nombres', usuario.nombres!);
+        if (guardar) {
+          await storage.write(key: "contrasenia", value: contrasenia);
+        }
+        Carrera carrera = await CarreraService.getCarreraActiva();
+        if (carrera.id != null) {
+          prefs.setString('carreraId', carrera.id!);
+        }
       }
-      if (usuario.apellidos != null) {
-        prefs.setString('apellidos', usuario.apellidos!);
-      }
-      if (usuario.nombre != null) {
-        prefs.setString('nombre', usuario.nombre!);
-      }
-      if (usuario.fotoUrl != null) {
-        prefs.setString('fotoUrl', usuario.fotoUrl!);
-      }
-      if (usuario.correo != null) {
-        prefs.setString('correo', usuario.correo!);
-      }
-      if (usuario.rut?.numero != null) {
-        prefs.setInt('rut', usuario.rut!.numero!);
-      }
-
-      prefs.setString('version', versionCorrecta);
-
-      prefs.setBool('esAntiguo', true);
-
-      if (guardar) {
-        await storage.write(key: "contrasenia", value: contrasenia);
-      }
-
       return usuario;
     } on DioError catch (e) {
       print(e.message);
@@ -81,10 +87,10 @@ class AutenticacionService {
   static Future<bool> isLoggedIn() async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? sesion = prefs.getString("sesion");
+      String? token = prefs.getString("token");
       String? version = prefs.getString("version");
-      bool isLoggedIn = sesion != null &&
-          sesion.isNotEmpty &&
+      bool isLoggedIn = token != null &&
+          token.isNotEmpty &&
           version != null &&
           version.isNotEmpty &&
           version == versionCorrecta;
@@ -105,7 +111,7 @@ class AutenticacionService {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       final FlutterSecureStorage storage = new FlutterSecureStorage();
 
-      prefs.remove("sesion");
+      prefs.remove("token");
       prefs.remove("correo");
       prefs.remove("nombres");
       prefs.remove("nombre");

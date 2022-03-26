@@ -3,7 +3,6 @@ import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:mi_utem/services/config_service.dart';
-import 'package:mi_utem/widgets/loading_indicator.dart';
 
 class AcercaAplicacionContent extends StatefulWidget {
   final String titulo;
@@ -16,7 +15,7 @@ class AcercaAplicacionContent extends StatefulWidget {
 }
 
 class _AcercaAplicacionContentState extends State<AcercaAplicacionContent> {
-  RemoteConfig? _remoteConfig;
+  FirebaseRemoteConfig? _remoteConfig;
 
   @override
   void initState() {

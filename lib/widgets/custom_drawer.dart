@@ -8,7 +8,6 @@ import 'package:mdi/mdi.dart';
 import 'package:mi_utem/models/usuario.dart';
 import 'package:mi_utem/screens/asignaturas_screen.dart';
 import 'package:mi_utem/screens/credencial_screen.dart';
-import 'package:mi_utem/screens/docentes_screen.dart';
 import 'package:mi_utem/screens/horario_screen.dart';
 import 'package:mi_utem/screens/login_screen.dart';
 import 'package:mi_utem/screens/usuario_screen.dart';
@@ -17,7 +16,6 @@ import 'package:mi_utem/services/config_service.dart';
 import 'package:mi_utem/services/review_service.dart';
 import 'package:mi_utem/themes/theme.dart';
 import 'package:mi_utem/widgets/acerca_screen.dart';
-import 'package:mi_utem/widgets/loading_indicator.dart';
 import 'package:mi_utem/widgets/profile_photo.dart';
 
 class CustomDrawer extends StatefulWidget {
@@ -29,7 +27,7 @@ class CustomDrawer extends StatefulWidget {
 }
 
 class _CustomDrawerState extends State<CustomDrawer> {
-  RemoteConfig? _remoteConfig;
+  FirebaseRemoteConfig? _remoteConfig;
 
   @override
   void initState() {
@@ -51,16 +49,18 @@ class _CustomDrawerState extends State<CustomDrawer> {
       case "Credencial":
         return CredencialScreen();
         break;
-      case "Docentes":
-        return DocentesScreen();
-        break;
+      // case "Docentes":
+      //   return DocentesScreen();
+      //   break;
       default:
         return null;
     }
   }
 
   List? get _menu {
-    return jsonDecode(_remoteConfig!.getString(ConfigService.DRAWER_MENU)).where((e) => e['mostrar'] == true).toList();
+    return jsonDecode(_remoteConfig!.getString(ConfigService.DRAWER_MENU))
+        .where((e) => e['mostrar'] == true)
+        .toList();
   }
 
   @override
@@ -81,7 +81,9 @@ class _CustomDrawerState extends State<CustomDrawer> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   UserAccountsDrawerHeader(
-                    accountEmail: Text(widget.usuario.correo ?? ""),
+                    accountEmail: Text(widget.usuario.correoUtem ??
+                        widget.usuario.correoPersonal ??
+                        ""),
                     accountName: Text(
                       widget.usuario.nombreCompleto ?? "",
                       style:
@@ -104,9 +106,11 @@ class _CustomDrawerState extends State<CustomDrawer> {
                   ),
                   for (var e in _menu!)
                     ListTile(
-                      leading: Icon(IconData(e["icono"]["codePoint"], fontFamily: e["icono"]["fontFamily"], fontPackage: e["icono"]["fontPackage"])),
+                      leading: Icon(IconData(e["icono"]["codePoint"],
+                          fontFamily: e["icono"]["fontFamily"],
+                          fontPackage: e["icono"]["fontPackage"])),
                       title: Text(e["nombre"]),
-                       trailing: e["esNuevo"]
+                      trailing: e["esNuevo"]
                           ? Badge(
                               shape: BadgeShape.square,
                               borderRadius: BorderRadius.circular(10),

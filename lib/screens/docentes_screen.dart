@@ -1,19 +1,14 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mi_utem/models/asignatura.dart';
 import 'package:mi_utem/models/usuario.dart';
-import 'package:mi_utem/screens/asignatura_screen.dart';
 import 'package:mi_utem/screens/usuario_screen.dart';
-import 'package:mi_utem/services/asignaturas_service.dart';
 import 'package:mi_utem/services/docentes_service.dart';
-import 'package:mi_utem/themes/theme.dart';
 import 'package:mi_utem/utils/debounce.dart';
+import 'package:mi_utem/widgets/custom_app_bar.dart';
 import 'package:mi_utem/widgets/custom_error_widget.dart';
 import 'package:mi_utem/widgets/loading_indicator.dart';
-import 'package:mi_utem/widgets/custom_app_bar.dart';
 import 'package:mi_utem/widgets/profile_photo.dart';
-import 'package:mi_utem/widgets/pull_to_refresh.dart';
 
 class DocentesScreen extends StatefulWidget {
   DocentesScreen({Key? key}) : super(key: key);
@@ -35,7 +30,7 @@ class _DocentesScreenState extends State<DocentesScreen> {
     d = Debounce(Duration(seconds: 1), () {
       _getDocentes(_controller.text);
     });
-    FirebaseAnalytics().setCurrentScreen(screenName: 'DocentesScreen');
+    FirebaseAnalytics.instance.setCurrentScreen(screenName: 'DocentesScreen');
   }
 
   Future<List<Usuario>> _getDocentes(String nombre,
@@ -123,7 +118,9 @@ class _DocentesScreenState extends State<DocentesScreen> {
                                     maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
                                   ),
-                                  subtitle: Text(docente.correo!),
+                                  subtitle: Text(docente.correoUtem ??
+                                      docente.correoPersonal ??
+                                      ""),
                                   onTap: () async {
                                     await Get.to(
                                       UsuarioScreen(

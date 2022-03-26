@@ -1,16 +1,17 @@
 import 'package:dio/dio.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:mi_utem/models/usuario.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DioMiUtemClient {
   static const bool isProduction = bool.fromEnvironment('dart.vm.product');
+  static String debugUrl =
+      dotenv.env['MI_UTEM_API_DEBUG'] ?? "https://api-mi-utem.herokuapp.com/";
+  static const String productionUrl = 'https://api-mi-utem.herokuapp.com/';
 
-  static const String debugUrl = 'http://192.168.5.130:3000';
-  static const String productionUrl = 'https://apiapp.utem.dev';
-
-  static const String url = isProduction ? productionUrl : productionUrl;
+  static String url = isProduction ? productionUrl : debugUrl;
 
   static Dio get initDio => Dio(BaseOptions(
         baseUrl: url,
@@ -31,8 +32,8 @@ class DioMiUtemClient {
       [
         InterceptorsWrapper(onRequest: (options, handler) async {
           SharedPreferences prefs = await SharedPreferences.getInstance();
-          var sesion = prefs.getString('sesion');
-          options.headers.addAll({"Authorization": "Bearer $sesion"});
+          var token = prefs.getString('token');
+          options.headers.addAll({"Authorization": "Bearer $token"});
 
           return handler.next(options);
         }, onResponse: (response, handler) async {
@@ -66,23 +67,24 @@ class DioMiUtemClient {
     );
 
   static Future<bool> refreshSesion() async {
-    String uri = "/v1/usuarios/refresh";
+    String uri = "/v1/auth";
 
     try {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       final FlutterSecureStorage storage = new FlutterSecureStorage();
 
-      String? correo = prefs.getString("correo");
+      String? correo = prefs.getString("correoUtem");
       String? contrasenia = await storage.read(key: "contrasenia");
 
       if (correo != null && contrasenia != null) {
-        dynamic data = {'usuario': correo, 'contrasenia': contrasenia};
+        dynamic data = {'correo': correo, 'contrasenia': contrasenia};
 
         Response response = await DioMiUtemClient.initDio.post(uri, data: data);
 
-        Usuario usuario = Usuario.fromJson(response.data);
-
-        prefs.setString('sesion', usuario.sesion!);
+        if (response.statusCode == 200) {
+          Usuario usuario = Usuario.fromJson(response.data);
+          prefs.setString('token', usuario.token!);
+        }
 
         return true;
       } else {
