@@ -44,7 +44,7 @@ class AutenticacionService {
           prefs.setString('correoUtem', usuario.correoUtem!);
         }
         if (usuario.correoPersonal != null) {
-          prefs.setString('correoUtem', usuario.correoPersonal!);
+          prefs.setString('correoPersonal', usuario.correoPersonal!);
         }
         if (usuario.rut?.numero != null) {
           prefs.setInt('rut', usuario.rut!.numero!);
