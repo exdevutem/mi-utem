@@ -1,114 +1,62 @@
-update_fastlane
 
-default_platform(:ios)
-
-platform :ios do
-  lane :flutter do |options|
-    build_number = options[:build_number]
-    build_name = options[:build_name]
-
-    Dir.chdir "../.." do
-      sh("flutter", "clean")
-      sh("flutter", "packages", "get")
-    end
-
-    cocoapods
-
-    Dir.chdir "../.." do
-      sh("flutter", "build", "ios", "--release", "--no-codesign", "--no-tree-shake-icons", "--build-name=#{build_name}", "--build-number=#{build_number}")
-    end
-  end
-
-  lane :beta do |options|
-    if options[:build] || options[:build_number] || options[:build_name]
-      flutter(build_number: options[:build_number], build_name: options[:build_name])
-      
-    end
-    build_app(workspace: "Runner.xcworkspace", scheme: "Runner")
-    beta_upload(options)
-  end
-
-  lane :beta_upload do |options|
-    build_number = options[:build_number]
-    build_name = options[:build_name]
-
-    upload_to_testflight
-    slack(
-      message: "Se ha subido correctamente la versión #{build_name} (#{build_number}) a TestFlight (iOS)",
-      slack_url: ENV["SLACK_URL"],
-      default_payloads: ["git_branch", "git_author", "last_git_commit", "last_git_commit_hash"],
-      attachment_properties: {
-        fields: [
-          {
-            title: "Track",
-            value: "TestFlight"
-          },
-          {
-            title: "Build name",
-            value: build_name
-          },
-          {
-            title: "Build number",
-            value: build_number
-          }
-        ]
-      },
-      use_webhook_configured_username_and_icon: true
-    )
-  end
-
-  lane :appstore_upload do |options|
-    if options[:build] || options[:build_number] || options[:build_name]
-      flutter(build_number: options[:build_number], build_name: options[:build_name])
-      build_app(workspace: "Runner.xcworkspace", scheme: "Runner")
-    end
-    
-    upload_to_app_store(
-      submit_for_review: true,
-      automatic_release: true,
-      force: true,
-      skip_metadata: true,
-      skip_screenshots: true,
-      skip_binary_upload: true
-    )
-
-    notificate(
-      track: options[:track],
-      build_name: build_name,
-      build_number: build_number,
-    )
-  end
-
-  lane :notificate  do |options|
-    build_number = options[:build_number]
-    build_name = options[:build_name]
-    
-    track = "beta"
-    if options[:track]
-      track = options[:track]
-    end
-
-    slack(
-      message: "🚀 Se ha lanzado correctamente la versión #{build_name} (#{build_number}) en Android",
-      slack_url: ENV["SLACK_URL"],
-      default_payloads: ["git_branch", "git_author", "last_git_commit", "last_git_commit_hash"],
-      attachment_properties: {
-        fields: [
-          {
-            title: "Track",
-            value: track
-          },
-          {
-            title: "Build name",
-            value: build_name
-          },
-          {
-            title: "Build number",
-            value: build_number
-          }
-        ]
-      },
-      use_webhook_configured_username_and_icon: true
-    )
-  end
+lane :ios_test do
+  puts("Testing Fastlane from iOS")
 end
+
+lane :ios_flutter do |options|
+  build_number = options[:build_number]
+  build_name = options[:build_name]
+  skip_clean = options[:skip_clean]
+
+  unless skip_clean
+    sh("flutter", "clean")
+    sh("flutter", "packages", "get")
+  end
+
+  cocoapods(use_bundle_exec: false, podfile: "ios")
+ 
+  sh("flutter", "build", "ios", "--release", "--no-codesign", "--no-tree-shake-icons", "--build-name=#{build_name}", "--build-number=#{build_number}")
+end
+
+lane :ios_build_and_upload do |options|
+  build_number = options[:build_number]
+  build_name = options[:build_name]
+  skip_clean = options[:skip_clean]
+  type = options[:type]
+  changelog = options[:changelog]
+
+  if build_number || build_name
+    ios_flutter(build_number: build_number, build_name: build_name, skip_clean:)
+  end
+
+  sync_code_signing(type: "appstore")
+  
+  build_app(
+    workspace: "./ios/Runner.xcworkspace",
+    scheme: "Runner",
+  )
+
+  if type == "beta"
+    ios_beta_upload(options)
+  elsif type == "release"
+    ios_beta_upload(options)
+  end
+  
+end
+
+lane :ios_beta_upload do |options|
+  changelog = options[:changelog]
+
+  upload_to_testflight(
+    changelog: changelog
+  )
+end
+
+lane :ios_release_upload do |options|
+  changelog = options[:changelog]
+
+  upload_to_app_store(
+    release_notes: changelog
+  )
+end
+

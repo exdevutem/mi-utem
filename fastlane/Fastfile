@@ -1,0 +1,154 @@
+import '../ios/fastlane/Fastfile'
+import '../android/fastlane/Fastfile'
+
+update_fastlane
+
+default_platform(:mobile)
+
+platform :mobile do
+  lane :test do
+    puts("Testing Fastlane for mobile")
+
+    changelog = read_changelog
+    emojified_changelog = emojify_changelog
+    
+    changelog = translate_changelog(changelog: changelog)
+    emojified_changelog = translate_changelog(changelog: emojified_changelog)
+
+    puts "Changelog: #{changelog}"
+    puts "Emojified Changelog: #{emojified_changelog}"
+
+    android_test
+    ios_test
+
+    slack(
+      message: "Este es un mensaje de prueba desde Fastlane",
+      slack_url: ENV["SLACK_URL"],
+      channel: "#proy-mi-utem-bots",
+      default_payloads: [],
+      attachment_properties: {
+        fields: [
+          {
+            title: "Campo",
+            value: "Prueba"
+          },
+        ]
+      },
+    )
+  end
+
+  lane :translate_changelog do |options|
+    changelog = options[:changelog]
+
+    if changelog.include? "Added"
+      changelog["Added"] = "Añadido"
+    end
+    if changelog.include? "Changed"
+      changelog["Changed"] = "Cambiado"
+    end
+    if changelog.include? "Deprecated"
+      changelog["Deprecated"] = "Deprecado"
+    end
+    if changelog.include? "Removed"
+      changelog["Removed"] = "Removido"
+    end
+    if changelog.include? "Fixed"
+      changelog["Fixed"] = "Corregido"
+    end
+
+    if changelog.include? "Security"
+      changelog["Security"] = "Seguridad"
+    end
+
+    changelog
+  end
+
+  lane :upload do |options|
+    build_number = options[:build_number]
+    build_name = options[:build_name]
+
+    changelog = read_changelog
+    emojified_changelog = emojify_changelog
+    changelog = translate_changelog(changelog: changelog)
+    emojified_changelog = translate_changelog(changelog: emojified_changelog)
+
+    type = "release"
+    skip_android = false
+    skip_ios = false
+
+    if options[:type] == "release" && options[:type] == "beta"
+      type = options[:type]
+    end
+
+    if options[:skip_android]
+      skip_android = options[:skip_android]
+    end
+
+    if options[:skip_ios]
+      skip_ios = options[:skip_ios]
+    end
+
+    unless skip_android
+      android_build_and_upload(
+        build_number: build_number,
+        build_name: build_name,
+        changelog: changelog,
+        type: type,
+        skip_clean: false,
+      )
+    end
+
+    unless skip_ios
+      ios_build_and_upload(
+        build_number: build_number,
+        build_name: build_name,
+        changelog: changelog,
+        type: type,
+        skip_clean: !skip_android
+      )
+    end
+
+    add_git_tag(
+      tag: build_name,
+      force: true
+    )
+
+    stamp_changelog(
+      section_identifier: build_name,
+      git_tag: build_name,
+    )
+
+    git_add
+    git_commit(path: "*", message: "Release: #{build_name} (#{build_number})")
+    push_to_git_remote
+
+    github_release = set_github_release(
+      repository_name: "exdevutem/mi-utem",
+      api_token: ENV["GITHUB_TOKEN"],
+      name: "v#{build_name}",
+      tag_name: "#{build_name}",
+      description: emojified_changelog,
+      commitish: "dev",
+      upload_assets: ["./build/app/outputs/bundle/release/app-release.aab", "./build/app/outputs/apk/release/app-release.apk"]
+    )
+
+    slack(
+      message: "🚀 Se ha publicado la nueva versión #{build_name} (#{build_number})",
+      slack_url: ENV["SLACK_URL"],
+      channel: "#proy-mi-utem",
+      default_payloads: [],
+      attachment_properties: {
+        fields: [
+          {
+            title: "",
+            value: "--------------------------------------"
+          },
+          {
+            title: "",
+            value: emojified_changelog
+          },
+        ]
+      },
+    )
+  end
+end
