@@ -76,6 +76,8 @@ class DioMiUtemClient {
       String? correo = prefs.getString("correoUtem");
       String? contrasenia = await storage.read(key: "contrasenia");
 
+      print({'correo': correo, 'contrasenia': contrasenia});
+
       if (correo != null && contrasenia != null) {
         dynamic data = {'correo': correo, 'contrasenia': contrasenia};
 
