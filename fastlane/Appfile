@@ -1,0 +1,8 @@
+json_key_file("./android/api-playstore.json")
+package_name("cl.inndev.miutem")
+
+
+app_identifier("cl.utem.miutem")
+apple_id(ENV["APPLE_ID"])
+itc_team_id(ENV["ITC_TEAM_ID"])
+team_id(ENV["TEAM_ID"])

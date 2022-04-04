@@ -1,69 +1,50 @@
-update_fastlane
 
-default_platform(:android)
+  lane :android_test do
+    puts("Testing Fastlane from Android")
+  end
 
-platform :android do
-  lane :flutter do |options|
+  lane :android_flutter do |options|
     build_number = options[:build_number]
     build_name = options[:build_name]
+    skip_clean = options[:skip_clean]
 
-    Dir.chdir "../.." do
+    unless skip_clean
       sh("flutter", "clean")
       sh("flutter", "packages", "get")
-      sh("flutter", "build", "appbundle", "--release", "--no-tree-shake-icons", "--build-name=#{build_name}", "--build-number=#{build_number}")
     end
+
+    sh("flutter", "build", "appbundle", "--release", "--no-tree-shake-icons", "--build-name=#{build_name}", "--build-number=#{build_number}")
+    sh("flutter", "build", "apk", "--release", "--no-tree-shake-icons", "--build-name=#{build_name}", "--build-number=#{build_number}")
   end
 
-  lane :upload do |options|
+  lane :android_build_and_upload do |options|
     build_number = options[:build_number]
     build_name = options[:build_name]
-
-    if options[:build] || options[:build_number] || options[:build_name]
-      flutter(build_number: options[:build_number], build_name: options[:build_name])
+    skip_clean = options[:skip_clean]
+    type = options[:type]
+    changelog = options[:changelog]
+  
+    if build_number || build_name
+      android_flutter(build_number: build_number, build_name: build_name, skip_clean: skip_clean)
     end
 
-    upload_to_track(
-      track: options[:track],
+    android_upload(
+      type: options[:type],
       build_name: build_name,
       build_number: build_number,
+      changelog: changelog,
     )
   end
 
-
-  lane :playstore do |options|
+  lane :android_upload do |options|
     build_number = options[:build_number]
     build_name = options[:build_name]
-
-    if options[:build] || options[:build_number] || options[:build_name]
-      flutter(build_number: options[:build_number], build_name: options[:build_name])
-    end
-    
-    upload_to_track(
-      track: "beta",
-      track_promote_to: "production",
-      build_name: build_name,
-      build_number: build_number,
-    )
-  end
-
-  lane :upload_to_track do |options|
-    build_number = options[:build_number]
-    build_name = options[:build_name]
-    
-    track = "beta"
-    if options[:track]
-      track = options[:track]
-    end
-
-    track_promote_to = track
-    if options[:track_promote_to]
-      track_promote_to = options[:track_promote_to]
-    end
+    type = options[:type]
+    changelog = options[:changelog]
 
     upload_to_play_store(
-      track: track,
-      track_promote_to: track_promote_to,
-      aab: "../build/app/outputs/bundle/release/app-release.aab",
+      track: "internal",
+      aab: "./build/app/outputs/bundle/release/app-release.aab",
       version_name: build_name,
       version_code: build_number,
       skip_upload_screenshots: true,
@@ -72,43 +53,46 @@ platform :android do
       skip_upload_images: true
     )
 
-    notificate(
-      track: options[:track],
-      build_name: build_name,
-      build_number: build_number,
-    )
-  end
+    if type == "beta"
+      upload_to_play_store(
+        track: "internal",
+        track_promote_to: "beta",
+        version_name: build_name,
+        version_code: build_number,
+        skip_upload_apk: true,
+        skip_upload_aab: true,
+        skip_upload_screenshots: true,
+        skip_upload_metadata: true,
+        skip_upload_changelogs: true,
+        skip_upload_images: true
+      )
+    elsif type == "release"
+      upload_to_play_store(
+        track: "internal",
+        track_promote_to: "beta",
+        version_name: build_name,
+        version_code: build_number,
+        skip_upload_apk: true,
+        skip_upload_aab: true,
+        skip_upload_screenshots: true,
+        skip_upload_metadata: true,
+        skip_upload_changelogs: true,
+        skip_upload_images: true
+      )
 
-  lane :notificate  do |options|
-    build_number = options[:build_number]
-    build_name = options[:build_name]
-    
-    track = "beta"
-    if options[:track]
-      track = options[:track]
+      upload_to_play_store(
+        track: "beta",
+        track_promote_to: "production",
+        version_name: build_name,
+        version_code: build_number,
+        skip_upload_apk: true,
+        skip_upload_aab: true,
+        skip_upload_screenshots: true,
+        skip_upload_metadata: true,
+        skip_upload_changelogs: true,
+        skip_upload_images: true
+      )
     end
 
-    slack(
-      message: "🚀 Se ha lanzado correctamente la versión #{build_name} (#{build_number}) en Android",
-      slack_url: ENV["SLACK_URL"],
-      default_payloads: ["git_branch", "git_author", "last_git_commit", "last_git_commit_hash"],
-      attachment_properties: {
-        fields: [
-          {
-            title: "Track",
-            value: track
-          },
-          {
-            title: "Build name",
-            value: build_name
-          },
-          {
-            title: "Build number",
-            value: build_number
-          }
-        ]
-      },
-      use_webhook_configured_username_and_icon: true
-    )
+
   end
-end
