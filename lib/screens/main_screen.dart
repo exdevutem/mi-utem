@@ -16,6 +16,7 @@ import 'package:mi_utem/services/review_service.dart';
 import 'package:mi_utem/widgets/custom_app_bar.dart';
 import 'package:mi_utem/widgets/custom_drawer.dart';
 import 'package:mi_utem/widgets/noticias_carrusel.dart';
+import 'package:mi_utem/widgets/qr_codes.dart';
 
 class MainScreen extends StatefulWidget {
   final Usuario usuario;
@@ -106,6 +107,7 @@ class _MainScreenState extends State<MainScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Container(height: 20),
+            QRCodes(),
             Container(
               padding: EdgeInsets.symmetric(horizontal: 20),
               child: Row(
