@@ -9,140 +9,29 @@ class PermisoCovidScreen extends StatelessWidget {
     return Scaffold(
       appBar: CustomAppBar(title: Text("Permiso Covid")),
       body: SingleChildScrollView(
-        child: Card(
-          child: Column(
-            children: [
-              Usuario(),
-              Divider(thickness: 1, color: Color(0xFFFEEEEE)),
-              DetallesPermiso(),
-              Divider(thickness: 1, color: Color(0xFFFEEEEE)),
-              Center(
-                child: Image.network(
-                  "https://i.pinimg.com/originals/60/c1/4a/60c14a43fb4745795b3b358868517e79.png",
-                  height: 300,
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Card(
+            child: Column(
+              children: [
+                Usuario(),
+                Divider(thickness: 1, color: Color(0xFFFEEEEE)),
+                DetallesPermiso(),
+                Divider(thickness: 1, color: Color(0xFFFEEEEE)),
+                Center(
+                  child: Image.network(
+                    "https://i.pinimg.com/originals/60/c1/4a/60c14a43fb4745795b3b358868517e79.png",
+                    height: 200,
+                  ),
                 ),
-              ),
-              Center(child: Text("Permiso generado el 27/03/2022")),
-            ],
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 20.0),
+                  child: Center(child: Text("Permiso generado el 27/03/2022")),
+                ),
+              ],
+            ),
           ),
         ),
-      ),
-    );
-  }
-}
-
-class DetallesPermiso extends StatelessWidget {
-  const DetallesPermiso({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(20.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "Motivo",
-                style: TextStyle(
-                  fontWeight: FontWeight.w700,
-                  color: Color(0xFF7F7F7F),
-                ),
-              ),
-              Text(
-                "Permiso para funcionarios",
-                style: TextStyle(
-                  fontWeight: FontWeight.w400,
-                  color: Color(0xFF363636),
-                ),
-              ),
-            ],
-          ),
-          Row(
-            children: [
-              Column(
-                children: [
-                  Text(
-                    "Campus",
-                    style: TextStyle(
-                      fontWeight: FontWeight.w700,
-                      color: Color(0xFF7F7F7F),
-                    ),
-                  ),
-                  Text(
-                    "Macul",
-                    style: TextStyle(
-                      fontWeight: FontWeight.w400,
-                      color: Color(0xFF363636),
-                    ),
-                  ),
-                ],
-              ),
-              Column(
-                children: [
-                  Text(
-                    "Dependencias",
-                    style: TextStyle(
-                      fontWeight: FontWeight.w700,
-                      color: Color(0xFF7F7F7F),
-                    ),
-                  ),
-                  Text(
-                    "Biblioteca",
-                    style: TextStyle(
-                      fontWeight: FontWeight.w400,
-                      color: Color(0xFF363636),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          Row(
-            children: [
-              Column(
-                children: [
-                  Text(
-                    "Jornada",
-                    style: TextStyle(
-                      fontWeight: FontWeight.w700,
-                      color: Color(0xFF7F7F7F),
-                    ),
-                  ),
-                  Text(
-                    "Mañana",
-                    style: TextStyle(
-                      fontWeight: FontWeight.w400,
-                      color: Color(0xFF363636),
-                    ),
-                  ),
-                ],
-              ),
-              Column(
-                children: [
-                  Text(
-                    "Vigencia",
-                    style: TextStyle(
-                      fontWeight: FontWeight.w700,
-                      color: Color(0xFF7F7F7F),
-                    ),
-                  ),
-                  Text(
-                    "Diario",
-                    style: TextStyle(
-                      fontWeight: FontWeight.w400,
-                      color: Color(0xFF363636),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ],
       ),
     );
   }
@@ -184,6 +73,80 @@ class Usuario extends StatelessWidget {
           ],
         ),
       ],
+    );
+  }
+}
+
+class DetallesPermiso extends StatelessWidget {
+  const DetallesPermiso({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 20.0, bottom: 20.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          BloqueDetalle(top: "Motivo", bottom: "Permiso para Funcionarios"),
+          Row(
+            children: [
+              BloqueDetalle(top: "Campus", bottom: "Macul"),
+              BloqueDetalle(top: "Dependencias", bottom: "Biblioteca"),
+            ],
+          ),
+          Row(
+            children: [
+              Flexible(
+                flex: 2,
+                child: BloqueDetalle(top: "Jornada", bottom: "Mañana"),
+              ),
+              Flexible(
+                flex: 1,
+                child: BloqueDetalle(top: "Vigencia", bottom: "Diario"),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class BloqueDetalle extends StatelessWidget {
+  const BloqueDetalle({
+    Key? key,
+    required this.top,
+    required this.bottom,
+  }) : super(key: key);
+
+  final String top;
+  final String bottom;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 20.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            top,
+            style: TextStyle(
+              fontWeight: FontWeight.w700,
+              color: Color(0xFF7F7F7F),
+            ),
+          ),
+          Text(
+            bottom,
+            style: TextStyle(
+              fontWeight: FontWeight.w400,
+              color: Color(0xFF363636),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
