@@ -1,5 +1,7 @@
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_navigation/get_navigation.dart';
+import 'package:get/state_manager.dart';
+import 'package:mi_utem/screens/permiso_covid.dart';
 
 class QRCodes extends StatelessWidget {
   const QRCodes({Key? key}) : super(key: key);
@@ -8,43 +10,40 @@ class QRCodes extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(top: 8.0, bottom: 30.0),
-      child: Column(children: [
-        Padding(
-          padding: const EdgeInsets.only(left: 30, right: 30),
-          child: Row(
-            children: [
-              Text(
-                "PERMISOS ACTIVOS",
-                style: TextStyle(
-                  color: Color(0xFF363636),
-                  fontWeight: FontWeight.w700,
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 30, right: 30),
+            child: Row(
+              children: [
+                Text(
+                  "PERMISOS ACTIVOS",
+                  style: TextStyle(
+                    color: Color(0xFF363636),
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
-              ),
-              Text(
-                "Ver Todos",
-                style: TextStyle(
-                  color: Color(0xFF009D9B),
-                  fontWeight: FontWeight.w700,
+                Text(
+                  "Ver Todos",
+                  style: TextStyle(
+                    color: Color(0xFF009D9B),
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
-              ),
-            ],
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              ],
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            ),
           ),
-        ),
-        CarouselSlider.builder(
-          itemCount: 3,
-          itemBuilder: (BuildContext context, int i, int rI) => QRCard(),
-          options: CarouselOptions(
+          SizedBox(
             height: 175,
-            initialPage: 0,
-            autoPlay: false,
-            viewportFraction: 0.8,
-            enableInfiniteScroll: false,
-            pageSnapping: true,
-            disableCenter: true,
+            child: ListView(
+              padding: EdgeInsets.only(left: 20.0, right: 20.0),
+              children: [QRCard(), QRCard(), QRCard()],
+              scrollDirection: Axis.horizontal,
+            ),
           ),
-        )
-      ]),
+        ],
+      ),
     );
   }
 }
@@ -104,15 +103,20 @@ class QRCard extends StatelessWidget {
               ),
               Divider(color: Color(0xFFBDBDBD), thickness: 0.3),
               Expanded(
-                  flex: 25,
+                flex: 25,
+                child: InkWell(
+                  onTap: () => {Get.to(PermisoCovidScreen())},
                   child: Center(
-                      child: Text(
-                    "Ver QR",
-                    style: TextStyle(
-                      color: Color(0xFF000000),
-                      fontWeight: FontWeight.w700,
+                    child: Text(
+                      "Ver QR",
+                      style: TextStyle(
+                        color: Color(0xFF000000),
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
-                  )))
+                  ),
+                ),
+              ),
             ],
           ),
         ),
