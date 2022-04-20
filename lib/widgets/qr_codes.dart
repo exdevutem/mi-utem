@@ -12,7 +12,22 @@ class QRCodes extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(left: 30, right: 30),
           child: Row(
-            children: [Text("PERMISOS ACTIVOS"), Text("Ver Todos")],
+            children: [
+              Text(
+                "PERMISOS ACTIVOS",
+                style: TextStyle(
+                  color: Color(0xFF363636),
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              Text(
+                "Ver Todos",
+                style: TextStyle(
+                  color: Color(0xFF009D9B),
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ],
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
           ),
         ),
@@ -23,7 +38,7 @@ class QRCodes extends StatelessWidget {
             height: 175,
             initialPage: 0,
             autoPlay: false,
-            viewportFraction: 0.9,
+            viewportFraction: 0.8,
             enableInfiniteScroll: false,
             pageSnapping: true,
             disableCenter: true,
@@ -43,7 +58,64 @@ class QRCard extends StatelessWidget {
       width: 300,
       height: 175,
       child: Card(
-        child: Material(color: Colors.white),
+        child: Container(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Expanded(
+                flex: 75,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: Icon(
+                        Icons.qr_code_2,
+                        color: Colors.black,
+                        size: 60.0,
+                      ),
+                    ),
+                    Expanded(
+                      flex: 3,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("Funcionario"),
+                          Text(
+                            "Taller - Eventos extraordinarios",
+                            style: TextStyle(
+                              color: Color(0xFF009D9B),
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          Text(
+                            "Campus Macul (Macul)",
+                            style: TextStyle(
+                              color: Color(0xFF363636),
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Divider(color: Color(0xFFBDBDBD), thickness: 0.3),
+              Expanded(
+                  flex: 25,
+                  child: Center(
+                      child: Text(
+                    "Ver QR",
+                    style: TextStyle(
+                      color: Color(0xFF000000),
+                      fontWeight: FontWeight.w700,
+                    ),
+                  )))
+            ],
+          ),
+        ),
       ),
     );
   }
