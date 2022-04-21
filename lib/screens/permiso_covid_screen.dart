@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mi_utem/widgets/custom_app_bar.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 
 class PermisoCovidScreen extends StatelessWidget {
   const PermisoCovidScreen({Key? key}) : super(key: key);
@@ -19,9 +20,9 @@ class PermisoCovidScreen extends StatelessWidget {
                 DetallesPermiso(),
                 Divider(thickness: 1, color: Color(0xFFFEEEEE)),
                 Center(
-                  child: Image.network(
-                    "https://i.pinimg.com/originals/60/c1/4a/60c14a43fb4745795b3b358868517e79.png",
-                    height: 200,
+                  child: QrImage(
+                    data: "https://www.youtube.com/watch?v=OcJQ-sOK5O8",
+                    size: 200,
                   ),
                 ),
                 Padding(
@@ -92,18 +93,22 @@ class DetallesPermiso extends StatelessWidget {
           BloqueDetalle(top: "Motivo", bottom: "Permiso para Funcionarios"),
           Row(
             children: [
-              BloqueDetalle(top: "Campus", bottom: "Macul"),
-              BloqueDetalle(top: "Dependencias", bottom: "Biblioteca"),
+              Flexible(
+                fit: FlexFit.tight,
+                child: BloqueDetalle(top: "Campus", bottom: "Macul"),
+              ),
+              Flexible(
+                child: BloqueDetalle(top: "Dependencias", bottom: "Biblioteca"),
+              ),
             ],
           ),
           Row(
             children: [
               Flexible(
-                flex: 2,
+                fit: FlexFit.tight,
                 child: BloqueDetalle(top: "Jornada", bottom: "Mañana"),
               ),
               Flexible(
-                flex: 1,
                 child: BloqueDetalle(top: "Vigencia", bottom: "Diario"),
               ),
             ],

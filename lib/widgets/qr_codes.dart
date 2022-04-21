@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:get/state_manager.dart';
-import 'package:mi_utem/screens/permiso_covid.dart';
+import 'package:mi_utem/screens/permiso_covid_screen.dart';
 
 class QRCodes extends StatelessWidget {
   const QRCodes({Key? key}) : super(key: key);
