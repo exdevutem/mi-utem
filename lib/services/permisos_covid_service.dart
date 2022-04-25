@@ -8,7 +8,7 @@ class PermisosCovidService {
   static final Dio _dio = DioMiUtemClient.baseDio;
 
   static Future<List<PermisoCovid>> getPermisos() async {
-    String uri = "/permisos";
+    String uri = "/v1/permisos";
 
     dynamic data = {
       'correo':
