@@ -26,4 +26,24 @@ class PermisosCovidService {
       throw e;
     }
   }
+
+  static Future<dynamic> getDetallesPermiso(String id) async {
+    String uri = "/v1/permisos/$id";
+
+    dynamic data = {
+      'correo':
+          (await SharedPreferences.getInstance()).getString('correoUtem')!,
+      'contrasenia':
+          (await (new FlutterSecureStorage()).read(key: 'contrasenia'))!,
+    };
+
+    try {
+      Response response = await _dio.post(uri, data: data);
+
+      return response.data;
+    } on DioError catch (e) {
+      print(e.message);
+      throw e;
+    }
+  }
 }
