@@ -1,10 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:get/state_manager.dart';
+import 'package:mi_utem/models/permiso_covid.dart';
 import 'package:mi_utem/screens/permiso_covid_screen.dart';
+import 'package:mi_utem/services/permisos_covid_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class QRCodes extends StatelessWidget {
+class QRCodes extends StatefulWidget {
   const QRCodes({Key? key}) : super(key: key);
+
+  @override
+  State<QRCodes> createState() => _QRCodesState();
+}
+
+class _QRCodesState extends State<QRCodes> {
+  late Future<List<PermisoCovid>> permisos;
+
+  @override
+  initState() {
+    super.initState();
+
+    permisos = PermisosCovidService.getPermisos();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,10 +53,24 @@ class QRCodes extends StatelessWidget {
           ),
           SizedBox(
             height: 175,
-            child: ListView(
-              padding: EdgeInsets.only(left: 20.0, right: 20.0),
-              children: [QRCard(), QRCard(), QRCard()],
-              scrollDirection: Axis.horizontal,
+            child: FutureBuilder(
+              future: permisos,
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                if (snapshot.hasError) {
+                  return Text('${snapshot.error}');
+                }
+                if (!snapshot.hasData) {
+                  return const CircularProgressIndicator();
+                }
+
+                if (snapshot.data.length == 0) {
+                  return Text('No hay permisos COVID');
+                }
+
+                return ListView.builder(
+                    itemBuilder: (context, index) =>
+                        QRCard(permiso: snapshot.data[index]));
+              },
             ),
           ),
         ],
@@ -49,7 +80,9 @@ class QRCodes extends StatelessWidget {
 }
 
 class QRCard extends StatelessWidget {
-  const QRCard({Key? key}) : super(key: key);
+  const QRCard({Key? key, required this.permiso}) : super(key: key);
+
+  final PermisoCovid permiso;
 
   @override
   Widget build(BuildContext context) {
