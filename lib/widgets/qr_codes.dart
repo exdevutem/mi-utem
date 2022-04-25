@@ -4,7 +4,7 @@ import 'package:get/state_manager.dart';
 import 'package:mi_utem/models/permiso_covid.dart';
 import 'package:mi_utem/screens/permiso_covid_screen.dart';
 import 'package:mi_utem/services/permisos_covid_service.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:mi_utem/themes/theme.dart';
 
 class QRCodes extends StatefulWidget {
   const QRCodes({Key? key}) : super(key: key);
@@ -40,13 +40,6 @@ class _QRCodesState extends State<QRCodes> {
                     fontWeight: FontWeight.w700,
                   ),
                 ),
-                Text(
-                  "Ver Todos",
-                  style: TextStyle(
-                    color: Color(0xFF009D9B),
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
               ],
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
             ),
@@ -68,8 +61,13 @@ class _QRCodesState extends State<QRCodes> {
                 }
 
                 return ListView.builder(
-                    itemBuilder: (context, index) =>
-                        QRCard(permiso: snapshot.data[index]));
+                  itemCount: snapshot.data.length,
+                  padding: EdgeInsets.only(left: 20.0, right: 20.0),
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (context, index) => QRCard(
+                    permiso: snapshot.data[index],
+                  ),
+                );
               },
             ),
           ),
@@ -113,16 +111,16 @@ class QRCard extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Funcionario"),
+                          Text(permiso.perfil!),
                           Text(
-                            "Taller - Eventos extraordinarios",
+                            permiso.motivo!,
                             style: TextStyle(
-                              color: Color(0xFF009D9B),
+                              color: MainTheme.primaryColor,
                               fontWeight: FontWeight.w700,
                             ),
                           ),
                           Text(
-                            "Campus Macul (Macul)",
+                            permiso.campus ?? '',
                             style: TextStyle(
                               color: Color(0xFF363636),
                               fontWeight: FontWeight.w700,
@@ -138,12 +136,17 @@ class QRCard extends StatelessWidget {
               Expanded(
                 flex: 25,
                 child: InkWell(
-                  onTap: () => {Get.to(PermisoCovidScreen())},
+                  onTap: () => Get.to(
+                    PermisoCovidScreen(),
+                    arguments: {
+                      'id': permiso.id,
+                    },
+                  ),
                   child: Center(
                     child: Text(
                       "Ver QR",
                       style: TextStyle(
-                        color: Color(0xFF000000),
+                        color: Colors.black,
                         fontWeight: FontWeight.w700,
                       ),
                     ),

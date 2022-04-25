@@ -29,7 +29,7 @@ class PermisoCovid {
     );
   }
 
-  static List<PermisoCovid> fromJsonList(List<Map<String, dynamic>> json) {
+  static List<PermisoCovid> fromJsonList(List<dynamic> json) {
     List<PermisoCovid> lista = [];
     for (var elemento in json) {
       lista.add(PermisoCovid.fromJson(elemento));
