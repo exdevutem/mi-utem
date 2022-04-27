@@ -1,25 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mi_utem/models/permiso_covid.dart';
 import 'package:mi_utem/services/permisos_covid_service.dart';
 import 'package:mi_utem/widgets/custom_app_bar.dart';
+import 'package:mi_utem/widgets/loading_indicator.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 class PermisoCovidScreen extends StatefulWidget {
-  const PermisoCovidScreen({Key? key}) : super(key: key);
+  const PermisoCovidScreen({Key? key, required this.permiso,}) : super(key: key);
+  
+  final PermisoCovid permiso;
 
   @override
   State<PermisoCovidScreen> createState() => _PermisoCovidScreenState();
 }
 
 class _PermisoCovidScreenState extends State<PermisoCovidScreen> {
-  late Future<dynamic> propiedades;
-
-  final String id = Get.arguments['id'];
+  late Future<dynamic> _propiedades;
 
   @override
   void initState() {
     super.initState();
-    propiedades = PermisosCovidService.getDetallesPermiso(id);
+    _propiedades = PermisosCovidService.getDetallesPermiso(widget.permiso.id!);
   }
 
   @override
@@ -28,14 +30,14 @@ class _PermisoCovidScreenState extends State<PermisoCovidScreen> {
       appBar: CustomAppBar(title: Text("Permiso Covid")),
       body: SingleChildScrollView(
         child: FutureBuilder(
-          future: propiedades,
+          future: _propiedades,
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             if (snapshot.hasError) {
               Get.back();
               return Container();
             }
             if (!snapshot.hasData) {
-              return const CircularProgressIndicator();
+              return Expanded(flex: 1,child: Center(child: LoadingIndicator(),));
             }
 
             return LoadedScreen(propiedades: snapshot.data);
@@ -106,18 +108,6 @@ class UsuarioDetalle extends StatelessWidget {
       padding: const EdgeInsets.all(20.0),
       child: Row(
         children: [
-          // Padding(
-          //   padding: const EdgeInsets.only(right: 20.0),
-          //   child: ClipRRect(
-          //     borderRadius: BorderRadius.all(Radius.circular(200)),
-          //     child: Image.network(
-          //       "https://static.wikia.nocookie.net/memes-pedia/images/4/4f/Gigachad.jpg/revision/latest?cb=20201122221724&path-prefix=es",
-          //       height: 50.0,
-          //       width: 50.0,
-          //       fit: BoxFit.cover,
-          //     ),
-          //   ),
-          // ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -158,7 +148,8 @@ class DetallesPermiso extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           BloqueDetalle(top: "Motivo", bottom: motivo),
-          Row(
+          if(campus != null && dependencias != null) 
+            Row(
             children: [
               Flexible(
                 fit: FlexFit.tight,
