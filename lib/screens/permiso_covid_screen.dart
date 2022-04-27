@@ -7,8 +7,11 @@ import 'package:mi_utem/widgets/loading_indicator.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 class PermisoCovidScreen extends StatefulWidget {
-  const PermisoCovidScreen({Key? key, required this.permiso,}) : super(key: key);
-  
+  const PermisoCovidScreen({
+    Key? key,
+    required this.permiso,
+  }) : super(key: key);
+
   final PermisoCovid permiso;
 
   @override
@@ -16,7 +19,7 @@ class PermisoCovidScreen extends StatefulWidget {
 }
 
 class _PermisoCovidScreenState extends State<PermisoCovidScreen> {
-  late Future<dynamic> _propiedades;
+  late Future<PermisoCovid> _propiedades;
 
   @override
   void initState() {
@@ -37,10 +40,14 @@ class _PermisoCovidScreenState extends State<PermisoCovidScreen> {
               return Container();
             }
             if (!snapshot.hasData) {
-              return Expanded(flex: 1,child: Center(child: LoadingIndicator(),));
+              return Expanded(
+                  flex: 1,
+                  child: Center(
+                    child: LoadingIndicator(),
+                  ));
             }
 
-            return LoadedScreen(propiedades: snapshot.data);
+            return LoadedScreen(permiso: snapshot.data);
           },
         ),
       ),
@@ -51,10 +58,10 @@ class _PermisoCovidScreenState extends State<PermisoCovidScreen> {
 class LoadedScreen extends StatelessWidget {
   const LoadedScreen({
     Key? key,
-    required this.propiedades,
+    required this.permiso,
   }) : super(key: key);
 
-  final dynamic propiedades;
+  final PermisoCovid permiso;
 
   @override
   Widget build(BuildContext context) {
@@ -64,21 +71,21 @@ class LoadedScreen extends StatelessWidget {
         child: Column(
           children: [
             UsuarioDetalle(
-              nombre: propiedades['usuario']['nombreCompleto'],
-              rut: propiedades['usuario']['rut'],
+              nombre: permiso.nombre!,
+              rut: permiso.rut!,
             ),
             Divider(thickness: 1, color: Color(0xFFFEEEEE)),
             DetallesPermiso(
-              campus: propiedades['campus'],
-              dependencias: propiedades['dependencia'],
-              jornada: propiedades['jornada'],
-              vigencia: propiedades['vigencia'],
-              motivo: propiedades['motivo'],
+              campus: permiso.campus,
+              dependencias: permiso.dependencia,
+              jornada: permiso.jornada,
+              vigencia: permiso.vigencia,
+              motivo: permiso.motivo,
             ),
             Divider(thickness: 1, color: Color(0xFFFEEEEE)),
             Center(
               child: QrImage(
-                data: propiedades['codigoQr'],
+                data: permiso.codigoQr!,
                 size: 200,
               ),
             ),
@@ -148,21 +155,22 @@ class DetallesPermiso extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           BloqueDetalle(top: "Motivo", bottom: motivo),
-          if(campus != null && dependencias != null) 
+          if (campus != null && dependencias != null)
             Row(
-            children: [
-              Flexible(
-                fit: FlexFit.tight,
-                child: BloqueDetalle(
-                  top: "Campus",
-                  bottom: campus,
+              children: [
+                Flexible(
+                  fit: FlexFit.tight,
+                  child: BloqueDetalle(
+                    top: "Campus",
+                    bottom: campus,
+                  ),
                 ),
-              ),
-              Flexible(
-                child: BloqueDetalle(top: "Dependencias", bottom: dependencias),
-              ),
-            ],
-          ),
+                Flexible(
+                  child:
+                      BloqueDetalle(top: "Dependencias", bottom: dependencias),
+                ),
+              ],
+            ),
           Row(
             children: [
               Flexible(

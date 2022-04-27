@@ -27,7 +27,7 @@ class PermisosCovidService {
     }
   }
 
-  static Future<dynamic> getDetallesPermiso(String id) async {
+  static Future<PermisoCovid> getDetallesPermiso(String id) async {
     String uri = "/v1/permisos/$id";
 
     dynamic data = {
@@ -40,7 +40,7 @@ class PermisosCovidService {
     try {
       Response response = await _dio.post(uri, data: data);
 
-      return response.data;
+      return PermisoCovid.fromJson(response.data);
     } on DioError catch (e) {
       print(e.message);
       throw e;
