@@ -12,13 +12,13 @@ class PermisosCovidSection extends StatefulWidget {
 }
 
 class _PermisosCovidSectionState extends State<PermisosCovidSection> {
-  late Future<List<PermisoCovid>> _permisos;
+  late Future<List<PermisoCovid>> _permisosFuture;
 
   @override
   initState() {
     super.initState();
 
-    _permisos = PermisosCovidService.getPermisos();
+    _permisosFuture = PermisosCovidService.getPermisos();
   }
 
   @override
@@ -45,7 +45,7 @@ class _PermisosCovidSectionState extends State<PermisosCovidSection> {
           SizedBox(
             height: 175,
             child: FutureBuilder(
-              future: _permisos,
+              future: _permisosFuture,
               builder: (BuildContext context, AsyncSnapshot snapshot) {
                 if (snapshot.hasError) {
                   return Text('${snapshot.error}');
