@@ -1,6 +1,3 @@
-import 'package:mi_utem/models/rut.dart';
-import 'package:mi_utem/models/usuario.dart';
-
 class PermisoCovid {
   String? id;
   String? nombre;
