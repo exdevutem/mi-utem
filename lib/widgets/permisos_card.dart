@@ -1,84 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:get/get_navigation/get_navigation.dart';
-import 'package:get/state_manager.dart';
+import 'package:get/get.dart';
 import 'package:mi_utem/models/permiso_covid.dart';
 import 'package:mi_utem/screens/permiso_covid_screen.dart';
-import 'package:mi_utem/services/permisos_covid_service.dart';
 import 'package:mi_utem/themes/theme.dart';
 
-class QRCodes extends StatefulWidget {
-  const QRCodes({Key? key}) : super(key: key);
-
-  @override
-  State<QRCodes> createState() => _QRCodesState();
-}
-
-class _QRCodesState extends State<QRCodes> {
-  late Future<List<PermisoCovid>> permisos;
-
-  @override
-  initState() {
-    super.initState();
-
-    permisos = PermisosCovidService.getPermisos();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 8.0, bottom: 30.0),
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 30, right: 30),
-            child: Row(
-              children: [
-                Text(
-                  "PERMISOS ACTIVOS",
-                  style: TextStyle(
-                    color: Color(0xFF363636),
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ],
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            ),
-          ),
-          SizedBox(
-            height: 175,
-            child: FutureBuilder(
-              future: permisos,
-              builder: (BuildContext context, AsyncSnapshot snapshot) {
-                if (snapshot.hasError) {
-                  return Text('${snapshot.error}');
-                }
-                if (!snapshot.hasData) {
-                  return const CircularProgressIndicator();
-                }
-
-                if (snapshot.data.length == 0) {
-                  return Text('No hay permisos COVID');
-                }
-
-                return ListView.builder(
-                  itemCount: snapshot.data.length,
-                  padding: EdgeInsets.only(left: 20.0, right: 20.0),
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (context, index) => QRCard(
-                    permiso: snapshot.data[index],
-                  ),
-                );
-              },
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class QRCard extends StatelessWidget {
-  const QRCard({Key? key, required this.permiso}) : super(key: key);
+class PermisosCard extends StatelessWidget {
+  const PermisosCard({Key? key, required this.permiso}) : super(key: key);
 
   final PermisoCovid permiso;
 
@@ -137,10 +64,9 @@ class QRCard extends StatelessWidget {
                 flex: 25,
                 child: InkWell(
                   onTap: () => Get.to(
-                    PermisoCovidScreen(),
-                    arguments: {
-                      'id': permiso.id,
-                    },
+                    PermisoCovidScreen(
+                      permiso: permiso,
+                    ),
                   ),
                   child: Center(
                     child: Text(
