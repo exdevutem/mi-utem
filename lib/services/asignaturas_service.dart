@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
+import 'package:dio_http_cache/dio_http_cache.dart';
 import 'package:mi_utem/models/asignatura.dart';
 import 'package:mi_utem/utils/dio_miutem_client.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -15,11 +16,7 @@ class AsignaturasService {
     try {
       Response response = await _dio.get(
         uri,
-        options: DioMiUtemClient.cacheOptions
-            .copyWith(
-                maxStale: Nullable(Duration(days: 7)),
-                policy: refresh ? CachePolicy.refresh : CachePolicy.forceCache)
-            .toOptions(),
+        options: buildCacheOptions(Duration(days: 7)),
       );
 
       List<Asignatura> asignaturas = Asignatura.fromJsonList(response.data);
@@ -38,11 +35,7 @@ class AsignaturasService {
     try {
       Response response = await _dio.get(
         uri,
-        options: DioMiUtemClient.cacheOptions
-            .copyWith(
-                maxStale: Nullable(Duration(days: 7)),
-                policy: refresh ? CachePolicy.refresh : CachePolicy.forceCache)
-            .toOptions(),
+        options: buildCacheOptions(Duration(days: 7)),
       );
 
       Asignatura asignatura = Asignatura.fromJson(response.data);
@@ -65,11 +58,7 @@ class AsignaturasService {
       Map<String, dynamic> query = {"semestre": false};
       Response response = await _dio.get(
         uri,
-        options: DioMiUtemClient.cacheOptions
-            .copyWith(
-                maxStale: Nullable(Duration(days: 7)),
-                policy: refresh ? CachePolicy.refresh : CachePolicy.forceCache)
-            .toOptions(),
+        options: buildCacheOptions(Duration(days: 7)),
         queryParameters: query,
       );
 

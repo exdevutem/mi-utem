@@ -64,7 +64,7 @@ class PermisosCard extends StatelessWidget {
                 flex: 25,
                 child: InkWell(
                   onTap: () => Get.to(
-                    PermisoCovidScreen(
+                    () => PermisoCovidScreen(
                       permiso: permiso,
                     ),
                   ),

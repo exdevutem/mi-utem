@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
+import 'package:dio_http_cache/dio_http_cache.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:mi_utem/models/usuario.dart';
@@ -8,8 +9,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 class DioMiUtemClient {
   static const bool isProduction = bool.fromEnvironment('dart.vm.product');
   static String debugUrl =
-      dotenv.env['MI_UTEM_API_DEBUG'] ?? "https://api-mi-utem.herokuapp.com/";
-  static const String productionUrl = 'https://api-mi-utem.herokuapp.com/';
+      dotenv.env['MI_UTEM_API_DEBUG'] ?? 'https://api.exdev.cl/';
+  static const String productionUrl = 'https://api.exdev.cl/';
 
   static String url = isProduction ? productionUrl : debugUrl;
 
@@ -17,15 +18,17 @@ class DioMiUtemClient {
         baseUrl: url,
       ));
 
+  static CacheConfig cacheConfig = CacheConfig(
+    baseUrl: url,
+    defaultMaxAge: Duration(days: 7),
+    defaultMaxStale: Duration(days: 60),
+  );
+  static DioCacheManager dioCacheManager = DioCacheManager(cacheConfig);
+
   static Dio baseDio = Dio(BaseOptions(
     baseUrl: url,
-  ));
-
-  static CacheOptions cacheOptions = CacheOptions(
-    store: MemCacheStore(),
-    policy: CachePolicy.forceCache,
-    maxStale: const Duration(days: 7),
-  );
+  ))
+    ..interceptors.add(dioCacheManager.interceptor);
 
   static Dio get authDio => baseDio
     ..interceptors.addAll(
@@ -62,7 +65,7 @@ class DioMiUtemClient {
             return handler.next(dioError);
           }
         }),
-        DioCacheInterceptor(options: cacheOptions),
+        //DioCacheInterceptor(options: cacheOptions),
       ],
     );
 

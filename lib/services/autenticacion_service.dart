@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:dio_http_cache/dio_http_cache.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:mi_utem/models/carrera.dart';
 import 'package:mi_utem/models/usuario.dart';
@@ -120,7 +121,7 @@ class AutenticacionService {
       prefs.remove("rut");
       prefs.remove("version");
       await storage.deleteAll();
-      await DioMiUtemClient.cacheOptions.store!.clean();
+      await DioMiUtemClient.dioCacheManager.clearAll();
       await PerfilService.deleteFcmToken();
     } catch (e) {
       print(e.toString());
