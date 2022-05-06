@@ -31,6 +31,8 @@ Tipos de cambios
 ### Added
 
 - Nuevo archivo CHANGELOG para documentar los cambios de cada versión
+- Sección con lista de permisos COVID del usuario Logeado en la pantalla principal.
+- Pantalla con información detallada y codigo QR para los permisos COVID.
 
 ## [2.7.3] - 2022-03-27Z
 
