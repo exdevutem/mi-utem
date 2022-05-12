@@ -1,10 +1,15 @@
+import 'dart:typed_data';
+
+import 'package:barcode_image/barcode_image.dart';
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mi_utem/models/permiso_covid.dart';
 import 'package:mi_utem/services/permisos_covid_service.dart';
 import 'package:mi_utem/widgets/custom_app_bar.dart';
+import 'package:mi_utem/widgets/image_view_screen.dart';
 import 'package:mi_utem/widgets/loading_indicator.dart';
+import 'package:image/image.dart' as dartImage;
 
 class PermisoCovidScreen extends StatefulWidget {
   const PermisoCovidScreen({
@@ -61,6 +66,29 @@ class LoadedScreen extends StatelessWidget {
 
   final PermisoCovid permiso;
 
+  _openQr(String heroTag) {
+    final image = dartImage.Image(500, 500);
+    dartImage.fill(image, dartImage.getColor(255, 255, 255));
+    drawBarcode(
+      image,
+      Barcode.qrCode(),
+      permiso.codigoQr!,
+      x: 25,
+      y: 25,
+      width: 450,
+      height: 450,
+    );
+
+    Uint8List data = Uint8List.fromList(dartImage.encodePng(image));
+
+    Get.to(
+      () => ImageViewScreen(
+        imageProvider: MemoryImage(data),
+        heroTag: heroTag,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -82,12 +110,22 @@ class LoadedScreen extends StatelessWidget {
             ),
             Divider(thickness: 1, color: Color(0xFFFEEEEE)),
             Center(
-              child: BarcodeWidget(
-                barcode: Barcode.qrCode(),
-                height: 200,
-                width: 200,
-                data: permiso.codigoQr!,
-                drawText: false,
+              child: InkWell(
+                onTap: () => _openQr("qr_${permiso.codigoQr!}"),
+                child: Hero(
+                  tag: "qr_${permiso.codigoQr!}",
+                  child: Container(
+                    color: Colors.white,
+                    padding: EdgeInsets.all(10),
+                    child: BarcodeWidget(
+                      barcode: Barcode.qrCode(),
+                      height: 200,
+                      width: 200,
+                      data: permiso.codigoQr!,
+                      drawText: false,
+                    ),
+                  ),
+                ),
               ),
             ),
             Padding(

@@ -3,8 +3,10 @@ import 'package:get/get.dart';
 import 'package:photo_view/photo_view.dart';
 
 class ImageViewScreen extends StatefulWidget {
-  final ImageProvider? imagen;
-  ImageViewScreen({Key? key, ImageProvider? this.imagen}) : super(key: key);
+  final ImageProvider imageProvider;
+  final String? heroTag;
+  ImageViewScreen({Key? key, required this.imageProvider, this.heroTag})
+      : super(key: key);
 
   @override
   _ImageViewScreenState createState() => _ImageViewScreenState();
@@ -18,7 +20,10 @@ class _ImageViewScreenState extends State<ImageViewScreen> {
         children: <Widget>[
           Container(
             child: PhotoView(
-              imageProvider: widget.imagen,
+              imageProvider: widget.imageProvider,
+              heroAttributes: widget.heroTag != null
+                  ? PhotoViewHeroAttributes(tag: widget.heroTag!)
+                  : null,
             ),
           ),
           SafeArea(

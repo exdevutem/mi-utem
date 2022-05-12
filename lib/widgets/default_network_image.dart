@@ -4,7 +4,6 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import 'package:mi_utem/widgets/image_view_screen.dart';
 
-
 class DefaultNetworkImage extends StatelessWidget {
   final String? url;
 
@@ -22,7 +21,7 @@ class DefaultNetworkImage extends StatelessWidget {
         imageBuilder: (context, imageProvider) => GestureDetector(
           onTap: () async {
             Get.to(
-              ImageViewScreen(imagen: imageProvider),
+              ImageViewScreen(imageProvider: imageProvider),
             );
           },
           child: Container(

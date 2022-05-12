@@ -303,7 +303,7 @@ class _UsuarioScreenState extends State<UsuarioScreen> {
                               : null,
                           onImageTap: (context, imageProvider) {
                             Get.to(
-                              ImageViewScreen(imagen: imageProvider),
+                              ImageViewScreen(imageProvider: imageProvider),
                             );
                           }),
                     ),
