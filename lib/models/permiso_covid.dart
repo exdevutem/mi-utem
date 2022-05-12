@@ -1,7 +1,8 @@
+import 'package:mi_utem/models/usuario.dart';
+
 class PermisoCovid {
   String? id;
-  String? nombre;
-  String? rut;
+  Usuario? usuario;
   String? codigoQr;
   String? perfil;
   String? motivo;
@@ -11,10 +12,9 @@ class PermisoCovid {
   String? vigencia;
   DateTime? fechaSolicitud;
 
-  PermisoCovid(
+  PermisoCovid({
     this.id,
-    this.nombre,
-    this.rut,
+    this.usuario,
     this.codigoQr,
     this.perfil,
     this.motivo,
@@ -23,21 +23,21 @@ class PermisoCovid {
     this.jornada,
     this.vigencia,
     this.fechaSolicitud,
-  );
+  });
 
   factory PermisoCovid.fromJson(Map<String, dynamic> json) {
     return PermisoCovid(
-        json['id'],
-        json['usuario']?['nombreCompleto'],
-        json['usuario']?['rut'],
-        json['codigoQr'],
-        json['perfil'],
-        json['motivo'],
-        json['campus'],
-        json['dependencia'],
-        json['jornada'],
-        json['vigencia'],
-        DateTime.tryParse(json['fechaSolicitud']));
+      id: json['id'],
+      usuario: Usuario.fromJson(json['usuario']),
+      codigoQr: json['codigoQr'],
+      perfil: json['perfil'],
+      motivo: json['motivo'],
+      campus: json['campus'],
+      dependencia: json['dependencia'],
+      jornada: json['jornada'],
+      vigencia: json['vigencia'],
+      fechaSolicitud: DateTime.tryParse(json['fechaSolicitud']),
+    );
   }
 
   static List<PermisoCovid> fromJsonList(List<dynamic> json) {

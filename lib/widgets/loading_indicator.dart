@@ -5,11 +5,13 @@ class LoadingIndicator extends StatelessWidget {
   final Color color;
   final AnimationController? controller;
   final EdgeInsetsGeometry padding;
+  final String? message;
 
   LoadingIndicator({
     this.color = const Color(0xFF009d9b),
     this.controller,
     this.padding = const EdgeInsets.all(20),
+    this.message,
   });
 
   @override
@@ -19,10 +21,17 @@ class LoadingIndicator extends StatelessWidget {
       child: Center(
         child: Container(
           padding: padding,
-          child: SpinKitDoubleBounce(
-            controller: controller,
-            color: color,
-            size: 40.0,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SpinKitDoubleBounce(
+                controller: controller,
+                color: color,
+                size: 40.0,
+              ),
+              if (message != null) Container(height: 10),
+              if (message != null) Text(message!),
+            ],
           ),
         ),
       ),

@@ -26,6 +26,7 @@ class ConfigService {
   static const String PRONTO_EG = 'miutem_eg_pronto_texto';
   static const String EG_HABILITADOS = 'miutem_eg_habilitados';
   static const String DRAWER_MENU = 'miutem_drawer_menu';
+  static const String GREETINGS = 'miutem_greetings';
 
   static final defaults = <String, dynamic>{
     CREDITOS: jsonEncode(
@@ -257,6 +258,7 @@ class ConfigService {
       //   "esNuevo": true
       // },
     ]),
+    GREETINGS: jsonEncode(['Que gusto verte, **%name**']),
   };
 
   static ConfigService? _instance;

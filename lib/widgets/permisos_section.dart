@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:mi_utem/models/permiso_covid.dart';
 import 'package:mi_utem/services/permisos_covid_service.dart';
 import 'package:mi_utem/widgets/loading_indicator.dart';
-import 'package:mi_utem/widgets/permisos_card.dart';
+import 'package:mi_utem/widgets/permiso_card.dart';
 
 class PermisosCovidSection extends StatefulWidget {
   const PermisosCovidSection({Key? key}) : super(key: key);
@@ -23,55 +24,54 @@ class _PermisosCovidSectionState extends State<PermisosCovidSection> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 8.0, bottom: 30.0),
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 30, right: 30),
-            child: Row(
-              children: [
-                Text(
-                  "PERMISOS ACTIVOS",
-                  style: TextStyle(
-                    color: Color(0xFF363636),
-                    fontWeight: FontWeight.w700,
-                  ),
+    return Column(
+      children: [
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 20),
+          child: Row(
+            children: [
+              Text(
+                "Permisos activos".toUpperCase(),
+                style: Get.textTheme.subtitle1!.copyWith(
+                  fontWeight: FontWeight.bold,
                 ),
-              ],
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            ),
+              ),
+            ],
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
           ),
-          SizedBox(
-            height: 175,
-            child: FutureBuilder(
-              future: _permisosFuture,
-              builder: (BuildContext context, AsyncSnapshot snapshot) {
-                if (snapshot.hasError) {
-                  return Text('${snapshot.error}');
-                }
-                if (!snapshot.hasData) {
-                  return Center(child: LoadingIndicator(),);
-                }
-
-                if (snapshot.data.length == 0) {
-                  return Text('No hay permisos COVID');
-                }
-
-                return ListView.builder(
-                  itemCount: snapshot.data.length,
-                  padding: EdgeInsets.only(left: 20.0, right: 20.0),
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (context, index) => PermisosCard(
-                    permiso: snapshot.data[index],
-                  ),
+        ),
+        Container(height: 10),
+        SizedBox(
+          height: 155,
+          child: FutureBuilder(
+            future: _permisosFuture,
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+              if (snapshot.hasError) {
+                return Text('${snapshot.error}');
+              }
+              if (!snapshot.hasData) {
+                return LoadingIndicator(
+                  message: "Esto tardará un poco, paciencia...",
                 );
-              },
-            ),
+              }
+
+              if (snapshot.data.length == 0) {
+                return Text('No hay permisos de ingresos');
+              }
+
+              return ListView.separated(
+                itemCount: snapshot.data.length,
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                scrollDirection: Axis.horizontal,
+                separatorBuilder: (context, index) => Container(width: 10),
+                itemBuilder: (context, index) => PermisoCard(
+                  permiso: snapshot.data[index],
+                ),
+              );
+            },
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
-

@@ -30,7 +30,7 @@ class DioMiUtemClient {
   ))
     ..interceptors.add(dioCacheManager.interceptor);
 
-  static Dio get authDio => baseDio
+  static Dio get authDio => initDio
     ..interceptors.addAll(
       [
         InterceptorsWrapper(onRequest: (options, handler) async {
@@ -53,10 +53,16 @@ class DioMiUtemClient {
             baseDio.interceptors.responseLock.unlock();
 
             if (ok) {
-              Response response = await baseDio.request(options.path,
-                  cancelToken: options.cancelToken,
-                  data: options.data,
-                  queryParameters: options.queryParameters);
+              final opts = new Options(
+                method: dioError.requestOptions.method,
+                headers: dioError.requestOptions.headers,
+              );
+              Response response = await baseDio.request(
+                options.path,
+                options: opts,
+                data: options.data,
+                queryParameters: options.queryParameters,
+              );
               handler.resolve(response);
             } else {
               return handler.next(dioError);
@@ -96,6 +102,7 @@ class DioMiUtemClient {
         return false;
       }
     } catch (e) {
+      print(e.toString());
       return false;
     }
   }
