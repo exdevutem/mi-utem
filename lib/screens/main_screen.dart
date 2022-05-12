@@ -1,22 +1,22 @@
+import 'dart:convert';
+import 'dart:math';
+
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:get/get.dart';
-import 'package:gradient_widgets/gradient_widgets.dart';
-import 'package:mdi/mdi.dart';
 import 'package:mi_utem/models/usuario.dart';
-import 'package:mi_utem/screens/asignaturas_screen.dart';
-import 'package:mi_utem/screens/horario_screen.dart';
 import 'package:mi_utem/services/config_service.dart';
 import 'package:mi_utem/services/perfil_service.dart';
 import 'package:mi_utem/services/review_service.dart';
-//import 'package:new_version/new_version.dart';
 import 'package:mi_utem/widgets/custom_app_bar.dart';
 import 'package:mi_utem/widgets/custom_drawer.dart';
 import 'package:mi_utem/widgets/noticias_carrusel.dart';
 import 'package:mi_utem/widgets/permisos_section.dart';
+import 'package:mi_utem/widgets/quick_menu_section.dart';
 
 class MainScreen extends StatefulWidget {
   final Usuario usuario;
@@ -95,6 +95,16 @@ class _MainScreenState extends State<MainScreen> {
     }
   }
 
+  String get _greetingText {
+    List<dynamic> texts = jsonDecode(_remoteConfig!.getString(
+      ConfigService.GREETINGS,
+    ));
+
+    Random random = new Random();
+
+    return texts[random.nextInt(texts.length)];
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -107,107 +117,23 @@ class _MainScreenState extends State<MainScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Container(height: 20),
-            PermisosCovidSection(),
             Container(
               padding: EdgeInsets.symmetric(horizontal: 20),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: GradientCard(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15.0),
-                      ),
-                      gradient: Gradients.cosmicFusion,
-                      child: Material(
-                        color: Colors.transparent,
-                        child: InkWell(
-                          onTap: () {
-                            Get.to(AsignaturasScreen());
-                          },
-                          borderRadius: BorderRadius.all(Radius.circular(15)),
-                          child: Container(
-                            padding: EdgeInsets.all(30),
-                            width: double.infinity,
-                            child: Column(
-                              children: [
-                                Icon(
-                                  Icons.book,
-                                  color: Colors.white,
-                                  size: 30,
-                                ),
-                                Container(height: 10),
-                                Text(
-                                  "Notas",
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .headline3!
-                                      .copyWith(
-                                        color: Colors.white,
-                                      ),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: GradientCard(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15.0),
-                      ),
-                      gradient: Gradients.hotLinear,
-                      child: Material(
-                        color: Colors.transparent,
-                        child: InkWell(
-                          onTap: () {
-                            Get.to(HorarioScreen());
-                          },
-                          borderRadius: BorderRadius.all(Radius.circular(15)),
-                          child: Container(
-                            padding: EdgeInsets.all(30),
-                            width: double.infinity,
-                            child: Column(
-                              children: [
-                                Icon(
-                                  Mdi.clockTimeEight,
-                                  color: Colors.white,
-                                  size: 30,
-                                ),
-                                Container(height: 10),
-                                Text(
-                                  "Horario",
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .headline3!
-                                      .copyWith(
-                                        color: Colors.white,
-                                      ),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+              child: MarkdownBody(
+                data: _greetingText.replaceAll(
+                    "%name", widget.usuario.primerNomber),
+                styleSheet: MarkdownStyleSheet(
+                  p: Get.textTheme.headline2!
+                      .copyWith(fontWeight: FontWeight.normal),
+                ),
               ),
             ),
             Container(height: 20),
-            Text(
-              "Noticias".toUpperCase(),
-              style: Theme.of(context).textTheme.headline4,
-            ),
-            Container(height: 10),
-            NoticiasCarrusel(),
+            PermisosCovidSection(),
+            Container(height: 20),
+            QuickMenuSection(),
+            Container(height: 20),
+            NoticiasSection(),
             Container(height: 20),
             GestureDetector(
               onTap: () {

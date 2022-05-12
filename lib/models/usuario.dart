@@ -26,7 +26,11 @@ class Usuario {
       return Usuario();
     }
     return Usuario(
-        rut: json['rut'] != null ? Rut.deEntero(json['rut']) : null,
+        rut: json['rut'] != null
+            ? (json['rut'].contains(".")
+                ? Rut.deString(json["rut"])
+                : Rut.deEntero(json['rut']))
+            : null,
         correoUtem: json['correoUtem'],
         correoPersonal: json['correoPersonal'],
         token: json['token'],
@@ -68,6 +72,10 @@ class Usuario {
       }
       return completo;
     }
+  }
+
+  String get primerNomber {
+    return nombreCompleto!.split(' ')[0];
   }
 
   String get iniciales => primeraLetraCadaPalabra(this.nombreCompleto);
