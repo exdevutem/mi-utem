@@ -137,7 +137,7 @@ class _ProfilePhotoState extends State<ProfilePhoto> {
                 ),
                 child: Icon(
                   Icons.camera_alt,
-                  color: Theme.of(context).primaryColor,
+                  color: Get.theme.primaryColor,
                 ),
               ),
             ),

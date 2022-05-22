@@ -1,10 +1,9 @@
 import 'package:dio/dio.dart';
-import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:dio_http_cache/dio_http_cache.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:mi_utem/models/usuario.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class DioMiUtemClient {
   static const bool isProduction = bool.fromEnvironment('dart.vm.product');
@@ -14,9 +13,11 @@ class DioMiUtemClient {
 
   static String url = isProduction ? productionUrl : debugUrl;
 
-  static Dio get initDio => Dio(BaseOptions(
-        baseUrl: url,
-      ));
+  static Dio get initDio => Dio(
+        BaseOptions(
+          baseUrl: url,
+        ),
+      );
 
   static CacheConfig cacheConfig = CacheConfig(
     baseUrl: url,
@@ -34,8 +35,8 @@ class DioMiUtemClient {
     ..interceptors.addAll(
       [
         InterceptorsWrapper(onRequest: (options, handler) async {
-          SharedPreferences prefs = await SharedPreferences.getInstance();
-          var token = prefs.getString('token');
+          GetStorage box = GetStorage();
+          var token = box.read('token');
           options.headers.addAll({"Authorization": "Bearer $token"});
 
           return handler.next(options);
@@ -73,10 +74,10 @@ class DioMiUtemClient {
     String uri = "/v1/auth";
 
     try {
-      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      final GetStorage box = GetStorage();
       final FlutterSecureStorage storage = new FlutterSecureStorage();
 
-      String? correo = prefs.getString("correoUtem");
+      String? correo = box.read("correoUtem");
       String? contrasenia = await storage.read(key: "contrasenia");
 
       print({'correo': correo, 'contrasenia': contrasenia});
@@ -88,7 +89,7 @@ class DioMiUtemClient {
 
         if (response.statusCode == 200) {
           Usuario usuario = Usuario.fromJson(response.data);
-          prefs.setString('token', usuario.token!);
+          box.write('token', usuario.token!);
         }
 
         return true;

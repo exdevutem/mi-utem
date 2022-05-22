@@ -51,7 +51,7 @@ class _MainScreenState extends State<MainScreen> {
     ReviewService.addScreen("MainScreen");
     ReviewService.checkAndRequestReview();
     SchedulerBinding.instance!.addPostFrameCallback((_) {
-      _checkAndPerformUpdate(context);
+      _checkAndPerformUpdate();
     });
   }
 
@@ -60,7 +60,7 @@ class _MainScreenState extends State<MainScreen> {
     super.dispose();
   }
 
-  Future<void> _checkAndPerformUpdate(BuildContext context) async {
+  Future<void> _checkAndPerformUpdate() async {
     try {
       /* VersionStatus status = await NewVersion(context: context).getVersionStatus();
       print("status.localVersion ${status.localVersion}");

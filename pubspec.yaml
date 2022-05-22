@@ -70,6 +70,8 @@ dependencies:
   video_player: ^2.1.0
   dio_http_cache: ^0.3.0
   intl: ^0.17.0
+  get_storage: ^2.0.3
+  hexcolor: ^2.0.7
 
 dependency_overrides:
   qr: ^3.0.0

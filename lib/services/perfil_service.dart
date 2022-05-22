@@ -1,27 +1,27 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:mi_utem/models/rut.dart';
 import 'package:mi_utem/models/usuario.dart';
 import 'package:mi_utem/utils/dio_miutem_client.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class PerfilService {
   static final Dio _dio = DioMiUtemClient.authDio;
+  static final GetStorage box = GetStorage();
 
   static Future<Usuario> getLocalUsuario() async {
     try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? token = prefs.getString("token");
-      String? nombres = prefs.getString("nombres");
-      String? apellidos = prefs.getString("apellidos");
-      String? nombre = prefs.getString("nombre");
-      String? fotoUrl = prefs.getString("fotoUrl");
-      Rut? rut = prefs.getInt("rut") != null
-          ? Rut.deEntero(prefs.getInt("rut"))
-          : null;
-      String? correoUtem = prefs.getString("correoUtem");
-      String? correoPersonal = prefs.getString("correoPersonal");
+      String? token = box.read("token");
+      String? nombres = box.read("nombres");
+      String? apellidos = box.read("apellidos");
+      String? nombre = box.read("nombre");
+      String? fotoUrl = box.read("fotoUrl");
+      Rut? rut = box.read("rut") is int
+          ? Rut.deEntero(box.read("rut"))
+          : Rut.deString(box.read("rut"));
+      String? correoUtem = box.read("correoUtem");
+      String? correoPersonal = box.read("correoPersonal");
 
       return Usuario(
           token: token,
@@ -42,15 +42,13 @@ class PerfilService {
     String uri = "/v1/usuarios/foto";
 
     try {
-      final SharedPreferences prefs = await SharedPreferences.getInstance();
-
       dynamic data = {'imagen': imagen};
 
       Response response = await _dio.put(uri, data: data);
 
       String fotoUrl = response.data["fotoUrl"];
 
-      prefs.setString('fotoUrl', fotoUrl);
+      box.write('fotoUrl', fotoUrl);
 
       Usuario usuario = await getLocalUsuario();
 

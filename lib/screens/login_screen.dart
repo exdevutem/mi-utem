@@ -67,11 +67,11 @@ class _LoginScreenState extends State<LoginScreen> {
       });
 
     SchedulerBinding.instance!.addPostFrameCallback((_) {
-      _checkAndPerformUpdate(context);
+      _checkAndPerformUpdate();
     });
   }
 
-  Future<void> _checkAndPerformUpdate(BuildContext context) async {
+  Future<void> _checkAndPerformUpdate() async {
     /* try {
       VersionStatus status =
           await NewVersion(context: context).getVersionStatus();
@@ -150,15 +150,11 @@ class _LoginScreenState extends State<LoginScreen> {
                   maxWidth: double.infinity,
                   maxHeight: double.infinity,
                   alignment: Alignment.center,
-                  child: FittedBox(
-                    fit: BoxFit.cover,
-                    alignment: Alignment.center,
-                    child: Container(
-                      decoration: _backgroundDecoration,
-                      width: size.width,
-                      height: size.height,
-                      child: VideoPlayer(_controller),
-                    ),
+                  child: Container(
+                    decoration: _backgroundDecoration,
+                    width: size.width,
+                    height: size.height,
+                    child: VideoPlayer(_controller),
                   ),
                 ),
               ),

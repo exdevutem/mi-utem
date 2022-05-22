@@ -26,11 +26,9 @@ class Usuario {
       return Usuario();
     }
     return Usuario(
-        rut: json['rut'] != null
-            ? (json['rut'].contains(".")
-                ? Rut.deString(json["rut"])
-                : Rut.deEntero(json['rut']))
-            : null,
+        rut: json['rut'] is int
+            ? Rut.deEntero(json['rut'])
+            : Rut.deString(json["rut"]),
         correoUtem: json['correoUtem'],
         correoPersonal: json['correoPersonal'],
         token: json['token'],

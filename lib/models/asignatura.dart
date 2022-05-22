@@ -1,11 +1,11 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:mi_utem/models/evaluacion.dart';
 import 'package:mi_utem/models/usuario.dart';
 import 'package:mi_utem/themes/theme.dart';
 import 'package:recase/recase.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class Asignatura {
   String? id;
@@ -51,13 +51,13 @@ class Asignatura {
   });
 
   Future<void> addColor(List<Color> colores) async {
+    GetStorage box = GetStorage();
     List<Color> coloresFiltrados = colores;
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+
     Map<String, dynamic> json = {};
 
-    if (prefs.containsKey('coloresAsignaturas') &&
-        prefs.getString('coloresAsignaturas') != null) {
-      json = jsonDecode(prefs.getString('coloresAsignaturas')!);
+    if (box.hasData('coloresAsignaturas')) {
+      json = jsonDecode(box.read('coloresAsignaturas')!);
     }
 
     List<Color> coloresUsados = json.values.map((c) => Color(c)).toList();
@@ -66,7 +66,7 @@ class Asignatura {
     if (!json.containsKey(this.codigo)) {
       this.colorAsignatura = coloresFiltrados[0];
       json[this.codigo!] = coloresFiltrados[0].value;
-      prefs.setString('coloresAsignaturas', jsonEncode(json));
+      box.write('coloresAsignaturas', jsonEncode(json));
     } else {
       this.colorAsignatura = Color(json[this.codigo!]!);
     }

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:mi_utem/screens/splash_screen.dart';
 import 'package:mi_utem/services/config_service.dart';
 import 'package:mi_utem/services/notificaciones_service.dart';
@@ -15,7 +16,8 @@ import 'package:sentry/sentry.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await dotenv.load(fileName: ".env");
+  await dotenv.load();
+  await GetStorage.init();
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   await Firebase.initializeApp();
   await ConfigService.getInstance();

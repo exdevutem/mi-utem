@@ -1,5 +1,6 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:mi_utem/models/asignatura.dart';
 import 'package:mi_utem/widgets/custom_error_widget.dart';
 import 'package:mi_utem/widgets/loading_indicator.dart';
@@ -76,7 +77,7 @@ class _AsignaturaResumenTabState extends State<AsignaturaResumenTab> {
                               width: double.infinity,
                               child: Text(
                                 "Resumen".toUpperCase(),
-                                style: Theme.of(context).textTheme.headline4,
+                                style: Get.textTheme.headline4,
                                 textAlign: TextAlign.left,
                               ),
                             ),
@@ -176,7 +177,7 @@ class _AsignaturaResumenTabState extends State<AsignaturaResumenTab> {
                     //           width: double.infinity,
                     //           child: Text(
                     //             "Asistencia".toUpperCase(),
-                    //             style: Theme.of(context).textTheme.headline4,
+                    //             style: Get.textTheme.headline4,
                     //             textAlign: TextAlign.left,
                     //           ),
                     //         ),
