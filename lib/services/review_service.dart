@@ -1,15 +1,11 @@
-import 'dart:convert';
-import 'package:dio/dio.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:in_app_review/in_app_review.dart';
-import 'package:mi_utem/models/rut.dart';
-import 'package:mi_utem/models/usuario.dart';
-import 'package:mi_utem/utils/dio_miutem_client.dart';
 import 'package:mi_utem/widgets/custom_alert_dialog.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class ReviewService {
+  static final GetStorage box = GetStorage();
+
   static final Duration minRequest = Duration(days: 80);
 
   static final Duration minScreen = Duration(days: 3);
@@ -27,9 +23,8 @@ class ReviewService {
 
   static Future<bool> addScreen(String screenName) async {
     try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
       if (screens.contains(screenName)) {
-        prefs.setString("review$screenName", DateTime.now().toIso8601String());
+        box.write("review$screenName", DateTime.now().toIso8601String());
         return true;
       } else {
         print(
@@ -44,9 +39,8 @@ class ReviewService {
 
   static Future<bool> mustRequest() async {
     try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
       for (String screen in screens) {
-        String? isoDate = prefs.getString("review$screen");
+        String? isoDate = box.read("review$screen");
         if (isoDate != null && isoDate.isNotEmpty) {
           DateTime date = DateTime.parse(isoDate);
           DateTime maxDate = DateTime.now().subtract(maxScreen);
@@ -61,7 +55,7 @@ class ReviewService {
           return false;
         }
       }
-      String? lastRequestIsoDate = prefs.getString("reviewLastRequest");
+      String? lastRequestIsoDate = box.read("reviewLastRequest");
       if (lastRequestIsoDate != null && lastRequestIsoDate.isNotEmpty) {
         DateTime lastRequestDate = DateTime.parse(lastRequestIsoDate);
         DateTime minDate = DateTime.now().subtract(minRequest);
@@ -84,7 +78,6 @@ class ReviewService {
   static Future<void> checkAndRequestReview() async {
     try {
       print("ReviewService checkAndRequestReview");
-      SharedPreferences prefs = await SharedPreferences.getInstance();
       bool mustRequest = await ReviewService.mustRequest();
       if (mustRequest) {
         if (await inAppReview.isAvailable()) {
@@ -99,7 +92,7 @@ class ReviewService {
               },
               onConfirmar: () async {
                 await inAppReview.requestReview();
-                prefs.setString(
+                box.write(
                     "reviewLastRequest", DateTime.now().toIso8601String());
                 Get.back();
               },

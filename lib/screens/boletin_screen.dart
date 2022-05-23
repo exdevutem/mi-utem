@@ -296,7 +296,7 @@ class BoletinScreen extends StatelessWidget {
   final List ramos = [['Cálculo avanzado', 'A', '4.9'], ['Circuitos eléctricos', 'A', '5.1']];
 
   Future<List<BoletinNotas>> _getBoletines() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    
     String token = await Usuario.getToken();
     int usuarioId = prefs.getInt("id");
 
@@ -311,7 +311,7 @@ class BoletinScreen extends StatelessWidget {
   }
 
   Future<BoletinNotas> _get() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    
     String token = await Usuario.getToken();
     int usuarioId = prefs.getInt("id");
 

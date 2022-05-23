@@ -1,9 +1,10 @@
+import 'dart:convert';
+
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:gradient_widgets/gradient_widgets.dart';
-import 'package:mdi/mdi.dart';
-import 'package:mi_utem/models/permiso_covid.dart';
-import 'package:mi_utem/screens/asignaturas_screen.dart';
+import 'package:mi_utem/services/config_service.dart';
+import 'package:mi_utem/widgets/quick_menu_card.dart';
 
 class QuickMenuSection extends StatefulWidget {
   const QuickMenuSection({Key? key}) : super(key: key);
@@ -13,38 +14,18 @@ class QuickMenuSection extends StatefulWidget {
 }
 
 class _QuickMenuSectionState extends State<QuickMenuSection> {
-  late Future<List<PermisoCovid>> _permisosFuture;
+  FirebaseRemoteConfig? _remoteConfig = ConfigService.config;
 
   @override
   initState() {
     super.initState();
   }
 
-  List<Map<String, dynamic>> get _quickMenu => [
-        {
-          "nombre": "Notas",
-          "icono": {
-            "codePoint": Icons.book.codePoint,
-            "fontFamily": 'MaterialIcons'
-          },
-        },
-        {
-          "nombre": "Horario",
-          "icono": {
-            "codePoint": Mdi.clockTimeEight.codePoint,
-            "fontFamily": 'Material Design Icons',
-            "fontPackage": "mdi"
-          },
-        },
-        {
-          "nombre": "Credencial",
-          "icono": {
-            "codePoint": Mdi.cardAccountDetails.codePoint,
-            "fontFamily": 'Material Design Icons',
-            "fontPackage": "mdi"
-          },
-        },
-      ];
+  List<dynamic> get _quickMenu {
+    return jsonDecode(_remoteConfig!.getString(
+      ConfigService.QUICK_MENU,
+    ));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -71,54 +52,7 @@ class _QuickMenuSectionState extends State<QuickMenuSection> {
             separatorBuilder: (context, index) => Container(width: 10),
             itemBuilder: (context, index) {
               Map<String, dynamic> e = _quickMenu[index];
-              return Container(
-                height: 130,
-                width: 150,
-                child: GradientCard(
-                  margin: EdgeInsets.zero,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15.0),
-                  ),
-                  gradient: Gradients.cosmicFusion,
-                  child: Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      onTap: () {
-                        Get.to(() => AsignaturasScreen());
-                      },
-                      borderRadius: BorderRadius.all(Radius.circular(15)),
-                      child: Container(
-                        padding: EdgeInsets.all(20),
-                        width: double.infinity,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              IconData(
-                                e["icono"]["codePoint"],
-                                fontFamily: e["icono"]["fontFamily"],
-                                fontPackage: e["icono"]["fontPackage"],
-                              ),
-                              color: Colors.white,
-                              size: 30,
-                            ),
-                            Container(height: 10),
-                            Text(
-                              e["nombre"],
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: Get.textTheme.headline6!.copyWith(
-                                color: Colors.white,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              );
+              return QuickMenuCard(card: e);
             },
           ),
         ),

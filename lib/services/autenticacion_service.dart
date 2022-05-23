@@ -1,15 +1,15 @@
 import 'package:dio/dio.dart';
-import 'package:dio_http_cache/dio_http_cache.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:mi_utem/models/carrera.dart';
 import 'package:mi_utem/models/usuario.dart';
 import 'package:mi_utem/services/carreras_service.dart';
 import 'package:mi_utem/services/perfil_service.dart';
 import 'package:mi_utem/utils/dio_miutem_client.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class AutenticacionService {
   static final Dio _dio = DioMiUtemClient.initDio;
+  static final GetStorage box = GetStorage();
 
   static final String versionCorrecta = "2.5.2";
 
@@ -18,7 +18,6 @@ class AutenticacionService {
     String uri = "/v1/auth";
 
     try {
-      final SharedPreferences prefs = await SharedPreferences.getInstance();
       final FlutterSecureStorage storage = new FlutterSecureStorage();
 
       dynamic data = {'correo': correo, 'contrasenia': contrasenia};
@@ -28,37 +27,37 @@ class AutenticacionService {
       Usuario usuario = Usuario();
       if (response.statusCode == 200) {
         usuario = Usuario.fromJson(response.data);
-        prefs.setString('token', usuario.token!);
+        box.write('token', usuario.token!);
         if (usuario.nombres != null) {
-          prefs.setString('nombres', usuario.nombres!);
+          box.write('nombres', usuario.nombres!);
         }
         if (usuario.apellidos != null) {
-          prefs.setString('apellidos', usuario.apellidos!);
+          box.write('apellidos', usuario.apellidos!);
         }
         if (usuario.nombre != null) {
-          prefs.setString('nombre', usuario.nombre!);
+          box.write('nombre', usuario.nombre!);
         }
         if (usuario.fotoUrl != null) {
-          prefs.setString('fotoUrl', usuario.fotoUrl!);
+          box.write('fotoUrl', usuario.fotoUrl!);
         }
         if (usuario.correoUtem != null) {
-          prefs.setString('correoUtem', usuario.correoUtem!);
+          box.write('correoUtem', usuario.correoUtem!);
         }
         if (usuario.correoPersonal != null) {
-          prefs.setString('correoPersonal', usuario.correoPersonal!);
+          box.write('correoPersonal', usuario.correoPersonal!);
         }
         if (usuario.rut?.numero != null) {
-          prefs.setInt('rut', usuario.rut!.numero!);
+          box.write('rut', usuario.rut!.numero!);
         }
-        prefs.setString('version', versionCorrecta);
-        prefs.setBool('esAntiguo', true);
+        box.write('version', versionCorrecta);
+        box.write('esAntiguo', true);
 
         if (guardar) {
           await storage.write(key: "contrasenia", value: contrasenia);
         }
         Carrera carrera = await CarreraService.getCarreraActiva();
         if (carrera.id != null) {
-          prefs.setString('carreraId', carrera.id!);
+          box.write('carreraId', carrera.id!);
         }
       }
       return usuario;
@@ -72,8 +71,7 @@ class AutenticacionService {
 
   static Future<bool> esPrimeraVez() async {
     try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      var esAntiguo = prefs.getBool("esAntiguo");
+      bool? esAntiguo = box.read("esAntiguo");
       if (esAntiguo == null) {
         return true;
       } else {
@@ -87,9 +85,8 @@ class AutenticacionService {
 
   static Future<bool> isLoggedIn() async {
     try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? token = prefs.getString("token");
-      String? version = prefs.getString("version");
+      String? token = box.read("token");
+      String? version = box.read("version");
       bool isLoggedIn = token != null &&
           token.isNotEmpty &&
           version != null &&
@@ -109,17 +106,16 @@ class AutenticacionService {
 
   static Future<void> logOut() async {
     try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
       final FlutterSecureStorage storage = new FlutterSecureStorage();
 
-      prefs.remove("token");
-      prefs.remove("correo");
-      prefs.remove("nombres");
-      prefs.remove("nombre");
-      prefs.remove("apellidos");
-      prefs.remove("fotoUrl");
-      prefs.remove("rut");
-      prefs.remove("version");
+      box.remove("token");
+      box.remove("correo");
+      box.remove("nombres");
+      box.remove("nombre");
+      box.remove("apellidos");
+      box.remove("fotoUrl");
+      box.remove("rut");
+      box.remove("version");
       await storage.deleteAll();
       await DioMiUtemClient.dioCacheManager.clearAll();
       await PerfilService.deleteFcmToken();

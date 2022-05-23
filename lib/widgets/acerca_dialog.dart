@@ -2,10 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mi_utem/themes/theme.dart';
 import 'package:mi_utem/widgets/acerca_aplicacion_content.dart';
 import 'package:mi_utem/widgets/acerca_screen.dart';
-import 'package:mi_utem/widgets/loading_indicator.dart';
 
 class AcercaDialog extends StatefulWidget {
   AcercaDialog({
@@ -100,8 +98,7 @@ class _AcercaDialogState extends State<AcercaDialog> {
                           OutlinedButton(
                             child: Text(
                               "Cerrar",
-                              style: TextStyle(
-                                  color: Theme.of(context).primaryColor),
+                              style: TextStyle(color: Get.theme.primaryColor),
                             ),
                             onPressed: () {
                               Get.back();

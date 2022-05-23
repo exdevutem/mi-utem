@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class FooterLayout extends StatelessWidget {
   const FooterLayout({
@@ -15,7 +16,7 @@ class FooterLayout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomMultiChildLayout(
-      delegate: _FooterLayoutDelegate(MediaQuery.of(context).viewInsets),
+      delegate: _FooterLayoutDelegate(Get.mediaQuery.viewInsets),
       children: <Widget>[
         LayoutId(
           id: _FooterLayout.body,

@@ -6,6 +6,7 @@ import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:get/get.dart';
 import 'package:mi_utem/models/carrera.dart';
 import 'package:mi_utem/models/usuario.dart';
 import 'package:mi_utem/services/config_service.dart';
@@ -44,7 +45,7 @@ class _CredencialCardState extends State<CredencialCard> {
   }
 
   Widget _buildFront() {
-    double altoBanner = MediaQuery.of(context).size.height * 0.2;
+    double altoBanner = Get.mediaQuery.size.height * 0.2;
     return Card(
       elevation: 1,
       clipBehavior: Clip.antiAlias,
@@ -79,7 +80,7 @@ class _CredencialCardState extends State<CredencialCard> {
                   padding: EdgeInsets.only(bottom: 20),
                   child: Image.asset(
                     'assets/images/utem_logo_negativo.png',
-                    width: MediaQuery.of(context).size.width * 0.4,
+                    width: Get.mediaQuery.size.width * 0.4,
                   ),
                 ),
               ),

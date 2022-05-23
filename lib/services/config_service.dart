@@ -27,6 +27,7 @@ class ConfigService {
   static const String EG_HABILITADOS = 'miutem_eg_habilitados';
   static const String DRAWER_MENU = 'miutem_drawer_menu';
   static const String GREETINGS = 'miutem_greetings';
+  static const String QUICK_MENU = 'miutem_quick_menu';
 
   static final defaults = <String, dynamic>{
     CREDITOS: jsonEncode(
@@ -259,6 +260,49 @@ class ConfigService {
       // },
     ]),
     GREETINGS: jsonEncode(['Que gusto verte, **%name**']),
+    QUICK_MENU: jsonEncode([
+      {
+        "nombre": "Notas",
+        "degradado": {
+          "colors": ["#ff00cc", "#333399"],
+          "begin": [-1, 0],
+          "end": [1, 0]
+        },
+        "icono": {
+          "codePoint": Icons.book.codePoint,
+          "fontFamily": 'MaterialIcons'
+        },
+        "route": "/AsignaturasScreen",
+      },
+      {
+        "nombre": "Horario",
+        "degradado": {
+          "colors": ["#F55B9A", "#F9B16E"],
+          "begin": [-1, -1],
+          "end": [1, 1]
+        },
+        "icono": {
+          "codePoint": Mdi.clockTimeEight.codePoint,
+          "fontFamily": 'Material Design Icons',
+          "fontPackage": "mdi"
+        },
+        "route": "/HorarioScreen",
+      },
+      {
+        "nombre": "Credencial",
+        "degradado": {
+          "colors": ["#00F260", "#0575E6"],
+          "begin": [-1, 1],
+          "end": [1, -1]
+        },
+        "icono": {
+          "codePoint": Mdi.cardAccountDetails.codePoint,
+          "fontFamily": 'Material Design Icons',
+          "fontPackage": "mdi"
+        },
+        "route": "/CredencialScreen",
+      },
+    ])
   };
 
   static ConfigService? _instance;

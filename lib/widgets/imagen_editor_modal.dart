@@ -52,7 +52,7 @@ class _ImagenEditorModalState extends State<ImagenEditorModal> {
       extendBody: true,
       extendBodyBehindAppBar: true,
       bottomNavigationBar: new Theme(
-        data: Theme.of(context).copyWith(
+        data: Get.theme.copyWith(
           canvasColor: Colors.black.withOpacity(0.5),
         ),
         child: Container(
