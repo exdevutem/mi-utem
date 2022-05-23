@@ -118,7 +118,9 @@ class AutenticacionService {
       box.remove("version");
       await storage.deleteAll();
       await DioMiUtemClient.dioCacheManager.clearAll();
-      await PerfilService.deleteFcmToken();
+      try {
+        await PerfilService.deleteFcmToken();
+      } catch (e) {}
     } catch (e) {
       print(e.toString());
       throw e;
