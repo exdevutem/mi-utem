@@ -1,25 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mi_utem/models/permiso_covid.dart';
-import 'package:mi_utem/services/permisos_covid_service.dart';
 import 'package:mi_utem/widgets/loading_indicator.dart';
 import 'package:mi_utem/widgets/permiso_card.dart';
 
 class PermisosCovidSection extends StatefulWidget {
-  const PermisosCovidSection({Key? key}) : super(key: key);
+  final List<PermisoCovid>? permisos;
+  const PermisosCovidSection({
+    Key? key,
+    required this.permisos,
+  }) : super(key: key);
 
   @override
   State<PermisosCovidSection> createState() => _PermisosCovidSectionState();
 }
 
 class _PermisosCovidSectionState extends State<PermisosCovidSection> {
-  late Future<List<PermisoCovid>> _permisosFuture;
-
   @override
   initState() {
     super.initState();
-
-    _permisosFuture = PermisosCovidService.getPermisos();
   }
 
   @override
@@ -43,29 +42,25 @@ class _PermisosCovidSectionState extends State<PermisosCovidSection> {
         Container(height: 10),
         SizedBox(
           height: 155,
-          child: FutureBuilder(
-            future: _permisosFuture,
-            builder: (BuildContext context, AsyncSnapshot snapshot) {
-              if (snapshot.hasError) {
-                return Text('${snapshot.error}');
-              }
-              if (!snapshot.hasData) {
+          child: LayoutBuilder(
+            builder: (BuildContext context, BoxConstraints constraints) {
+              if (widget.permisos == null) {
                 return LoadingIndicator(
                   message: "Esto tardará un poco, paciencia...",
                 );
               }
 
-              if (snapshot.data.length == 0) {
+              if (widget.permisos!.length == 0) {
                 return Text('No hay permisos de ingresos');
               }
 
               return ListView.separated(
-                itemCount: snapshot.data.length,
+                itemCount: widget.permisos!.length,
                 padding: EdgeInsets.symmetric(horizontal: 20),
                 scrollDirection: Axis.horizontal,
                 separatorBuilder: (context, index) => Container(width: 10),
                 itemBuilder: (context, index) => PermisoCard(
-                  permiso: snapshot.data[index],
+                  permiso: widget.permisos![index],
                 ),
               );
             },

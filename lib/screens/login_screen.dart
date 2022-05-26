@@ -259,7 +259,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                                   data: _creditText,
                                                 ),
                                                 onTap: () {
-                                                  Get.to(AcercaScreen());
+                                                  Get.to(() => AcercaScreen());
                                                 },
                                               ),
                                             ),
@@ -403,7 +403,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                           recognizer: TapGestureRecognizer()
                             ..onTap = () {
-                              Get.to(AcercaScreen());
+                              Get.to(() => AcercaScreen());
                             },
                         ),
                       ],

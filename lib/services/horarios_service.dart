@@ -15,7 +15,10 @@ class HorarioService {
     try {
       Response response = await _dio.get(
         uri,
-        options: buildCacheOptions(Duration(days: 30)),
+        options: buildCacheOptions(
+          Duration(days: 30),
+          forceRefresh: refresh,
+        ),
       );
 
       Horario horario = Horario.fromJson(response.data);

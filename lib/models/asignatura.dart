@@ -16,7 +16,7 @@ class Asignatura {
   String? docente;
   String? seccion;
   Color? colorAsignatura;
-  List<Evaluacion> evaluaciones;
+  List<Evaluacion> notasParciales;
   num? notaExamen;
   num? notaPresentacion;
   num? notaFinal;
@@ -35,7 +35,7 @@ class Asignatura {
     this.colorAsignatura,
     this.tipoHora,
     this.estado,
-    this.evaluaciones = const [],
+    this.notasParciales = const [],
     this.notaFinal,
     this.notaPresentacion,
     this.docente,
@@ -87,8 +87,8 @@ class Asignatura {
       docente:
           json['docente'] != null ? ReCase(json['docente']).titleCase : null,
       seccion: json['seccion'],
-      evaluaciones: json['evaluaciones'] != null
-          ? Evaluacion.fromJsonList(json['evaluaciones'])
+      notasParciales: json['notasParciales'] != null
+          ? Evaluacion.fromJsonList(json['notasParciales'])
           : [],
       notaFinal: json['notaFinal'] != null ? json['notaFinal'] : null,
       notaPresentacion:
@@ -108,8 +108,10 @@ class Asignatura {
           json['tipoSala'] != null ? ReCase(json['tipoSala']).titleCase : null,
     );
 
-    List<Color> colores = Colors.primaries.toList()..shuffle();
-    asignaturaParseada.addColor(colores);
+    if (asignaturaParseada.codigo != null) {
+      List<Color> colores = Colors.primaries.toList()..shuffle();
+      asignaturaParseada.addColor(colores);
+    }
     return asignaturaParseada;
   }
 
@@ -139,7 +141,7 @@ class Asignatura {
 
   num get notaPresentacionCalculada {
     double presentacion = 0;
-    for (var evaluacion in evaluaciones) {
+    for (var evaluacion in notasParciales) {
       if (evaluacion.nota != null && evaluacion.porcentaje != null) {
         presentacion += evaluacion.nota! * (evaluacion.porcentaje! / 100);
       }
@@ -149,7 +151,7 @@ class Asignatura {
   }
 
   bool get estanTodasLasNotas {
-    for (var evaluacion in evaluaciones) {
+    for (var evaluacion in notasParciales) {
       if (evaluacion.nota == null) {
         return false;
       }

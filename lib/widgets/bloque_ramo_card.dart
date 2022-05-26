@@ -41,7 +41,7 @@ class BloqueRamoCard extends StatelessWidget {
         child: InkWell(
           onTap: () {
             // if (bloque.asignatura != null) {
-            //   Get.to(
+            //   Get.to(() =>
             //     AsignaturaScreen(asignatura: bloque.asignatura!),
             //   );
             // }

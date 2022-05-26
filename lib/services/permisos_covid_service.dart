@@ -25,6 +25,7 @@ class PermisosCovidService {
         options: buildCacheOptions(
           Duration(days: 30),
           maxStale: Duration(days: 365),
+          forceRefresh: refresh,
         ),
       );
 

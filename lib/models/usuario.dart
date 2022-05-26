@@ -74,7 +74,7 @@ class Usuario {
     }
   }
 
-  String get primerNomber {
+  String get primerNombre {
     return nombreCompleto!.split(' ')[0];
   }
 

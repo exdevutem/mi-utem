@@ -96,7 +96,7 @@ class _ProfilePhotoState extends State<ProfilePhoto> {
                         File(imagen.path).readAsBytesSync();
 
                     Uint8List imagenEditadaBytes = await Get.to(
-                      ImagenEditorModal(
+                      () => ImagenEditorModal(
                         imagenInicial: imagenOriginalBytes,
                         aspectRatio: 1,
                       ),

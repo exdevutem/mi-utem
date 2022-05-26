@@ -123,7 +123,7 @@ class _DocentesScreenState extends State<DocentesScreen> {
                                       ""),
                                   onTap: () async {
                                     await Get.to(
-                                      UsuarioScreen(
+                                      () => UsuarioScreen(
                                           tipo: 2,
                                           query: {"nombre": docente.nombre}),
                                     );

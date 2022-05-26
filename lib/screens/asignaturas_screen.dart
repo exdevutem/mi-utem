@@ -73,7 +73,7 @@ class _AsignaturasScreenState extends State<AsignaturasScreen> {
                       return ListTile(
                         onTap: () {
                           Get.to(
-                            AsignaturaScreen(asignatura: asignatura),
+                            () => AsignaturaScreen(asignatura: asignatura),
                           );
                         },
                         title: Text(

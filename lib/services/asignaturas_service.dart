@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
 import 'package:dio_http_cache/dio_http_cache.dart';
 import 'package:get_storage/get_storage.dart';
@@ -15,7 +17,10 @@ class AsignaturasService {
     try {
       Response response = await _dio.get(
         uri,
-        options: buildCacheOptions(Duration(days: 7)),
+        options: buildCacheOptions(
+          Duration(days: 7),
+          forceRefresh: refresh,
+        ),
       );
 
       List<Asignatura> asignaturas = Asignatura.fromJsonList(response.data);
@@ -34,7 +39,10 @@ class AsignaturasService {
     try {
       Response response = await _dio.get(
         uri,
-        options: buildCacheOptions(Duration(days: 7)),
+        options: buildCacheOptions(
+          Duration(days: 7),
+          forceRefresh: refresh,
+        ),
       );
 
       Asignatura asignatura = Asignatura.fromJson(response.data);
@@ -56,17 +64,26 @@ class AsignaturasService {
       Map<String, dynamic> query = {"semestre": false};
       Response response = await _dio.get(
         uri,
-        options: buildCacheOptions(Duration(days: 7)),
+        options: buildCacheOptions(
+          Duration(days: 7),
+          forceRefresh: refresh,
+        ),
         queryParameters: query,
       );
 
-      List<Asignatura> asignaturas = Asignatura.fromJsonList(response.data);
-      if (asignaturas.length > 0) {
-        Asignatura asignatura =
-            asignaturas.firstWhere((a) => a.codigo == codigo);
-        return asignatura;
+      if (response.data is Iterable) {
+        List<Asignatura> asignaturas = Asignatura.fromJsonList(response.data);
+        if (asignaturas.length > 0) {
+          Asignatura asignatura =
+              asignaturas.firstWhere((a) => a.codigo == codigo);
+          return asignatura;
+        } else {
+          return null;
+        }
       } else {
-        return null;
+        Asignatura asignatura = Asignatura.fromJson(response.data);
+        log("AAAA ${asignatura.toString()}");
+        return asignatura;
       }
     } on DioError catch (e) {
       print(e.message);

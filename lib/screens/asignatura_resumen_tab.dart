@@ -127,7 +127,7 @@ class _AsignaturaResumenTabState extends State<AsignaturaResumenTab> {
                               //     : null,
                               // onTap: _asignatura.docente != null
                               //     ? () async {
-                              //         await Get.to(
+                              //         await Get.to(() =>
                               //           UsuarioScreen(
                               //             tipo: 2,
                               //             query: {

@@ -15,7 +15,7 @@ class Evaluacion {
     }
     return Evaluacion(
       porcentaje: json['porcentaje'],
-      descripcion: json['descripcion'],
+      descripcion: json['descripcion'] ?? "Nota",
       nota: json['nota'],
     );
   }

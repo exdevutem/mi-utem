@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import 'package:mi_utem/widgets/image_view_screen.dart';
 
@@ -20,7 +19,7 @@ class DefaultNetworkImage extends StatelessWidget {
         imageUrl: url ?? "",
         imageBuilder: (context, imageProvider) => GestureDetector(
           onTap: () async {
-            Get.to(
+            Get.to(() =>
               ImageViewScreen(imageProvider: imageProvider),
             );
           },

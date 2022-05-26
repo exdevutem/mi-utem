@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:dio_http_cache/dio_http_cache.dart';
 import 'package:mi_utem/models/carrera.dart';
 import 'package:mi_utem/utils/dio_miutem_client.dart';
@@ -12,7 +11,10 @@ class CarreraService {
 
     Response response = await _dio.get(
       uri,
-      options: buildCacheOptions(Duration(days: 7)),
+      options: buildCacheOptions(
+        Duration(days: 7),
+        forceRefresh: refresh,
+      ),
     );
 
     List<Carrera> carreras = Carrera.fromJsonList(response.data);
@@ -25,7 +27,10 @@ class CarreraService {
 
     Response response = await _dio.get(
       uri,
-      options: buildCacheOptions(Duration(days: 7)),
+      options: buildCacheOptions(
+        Duration(days: 7),
+        forceRefresh: refresh,
+      ),
     );
 
     List<Carrera> carreras = Carrera.fromJsonList(response.data);

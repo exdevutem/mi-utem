@@ -89,7 +89,7 @@ class _AcercaDialogState extends State<AcercaDialog> {
                                   ? null
                                   : () {
                                       Get.back();
-                                      Get.to(AcercaScreen());
+                                      Get.to(() => AcercaScreen());
                                     },
                             ),
                           ],
