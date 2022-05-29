@@ -1,3 +1,15 @@
+def ensure_keychain()
+  delete_keychain(
+    name: ENV["KEYCHAIN_NAME"]
+  ) if File.exist? File.expand_path("~/Library/Keychains/#{ENV["KEYCHAIN_NAME"]}-db")
+  create_keychain(
+    name: ENV["KEYCHAIN_NAME"],
+    password: ENV["KEYCHAIN_PASSWORD"],
+    default_keychain: true,
+    unlock: true,
+    timeout: 0,
+  )
+end
 
 lane :ios_test do
   puts("Testing Fastlane from iOS")
@@ -7,14 +19,22 @@ lane :ios_flutter do |options|
   build_number = options[:build_number]
   build_name = options[:build_name]
   skip_clean = options[:skip_clean]
+  skip_cocoapods = options[:skip_cocoapods]
 
   unless skip_clean
     sh("flutter", "clean")
     sh("flutter", "packages", "get")
   end
 
-  cocoapods(use_bundle_exec: false, podfile: "ios")
- 
+  unless skip_cocoapods
+    Dir.chdir("../ios") do
+      sh("rm", "-rf", "Pods")
+      sh("pod", "deintegrate")
+    end
+
+    cocoapods(use_bundle_exec: false, podfile: "ios")
+  end
+
   sh("flutter", "build", "ios", "--release", "--no-codesign", "--no-tree-shake-icons", "--build-name=#{build_name}", "--build-number=#{build_number}")
 end
 
@@ -24,12 +44,34 @@ lane :ios_build_and_upload do |options|
   skip_clean = options[:skip_clean]
   type = options[:type]
   changelog = options[:changelog]
+  skip_cocoapods = options[:skip_cocoapods]
+  is_ci = options[:is_ci]
+  skip_match = false
 
   if build_number || build_name
-    ios_flutter(build_number: build_number, build_name: build_name, skip_clean:)
+    ios_flutter(build_number: build_number, build_name: build_name, skip_clean: skip_clean, skip_cocoapods: skip_cocoapods)
   end
 
-  sync_code_signing(type: "appstore")
+  if options[:skip_match]
+    skip_match = options[:skip_match]
+  end
+
+  unless skip_match
+    ensure_keychain()
+    unlock_keychain(
+      path: ENV["KEYCHAIN_NAME"],
+    password: ENV["KEYCHAIN_PASSWORD"],
+      set_default: true
+    )
+    sync_code_signing(
+      type: "appstore",
+      git_url: ENV["MATCH_REPO_GIT_URL"],
+      readonly: is_ci,
+      keychain_name: ENV["KEYCHAIN_NAME"],
+      keychain_password: ENV["KEYCHAIN_PASSWORD"],
+    )
+    
+  end
   
   build_app(
     workspace: "./ios/Runner.xcworkspace",
@@ -46,9 +88,11 @@ end
 
 lane :ios_beta_upload do |options|
   changelog = options[:changelog]
+  is_ci = options[:is_ci]
 
   upload_to_testflight(
-    changelog: changelog
+    changelog: changelog,
+    skip_waiting_for_build_processing: is_ci
   )
 end
 
@@ -59,4 +103,3 @@ lane :ios_release_upload do |options|
     release_notes: changelog
   )
 end
-

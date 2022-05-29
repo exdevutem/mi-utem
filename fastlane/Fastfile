@@ -1,11 +1,36 @@
 import '../ios/fastlane/Fastfile'
 import '../android/fastlane/Fastfile'
 
-update_fastlane
-
 default_platform(:mobile)
 
 platform :mobile do
+
+  lane :translate_changelog do |options|
+    changelog = options[:changelog]
+
+    if changelog.include? "Added"
+      changelog["Added"] = "Añadido"
+    end
+    if changelog.include? "Changed"
+      changelog["Changed"] = "Cambiado"
+    end
+    if changelog.include? "Deprecated"
+      changelog["Deprecated"] = "Deprecado"
+    end
+    if changelog.include? "Removed"
+      changelog["Removed"] = "Removido"
+    end
+    if changelog.include? "Fixed"
+      changelog["Fixed"] = "Corregido"
+    end
+
+    if changelog.include? "Security"
+      changelog["Security"] = "Seguridad"
+    end
+
+    changelog
+  end
+
   lane :test do
     puts("Testing Fastlane for mobile")
 
@@ -37,44 +62,23 @@ platform :mobile do
     )
   end
 
-  lane :translate_changelog do |options|
-    changelog = options[:changelog]
 
-    if changelog.include? "Added"
-      changelog["Added"] = "Añadido"
-    end
-    if changelog.include? "Changed"
-      changelog["Changed"] = "Cambiado"
-    end
-    if changelog.include? "Deprecated"
-      changelog["Deprecated"] = "Deprecado"
-    end
-    if changelog.include? "Removed"
-      changelog["Removed"] = "Removido"
-    end
-    if changelog.include? "Fixed"
-      changelog["Fixed"] = "Corregido"
-    end
 
-    if changelog.include? "Security"
-      changelog["Security"] = "Seguridad"
-    end
-
-    changelog
-  end
 
   lane :upload do |options|
     build_number = options[:build_number]
     build_name = options[:build_name]
-
     changelog = read_changelog
-    emojified_changelog = emojify_changelog
     changelog = translate_changelog(changelog: changelog)
     emojified_changelog = translate_changelog(changelog: emojified_changelog)
-
     type = "release"
     skip_android = false
     skip_ios = false
+    skip_match = false
+    skip_cocoapods = false
+    skip_git_push = false
+    skip_slack = false
+    is_ci = true
 
     if options[:type] == "release" && options[:type] == "beta"
       type = options[:type]
@@ -88,12 +92,37 @@ platform :mobile do
       skip_ios = options[:skip_ios]
     end
 
+    if options[:skip_match]
+      skip_match = options[:skip_match]
+    end
+
+    if options[:skip_cocoapods]
+      skip_cocoapods = options[:skip_cocoapods]
+    end
+
+    if options[:skip_git_push]
+      skip_git_push = options[:skip_git_push]
+    end
+
+    if options[:skip_slack]
+      skip_slack = options[:skip_slack]
+    end
+
+    if options[:is_ci]
+      is_ci = options[:is_ci]
+    end
+
+    if build_name
+      build_name = build_name.tr('v', '')
+    end
+
     unless skip_android
       android_build_and_upload(
         build_number: build_number,
         build_name: build_name,
         changelog: changelog,
         type: type,
+        is_ci: is_ci,
         skip_clean: false,
       )
     end
@@ -104,35 +133,37 @@ platform :mobile do
         build_name: build_name,
         changelog: changelog,
         type: type,
-        skip_clean: !skip_android
+        skip_clean: !skip_android,
+        skip_match: skip_match,
+        skip_cocoapods: skip_cocoapods,
+        is_ci: is_ci,
       )
     end
-
-    add_git_tag(
-      tag: build_name,
-      force: true
-    )
 
     stamp_changelog(
       section_identifier: build_name,
       git_tag: build_name,
     )
 
-    git_add
-    git_commit(path: "*", message: "Release: #{build_name} (#{build_number})")
-    push_to_git_remote
+    unless skip_git_push
+      push_to_git_remote
+      git_add
+      git_commit(path: "*", message: "Stamp changelog for #{build_name} (#{build_number})")
+      push_to_git_remote
 
-    github_release = set_github_release(
-      repository_name: "exdevutem/mi-utem",
-      api_token: ENV["GITHUB_TOKEN"],
-      name: "v#{build_name}",
-      tag_name: "#{build_name}",
-      description: emojified_changelog,
-      commitish: "dev",
-      upload_assets: ["./build/app/outputs/bundle/release/app-release.aab", "./build/app/outputs/apk/release/app-release.apk"]
-    )
+      github_release = set_github_release(
+        repository_name: "exdevutem/mi-utem",
+        api_token: ENV["GITHUB_TOKEN"],
+        name: "v#{build_name}",
+        tag_name: "v#{build_name}",
+        description: emojified_changelog,
+        commitish: "dev",
+        upload_assets: ["./build/app/outputs/bundle/release/app-release.aab", "./build/app/outputs/apk/release/app-release.apk"]
+      )
+    end
 
-    slack(
+    unless skip_slack
+      slack(
       message: "🚀 Se ha publicado la nueva versión #{build_name} (#{build_number})",
       slack_url: ENV["SLACK_URL"],
       channel: "#proy-mi-utem",
@@ -150,5 +181,6 @@ platform :mobile do
         ]
       },
     )
+    end
   end
 end
