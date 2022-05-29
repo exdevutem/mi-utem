@@ -14,7 +14,6 @@
     end
 
     sh("flutter", "build", "appbundle", "--release", "--no-tree-shake-icons", "--build-name=#{build_name}", "--build-number=#{build_number}")
-    sh("flutter", "build", "apk", "--release", "--no-tree-shake-icons", "--build-name=#{build_name}", "--build-number=#{build_number}")
   end
 
   lane :android_build_and_upload do |options|
@@ -41,7 +40,7 @@
     build_name = options[:build_name]
     type = options[:type]
     changelog = options[:changelog]
-
+    
     upload_to_play_store(
       track: "internal",
       aab: "./build/app/outputs/bundle/release/app-release.aab",
@@ -93,6 +92,4 @@
         skip_upload_images: true
       )
     end
-
-
   end

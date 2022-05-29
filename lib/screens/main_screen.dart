@@ -1,22 +1,25 @@
-import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:firebase_remote_config/firebase_remote_config.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
-import 'package:flutter/services.dart';
-import 'package:get/get.dart';
-import 'package:gradient_widgets/gradient_widgets.dart';
-import 'package:mdi/mdi.dart';
-import 'package:mi_utem/models/usuario.dart';
-import 'package:mi_utem/screens/asignaturas_screen.dart';
-import 'package:mi_utem/screens/horario_screen.dart';
-import 'package:mi_utem/services/config_service.dart';
-import 'package:mi_utem/services/perfil_service.dart';
-import 'package:mi_utem/services/review_service.dart';
-//import 'package:new_version/new_version.dart';
-import 'package:mi_utem/widgets/custom_app_bar.dart';
-import 'package:mi_utem/widgets/custom_drawer.dart';
-import 'package:mi_utem/widgets/noticias_carrusel.dart';
-import 'package:mi_utem/widgets/permisos_section.dart';
+import "dart:convert";
+import "dart:math";
+
+import "package:firebase_analytics/firebase_analytics.dart";
+import "package:firebase_remote_config/firebase_remote_config.dart";
+import "package:flutter/material.dart";
+import "package:flutter/scheduler.dart";
+import "package:flutter/services.dart";
+import "package:flutter_markdown/flutter_markdown.dart";
+import "package:get/get.dart";
+import 'package:mi_utem/models/permiso_covid.dart';
+import "package:mi_utem/models/usuario.dart";
+import "package:mi_utem/services/config_service.dart";
+import "package:mi_utem/services/perfil_service.dart";
+import 'package:mi_utem/services/permisos_covid_service.dart';
+import "package:mi_utem/services/review_service.dart";
+import "package:mi_utem/widgets/custom_app_bar.dart";
+import "package:mi_utem/widgets/custom_drawer.dart";
+import "package:mi_utem/widgets/noticias_carrusel.dart";
+import "package:mi_utem/widgets/permisos_section.dart";
+import 'package:mi_utem/widgets/pull_to_refresh.dart';
+import "package:mi_utem/widgets/quick_menu_section.dart";
 
 class MainScreen extends StatefulWidget {
   final Usuario usuario;
@@ -27,14 +30,16 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
+  late FirebaseRemoteConfig? _remoteConfig;
+  late Future<List<PermisoCovid>> _permisosFuture;
+  List<PermisoCovid>? _permisos;
   int _a = 0;
-
-  FirebaseRemoteConfig? _remoteConfig;
 
   @override
   void initState() {
     super.initState();
     _remoteConfig = ConfigService.config;
+    _permisosFuture = _getPermisos();
     PerfilService.saveFcmToken();
     SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(
@@ -51,7 +56,7 @@ class _MainScreenState extends State<MainScreen> {
     ReviewService.addScreen("MainScreen");
     ReviewService.checkAndRequestReview();
     SchedulerBinding.instance!.addPostFrameCallback((_) {
-      _checkAndPerformUpdate(context);
+      _checkAndPerformUpdate();
     });
   }
 
@@ -60,7 +65,20 @@ class _MainScreenState extends State<MainScreen> {
     super.dispose();
   }
 
-  Future<void> _checkAndPerformUpdate(BuildContext context) async {
+  Future<List<PermisoCovid>> _getPermisos([bool refresh = false]) async {
+    List<PermisoCovid> permisos =
+        await PermisosCovidService.getPermisos(refresh);
+    setState(() {
+      _permisos = permisos;
+    });
+    return permisos;
+  }
+
+  Future<void> _onRefresh() async {
+    await _getPermisos(true);
+  }
+
+  Future<void> _checkAndPerformUpdate() async {
     try {
       /* VersionStatus status = await NewVersion(context: context).getVersionStatus();
       print("status.localVersion ${status.localVersion}");
@@ -95,6 +113,17 @@ class _MainScreenState extends State<MainScreen> {
     }
   }
 
+  String get _greetingText {
+    List<dynamic> texts = jsonDecode(_remoteConfig!.getString(
+      ConfigService.GREETINGS,
+    ));
+
+    Random random = new Random();
+    String text = texts[random.nextInt(texts.length)];
+    text = text.replaceAll("%name", widget.usuario.primerNombre);
+    return text;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -102,159 +131,81 @@ class _MainScreenState extends State<MainScreen> {
         title: Text("Inicio"),
       ),
       drawer: CustomDrawer(usuario: widget.usuario),
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Container(height: 20),
-            PermisosCovidSection(),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 20),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: GradientCard(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15.0),
-                      ),
-                      gradient: Gradients.cosmicFusion,
-                      child: Material(
-                        color: Colors.transparent,
-                        child: InkWell(
-                          onTap: () {
-                            Get.to(AsignaturasScreen());
-                          },
-                          borderRadius: BorderRadius.all(Radius.circular(15)),
-                          child: Container(
-                            padding: EdgeInsets.all(30),
-                            width: double.infinity,
-                            child: Column(
-                              children: [
-                                Icon(
-                                  Icons.book,
-                                  color: Colors.white,
-                                  size: 30,
-                                ),
-                                Container(height: 10),
-                                Text(
-                                  "Notas",
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .headline3!
-                                      .copyWith(
-                                        color: Colors.white,
-                                      ),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
+      body: PullToRefresh(
+        onRefresh: () async {
+          await _onRefresh();
+        },
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Container(height: 20),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                width: double.infinity,
+                child: MarkdownBody(
+                  data: _greetingText,
+                  styleSheet: MarkdownStyleSheet(
+                    p: Get.textTheme.headline2!
+                        .copyWith(fontWeight: FontWeight.normal),
                   ),
-                  Expanded(
-                    child: GradientCard(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15.0),
-                      ),
-                      gradient: Gradients.hotLinear,
-                      child: Material(
-                        color: Colors.transparent,
-                        child: InkWell(
-                          onTap: () {
-                            Get.to(HorarioScreen());
-                          },
-                          borderRadius: BorderRadius.all(Radius.circular(15)),
-                          child: Container(
-                            padding: EdgeInsets.all(30),
-                            width: double.infinity,
-                            child: Column(
-                              children: [
-                                Icon(
-                                  Mdi.clockTimeEight,
-                                  color: Colors.white,
-                                  size: 30,
-                                ),
-                                Container(height: 10),
-                                Text(
-                                  "Horario",
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .headline3!
-                                      .copyWith(
-                                        color: Colors.white,
-                                      ),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Container(height: 20),
-            Text(
-              "Noticias".toUpperCase(),
-              style: Theme.of(context).textTheme.headline4,
-            ),
-            Container(height: 10),
-            NoticiasCarrusel(),
-            Container(height: 20),
-            GestureDetector(
-              onTap: () {
-                setState(() {
-                  _a = _a + 1;
-                });
-                if (_a >= 11) {
-                  _a = 0;
-                  if (_remoteConfig!.getBool(ConfigService.EG_HABILITADOS)) {
-                    Get.snackbar(
-                      "Error",
-                      _remoteConfig!.getString(ConfigService.PRONTO_EG),
-                      colorText: Colors.white,
-                      backgroundColor: Get.theme.primaryColor,
-                      snackPosition: SnackPosition.BOTTOM,
-                      margin: EdgeInsets.all(20),
-                    );
-                    FirebaseAnalytics.instance.logEvent(name: "pronto_eg");
-                  }
-                }
-              },
-              child: Padding(
-                padding: EdgeInsets.all(20),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Icon(
-                      IconData(
-                          _remoteConfig!
-                              .getInt(ConfigService.HOME_PRONTO_ICONO),
-                          fontFamily: 'MaterialIcons'),
-                      size: 150,
-                      color: Colors.grey,
-                    ),
-                    Container(
-                      height: 20,
-                    ),
-                    Text(
-                      _remoteConfig!.getString(ConfigService.HOME_PRONTO_TEXTO),
-                      style: TextStyle(color: Colors.grey, fontSize: 16),
-                    )
-                  ],
                 ),
               ),
-            ),
-          ],
+              Container(height: 20),
+              PermisosCovidSection(permisos: _permisos),
+              Container(height: 20),
+              QuickMenuSection(),
+              Container(height: 20),
+              NoticiasSection(),
+              Container(height: 20),
+              GestureDetector(
+                onTap: () {
+                  setState(() {
+                    _a = _a + 1;
+                  });
+                  if (_a >= 11) {
+                    _a = 0;
+                    if (_remoteConfig!.getBool(ConfigService.EG_HABILITADOS)) {
+                      Get.snackbar(
+                        "Error",
+                        _remoteConfig!.getString(ConfigService.PRONTO_EG),
+                        colorText: Colors.white,
+                        backgroundColor: Get.theme.primaryColor,
+                        snackPosition: SnackPosition.BOTTOM,
+                        margin: EdgeInsets.all(20),
+                      );
+                      FirebaseAnalytics.instance.logEvent(name: "pronto_eg");
+                    }
+                  }
+                },
+                child: Padding(
+                  padding: EdgeInsets.all(20),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Icon(
+                        IconData(
+                            _remoteConfig!
+                                .getInt(ConfigService.HOME_PRONTO_ICONO),
+                            fontFamily: "MaterialIcons"),
+                        size: 150,
+                        color: Colors.grey,
+                      ),
+                      Container(
+                        height: 20,
+                      ),
+                      Text(
+                        _remoteConfig!
+                            .getString(ConfigService.HOME_PRONTO_TEXTO),
+                        style: TextStyle(color: Colors.grey, fontSize: 16),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

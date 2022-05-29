@@ -1,4 +1,3 @@
-import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -96,13 +95,14 @@ class SadDialog extends StatelessWidget {
                     ),
                   ),
                   Padding(
-                      padding: EdgeInsets.only(top: 20),
-                      child: TextButton(
-                        onPressed: () async {
-                          Get.to(AcercaScreen());
-                        },
-                        child: Text("Quiero saber más"),
-                      ),)
+                    padding: EdgeInsets.only(top: 20),
+                    child: TextButton(
+                      onPressed: () async {
+                        Get.to(() => AcercaScreen());
+                      },
+                      child: Text("Quiero saber más"),
+                    ),
+                  )
                 ],
               ),
             ),

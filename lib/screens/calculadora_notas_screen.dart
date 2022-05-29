@@ -48,7 +48,7 @@ class _CalculadoraNotasScreenState extends State<CalculadoraNotasScreen> {
   void _onCambioNota(String nota, String porcentaje, int i) {
     setState(() {
       _asignatura!.notaExamen = null;
-      _asignatura!.evaluaciones[i].nota = num.tryParse(nota);
+      _asignatura!.notasParciales[i].nota = num.tryParse(nota);
       _examenController.text =
           _asignatura!.notaExamen?.toStringAsFixed(1) ?? "";
       _presentacionController.text =
@@ -230,7 +230,7 @@ class _CalculadoraNotasScreenState extends State<CalculadoraNotasScreen> {
                     shrinkWrap: true,
                     physics: ClampingScrollPhysics(),
                     itemBuilder: (context, i) {
-                      Evaluacion evaluacion = _asignatura!.evaluaciones[i];
+                      Evaluacion evaluacion = _asignatura!.notasParciales[i];
                       return NotaListItem(
                         evaluacion: evaluacion,
                         esSimulacion: true,
@@ -239,7 +239,7 @@ class _CalculadoraNotasScreenState extends State<CalculadoraNotasScreen> {
                         },
                       );
                     },
-                    itemCount: _asignatura!.evaluaciones.length,
+                    itemCount: _asignatura!.notasParciales.length,
                   ),
                 ),
               ],

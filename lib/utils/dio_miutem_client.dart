@@ -1,38 +1,42 @@
 import 'package:dio/dio.dart';
-import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
+import 'package:dio_http_cache/dio_http_cache.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:mi_utem/models/usuario.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class DioMiUtemClient {
   static const bool isProduction = bool.fromEnvironment('dart.vm.product');
   static String debugUrl =
-      dotenv.env['MI_UTEM_API_DEBUG'] ?? "https://api-mi-utem.herokuapp.com/";
-  static const String productionUrl = 'https://api-mi-utem.herokuapp.com/';
+      dotenv.env['MI_UTEM_API_DEBUG'] ?? 'https://api.exdev.cl/';
+  static const String productionUrl = 'https://api.exdev.cl/';
 
   static String url = isProduction ? productionUrl : debugUrl;
 
-  static Dio get initDio => Dio(BaseOptions(
-        baseUrl: url,
-      ));
+  static Dio get initDio => Dio(
+        BaseOptions(
+          baseUrl: url,
+        ),
+      );
+
+  static CacheConfig cacheConfig = CacheConfig(
+    baseUrl: url,
+    defaultMaxAge: Duration(days: 7),
+    defaultMaxStale: Duration(days: 60),
+  );
+  static DioCacheManager dioCacheManager = DioCacheManager(cacheConfig);
 
   static Dio baseDio = Dio(BaseOptions(
     baseUrl: url,
-  ));
+  ))
+    ..interceptors.add(dioCacheManager.interceptor);
 
-  static CacheOptions cacheOptions = CacheOptions(
-    store: MemCacheStore(),
-    policy: CachePolicy.forceCache,
-    maxStale: const Duration(days: 7),
-  );
-
-  static Dio get authDio => baseDio
+  static Dio get authDio => initDio
     ..interceptors.addAll(
       [
         InterceptorsWrapper(onRequest: (options, handler) async {
-          SharedPreferences prefs = await SharedPreferences.getInstance();
-          var token = prefs.getString('token');
+          GetStorage box = GetStorage();
+          var token = box.read('token');
           options.headers.addAll({"Authorization": "Bearer $token"});
 
           return handler.next(options);
@@ -50,10 +54,16 @@ class DioMiUtemClient {
             baseDio.interceptors.responseLock.unlock();
 
             if (ok) {
-              Response response = await baseDio.request(options.path,
-                  cancelToken: options.cancelToken,
-                  data: options.data,
-                  queryParameters: options.queryParameters);
+              final opts = new Options(
+                method: dioError.requestOptions.method,
+                headers: dioError.requestOptions.headers,
+              );
+              Response response = await authDio.request(
+                options.path,
+                options: opts,
+                data: options.data,
+                queryParameters: options.queryParameters,
+              );
               handler.resolve(response);
             } else {
               return handler.next(dioError);
@@ -62,7 +72,7 @@ class DioMiUtemClient {
             return handler.next(dioError);
           }
         }),
-        DioCacheInterceptor(options: cacheOptions),
+        //DioCacheInterceptor(options: cacheOptions),
       ],
     );
 
@@ -70,10 +80,10 @@ class DioMiUtemClient {
     String uri = "/v1/auth";
 
     try {
-      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      final GetStorage box = GetStorage();
       final FlutterSecureStorage storage = new FlutterSecureStorage();
 
-      String? correo = prefs.getString("correoUtem");
+      String? correo = box.read("correoUtem");
       String? contrasenia = await storage.read(key: "contrasenia");
 
       print({'correo': correo, 'contrasenia': contrasenia});
@@ -85,7 +95,7 @@ class DioMiUtemClient {
 
         if (response.statusCode == 200) {
           Usuario usuario = Usuario.fromJson(response.data);
-          prefs.setString('token', usuario.token!);
+          box.write('token', usuario.token!);
         }
 
         return true;
@@ -93,6 +103,7 @@ class DioMiUtemClient {
         return false;
       }
     } catch (e) {
+      print(e.toString());
       return false;
     }
   }

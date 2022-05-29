@@ -1,11 +1,11 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:mi_utem/models/evaluacion.dart';
 import 'package:mi_utem/models/usuario.dart';
 import 'package:mi_utem/themes/theme.dart';
 import 'package:recase/recase.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class Asignatura {
   String? id;
@@ -16,7 +16,7 @@ class Asignatura {
   String? docente;
   String? seccion;
   Color? colorAsignatura;
-  List<Evaluacion> evaluaciones;
+  List<Evaluacion> notasParciales;
   num? notaExamen;
   num? notaPresentacion;
   num? notaFinal;
@@ -35,7 +35,7 @@ class Asignatura {
     this.colorAsignatura,
     this.tipoHora,
     this.estado,
-    this.evaluaciones = const [],
+    this.notasParciales = const [],
     this.notaFinal,
     this.notaPresentacion,
     this.docente,
@@ -51,13 +51,13 @@ class Asignatura {
   });
 
   Future<void> addColor(List<Color> colores) async {
+    GetStorage box = GetStorage();
     List<Color> coloresFiltrados = colores;
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+
     Map<String, dynamic> json = {};
 
-    if (prefs.containsKey('coloresAsignaturas') &&
-        prefs.getString('coloresAsignaturas') != null) {
-      json = jsonDecode(prefs.getString('coloresAsignaturas')!);
+    if (box.hasData('coloresAsignaturas')) {
+      json = jsonDecode(box.read('coloresAsignaturas')!);
     }
 
     List<Color> coloresUsados = json.values.map((c) => Color(c)).toList();
@@ -66,7 +66,7 @@ class Asignatura {
     if (!json.containsKey(this.codigo)) {
       this.colorAsignatura = coloresFiltrados[0];
       json[this.codigo!] = coloresFiltrados[0].value;
-      prefs.setString('coloresAsignaturas', jsonEncode(json));
+      box.write('coloresAsignaturas', jsonEncode(json));
     } else {
       this.colorAsignatura = Color(json[this.codigo!]!);
     }
@@ -87,8 +87,8 @@ class Asignatura {
       docente:
           json['docente'] != null ? ReCase(json['docente']).titleCase : null,
       seccion: json['seccion'],
-      evaluaciones: json['evaluaciones'] != null
-          ? Evaluacion.fromJsonList(json['evaluaciones'])
+      notasParciales: json['notasParciales'] != null
+          ? Evaluacion.fromJsonList(json['notasParciales'])
           : [],
       notaFinal: json['notaFinal'] != null ? json['notaFinal'] : null,
       notaPresentacion:
@@ -108,8 +108,10 @@ class Asignatura {
           json['tipoSala'] != null ? ReCase(json['tipoSala']).titleCase : null,
     );
 
-    List<Color> colores = Colors.primaries.toList()..shuffle();
-    asignaturaParseada.addColor(colores);
+    if (asignaturaParseada.codigo != null) {
+      List<Color> colores = Colors.primaries.toList()..shuffle();
+      asignaturaParseada.addColor(colores);
+    }
     return asignaturaParseada;
   }
 
@@ -139,7 +141,7 @@ class Asignatura {
 
   num get notaPresentacionCalculada {
     double presentacion = 0;
-    for (var evaluacion in evaluaciones) {
+    for (var evaluacion in notasParciales) {
       if (evaluacion.nota != null && evaluacion.porcentaje != null) {
         presentacion += evaluacion.nota! * (evaluacion.porcentaje! / 100);
       }
@@ -149,7 +151,7 @@ class Asignatura {
   }
 
   bool get estanTodasLasNotas {
-    for (var evaluacion in evaluaciones) {
+    for (var evaluacion in notasParciales) {
       if (evaluacion.nota == null) {
         return false;
       }

@@ -31,8 +31,19 @@ Tipos de cambios
 ### Added
 
 - Nuevo archivo CHANGELOG para documentar los cambios de cada versión
-- Sección con lista de permisos COVID del usuario Logeado en la pantalla principal.
-- Pantalla con información detallada y codigo QR para los permisos COVID.
+- Sección con lista de permisos de ingreso del usuario en la pantalla principal
+- Pantalla con información detallada y codigo QR para los permisos de ingreso
+- Posibilidad de ver en pantalla completa el código QR de los permisos de ingreso
+- Nuevo saludo dinámico en la pantalla de inicio
+
+### Fixed
+
+- Arreglado el código de barras en la credencial para estudiantes con RUT 20 millones para arriba
+- Notas y ponderadores funcionando nuevamente
+
+### Changed
+
+- Ahora las consultas al servidor se guardan en el caché del teléfono
 
 ## [2.7.3] - 2022-03-27Z
 

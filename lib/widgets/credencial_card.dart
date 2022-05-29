@@ -1,9 +1,12 @@
-import 'package:barcode_flutter/barcode_flutter.dart';
+import 'dart:developer';
+
+import 'package:barcode_widget/barcode_widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:get/get.dart';
 import 'package:mi_utem/models/carrera.dart';
 import 'package:mi_utem/models/usuario.dart';
 import 'package:mi_utem/services/config_service.dart';
@@ -38,10 +41,11 @@ class _CredencialCardState extends State<CredencialCard> {
   void initState() {
     super.initState();
     _remoteConfig = ConfigService.config;
+    log("'${widget.usuario!.rut!.numero}'");
   }
 
   Widget _buildFront() {
-    double altoBanner = MediaQuery.of(context).size.height * 0.2;
+    double altoBanner = Get.mediaQuery.size.height * 0.2;
     return Card(
       elevation: 1,
       clipBehavior: Clip.antiAlias,
@@ -76,7 +80,7 @@ class _CredencialCardState extends State<CredencialCard> {
                   padding: EdgeInsets.only(bottom: 20),
                   child: Image.asset(
                     'assets/images/utem_logo_negativo.png',
-                    width: MediaQuery.of(context).size.width * 0.4,
+                    width: Get.mediaQuery.size.width * 0.4,
                   ),
                 ),
               ),
@@ -135,17 +139,12 @@ class _CredencialCardState extends State<CredencialCard> {
                             vertical: 5,
                             horizontal: 10,
                           ),
-                          child: BarCodeImage(
-                            params: Code39BarCodeParams(
-                              widget.usuario!.rut!.numero.toString(),
-                              lineWidth:
-                                  MediaQuery.of(context).size.width / 250,
-                              barHeight: 50,
-                            ),
-                            padding: EdgeInsets.symmetric(vertical: 5),
-                            onError: (error) {
-                              print('error = $error');
-                            },
+                          child: BarcodeWidget(
+                            barcode: Barcode.code39(),
+                            data: "${widget.usuario!.rut!.numero}",
+                            width: 200,
+                            height: 50,
+                            drawText: false,
                           ),
                         ),
                         Container(height: 10),

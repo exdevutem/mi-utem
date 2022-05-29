@@ -1,25 +1,26 @@
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
-import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
+import 'package:dio_http_cache/dio_http_cache.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:mi_utem/models/asignatura.dart';
 import 'package:mi_utem/utils/dio_miutem_client.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class AsignaturasService {
   static final Dio _dio = DioMiUtemClient.authDio;
+  static final GetStorage box = GetStorage();
 
   static Future<List<Asignatura>> getAsignaturas([bool refresh = false]) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    String carreraId = prefs.getString('carreraId')!;
+    String carreraId = box.read('carreraId')!;
     String uri = "/v1/carreras/$carreraId/asignaturas";
 
     try {
       Response response = await _dio.get(
         uri,
-        options: DioMiUtemClient.cacheOptions
-            .copyWith(
-                maxStale: Nullable(Duration(days: 7)),
-                policy: refresh ? CachePolicy.refresh : CachePolicy.forceCache)
-            .toOptions(),
+        options: buildCacheOptions(
+          Duration(days: 7),
+          forceRefresh: refresh,
+        ),
       );
 
       List<Asignatura> asignaturas = Asignatura.fromJsonList(response.data);
@@ -38,11 +39,10 @@ class AsignaturasService {
     try {
       Response response = await _dio.get(
         uri,
-        options: DioMiUtemClient.cacheOptions
-            .copyWith(
-                maxStale: Nullable(Duration(days: 7)),
-                policy: refresh ? CachePolicy.refresh : CachePolicy.forceCache)
-            .toOptions(),
+        options: buildCacheOptions(
+          Duration(days: 7),
+          forceRefresh: refresh,
+        ),
       );
 
       Asignatura asignatura = Asignatura.fromJson(response.data);
@@ -57,29 +57,33 @@ class AsignaturasService {
   static Future<Asignatura?> getNotasByCodigoAsignatura(
       String? codigo, String? asignaturaId,
       [bool refresh = false]) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String carreraId = prefs.getString('carreraId')!;
+    String carreraId = box.read('carreraId')!;
     String uri = "/v1/carreras/$carreraId/asignaturas/$asignaturaId/notas";
 
     try {
       Map<String, dynamic> query = {"semestre": false};
       Response response = await _dio.get(
         uri,
-        options: DioMiUtemClient.cacheOptions
-            .copyWith(
-                maxStale: Nullable(Duration(days: 7)),
-                policy: refresh ? CachePolicy.refresh : CachePolicy.forceCache)
-            .toOptions(),
+        options: buildCacheOptions(
+          Duration(days: 7),
+          forceRefresh: refresh,
+        ),
         queryParameters: query,
       );
 
-      List<Asignatura> asignaturas = Asignatura.fromJsonList(response.data);
-      if (asignaturas.length > 0) {
-        Asignatura asignatura =
-            asignaturas.firstWhere((a) => a.codigo == codigo);
-        return asignatura;
+      if (response.data is Iterable) {
+        List<Asignatura> asignaturas = Asignatura.fromJsonList(response.data);
+        if (asignaturas.length > 0) {
+          Asignatura asignatura =
+              asignaturas.firstWhere((a) => a.codigo == codigo);
+          return asignatura;
+        } else {
+          return null;
+        }
       } else {
-        return null;
+        Asignatura asignatura = Asignatura.fromJson(response.data);
+        log("AAAA ${asignatura.toString()}");
+        return asignatura;
       }
     } on DioError catch (e) {
       print(e.message);

@@ -72,7 +72,7 @@ class _AsignaturaScreenState extends State<AsignaturaScreen>
                   tooltip: "Calculadora",
                   onPressed: () {
                     Get.to(
-                      CalculadoraNotasScreen(
+                      () => CalculadoraNotasScreen(
                           asignaturaInicial: _asignaturaConNotas),
                     );
                   },

@@ -185,8 +185,8 @@ class _AcercaScreenState extends State<AcercaScreen> {
                                           },
                                         );
                                         Get.to(
-                                          ImageViewScreen(
-                                              imagen: imageProvider),
+                                          () => ImageViewScreen(
+                                              imageProvider: imageProvider),
                                         );
                                       }),
                                   Container(width: 20),

@@ -41,7 +41,8 @@ class MainTheme {
                 return primaryColor;
               },
             ),
-            padding: MaterialStateProperty.all(EdgeInsets.symmetric(vertical: 5, horizontal: 20)),
+            padding: MaterialStateProperty.all(
+                EdgeInsets.symmetric(vertical: 5, horizontal: 20)),
             foregroundColor: MaterialStateProperty.all(Colors.white),
             shape: MaterialStateProperty.all(
               StadiumBorder(),
@@ -75,7 +76,8 @@ class MainTheme {
               }
               return primaryColor;
             }),
-            padding: MaterialStateProperty.all(EdgeInsets.symmetric(vertical: 5, horizontal: 20)),
+            padding: MaterialStateProperty.all(
+                EdgeInsets.symmetric(vertical: 5, horizontal: 20)),
             shape: MaterialStateProperty.all(
               StadiumBorder(
                 side: BorderSide(width: 3),
@@ -123,36 +125,36 @@ class MainTheme {
   static TextTheme get textTheme => TextTheme(
         headline1: TextStyle(
           fontWeight: FontWeight.bold,
-          fontSize: 32,
+          fontSize: 36,
           color: darkGrey,
         ),
         headline2: TextStyle(
           fontWeight: FontWeight.bold,
-          fontSize: 25,
+          fontSize: 30,
           color: darkGrey,
         ),
         headline3: TextStyle(
           fontWeight: FontWeight.bold,
-          fontSize: 20,
+          fontSize: 26,
           color: darkGrey,
         ),
         headline4: TextStyle(
-          fontSize: 18,
+          fontSize: 24,
           fontWeight: FontWeight.bold,
           color: darkGrey,
         ),
         headline5: TextStyle(
           fontWeight: FontWeight.bold,
-          fontSize: 18,
+          fontSize: 22,
           color: grey,
         ),
         headline6: TextStyle(
-          fontSize: 18,
+          fontSize: 20,
           color: grey,
         ),
         subtitle1: TextStyle(
           fontWeight: FontWeight.normal,
-          fontSize: 16,
+          fontSize: 18,
           color: darkGrey,
         ),
         subtitle2: TextStyle(
@@ -160,7 +162,10 @@ class MainTheme {
           color: grey,
         ),
         button: TextStyle(
-            fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
+        ),
         bodyText1: TextStyle(
           color: darkGrey,
           fontWeight: FontWeight.w500,
@@ -168,7 +173,7 @@ class MainTheme {
         ),
         bodyText2: TextStyle(
           color: grey,
-          fontSize: 16,
+          fontSize: 14,
         ),
       );
 }

@@ -1,25 +1,24 @@
 import 'package:dio/dio.dart';
-import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
+import 'package:dio_http_cache/dio_http_cache.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:mi_utem/models/horario.dart';
 import 'package:mi_utem/utils/dio_miutem_client.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class HorarioService {
   static final Dio _dio = DioMiUtemClient.authDio;
+  static final GetStorage box = GetStorage();
 
   static Future<Horario> getHorario([bool refresh = false]) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    final String carreraId = prefs.getString('carreraId')!;
+    final String carreraId = box.read('carreraId')!;
     String uri = "/v1/carreras/$carreraId/horarios";
 
     try {
       Response response = await _dio.get(
         uri,
-        options: DioMiUtemClient.cacheOptions
-            .copyWith(
-                maxStale: Nullable(Duration(days: 30)),
-                policy: refresh ? CachePolicy.refresh : CachePolicy.forceCache)
-            .toOptions(),
+        options: buildCacheOptions(
+          Duration(days: 30),
+          forceRefresh: refresh,
+        ),
       );
 
       Horario horario = Horario.fromJson(response.data);

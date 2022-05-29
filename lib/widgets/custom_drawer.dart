@@ -128,8 +128,11 @@ class _CustomDrawerState extends State<CustomDrawer> {
                             )
                           : null,
                       onTap: () async {
-                        await Get.to(_getScreen(e["nombre"]));
-                        ReviewService.checkAndRequestReview();
+                        Widget? screen = _getScreen(e["nombre"]);
+                        if (screen != null) {
+                          await Get.to(() => screen);
+                          ReviewService.checkAndRequestReview();
+                        }
                       },
                     ),
                   Expanded(
@@ -142,7 +145,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                             leading: Icon(Mdi.heart),
                             title: Text('Acerca de Mi UTEM'),
                             onTap: () async {
-                              await Get.to(AcercaScreen());
+                              await Get.to(() => AcercaScreen());
                               ReviewService.checkAndRequestReview();
                             },
                           ),

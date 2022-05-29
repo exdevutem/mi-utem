@@ -18,7 +18,7 @@ class AvanceMallaScreen extends StatelessWidget {
   final List<String> nombreRamos = ["QUIC8010 - QUIMICA GENERAL", "MATC8010 - TALLER DE MATEMATICA	", "PPSB0001 - TALLER DE COMUNICACION EFECTIVA	", "PPSB0002 - TALLER PARA EL DESARROLLO DEL PENSAMIENTO LOGICO DEDUCTIVO	"];
 
   Future<List<AvanceRamoCard>> _getRamos() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    
     String token = await Usuario.getToken();
     int usuarioId = prefs.getInt("id");
     

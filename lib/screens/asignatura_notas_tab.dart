@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
@@ -49,14 +51,17 @@ class _AsignaturaNotasTabState extends State<AsignaturaNotasTab> {
   Future<Asignatura?> _getNotasByCodigoAsignatura(
       [bool refresh = false]) async {
     try {
-      setState(() {
-        _futureAsignatura = AsignaturasService.getNotasByCodigoAsignatura(
-            widget.asignatura.codigo, widget.asignatura.id, refresh);
-      });
+      Asignatura? asignatura =
+          await AsignaturasService.getNotasByCodigoAsignatura(
+        widget.asignatura.codigo,
+        widget.asignatura.id,
+        refresh,
+      );
 
-      Asignatura? asignatura = await _futureAsignatura;
+      log(asignatura?.notasParciales.toString() ?? "null");
 
       setState(() {
+        _asignatura = asignatura;
         _examenController.text =
             asignatura?.notaExamen?.toStringAsFixed(1) ?? "S/N";
         _presentacionController.text =
@@ -64,8 +69,8 @@ class _AsignaturaNotasTabState extends State<AsignaturaNotasTab> {
         _asignatura = asignatura;
       });
 
-      if (asignatura?.evaluaciones != null &&
-          asignatura!.evaluaciones.length > 0 &&
+      if (asignatura?.notasParciales != null &&
+          asignatura!.notasParciales.length > 0 &&
           _remoteConfig!.getBool(ConfigService.CALCULADORA_MOSTRAR)) {
         widget.onNotas!(asignatura);
       }
@@ -98,8 +103,8 @@ class _AsignaturaNotasTabState extends State<AsignaturaNotasTab> {
               ),
             );
           } else if (snapshot.hasData &&
-              (_asignatura?.evaluaciones != null &&
-                  _asignatura!.evaluaciones.length > 0)) {
+              (_asignatura?.notasParciales != null &&
+                  _asignatura!.notasParciales.length > 0)) {
             content = ListView(
               physics: AlwaysScrollableScrollPhysics(),
               padding: EdgeInsets.all(10),
@@ -225,12 +230,12 @@ class _AsignaturaNotasTabState extends State<AsignaturaNotasTab> {
                       shrinkWrap: true,
                       physics: ClampingScrollPhysics(),
                       itemBuilder: (context, i) {
-                        Evaluacion evaluacion = _asignatura!.evaluaciones[i];
+                        Evaluacion evaluacion = _asignatura!.notasParciales[i];
                         return NotaListItem(
                           evaluacion: evaluacion,
                         );
                       },
-                      itemCount: _asignatura!.evaluaciones.length,
+                      itemCount: _asignatura!.notasParciales.length,
                     ),
                   ),
                 ),
