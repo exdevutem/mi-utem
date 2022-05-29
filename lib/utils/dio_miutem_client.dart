@@ -58,7 +58,7 @@ class DioMiUtemClient {
                 method: dioError.requestOptions.method,
                 headers: dioError.requestOptions.headers,
               );
-              Response response = await baseDio.request(
+              Response response = await authDio.request(
                 options.path,
                 options: opts,
                 data: options.data,

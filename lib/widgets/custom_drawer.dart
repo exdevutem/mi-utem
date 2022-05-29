@@ -128,8 +128,11 @@ class _CustomDrawerState extends State<CustomDrawer> {
                             )
                           : null,
                       onTap: () async {
-                        await Get.to(() => _getScreen(e["nombre"]));
-                        ReviewService.checkAndRequestReview();
+                        Widget? screen = _getScreen(e["nombre"]);
+                        if (screen != null) {
+                          await Get.to(() => screen);
+                          ReviewService.checkAndRequestReview();
+                        }
                       },
                     ),
                   Expanded(

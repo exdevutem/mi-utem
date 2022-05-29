@@ -27,11 +27,6 @@ lane :ios_flutter do |options|
   end
 
   unless skip_cocoapods
-    Dir.chdir("../ios") do
-      sh("rm", "-rf", "Pods")
-      sh("pod", "deintegrate")
-    end
-
     cocoapods(use_bundle_exec: false, podfile: "ios")
   end
 

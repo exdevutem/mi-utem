@@ -62,13 +62,11 @@ platform :mobile do
     )
   end
 
-
-
-
   lane :upload do |options|
     build_number = options[:build_number]
     build_name = options[:build_name]
     changelog = read_changelog
+    emojified_changelog = emojify_changelog
     changelog = translate_changelog(changelog: changelog)
     emojified_changelog = translate_changelog(changelog: emojified_changelog)
     type = "release"
