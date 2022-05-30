@@ -1,7 +1,4 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 
 class BloquePeriodoCard extends StatelessWidget {
   final String? inicio;

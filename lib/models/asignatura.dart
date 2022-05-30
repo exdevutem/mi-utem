@@ -130,10 +130,8 @@ class Asignatura {
     switch (estado) {
       case "Aprobado":
         return MainTheme.aprobadoColor;
-        break;
       case "Reprobado":
         return MainTheme.reprobadoColor;
-        break;
       default:
         return MainTheme.inscritoColor;
     }

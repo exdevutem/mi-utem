@@ -39,16 +39,12 @@ class _CustomDrawerState extends State<CustomDrawer> {
     switch (nombre) {
       case "Perfil":
         return UsuarioScreen();
-        break;
       case "Asignaturas":
         return AsignaturasScreen();
-        break;
       case "Horario":
         return HorarioScreen();
-        break;
       case "Credencial":
         return CredencialScreen();
-        break;
       // case "Docentes":
       //   return DocentesScreen();
       //   break;

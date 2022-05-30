@@ -1066,3 +1066,4 @@ api-playstore.json
 GoogleService-Info.plist
 android/keystores/*
 */fastlane/report.xml
+.flutter-plugins-dependencies

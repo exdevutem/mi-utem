@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class MainTheme {
   static Color get utemAzul => Color(0xff06607a);
@@ -109,7 +110,7 @@ class MainTheme {
           color: primaryColor,
           elevation: 0,
           iconTheme: IconThemeData(color: Colors.white),
-          brightness: Brightness.dark,
+          systemOverlayStyle: SystemUiOverlayStyle.dark,
         ),
         inputDecorationTheme: InputDecorationTheme(
             contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),

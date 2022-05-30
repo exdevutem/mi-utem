@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:get/get.dart';
@@ -14,7 +13,7 @@ import 'package:mi_utem/themes/theme.dart';
 import 'package:mi_utem/widgets/flip_widget.dart';
 import 'package:mi_utem/widgets/profile_photo.dart';
 import 'package:simple_gesture_detector/simple_gesture_detector.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class CredencialCard extends StatefulWidget {
   final Usuario? usuario;
@@ -279,7 +278,7 @@ class _CredencialCardState extends State<CredencialCard> {
                         ),
                       ),
                       onTapLink: (text, href, title) {
-                        launch(href!);
+                        launchUrlString(href!);
                       },
                       data: _remoteConfig!
                           .getString(

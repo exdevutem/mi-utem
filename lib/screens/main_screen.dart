@@ -55,7 +55,7 @@ class _MainScreenState extends State<MainScreen> {
 
     ReviewService.addScreen("MainScreen");
     ReviewService.checkAndRequestReview();
-    SchedulerBinding.instance!.addPostFrameCallback((_) {
+    SchedulerBinding.instance.addPostFrameCallback((_) {
       _checkAndPerformUpdate();
     });
   }
