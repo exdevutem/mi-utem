@@ -28,6 +28,8 @@ Tipos de cambios
 
 ## [Unreleased]
 
+## [2.8.4] - 2022-05-30Z
+
 ### Added
 
 - Nuevo archivo CHANGELOG para documentar los cambios de cada versión
@@ -54,4 +56,5 @@ Tipos de cambios
 ### Removed
 
 - Lista de estudiantes en la pantalla de asignatura
+- Perfil de profesores
 - Perfil de profesores
