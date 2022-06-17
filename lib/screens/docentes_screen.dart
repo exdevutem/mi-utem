@@ -33,17 +33,14 @@ class _DocentesScreenState extends State<DocentesScreen> {
     FirebaseAnalytics.instance.setCurrentScreen(screenName: 'DocentesScreen');
   }
 
-  Future<List<Usuario>> _getDocentes(String nombre,
-      [bool refresh = false]) async {
+  Future<List<Usuario>> _getDocentes(String nombre) async {
     setState(() {
       _docentes = [];
       _futureDocentes = null;
       _futureDocentes = DocentesService.buscarDocentes(nombre);
     });
     List<Usuario> docentes = await _futureDocentes!;
-    setState(() {
-      _docentes = docentes;
-    });
+    setState(() => _docentes = docentes);
     return docentes;
   }
 
