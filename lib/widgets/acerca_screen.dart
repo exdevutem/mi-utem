@@ -13,7 +13,6 @@ import 'package:mi_utem/widgets/custom_app_bar.dart';
 import 'package:mi_utem/widgets/default_network_image.dart';
 import 'package:mi_utem/widgets/image_view_screen.dart';
 import 'package:mi_utem/widgets/profile_photo.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class AcercaScreen extends StatefulWidget {

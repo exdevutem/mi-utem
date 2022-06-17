@@ -36,14 +36,14 @@ class MainTheme {
                 const Set<MaterialState> interactiveStates = <MaterialState>{
                   MaterialState.disabled,
                 };
-                if (states.any(interactiveStates.contains)) {
-                  return disabledColor;
-                }
-                return primaryColor;
+                return states.any(interactiveStates.contains)
+                    ? disabledColor
+                    : primaryColor;
               },
             ),
             padding: MaterialStateProperty.all(
-                EdgeInsets.symmetric(vertical: 5, horizontal: 20)),
+              EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+            ),
             foregroundColor: MaterialStateProperty.all(Colors.white),
             shape: MaterialStateProperty.all(
               StadiumBorder(),
@@ -58,25 +58,21 @@ class MainTheme {
                 const Set<MaterialState> interactiveStates = <MaterialState>{
                   MaterialState.disabled,
                 };
-                if (states.any(interactiveStates.contains)) {
-                  return BorderSide(
-                    color: disabledColor!,
-                  );
-                }
-                return BorderSide(
-                  color: primaryColor,
-                );
+                return states.any(interactiveStates.contains)
+                    ? BorderSide(color: disabledColor!)
+                    : BorderSide(color: primaryColor);
               },
             ),
-            foregroundColor: MaterialStateProperty.resolveWith((states) {
-              const Set<MaterialState> interactiveStates = <MaterialState>{
-                MaterialState.disabled,
-              };
-              if (states.any(interactiveStates.contains)) {
-                return disabledColor;
-              }
-              return primaryColor;
-            }),
+            foregroundColor: MaterialStateProperty.resolveWith(
+              (states) {
+                const Set<MaterialState> interactiveStates = <MaterialState>{
+                  MaterialState.disabled,
+                };
+                return states.any(interactiveStates.contains)
+                    ? disabledColor
+                    : primaryColor;
+              },
+            ),
             padding: MaterialStateProperty.all(
                 EdgeInsets.symmetric(vertical: 5, horizontal: 20)),
             shape: MaterialStateProperty.all(
@@ -113,12 +109,13 @@ class MainTheme {
           systemOverlayStyle: SystemUiOverlayStyle.dark,
         ),
         inputDecorationTheme: InputDecorationTheme(
-            contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-            isDense: true,
-            hintStyle: TextStyle(color: Colors.grey[400]),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(15)),
-            )),
+          contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+          isDense: true,
+          hintStyle: TextStyle(color: Colors.grey[400]),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(15)),
+          ),
+        ),
         primaryColor: primaryColor,
         accentColor: primaryLightColor,
       );
