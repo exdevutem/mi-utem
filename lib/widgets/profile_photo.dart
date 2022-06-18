@@ -90,7 +90,7 @@ class _ProfilePhotoState extends State<ProfilePhoto> {
               onTap: () async {
                 try {
                   final imagen =
-                      await picker.getImage(source: ImageSource.gallery);
+                      await picker.pickImage(source: ImageSource.gallery);
                   if (imagen != null) {
                     Uint8List imagenOriginalBytes =
                         File(imagen.path).readAsBytesSync();

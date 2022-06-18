@@ -20,7 +20,6 @@ class AsignaturaEstudiantesTab extends StatefulWidget {
 
 class _AsignaturaEstudiantesTabState extends State<AsignaturaEstudiantesTab> {
   Future<Asignatura>? _futureAsignatura;
-  late Asignatura _asignatura;
 
   @override
   void initState() {
@@ -30,19 +29,11 @@ class _AsignaturaEstudiantesTabState extends State<AsignaturaEstudiantesTab> {
     _futureAsignatura = _getDetalleAsignatura();
   }
 
-  Future<Asignatura> _getDetalleAsignatura([bool refresh = false]) async {
+  Future<Asignatura> _getDetalleAsignatura({bool refresh = false}) async {
     Asignatura asignatura = await AsignaturasService.getDetalleAsignatura(
         widget.asignatura!.codigo, refresh);
 
-    setState(() {
-      _asignatura = asignatura;
-    });
-
     return asignatura;
-  }
-
-  Future<void> _onRefresh() async {
-    await _getDetalleAsignatura(true);
   }
 
   @override
@@ -52,40 +43,36 @@ class _AsignaturaEstudiantesTabState extends State<AsignaturaEstudiantesTab> {
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return CustomErrorWidget(
-              texto: "Ocurrió un error trayendo a los estudiantes",
-              error: snapshot.error);
-        } else {
-          if (snapshot.hasData) {
-            return PullToRefresh(
-              onRefresh: () async {
-                await _onRefresh();
-              },
-              child: ListView.separated(
-                // itemCount: _asignatura.estudiantes?.length,
-                itemCount: 0,
-                separatorBuilder: (context, index) =>
-                    Divider(height: 5, indent: 20, endIndent: 20),
-                itemBuilder: (context, i) {
-                  // Usuario estudiante = _asignatura.estudiantes![i];
-                  return ListTile(
-                    onTap: () {
-                      FirebaseAnalytics.instance.logEvent(
-                          name: 'asignatura_estudiante_click',
-                          parameters: null);
-                    },
-                    // leading: ProfilePhoto(usuario: estudiante),
-                    // title: Text(estudiante.nombreCompleto ?? "Sin nombre"),
-                    // subtitle: Text(estudiante.correo!),
+            texto: "Ocurrió un error trayendo a los estudiantes",
+            error: snapshot.error,
+          );
+        }
+
+        if (!snapshot.hasData) {
+          return Center(child: LoadingIndicator());
+        }
+
+        return PullToRefresh(
+          onRefresh: () async => await _getDetalleAsignatura(refresh: true),
+          child: ListView.separated(
+            itemCount: 0,
+            separatorBuilder: (context, index) => Divider(
+              height: 5,
+              indent: 20,
+              endIndent: 20,
+            ),
+            itemBuilder: (context, i) {
+              return ListTile(
+                onTap: () {
+                  FirebaseAnalytics.instance.logEvent(
+                    name: 'asignatura_estudiante_click',
+                    parameters: null,
                   );
                 },
-              ),
-            );
-          } else {
-            return Center(
-              child: LoadingIndicator(),
-            );
-          }
-        }
+              );
+            },
+          ),
+        );
       },
     );
   }

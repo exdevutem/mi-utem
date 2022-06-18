@@ -1,5 +1,4 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -32,7 +31,7 @@ void main() async {
 }
 
 class MiUtem extends StatelessWidget {
-  FirebaseAnalytics analytics = FirebaseAnalytics.instance;
+  final FirebaseAnalytics analytics = FirebaseAnalytics.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -41,9 +40,7 @@ class MiUtem extends StatelessWidget {
       title: 'Mi UTEM',
       theme: MainTheme.theme,
       home: SplashScreen(),
-      navigatorObservers: [
-        FirebaseAnalyticsObserver(analytics: analytics),
-      ],
+      navigatorObservers: [FirebaseAnalyticsObserver(analytics: analytics)],
       builder: (context, widget) => ResponsiveWrapper.builder(
         widget,
         maxWidth: 1200,

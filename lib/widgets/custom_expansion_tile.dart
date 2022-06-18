@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 const Duration _kExpand = Duration(milliseconds: 200);
 
 class ExpansionTile extends StatefulWidget {
@@ -13,8 +14,7 @@ class ExpansionTile extends StatefulWidget {
     this.children = const <Widget>[],
     this.trailing,
     this.initiallyExpanded = false,
-  })  : assert(initiallyExpanded != null),
-        super(key: key);
+  }) : super(key: key);
 
   final Widget? leading;
   final Widget title;
@@ -47,8 +47,6 @@ class _ExpansionTileState extends State<ExpansionTile>
   late AnimationController _controller;
   late Animation<double> _iconTurns;
   late Animation<double> _heightFactor;
-  Animation<Color?>? _borderColor;
-  Animation<Color?>? _headerColor;
   late Animation<Color?> _iconColor;
   late Animation<Color?> _backgroundColor;
 
@@ -60,8 +58,6 @@ class _ExpansionTileState extends State<ExpansionTile>
     _controller = AnimationController(duration: _kExpand, vsync: this);
     _heightFactor = _controller.drive(_easeInTween);
     _iconTurns = _controller.drive(_halfTween.chain(_easeInTween));
-    _borderColor = _controller.drive(_borderColorTween.chain(_easeOutTween));
-    _headerColor = _controller.drive(_headerColorTween.chain(_easeInTween));
     _iconColor = _controller.drive(_iconColorTween.chain(_easeInTween));
     _backgroundColor =
         _controller.drive(_backgroundColorTween.chain(_easeOutTween));
@@ -85,8 +81,7 @@ class _ExpansionTileState extends State<ExpansionTile>
       } else {
         _controller.reverse().then<void>((void value) {
           if (!mounted) return;
-          setState(() {
-          });
+          setState(() {});
         });
       }
       PageStorage.of(context)?.writeState(context, _isExpanded);
@@ -96,7 +91,6 @@ class _ExpansionTileState extends State<ExpansionTile>
   }
 
   Widget _buildChildren(BuildContext context, Widget? child) {
-    final Color? borderSideColor = widget.headerBackgroundColor;
     final Color? titleColor = widget.iconColor;
 
     return Container(
@@ -111,9 +105,8 @@ class _ExpansionTileState extends State<ExpansionTile>
             child: Container(
               margin: const EdgeInsets.fromLTRB(10.0, 2.0, 10.0, 2.0),
               decoration: new BoxDecoration(
-                color: widget.headerBackgroundColor ?? Colors.black,
-                borderRadius: BorderRadius.circular(10.0)
-              ),
+                  color: widget.headerBackgroundColor ?? Colors.black,
+                  borderRadius: BorderRadius.circular(10.0)),
               child: ListTile(
                 onTap: _handleTap,
                 leading: widget.leading,

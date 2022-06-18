@@ -14,7 +14,6 @@ class ProgressButton extends StatefulWidget {
 
 class _ProgressButtonState extends State<ProgressButton>
     with TickerProviderStateMixin {
-  bool _isPressed = false, _animatingReveal = false;
   int _state = 0;
   double _width = double.infinity;
   late Animation _animation;
@@ -42,14 +41,15 @@ class _ProgressButtonState extends State<ProgressButton>
           key: _globalKey,
           height: 48.0,
           width: _width,
-          child: RaisedButton(
-            padding: EdgeInsets.zero,
-            color: _state == 2 ? Colors.green : Get.theme.primaryColor,
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              primary: _state == 2 ? Colors.green : Get.theme.primaryColor,
+              padding: EdgeInsets.zero,
+            ),
             child: buildButtonChild(),
             onPressed: () {},
-            onHighlightChanged: (isPressed) {
+            onFocusChange: (isPressed) {
               setState(() {
-                _isPressed = isPressed;
                 if (_state == 0) {
                   animateButton();
                 }
@@ -83,7 +83,6 @@ class _ProgressButtonState extends State<ProgressButton>
     });
 
     Timer(Duration(milliseconds: 3600), () {
-      _animatingReveal = true;
       widget.callback();
     });
   }
@@ -110,7 +109,6 @@ class _ProgressButtonState extends State<ProgressButton>
 
   void reset() {
     _width = double.infinity;
-    _animatingReveal = false;
     _state = 0;
   }
 }

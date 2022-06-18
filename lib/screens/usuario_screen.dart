@@ -15,7 +15,7 @@ import 'package:mi_utem/widgets/image_view_screen.dart';
 import 'package:mi_utem/widgets/loading_dialog.dart';
 import 'package:mi_utem/widgets/loading_indicator.dart';
 import 'package:mi_utem/widgets/profile_photo.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class UsuarioScreen extends StatefulWidget {
   final int tipo;
@@ -186,7 +186,7 @@ class _UsuarioScreenState extends State<UsuarioScreen> {
               : null,
           onTap: widget.tipo != 0
               ? () async {
-                  await launch("mailto:${_usuario!.correoUtem}");
+                  await launchUrlString("mailto:${_usuario!.correoUtem}");
                 }
               : null,
           subtitle: Text(
@@ -223,7 +223,7 @@ class _UsuarioScreenState extends State<UsuarioScreen> {
               : null,
           onTap: widget.tipo != 0
               ? () async {
-                  await launch("mailto:${_usuario!.correoPersonal}");
+                  await launchUrlString("mailto:${_usuario!.correoPersonal}");
                 }
               : null,
           subtitle: Text(

@@ -22,8 +22,7 @@ import 'package:mi_utem/widgets/acerca_screen.dart';
 import 'package:mi_utem/widgets/error_dialog.dart';
 import 'package:mi_utem/widgets/loading_dialog.dart';
 import 'package:mi_utem/widgets/login_text_form_field.dart';
-import 'package:url_launcher/url_launcher.dart';
-//import 'package:new_version/new_version.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 import 'package:video_player/video_player.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -66,7 +65,7 @@ class _LoginScreenState extends State<LoginScreen> {
         setState(() {});
       });
 
-    SchedulerBinding.instance!.addPostFrameCallback((_) {
+    SchedulerBinding.instance.addPostFrameCallback((_) {
       _checkAndPerformUpdate();
     });
   }
@@ -379,7 +378,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                           recognizer: TapGestureRecognizer()
                             ..onTap = () {
-                              launch("https://mi.utem.cl/?ref=appMiUtemInndev");
+                              launchUrlString(
+                                  "https://mi.utem.cl/?ref=appMiUtemInndev");
                             },
                         ),
                         TextSpan(text: ", contáctate con "),
@@ -390,7 +390,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                           recognizer: TapGestureRecognizer()
                             ..onTap = () {
-                              launch("mailto:soporte.sisei@utem.cl");
+                              launchUrlString("mailto:soporte.sisei@utem.cl");
                             },
                         ),
                         TextSpan(

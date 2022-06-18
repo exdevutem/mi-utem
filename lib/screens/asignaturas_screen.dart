@@ -2,10 +2,8 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mi_utem/models/asignatura.dart';
-import 'package:mi_utem/models/usuario.dart';
 import 'package:mi_utem/screens/asignatura_screen.dart';
 import 'package:mi_utem/services/asignaturas_service.dart';
-import 'package:mi_utem/services/perfil_service.dart';
 import 'package:mi_utem/widgets/custom_app_bar.dart';
 import 'package:mi_utem/widgets/custom_error_widget.dart';
 import 'package:mi_utem/widgets/loading_indicator.dart';
@@ -31,7 +29,6 @@ class _AsignaturasScreenState extends State<AsignaturasScreen> {
   }
 
   Future<List<Asignatura>> _getAsignaturas([bool refresh = false]) async {
-    Usuario usuario = await PerfilService.getLocalUsuario();
     List<Asignatura> asignaturas =
         await AsignaturasService.getAsignaturas(refresh);
     setState(() {
