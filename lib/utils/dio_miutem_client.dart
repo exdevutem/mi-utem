@@ -13,11 +13,7 @@ class DioMiUtemClient {
 
   static String url = isProduction ? productionUrl : debugUrl;
 
-  static Dio get initDio => Dio(
-        BaseOptions(
-          baseUrl: url,
-        ),
-      );
+  static Dio get initDio => Dio(BaseOptions(baseUrl: url));
 
   static CacheConfig cacheConfig = CacheConfig(
     baseUrl: url,
@@ -26,55 +22,45 @@ class DioMiUtemClient {
   );
   static DioCacheManager dioCacheManager = DioCacheManager(cacheConfig);
 
-  static Dio baseDio = Dio(BaseOptions(
-    baseUrl: url,
-  ))
+  static Dio baseDio = Dio(BaseOptions(baseUrl: url))
     ..interceptors.add(dioCacheManager.interceptor);
 
   static Dio get authDio => initDio
-    ..interceptors.addAll(
-      [
-        InterceptorsWrapper(onRequest: (options, handler) async {
-          GetStorage box = GetStorage();
-          var token = box.read('token');
-          options.headers.addAll({"Authorization": "Bearer $token"});
+    ..interceptors.add(QueuedInterceptorsWrapper(
+      onRequest: (options, handler) async {
+        GetStorage box = GetStorage();
+        var token = box.read('token');
+        options.headers.addAll({"Authorization": "Bearer $token"});
 
-          return handler.next(options);
-        }, onResponse: (response, handler) async {
-          return handler.next(response);
-        }, onError: (dioError, handler) async {
-          print("onError");
-          if (dioError.response?.statusCode == 401) {
-            RequestOptions options = dioError.response!.requestOptions;
+        return handler.next(options);
+      },
+      onResponse: (response, handler) async => handler.next(response),
+      onError: (dioError, handler) async {
+        print("onError");
+        if (dioError.response?.statusCode != 401) {
+          return handler.next(dioError);
+        }
 
-            baseDio.interceptors.requestLock.lock();
-            baseDio.interceptors.responseLock.lock();
-            bool ok = await refreshSesion();
-            baseDio.interceptors.requestLock.unlock();
-            baseDio.interceptors.responseLock.unlock();
+        RequestOptions options = dioError.response!.requestOptions;
 
-            if (ok) {
-              final opts = new Options(
-                method: dioError.requestOptions.method,
-                headers: dioError.requestOptions.headers,
-              );
-              Response response = await authDio.request(
-                options.path,
-                options: opts,
-                data: options.data,
-                queryParameters: options.queryParameters,
-              );
-              handler.resolve(response);
-            } else {
-              return handler.next(dioError);
-            }
-          } else {
-            return handler.next(dioError);
-          }
-        }),
-        //DioCacheInterceptor(options: cacheOptions),
-      ],
-    );
+        bool ok = await refreshSesion();
+
+        if (!ok) {
+          return handler.next(dioError);
+        }
+
+        Response response = await authDio.request(
+          options.path,
+          data: options.data,
+          queryParameters: options.queryParameters,
+          options: new Options(
+            method: dioError.requestOptions.method,
+            headers: dioError.requestOptions.headers,
+          ),
+        );
+        handler.resolve(response);
+      },
+    ));
 
   static Future<bool> refreshSesion() async {
     String uri = "/v1/auth";
@@ -88,20 +74,20 @@ class DioMiUtemClient {
 
       print({'correo': correo, 'contrasenia': contrasenia});
 
-      if (correo != null && contrasenia != null) {
-        dynamic data = {'correo': correo, 'contrasenia': contrasenia};
-
-        Response response = await DioMiUtemClient.initDio.post(uri, data: data);
-
-        if (response.statusCode == 200) {
-          Usuario usuario = Usuario.fromJson(response.data);
-          box.write('token', usuario.token!);
-        }
-
-        return true;
-      } else {
+      if (correo == null || contrasenia == null) {
         return false;
       }
+
+      dynamic data = {'correo': correo, 'contrasenia': contrasenia};
+
+      Response response = await DioMiUtemClient.initDio.post(uri, data: data);
+
+      if (response.statusCode == 200) {
+        Usuario usuario = Usuario.fromJson(response.data);
+        box.write('token', usuario.token!);
+      }
+
+      return true;
     } catch (e) {
       print(e.toString());
       return false;
