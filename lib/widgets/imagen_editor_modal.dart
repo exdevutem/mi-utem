@@ -140,8 +140,6 @@ class _ImagenEditorModalState extends State<ImagenEditorModal> {
 
     final Rect? rect = state.getCropRect();
 
-    Uint8List data = state.rawImageData;
-
     final rotateAngle = action.rotateAngle.toInt();
     final flipHorizontal = action.flipY;
     final flipVertical = action.flipX;
