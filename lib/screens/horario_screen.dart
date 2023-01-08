@@ -1,11 +1,18 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
 import 'package:dio/dio.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:screenshot/screenshot.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:vector_math/vector_math_64.dart';
+
 import 'package:mi_utem/models/horario.dart';
 import 'package:mi_utem/services/config_service.dart';
 import 'package:mi_utem/services/horarios_service.dart';
@@ -17,10 +24,6 @@ import 'package:mi_utem/widgets/custom_app_bar.dart';
 import 'package:mi_utem/widgets/custom_error_widget.dart';
 import 'package:mi_utem/widgets/loading_indicator.dart';
 import 'package:mi_utem/widgets/pull_to_refresh.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:screenshot/screenshot.dart';
-import 'package:share_plus/share_plus.dart';
-import 'package:vector_math/vector_math_64.dart';
 
 class HorarioScreen extends StatefulWidget {
   HorarioScreen({
@@ -63,7 +66,7 @@ class _HorarioScreenState extends State<HorarioScreen> {
                     await imagePath.writeAsBytes(image);
 
                     /// Share Plugin
-                    await Share.shareFiles([imagePath.path]);
+                    await Share.shareXFiles([XFile(imagePath.path)]);
                   }
                 }).catchError((onError) {
                   print(onError);

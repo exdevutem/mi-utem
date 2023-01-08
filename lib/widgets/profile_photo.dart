@@ -2,10 +2,12 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:flutter/material.dart';
+
+import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+
 import 'package:mi_utem/models/usuario.dart';
 import 'package:mi_utem/themes/theme.dart';
 import 'package:mi_utem/widgets/imagen_editor_modal.dart';
@@ -89,8 +91,9 @@ class _ProfilePhotoState extends State<ProfilePhoto> {
             InkWell(
               onTap: () async {
                 try {
-                  final imagen =
-                      await picker.getImage(source: ImageSource.gallery);
+                  final imagen = await picker.pickImage(
+                    source: ImageSource.gallery,
+                  );
                   if (imagen != null) {
                     Uint8List imagenOriginalBytes =
                         File(imagen.path).readAsBytesSync();

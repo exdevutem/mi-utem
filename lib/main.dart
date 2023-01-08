@@ -1,18 +1,19 @@
-import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:firebase_analytics/observer.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:responsive_framework/responsive_framework.dart';
+import 'package:sentry/sentry.dart';
+
 import 'package:mi_utem/screens/splash_screen.dart';
 import 'package:mi_utem/services/config_service.dart';
 import 'package:mi_utem/services/notificaciones_service.dart';
 import 'package:mi_utem/themes/theme.dart';
-import 'package:responsive_framework/responsive_framework.dart';
-import 'package:sentry/sentry.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -32,7 +33,7 @@ void main() async {
 }
 
 class MiUtem extends StatelessWidget {
-  FirebaseAnalytics analytics = FirebaseAnalytics.instance;
+  final FirebaseAnalytics analytics = FirebaseAnalytics.instance;
 
   @override
   Widget build(BuildContext context) {

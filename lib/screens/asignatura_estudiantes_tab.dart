@@ -1,5 +1,7 @@
-import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
+
+import 'package:firebase_analytics/firebase_analytics.dart';
+
 import 'package:mi_utem/models/asignatura.dart';
 import 'package:mi_utem/services/asignaturas_service.dart';
 import 'package:mi_utem/widgets/custom_error_widget.dart';
@@ -20,7 +22,7 @@ class AsignaturaEstudiantesTab extends StatefulWidget {
 
 class _AsignaturaEstudiantesTabState extends State<AsignaturaEstudiantesTab> {
   Future<Asignatura>? _futureAsignatura;
-  late Asignatura _asignatura;
+  //late Asignatura _asignatura;
 
   @override
   void initState() {
@@ -34,9 +36,9 @@ class _AsignaturaEstudiantesTabState extends State<AsignaturaEstudiantesTab> {
     Asignatura asignatura = await AsignaturasService.getDetalleAsignatura(
         widget.asignatura!.codigo, refresh);
 
-    setState(() {
+/*     setState(() {
       _asignatura = asignatura;
-    });
+    }); */
 
     return asignatura;
   }

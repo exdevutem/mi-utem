@@ -1,5 +1,6 @@
-import 'package:mi_utem/models/rut.dart';
 import 'package:recase/recase.dart';
+
+import 'package:mi_utem/models/rut.dart';
 
 class Usuario {
   String? nombre;

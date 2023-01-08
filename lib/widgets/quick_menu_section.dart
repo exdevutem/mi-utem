@@ -1,8 +1,10 @@
 import 'dart:convert';
 
-import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
+
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:get/get.dart';
+
 import 'package:mi_utem/services/config_service.dart';
 import 'package:mi_utem/widgets/quick_menu_card.dart';
 

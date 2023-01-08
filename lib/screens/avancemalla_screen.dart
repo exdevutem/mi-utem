@@ -1,10 +1,12 @@
 /* import 'package:flutter/material.dart';
+
 import 'package:flutter_statusbar/flutter_statusbar.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 import 'package:mi_utem/models/avance_malla.dart';
 import 'package:mi_utem/models/usuario.dart';
 import 'package:mi_utem/services/malla_service.dart';
 import 'package:mi_utem/widgets/avance_ramo_card.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class AvanceMallaScreen extends StatelessWidget {
   final String carreraCod = "21041";

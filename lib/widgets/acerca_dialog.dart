@@ -1,7 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+
 import 'package:get/get.dart';
+
 import 'package:mi_utem/widgets/acerca_aplicacion_content.dart';
 import 'package:mi_utem/widgets/acerca_screen.dart';
 
@@ -27,6 +29,12 @@ class _AcercaDialogState extends State<AcercaDialog> {
     _timeLeft = isProduction ? 30 : 3;
     _startTimer();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
   }
 
   void _startTimer() {

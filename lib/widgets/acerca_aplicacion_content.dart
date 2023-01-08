@@ -1,7 +1,9 @@
+import 'package:flutter/material.dart';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+
 import 'package:mi_utem/services/config_service.dart';
 
 class AcercaAplicacionContent extends StatefulWidget {

@@ -1,9 +1,12 @@
 import 'dart:core';
 
+import 'package:flutter/material.dart';
+
 import 'package:clipboard/clipboard.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:url_launcher/url_launcher.dart';
+
 import 'package:mi_utem/models/asignatura.dart';
 import 'package:mi_utem/models/usuario.dart';
 import 'package:mi_utem/services/docentes_service.dart';
@@ -15,7 +18,6 @@ import 'package:mi_utem/widgets/image_view_screen.dart';
 import 'package:mi_utem/widgets/loading_dialog.dart';
 import 'package:mi_utem/widgets/loading_indicator.dart';
 import 'package:mi_utem/widgets/profile_photo.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class UsuarioScreen extends StatefulWidget {
   final int tipo;
@@ -186,7 +188,11 @@ class _UsuarioScreenState extends State<UsuarioScreen> {
               : null,
           onTap: widget.tipo != 0
               ? () async {
-                  await launch("mailto:${_usuario!.correoUtem}");
+                  await launchUrl(
+                    Uri.parse(
+                      "mailto:${_usuario!.correoUtem}",
+                    ),
+                  );
                 }
               : null,
           subtitle: Text(
@@ -201,39 +207,45 @@ class _UsuarioScreenState extends State<UsuarioScreen> {
       if (_usuario!.correoPersonal != null &&
           _usuario!.correoPersonal!.isNotEmpty) {
         lista.add(Divider(height: 1));
-        lista.add(ListTile(
-          title: Text(
-            "Correo",
-            style: TextStyle(
-              color: Colors.grey,
+        lista.add(
+          ListTile(
+            title: Text(
+              "Correo",
+              style: TextStyle(
+                color: Colors.grey,
+              ),
+            ),
+            onLongPress: widget.tipo != 0
+                ? () async {
+                    await FlutterClipboard.copy(_usuario!.correoPersonal!);
+                    Get.snackbar(
+                      "¡Copiado!",
+                      "Correo copiado al portapapeles",
+                      colorText: Colors.white,
+                      backgroundColor: Get.theme.primaryColor,
+                      snackPosition: SnackPosition.BOTTOM,
+                      margin: EdgeInsets.all(20),
+                    );
+                  }
+                : null,
+            onTap: widget.tipo != 0
+                ? () async {
+                    await launchUrl(
+                      Uri.parse(
+                        "mailto:${_usuario!.correoPersonal}",
+                      ),
+                    );
+                  }
+                : null,
+            subtitle: Text(
+              _usuario!.correoPersonal ?? "",
+              style: TextStyle(
+                color: Colors.grey[900],
+                fontSize: 18,
+              ),
             ),
           ),
-          onLongPress: widget.tipo != 0
-              ? () async {
-                  await FlutterClipboard.copy(_usuario!.correoPersonal!);
-                  Get.snackbar(
-                    "¡Copiado!",
-                    "Correo copiado al portapapeles",
-                    colorText: Colors.white,
-                    backgroundColor: Get.theme.primaryColor,
-                    snackPosition: SnackPosition.BOTTOM,
-                    margin: EdgeInsets.all(20),
-                  );
-                }
-              : null,
-          onTap: widget.tipo != 0
-              ? () async {
-                  await launch("mailto:${_usuario!.correoPersonal}");
-                }
-              : null,
-          subtitle: Text(
-            _usuario!.correoPersonal ?? "",
-            style: TextStyle(
-              color: Colors.grey[900],
-              fontSize: 18,
-            ),
-          ),
-        ));
+        );
       }
 
       if (widget.tipo == 0 && _usuario!.rut != null) {

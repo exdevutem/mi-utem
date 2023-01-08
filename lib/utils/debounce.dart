@@ -6,9 +6,7 @@ class Debounce {
   Timer? _timer;
   late int _lastCompletionTime;
 
-  Debounce(this._duration, this._function)
-      : assert(_duration != null, "Duration can not be null"),
-        assert(_function != null, "Function can not be null");
+  Debounce(this._duration, this._function);
 
   void schedule() {
     var now = DateTime.now().millisecondsSinceEpoch;
@@ -18,9 +16,11 @@ class Debounce {
       _timer = Timer(_duration, _function as void Function());
     } else {
       _timer?.cancel(); // doesn't throw exception if _timer is not active
-      int wait = _lastCompletionTime - now; // this uses last wait time, so we need to wait only for calculated wait time
+      int wait = _lastCompletionTime -
+          now; // this uses last wait time, so we need to wait only for calculated wait time
       _lastCompletionTime = now + wait;
-      _timer = Timer(Duration(milliseconds: wait), _function as void Function());
+      _timer =
+          Timer(Duration(milliseconds: wait), _function as void Function());
     }
   }
 

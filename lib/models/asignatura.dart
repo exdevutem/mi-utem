@@ -1,11 +1,13 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+
 import 'package:get_storage/get_storage.dart';
+import 'package:recase/recase.dart';
+
 import 'package:mi_utem/models/evaluacion.dart';
 import 'package:mi_utem/models/usuario.dart';
 import 'package:mi_utem/themes/theme.dart';
-import 'package:recase/recase.dart';
 
 class Asignatura {
   String? id;
@@ -130,10 +132,8 @@ class Asignatura {
     switch (estado) {
       case "Aprobado":
         return MainTheme.aprobadoColor;
-        break;
       case "Reprobado":
         return MainTheme.reprobadoColor;
-        break;
       default:
         return MainTheme.inscritoColor;
     }

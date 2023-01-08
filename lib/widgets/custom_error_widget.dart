@@ -1,8 +1,5 @@
-import 'package:dotted_border/dotted_border.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:mi_utem/models/horario.dart';
-import 'package:mi_utem/screens/asignatura_screen.dart';
+import 'package:flutter/material.dart';
 
 class CustomErrorWidget extends StatelessWidget {
   final String emoji;
@@ -39,8 +36,7 @@ class CustomErrorWidget extends StatelessWidget {
               fontSize: 18,
             ),
           ),
-          if (error != null)
-            Container(height: 15),
+          if (error != null) Container(height: 15),
           if (error != null)
             Text(
               error.toString(),

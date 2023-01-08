@@ -1,9 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:dio_http_cache/dio_http_cache.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:get_storage/get_storage.dart';
-import 'package:mi_utem/models/usuario.dart';
+
+import 'package:mi_utem/services/auth_service.dart';
 
 class DioMiUtemClient {
   static const bool isProduction = bool.fromEnvironment('dart.vm.product');
@@ -34,77 +33,84 @@ class DioMiUtemClient {
   static Dio get authDio => initDio
     ..interceptors.addAll(
       [
-        InterceptorsWrapper(onRequest: (options, handler) async {
-          GetStorage box = GetStorage();
-          var token = box.read('token');
-          options.headers.addAll({"Authorization": "Bearer $token"});
-
-          return handler.next(options);
-        }, onResponse: (response, handler) async {
-          return handler.next(response);
-        }, onError: (dioError, handler) async {
-          print("onError");
-          if (dioError.response?.statusCode == 401) {
-            RequestOptions options = dioError.response!.requestOptions;
-
-            baseDio.interceptors.requestLock.lock();
-            baseDio.interceptors.responseLock.lock();
-            bool ok = await refreshSesion();
-            baseDio.interceptors.requestLock.unlock();
-            baseDio.interceptors.responseLock.unlock();
-
-            if (ok) {
-              final opts = new Options(
-                method: dioError.requestOptions.method,
-                headers: dioError.requestOptions.headers,
-              );
-              Response response = await authDio.request(
-                options.path,
-                options: opts,
-                data: options.data,
-                queryParameters: options.queryParameters,
-              );
-              handler.resolve(response);
-            } else {
-              return handler.next(dioError);
-            }
-          } else {
-            return handler.next(dioError);
-          }
-        }),
+        AuthInterceptor(),
         //DioCacheInterceptor(options: cacheOptions),
       ],
     );
+}
 
-  static Future<bool> refreshSesion() async {
-    String uri = "/v1/auth";
+class AuthInterceptor extends QueuedInterceptor {
+  AuthInterceptor({
+    this.retries = 3,
+  });
 
+  /// The number of retries in case of 401
+  final int retries;
+
+  @override
+  Future<void> onRequest(
+    final RequestOptions options,
+    final RequestInterceptorHandler handler,
+  ) async {
     try {
-      final GetStorage box = GetStorage();
-      final FlutterSecureStorage storage = new FlutterSecureStorage();
+      final token = AuthService.getToken();
 
-      String? correo = box.read("correoUtem");
-      String? contrasenia = await storage.read(key: "contrasenia");
+      options._setAuthenticationHeader(token);
 
-      print({'correo': correo, 'contrasenia': contrasenia});
-
-      if (correo != null && contrasenia != null) {
-        dynamic data = {'correo': correo, 'contrasenia': contrasenia};
-
-        Response response = await DioMiUtemClient.initDio.post(uri, data: data);
-
-        if (response.statusCode == 200) {
-          Usuario usuario = Usuario.fromJson(response.data);
-          box.write('token', usuario.token!);
-        }
-
-        return true;
-      } else {
-        return false;
-      }
+      return handler.next(options);
     } catch (e) {
-      print(e.toString());
-      return false;
+      await _onErrorRefreshingToken();
+      final error = DioError(requestOptions: options, error: e);
+      handler.reject(error);
     }
   }
+
+  @override
+  Future<void> onError(
+      final DioError err, final ErrorInterceptorHandler handler) async {
+    final options = err.requestOptions;
+
+    if (err.response?.statusCode != 401) {
+      return super.onError(err, handler);
+    }
+
+    AuthService.invalidateToken();
+
+    final attempt = err.requestOptions._retryAttempt + 1;
+    if (attempt > retries) {
+      return super.onError(err, handler);
+    }
+    err.requestOptions._retryAttempt = attempt;
+    await Future<void>.delayed(const Duration(seconds: 1));
+
+    // Force refresh auth token
+    try {
+      final token = await AuthService.refreshToken();
+
+      options._setAuthenticationHeader(token);
+      final response = await DioMiUtemClient.initDio.fetch<void>(options);
+      return handler.resolve(response);
+    } on DioError catch (e) {
+      if (e.response?.statusCode == 401) {
+        await _onErrorRefreshingToken();
+      }
+      super.onError(e, handler);
+    } catch (e) {
+      super.onError(
+        DioError(requestOptions: options, error: e),
+        handler,
+      );
+    }
+  }
+
+  Future<void> _onErrorRefreshingToken() async {}
+}
+
+extension AuthRequestOptionsX on RequestOptions {
+  void _setAuthenticationHeader(final String token) =>
+      headers['Authorization'] = 'Bearer $token';
+
+  int get _retryAttempt => (extra['auth_retry_attempt'] as int?) ?? 0;
+
+  set _retryAttempt(final int attempt) => extra['auth_retry_attempt'] = attempt;
 }

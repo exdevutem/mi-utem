@@ -1,16 +1,17 @@
-import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:flare_flutter/flare_actor.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:flare_flutter/flare_actor.dart';
 import 'package:get/get.dart';
+import 'package:package_info/package_info.dart';
+
 import 'package:mi_utem/models/usuario.dart';
 import 'package:mi_utem/screens/login_screen.dart';
 import 'package:mi_utem/screens/main_screen.dart';
-import 'package:mi_utem/services/autenticacion_service.dart';
+import 'package:mi_utem/services/auth_service.dart';
 import 'package:mi_utem/services/notificaciones_service.dart';
 import 'package:mi_utem/services/perfil_service.dart';
-import 'package:package_info/package_info.dart';
 
 class SplashScreen extends StatefulWidget {
   SplashScreen({Key? key}) : super(key: key);
@@ -49,7 +50,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   void _validarToken() async {
     try {
-      bool isLoggedIn = await AutenticacionService.isLoggedIn();
+      bool isLoggedIn = await AuthService.isLoggedIn();
       if (isLoggedIn) {
         Usuario usuario = await PerfilService.getLocalUsuario();
         _ruta = MainScreen(usuario: usuario);

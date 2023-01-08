@@ -1,6 +1,8 @@
-import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
+
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:get/get.dart';
+
 import 'package:mi_utem/models/usuario.dart';
 import 'package:mi_utem/screens/usuario_screen.dart';
 import 'package:mi_utem/services/docentes_service.dart';
@@ -33,8 +35,10 @@ class _DocentesScreenState extends State<DocentesScreen> {
     FirebaseAnalytics.instance.setCurrentScreen(screenName: 'DocentesScreen');
   }
 
-  Future<List<Usuario>> _getDocentes(String nombre,
-      [bool refresh = false]) async {
+  Future<List<Usuario>> _getDocentes(
+    String nombre,
+    //[bool refresh = false,]
+  ) async {
     setState(() {
       _docentes = [];
       _futureDocentes = null;
