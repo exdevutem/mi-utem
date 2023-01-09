@@ -8,12 +8,12 @@ class BloqueRamoCard extends StatelessWidget {
   final double height;
   final BloqueHorario bloque;
 
-  BloqueRamoCard(
-      {Key? key,
-      required this.bloque,
-      required this.width,
-      required this.height})
-      : super(key: key);
+  BloqueRamoCard({
+    Key? key,
+    required this.bloque,
+    required this.width,
+    required this.height,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -38,53 +38,13 @@ class BloqueRamoCard extends StatelessWidget {
       child: Padding(
         padding: EdgeInsets.all(10),
         child: InkWell(
-          onTap: () {
-            // if (bloque.asignatura != null) {
-            //   Get.to(() =>
-            //     AsignaturaScreen(asignatura: bloque.asignatura!),
-            //   );
-            // }
-          },
           child: Container(
             decoration: BoxDecoration(
               color: bloque.codigo != null ? Colors.teal : Color(0xFFF1F1F1),
               borderRadius: BorderRadius.circular(15),
             ),
             child: bloque.asignatura != null
-                ? Column(
-                    children: <Widget>[
-                      Text(
-                        "${bloque.codigo}",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: colorTexto,
-                          fontSize: 18,
-                        ),
-                      ),
-                      Text(
-                        bloque.asignatura!.toUpperCase(),
-                        maxLines: 3,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 0.5,
-                          wordSpacing: 1,
-                          color: colorTexto,
-                          fontSize: 18,
-                        ),
-                      ),
-                      Text(
-                        bloque.sala != null ? bloque.sala! : "Sin sala",
-                        textAlign: TextAlign.center,
-                        maxLines: 2,
-                        style: TextStyle(
-                          color: colorTexto,
-                          fontSize: 18,
-                        ),
-                      )
-                    ],
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  )
+                ? BloqueConInfo(bloque: bloque, colorTexto: colorTexto)
                 : DottedBorder(
                     strokeWidth: 2,
                     color: Color(0xFF7F7F7F),
@@ -92,73 +52,58 @@ class BloqueRamoCard extends StatelessWidget {
                     radius: Radius.circular(15),
                     child: Container(),
                   ),
-
-            // child: bloque.asignatura != null
-            //     ? Card(
-            //         shape: RoundedRectangleBorder(
-            //             borderRadius: BorderRadius.circular(15.0),
-            //             side: BorderSide(
-            //               color: Colors.transparent,
-            //               width: 0,
-            //               style: BorderStyle.none,
-            //             )),
-            //         margin: EdgeInsets.all(5.0),
-            //         child: Material(
-            //           color: Colors.transparent,
-            //           child: InkWell(
-            //             onTap: () {
-            //               if (bloque.asignatura != null) {
-            //                 Get.to(
-            //                   AsignaturaScreen(asignatura: bloque.asignatura!),
-            //                 );
-            //               }
-            //             },
-            //             borderRadius: BorderRadius.all(Radius.circular(15)),
-            //             child: Padding(
-            //               padding: EdgeInsets.all(15),
-            //               child: Column(
-            //                 children: <Widget>[
-            //                   Text(
-            //                       "${bloque.asignatura!.codigo}/${bloque.asignatura!.seccion}",
-            //                       textAlign: TextAlign.center,
-            //                       style:
-            //                           TextStyle(color: colorTexto, fontSize: 12)),
-            //                   Text(bloque.asignatura!.nombre!.toUpperCase(),
-            //                       maxLines: 3,
-            //                       textAlign: TextAlign.center,
-            //                       style: TextStyle(
-            //                           fontWeight: FontWeight.bold,
-            //                           letterSpacing: 0.5,
-            //                           wordSpacing: 1,
-            //                           color: colorTexto,
-            //                           fontSize: 14)),
-            //                   Text(bloque.sala!,
-            //                       textAlign: TextAlign.center,
-            //                       maxLines: 2,
-            //                       style:
-            //                           TextStyle(color: colorTexto, fontSize: 12))
-            //                 ],
-            //                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            //               ),
-            //             ),
-            //           ),
-            //         ),
-            //         color: bloque.asignatura!.colorAsignatura,
-            //       )
-            //     : Container(
-            // margin: EdgeInsets.all(5.0),
-            // child: DottedBorder(
-            //     color: Colors.grey[400]!,
-            //     strokeWidth: 2,
-            //     borderType: BorderType.RRect,
-            //     radius: Radius.circular(15.0),
-            //     child: ClipRRect(
-            //         borderRadius: BorderRadius.all(Radius.circular(13.0)),
-            //         child: Container(color: Colors.grey[200]))),
-            // ),
           ),
         ),
       ),
+    );
+  }
+}
+
+class BloqueConInfo extends StatelessWidget {
+  const BloqueConInfo({
+    Key? key,
+    required this.bloque,
+    required this.colorTexto,
+  }) : super(key: key);
+
+  final BloqueHorario bloque;
+  final Color colorTexto;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        Text(
+          "${bloque.codigo}",
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            color: colorTexto,
+            fontSize: 18,
+          ),
+        ),
+        Text(
+          bloque.asignatura!.toUpperCase(),
+          maxLines: 3,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            letterSpacing: 0.5,
+            wordSpacing: 1,
+            color: colorTexto,
+            fontSize: 18,
+          ),
+        ),
+        Text(
+          bloque.sala != null ? bloque.sala! : "Sin sala",
+          textAlign: TextAlign.center,
+          maxLines: 2,
+          style: TextStyle(
+            color: colorTexto,
+            fontSize: 18,
+          ),
+        )
+      ],
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
     );
   }
 }

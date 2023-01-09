@@ -1,7 +1,8 @@
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
 import 'package:dio_http_cache/dio_http_cache.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-
 import 'package:mi_utem/services/auth_service.dart';
 
 class DioMiUtemClient {
@@ -12,11 +13,7 @@ class DioMiUtemClient {
 
   static String url = isProduction ? productionUrl : debugUrl;
 
-  static Dio get initDio => Dio(
-        BaseOptions(
-          baseUrl: url,
-        ),
-      );
+  static Dio get initDio => Dio(BaseOptions(baseUrl: url));
 
   static CacheConfig cacheConfig = CacheConfig(
     baseUrl: url,
@@ -25,17 +22,12 @@ class DioMiUtemClient {
   );
   static DioCacheManager dioCacheManager = DioCacheManager(cacheConfig);
 
-  static Dio baseDio = Dio(BaseOptions(
-    baseUrl: url,
-  ))
+  static Dio baseDio = Dio(BaseOptions(baseUrl: url))
     ..interceptors.add(dioCacheManager.interceptor);
 
   static Dio get authDio => initDio
-    ..interceptors.addAll(
-      [
-        AuthInterceptor(),
-        //DioCacheInterceptor(options: cacheOptions),
-      ],
+    ..interceptors.add(
+      AuthInterceptor(),
     );
 }
 
@@ -59,7 +51,6 @@ class AuthInterceptor extends QueuedInterceptor {
 
       return handler.next(options);
     } catch (e) {
-      await _onErrorRefreshingToken();
       final error = DioError(requestOptions: options, error: e);
       handler.reject(error);
     }
@@ -78,6 +69,7 @@ class AuthInterceptor extends QueuedInterceptor {
 
     final attempt = err.requestOptions._retryAttempt + 1;
     if (attempt > retries) {
+      await _onErrorRefreshingToken();
       return super.onError(err, handler);
     }
     err.requestOptions._retryAttempt = attempt;
@@ -87,13 +79,12 @@ class AuthInterceptor extends QueuedInterceptor {
     try {
       final token = await AuthService.refreshToken();
 
+      log("Refreshing token, attempt $attempt...");
+
       options._setAuthenticationHeader(token);
-      final response = await DioMiUtemClient.initDio.fetch<void>(options);
+      final response = await DioMiUtemClient.baseDio.fetch<void>(options);
       return handler.resolve(response);
     } on DioError catch (e) {
-      if (e.response?.statusCode == 401) {
-        await _onErrorRefreshingToken();
-      }
       super.onError(e, handler);
     } catch (e) {
       super.onError(

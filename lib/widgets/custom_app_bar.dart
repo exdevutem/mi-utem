@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:mi_utem/themes/theme.dart';
 
 class CustomAppBar extends AppBar {
@@ -26,13 +25,7 @@ class CustomAppBar extends AppBar {
     this.bottomOpacity = 1.0,
     this.toolbarHeight,
     this.leadingWidth,
-  })  : assert(automaticallyImplyLeading != null),
-        assert(elevation == null || elevation >= 0.0),
-        assert(primary != null),
-        assert(titleSpacing != null),
-        assert(toolbarOpacity != null),
-        assert(bottomOpacity != null),
-        preferredSize = Size.fromHeight(toolbarHeight ??
+  })  : preferredSize = Size.fromHeight(toolbarHeight ??
             kToolbarHeight + (bottom?.preferredSize.height ?? 0.0)),
         super(
           key: key,
@@ -44,10 +37,8 @@ class CustomAppBar extends AppBar {
           elevation: elevation,
           shape: shape,
           backgroundColor: backgroundColor,
-          brightness: brightness,
           iconTheme: iconTheme,
           actionsIconTheme: actionsIconTheme,
-          textTheme: textTheme,
           primary: primary,
           centerTitle: centerTitle,
           titleSpacing: titleSpacing,
@@ -65,6 +56,8 @@ class CustomAppBar extends AppBar {
               ),
             ),
           ),
+          toolbarTextStyle: textTheme?.bodyText2,
+          titleTextStyle: textTheme?.headline6,
         );
 
   /// A widget to display before the [title].
@@ -211,7 +204,7 @@ class CustomAppBar extends AppBar {
   /// The color to use for the app bar's material. Typically this should be set
   /// along with [brightness], [iconTheme], [textTheme].
   ///
-  /// If this property is null, then [AppBarTheme.color] of
+  /// If this property is null, then [AppBarTheme.backgroundColor] of
   /// [ThemeData.appBarTheme] is used. If that is also null, then
   /// [ThemeData.primaryColor] is used.
   final Color? backgroundColor;
@@ -219,9 +212,8 @@ class CustomAppBar extends AppBar {
   /// The brightness of the app bar's material. Typically this is set along
   /// with [backgroundColor], [iconTheme], [textTheme].
   ///
-  /// If this property is null, then [AppBarTheme.brightness] of
-  /// [ThemeData.appBarTheme] is used. If that is also null, then
-  /// [ThemeData.primaryColorBrightness] is used.
+  /// If this property is null, then [AppBarTheme.systemOverlayStyle] of
+  /// [ThemeData.appBarTheme] is used.
   final Brightness? brightness;
 
   /// The color, opacity, and size to use for app bar icons. Typically this
