@@ -1,27 +1,25 @@
 import "dart:convert";
 import "dart:math";
 
+import "package:firebase_analytics/firebase_analytics.dart";
+import "package:firebase_remote_config/firebase_remote_config.dart";
 import "package:flutter/material.dart";
 import "package:flutter/scheduler.dart";
 import "package:flutter/services.dart";
-
-import "package:firebase_analytics/firebase_analytics.dart";
-import "package:firebase_remote_config/firebase_remote_config.dart";
 import "package:flutter_markdown/flutter_markdown.dart";
 import "package:get/get.dart";
-
+import 'package:mi_utem/models/permiso_covid.dart';
 import "package:mi_utem/models/usuario.dart";
 import "package:mi_utem/services/config_service.dart";
 import "package:mi_utem/services/perfil_service.dart";
+import 'package:mi_utem/services/permisos_covid_service.dart';
 import "package:mi_utem/services/review_service.dart";
 import "package:mi_utem/widgets/custom_app_bar.dart";
 import "package:mi_utem/widgets/custom_drawer.dart";
 import "package:mi_utem/widgets/noticias_carrusel.dart";
 import "package:mi_utem/widgets/permisos_section.dart";
-import "package:mi_utem/widgets/quick_menu_section.dart";
-import 'package:mi_utem/models/permiso_covid.dart';
-import 'package:mi_utem/services/permisos_covid_service.dart';
 import 'package:mi_utem/widgets/pull_to_refresh.dart';
+import "package:mi_utem/widgets/quick_menu_section.dart";
 
 class MainScreen extends StatefulWidget {
   final Usuario usuario;
@@ -57,7 +55,7 @@ class _MainScreenState extends State<MainScreen> {
 
     ReviewService.addScreen("MainScreen");
     ReviewService.checkAndRequestReview();
-    SchedulerBinding.instance!.addPostFrameCallback((_) {
+    SchedulerBinding.instance.addPostFrameCallback((_) {
       _checkAndPerformUpdate();
     });
   }

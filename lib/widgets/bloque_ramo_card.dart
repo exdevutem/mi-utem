@@ -1,15 +1,12 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-
 import 'package:dotted_border/dotted_border.dart';
-
+import 'package:flutter/material.dart';
 import 'package:mi_utem/models/horario.dart';
 
 class BloqueRamoCard extends StatelessWidget {
   final Color colorTexto = Colors.white;
   final double width;
   final double height;
-  BloqueHorario bloque;
+  final BloqueHorario bloque;
 
   BloqueRamoCard(
       {Key? key,

@@ -14,8 +14,7 @@ class ExpansionTile extends StatefulWidget {
     this.children = const <Widget>[],
     this.trailing,
     this.initiallyExpanded = false,
-  })  : assert(initiallyExpanded != null),
-        super(key: key);
+  }) : super(key: key);
 
   final Widget? leading;
   final Widget title;
@@ -86,8 +85,7 @@ class _ExpansionTileState extends State<ExpansionTile>
       } else {
         _controller.reverse().then<void>((void value) {
           if (!mounted) return;
-          setState(() {
-          });
+          setState(() {});
         });
       }
       PageStorage.of(context)?.writeState(context, _isExpanded);
@@ -112,9 +110,8 @@ class _ExpansionTileState extends State<ExpansionTile>
             child: Container(
               margin: const EdgeInsets.fromLTRB(10.0, 2.0, 10.0, 2.0),
               decoration: new BoxDecoration(
-                color: widget.headerBackgroundColor ?? Colors.black,
-                borderRadius: BorderRadius.circular(10.0)
-              ),
+                  color: widget.headerBackgroundColor ?? Colors.black,
+                  borderRadius: BorderRadius.circular(10.0)),
               child: ListTile(
                 onTap: _handleTap,
                 leading: widget.leading,

@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
 
 class ProgressButton extends StatefulWidget {
@@ -43,19 +42,23 @@ class _ProgressButtonState extends State<ProgressButton>
           key: _globalKey,
           height: 48.0,
           width: _width,
-          child: RaisedButton(
-            padding: EdgeInsets.zero,
-            color: _state == 2 ? Colors.green : Get.theme.primaryColor,
+          child: ElevatedButton(
+            style: ButtonStyle(
+              padding: MaterialStatePropertyAll(EdgeInsets.zero),
+              backgroundColor: MaterialStatePropertyAll(
+                _state == 2 ? Colors.green : Get.theme.primaryColor,
+              ),
+            ),
             child: buildButtonChild(),
             onPressed: () {},
-            onHighlightChanged: (isPressed) {
+            /* onHighlightChanged: (isPressed) {
               setState(() {
                 _isPressed = isPressed;
                 if (_state == 0) {
                   animateButton();
                 }
               });
-            },
+            }, */
           ),
         ));
   }
