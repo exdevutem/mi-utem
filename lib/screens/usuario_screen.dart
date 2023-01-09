@@ -1,9 +1,12 @@
 import 'dart:core';
 
+import 'package:flutter/material.dart';
+
 import 'package:clipboard/clipboard.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:url_launcher/url_launcher.dart';
+
 import 'package:mi_utem/models/asignatura.dart';
 import 'package:mi_utem/models/usuario.dart';
 import 'package:mi_utem/services/docentes_service.dart';
@@ -15,7 +18,6 @@ import 'package:mi_utem/widgets/image_view_screen.dart';
 import 'package:mi_utem/widgets/loading_dialog.dart';
 import 'package:mi_utem/widgets/loading_indicator.dart';
 import 'package:mi_utem/widgets/profile_photo.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class UsuarioScreen extends StatefulWidget {
   final int tipo;

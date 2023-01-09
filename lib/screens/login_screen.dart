@@ -1,17 +1,21 @@
 import 'dart:convert';
 import 'dart:math';
 
-import 'package:dio/dio.dart';
-import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:firebase_remote_config/firebase_remote_config.dart';
-import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
+
+import 'package:dio/dio.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:get/get.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:video_player/video_player.dart';
+
 import 'package:mi_utem/models/usuario.dart';
 import 'package:mi_utem/screens/main_screen.dart';
 import 'package:mi_utem/services/auth_service.dart';
@@ -22,8 +26,6 @@ import 'package:mi_utem/widgets/acerca_screen.dart';
 import 'package:mi_utem/widgets/error_dialog.dart';
 import 'package:mi_utem/widgets/loading_dialog.dart';
 import 'package:mi_utem/widgets/login_text_form_field.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:video_player/video_player.dart';
 
 //import 'package:new_version/new_version.dart';
 
