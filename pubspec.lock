@@ -46,12 +46,10 @@ packages:
   awesome_notifications:
     dependency: "direct main"
     description:
-      path: "."
-      ref: HEAD
-      resolved-ref: d604c0c72f44ac7d969bef6bdb15070d1c7a5aab
-      url: "https://github.com/aaqibism/awesome_notifications.git"
-    source: git
-    version: "0.0.5+8"
+      name: awesome_notifications
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.7.4+1"
   badges:
     dependency: "direct main"
     description:
