@@ -1078,9 +1078,16 @@ packages:
     source: hosted
     version: "1.3.0"
   sentry:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: sentry
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "6.18.2"
+  sentry_flutter:
+    dependency: "direct main"
+    description:
+      name: sentry_flutter
       url: "https://pub.dartlang.org"
     source: hosted
     version: "6.18.2"
