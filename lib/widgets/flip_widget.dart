@@ -1,9 +1,8 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+
 import 'package:simple_gesture_detector/simple_gesture_detector.dart';
-
-
 
 class FlipController {
   static const front = "Front";

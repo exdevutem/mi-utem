@@ -1,17 +1,19 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
+
 import 'package:badges/badges.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mdi/mdi.dart';
+
 import 'package:mi_utem/models/usuario.dart';
 import 'package:mi_utem/screens/asignaturas_screen.dart';
 import 'package:mi_utem/screens/credencial_screen.dart';
 import 'package:mi_utem/screens/horario_screen.dart';
 import 'package:mi_utem/screens/login_screen.dart';
 import 'package:mi_utem/screens/usuario_screen.dart';
-import 'package:mi_utem/services/autenticacion_service.dart';
+import 'package:mi_utem/services/auth_service.dart';
 import 'package:mi_utem/services/config_service.dart';
 import 'package:mi_utem/services/review_service.dart';
 import 'package:mi_utem/themes/theme.dart';
@@ -39,16 +41,12 @@ class _CustomDrawerState extends State<CustomDrawer> {
     switch (nombre) {
       case "Perfil":
         return UsuarioScreen();
-        break;
       case "Asignaturas":
         return AsignaturasScreen();
-        break;
       case "Horario":
         return HorarioScreen();
-        break;
       case "Credencial":
         return CredencialScreen();
-        break;
       // case "Docentes":
       //   return DocentesScreen();
       //   break;
@@ -153,7 +151,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                             leading: Icon(Mdi.closeCircle),
                             title: Text('Cerrar sesión'),
                             onTap: () async {
-                              await AutenticacionService.logOut();
+                              await AuthService.logOut();
 
                               await Get.offAll(LoginScreen());
                             },

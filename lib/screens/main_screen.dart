@@ -1,25 +1,26 @@
 import "dart:convert";
 import "dart:math";
 
+import "package:flutter/material.dart";
+import "package:flutter/services.dart";
+
 import "package:firebase_analytics/firebase_analytics.dart";
 import "package:firebase_remote_config/firebase_remote_config.dart";
-import "package:flutter/material.dart";
-import "package:flutter/scheduler.dart";
-import "package:flutter/services.dart";
 import "package:flutter_markdown/flutter_markdown.dart";
 import "package:get/get.dart";
-import 'package:mi_utem/models/permiso_covid.dart';
+
 import "package:mi_utem/models/usuario.dart";
 import "package:mi_utem/services/config_service.dart";
 import "package:mi_utem/services/perfil_service.dart";
-import 'package:mi_utem/services/permisos_covid_service.dart';
 import "package:mi_utem/services/review_service.dart";
 import "package:mi_utem/widgets/custom_app_bar.dart";
 import "package:mi_utem/widgets/custom_drawer.dart";
 import "package:mi_utem/widgets/noticias_carrusel.dart";
 import "package:mi_utem/widgets/permisos_section.dart";
-import 'package:mi_utem/widgets/pull_to_refresh.dart';
 import "package:mi_utem/widgets/quick_menu_section.dart";
+import 'package:mi_utem/models/permiso_covid.dart';
+import 'package:mi_utem/services/permisos_covid_service.dart';
+import 'package:mi_utem/widgets/pull_to_refresh.dart';
 
 class MainScreen extends StatefulWidget {
   final Usuario usuario;
@@ -31,7 +32,6 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   late FirebaseRemoteConfig? _remoteConfig;
-  late Future<List<PermisoCovid>> _permisosFuture;
   List<PermisoCovid>? _permisos;
   int _a = 0;
 
@@ -39,7 +39,7 @@ class _MainScreenState extends State<MainScreen> {
   void initState() {
     super.initState();
     _remoteConfig = ConfigService.config;
-    _permisosFuture = _getPermisos();
+    _getPermisos();
     PerfilService.saveFcmToken();
     SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(
@@ -55,9 +55,6 @@ class _MainScreenState extends State<MainScreen> {
 
     ReviewService.addScreen("MainScreen");
     ReviewService.checkAndRequestReview();
-    SchedulerBinding.instance!.addPostFrameCallback((_) {
-      _checkAndPerformUpdate();
-    });
   }
 
   @override
@@ -65,52 +62,13 @@ class _MainScreenState extends State<MainScreen> {
     super.dispose();
   }
 
-  Future<List<PermisoCovid>> _getPermisos([bool refresh = false]) async {
+  Future<List<PermisoCovid>> _getPermisos({bool refresh = false}) async {
     List<PermisoCovid> permisos =
         await PermisosCovidService.getPermisos(refresh);
     setState(() {
       _permisos = permisos;
     });
     return permisos;
-  }
-
-  Future<void> _onRefresh() async {
-    await _getPermisos(true);
-  }
-
-  Future<void> _checkAndPerformUpdate() async {
-    try {
-      /* VersionStatus status = await NewVersion(context: context).getVersionStatus();
-      print("status.localVersion ${status.localVersion}");
-      print("status.storeVersion ${status.storeVersion}");
-
-      var localVersion = status.localVersion.split(".");
-      var storeVersion = status.storeVersion.split(".");
-      if (storeVersion[0].compareTo(localVersion[0]) > 0) {
-        if (Platform.isAndroid) {
-          AppUpdateInfo info = await InAppUpdate.checkForUpdate();
-
-          if (info.updateAvailable == true) {
-            await InAppUpdate.performImmediateUpdate();
-          }
-        }
-      } else if (storeVersion[1].compareTo(localVersion[1]) > 0) {
-        if (Platform.isAndroid) {
-          AppUpdateInfo info = await InAppUpdate.checkForUpdate();
-          
-          if (info.updateAvailable == true) {
-            await InAppUpdate.startFlexibleUpdate();
-            await InAppUpdate.completeFlexibleUpdate();
-          }
-        }
-      } else if (storeVersion[2].compareTo(localVersion[2]) > 0) {
-        print("MINOR");
-      }
- */
-      return;
-    } catch (error) {
-      print("_checkAndPerformUpdate Error: ${error.toString()}");
-    }
   }
 
   String get _greetingText {
@@ -127,14 +85,10 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(
-        title: Text("Inicio"),
-      ),
+      appBar: CustomAppBar(title: Text("Inicio")),
       drawer: CustomDrawer(usuario: widget.usuario),
       body: PullToRefresh(
-        onRefresh: () async {
-          await _onRefresh();
-        },
+        onRefresh: () async => await _getPermisos(refresh: true),
         child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,

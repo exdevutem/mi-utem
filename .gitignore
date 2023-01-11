@@ -111,7 +111,7 @@ Pods/
 .dart_tool/
 .packages
 # If you're building an application, you may want to check-in your pubspec.lock
-pubspec.lock
+#pubspec.lock
 
 # Directory created by dartdoc
 # If you don't generate documentation locally you can remove this line.
@@ -1066,3 +1066,4 @@ api-playstore.json
 GoogleService-Info.plist
 android/keystores/*
 */fastlane/report.xml
+.flutter-plugins-dependencies

@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:dio_http_cache/dio_http_cache.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_storage/get_storage.dart';
+
 import 'package:mi_utem/models/permiso_covid.dart';
 import 'package:mi_utem/utils/dio_miutem_client.dart';
 
@@ -23,7 +24,7 @@ class PermisosCovidService {
         uri,
         data: data,
         options: buildCacheOptions(
-          Duration(days: 30),
+          Duration(days: 150),
           maxStale: Duration(days: 365),
           forceRefresh: refresh,
         ),

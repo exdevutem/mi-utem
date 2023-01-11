@@ -1,7 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+
 import 'package:get/get.dart';
+
 import 'package:mi_utem/widgets/acerca_aplicacion_content.dart';
 import 'package:mi_utem/widgets/acerca_screen.dart';
 
@@ -17,34 +19,39 @@ class AcercaDialog extends StatefulWidget {
 class _AcercaDialogState extends State<AcercaDialog> {
   static const bool isProduction = bool.fromEnvironment('dart.vm.product');
 
-  late Timer _timer;
+  Timer? _timer;
+
   late int _timeLeft;
-  bool _isDisabled = true;
+  bool _isActive = true;
 
   @override
   void initState() {
-    _isDisabled = true;
-    _timeLeft = isProduction ? 30 : 3;
+    _timeLeft = isProduction ? 15 : 3;
     _startTimer();
     super.initState();
   }
 
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
   void _startTimer() {
-    const oneSec = const Duration(seconds: 1);
-    _timer = new Timer.periodic(
-      oneSec,
+    _timer = Timer.periodic(
+      const Duration(seconds: 1),
       (Timer timer) {
         if (_timeLeft == 0) {
-          setState(() {
-            _isDisabled = false;
+          return setState(() {
+            _isActive = false;
             timer.cancel();
           });
-        } else {
-          setState(() {
-            _isDisabled = true;
-            _timeLeft--;
-          });
         }
+
+        setState(() {
+          _isActive = true;
+          _timeLeft--;
+        });
       },
     );
   }
@@ -80,12 +87,12 @@ class _AcercaDialogState extends State<AcercaDialog> {
                           children: [
                             TextButton(
                               child: Text(
-                                _isDisabled
+                                _isActive
                                     ? "Podrás cerrar en $_timeLeft"
                                     : "Saber más",
                                 style: TextStyle(color: Colors.white),
                               ),
-                              onPressed: _isDisabled
+                              onPressed: _isActive
                                   ? null
                                   : () {
                                       Get.back();
@@ -94,7 +101,7 @@ class _AcercaDialogState extends State<AcercaDialog> {
                             ),
                           ],
                         ),
-                        if (!_isDisabled)
+                        if (!_isActive)
                           OutlinedButton(
                             child: Text(
                               "Cerrar",

@@ -1,8 +1,8 @@
-import 'package:circular_profile_avatar/circular_profile_avatar.dart';
-import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:flutter/material.dart';
+
+import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:intl/intl.dart';
+
 import 'package:mi_utem/themes/theme.dart';
 import 'package:mi_utem/widgets/loading_indicator.dart';
 

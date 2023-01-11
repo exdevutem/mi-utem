@@ -1,42 +1,30 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:mi_utem/themes/theme.dart';
-import 'package:mi_utem/widgets/acerca_aplicacion_content.dart';
-import 'package:mi_utem/widgets/acerca_screen.dart';
-import 'package:mi_utem/widgets/loading_indicator.dart';
 
 class CustomAlertDialog extends StatefulWidget {
-  String titulo;
-  String? emoji;
-  String descripcion;
-  String confirmarTextoBoton;
-  String cancelarTextoBoton;
-  VoidCallback? onCancelar;
-  VoidCallback? onConfirmar;
+  final String titulo;
+  final String? emoji;
+  final String descripcion;
+  final String confirmarTextoBoton;
+  final String cancelarTextoBoton;
+  final VoidCallback? onCancelar;
+  final VoidCallback? onConfirmar;
 
-  CustomAlertDialog(
-      {Key? key,
-      required this.titulo,
-      required this.descripcion,
-      this.cancelarTextoBoton = "Cancelar",
-      this.confirmarTextoBoton = "Confirmar",
-      this.onCancelar,
-      this.emoji,
-      this.onConfirmar})
-      : super(key: key);
+  CustomAlertDialog({
+    Key? key,
+    required this.titulo,
+    required this.descripcion,
+    this.cancelarTextoBoton = "Cancelar",
+    this.confirmarTextoBoton = "Confirmar",
+    this.onCancelar,
+    this.emoji,
+    this.onConfirmar,
+  }) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _CustomAlertDialogState();
 }
 
 class _CustomAlertDialogState extends State<CustomAlertDialog> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -74,17 +62,13 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
                               Text(
                                 widget.emoji!,
                                 textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontSize: 50,
-                                ),
+                                style: TextStyle(fontSize: 50),
                               ),
-                            if (widget.descripcion != null)
-                              Container(height: 20),
-                            if (widget.descripcion != null)
-                              Text(
-                                widget.descripcion,
-                                textAlign: TextAlign.center,
-                              ),
+                            Container(height: 20),
+                            Text(
+                              widget.descripcion,
+                              textAlign: TextAlign.center,
+                            ),
                             Container(height: 20),
                             Wrap(
                               spacing: 10,
@@ -94,15 +78,11 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
                               runAlignment: WrapAlignment.center,
                               children: [
                                 OutlinedButton(
-                                  onPressed: () async {
-                                    widget.onCancelar!();
-                                  },
+                                  onPressed: () async => widget.onCancelar!(),
                                   child: Text(widget.cancelarTextoBoton),
                                 ),
                                 TextButton(
-                                  onPressed: () {
-                                    widget.onConfirmar!();
-                                  },
+                                  onPressed: () => widget.onConfirmar!(),
                                   child: Text(widget.confirmarTextoBoton),
                                 ),
                               ],

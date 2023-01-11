@@ -9,6 +9,7 @@ import 'package:mi_utem/widgets/custom_alert_dialog.dart';
 
 class NotificationsService {
   static AwesomeNotifications get notification => AwesomeNotifications();
+  static ReceivedAction? _initialAction;
 
   static Future initialize() async {
     try {
@@ -33,38 +34,48 @@ class NotificationsService {
               defaultColor: MainTheme.primaryColor,
               ledColor: MainTheme.primaryColor)
         ],
+        debug: true,
       );
-      NotificationsService.notification.actionStream
-          .listen((receivedNotification) {});
 
-      NotificationsService.notification.createdStream
-          .listen((ReceivedNotification notification) {
-        print("Notification created: " +
-            (notification.title ??
-                notification.body ??
-                notification.id.toString()));
-      });
+      // Get initial notification action is optional
+      _initialAction = await AwesomeNotifications()
+          .getInitialNotificationAction(removeFromActionEvents: false);
 
-      NotificationsService.notification.displayedStream
-          .listen((ReceivedNotification notification) {
-        print("Notification displayed: " +
-            (notification.title ??
-                notification.body ??
-                notification.id.toString()));
-      });
+      NotificationsService.notification
+          .setListeners(onActionReceivedMethod: _onActionReceivedMethod);
 
-      NotificationsService.notification.dismissedStream
-          .listen((ReceivedAction dismissedAction) {
-        print("Notification dismissed: " +
-            (dismissedAction.title ??
-                dismissedAction.body ??
-                dismissedAction.id.toString()));
-      });
       String? fcmToken = await FirebaseMessaging.instance.getToken();
       print("Firebase token: $fcmToken");
     } catch (e) {
       print('Error ${e.toString()}');
     }
+  }
+
+  @pragma('vm:entry-point')
+  static Future<void> _onActionReceivedMethod(
+      ReceivedAction receivedAction) async {
+    if (receivedAction.actionType == ActionType.SilentAction ||
+        receivedAction.actionType == ActionType.SilentBackgroundAction) {
+      // For background actions, you must hold the execution until the end
+      print(
+          'Message sent via notification input: "${receivedAction.buttonKeyInput}"');
+      await _executeLongTaskInBackground();
+    } else {
+/*       MyApp.navigatorKey.currentState?.pushNamedAndRemoveUntil(
+          '/notification-page',
+          (route) =>
+              (route.settings.name != '/notification-page') || route.isFirst,
+          arguments: receivedAction); */
+    }
+  }
+
+  static Future<void> _executeLongTaskInBackground() async {
+    print("starting long task");
+    await Future.delayed(const Duration(seconds: 4));
+/*     final url = Uri.parse("http://google.com");
+    final re = await http.get(url);
+    print(re.body); */
+    print("long task done");
   }
 
   static Future<dynamic> _onFCM(RemoteMessage message) async {

@@ -47,10 +47,8 @@ class Rut {
       switch (valor) {
         case 10:
           return "K";
-          break;
         case 11:
           return "0";
-          break;
         default:
           return valor.toString();
       }
