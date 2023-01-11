@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
-
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_masked_text/flutter_masked_text.dart';
-
+import 'package:get/get.dart';
+import 'package:mi_utem/controllers/calculator_controller.dart';
 import 'package:mi_utem/models/asignatura.dart';
 import 'package:mi_utem/models/evaluacion.dart';
 import 'package:mi_utem/services/review_service.dart';
@@ -10,7 +10,7 @@ import 'package:mi_utem/themes/theme.dart';
 import 'package:mi_utem/widgets/custom_app_bar.dart';
 import 'package:mi_utem/widgets/nota_list_item.dart';
 
-class CalculadoraNotasScreen extends StatefulWidget {
+class CalculadoraNotasScreen extends StatelessWidget {
   final Asignatura? asignaturaInicial;
 
   CalculadoraNotasScreen({
@@ -18,50 +18,22 @@ class CalculadoraNotasScreen extends StatefulWidget {
     this.asignaturaInicial,
   }) : super(key: key);
 
-  @override
-  State<StatefulWidget> createState() => _CalculadoraNotasScreenState();
-}
-
-class _CalculadoraNotasScreenState extends State<CalculadoraNotasScreen> {
-  MaskedTextController _examenController =
+  final MaskedTextController _examenController =
       new MaskedTextController(mask: '0.0');
-  MaskedTextController _presentacionController =
+  final MaskedTextController _presentacionController =
       new MaskedTextController(mask: '0.0');
-
-  Asignatura? _asignatura;
-
-  @override
-  void initState() {
-    super.initState();
-    ReviewService.addScreen("CalculadoraNotasScreen");
-    FirebaseAnalytics.instance
-        .setCurrentScreen(screenName: 'CalculadoraNotasScreen');
-    setState(() {
-      _examenController.text =
-          widget.asignaturaInicial!.notaExamen?.toStringAsFixed(1) ?? "";
-      _presentacionController.text = widget
-              .asignaturaInicial?.notaPresentacionCalculada
-              .toStringAsFixed(1) ??
-          "";
-      _asignatura = widget.asignaturaInicial;
-    });
-  }
-
-  void _onCambioNota(String nota, String porcentaje, int i) {
-    setState(() {
-      _asignatura!.notaExamen = null;
-      _asignatura!.notasParciales[i].nota = num.tryParse(nota);
-      _examenController.text =
-          _asignatura!.notaExamen?.toStringAsFixed(1) ?? "";
-      _presentacionController.text =
-          _asignatura?.notaPresentacionCalculada.toStringAsFixed(1) ?? "";
-      _asignatura = _asignatura;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
-    //_procesarNotas(prueba);
+    ReviewService.addScreen("CalculadoraNotasScreen");
+    FirebaseAnalytics.instance.setCurrentScreen(
+      screenName: 'CalculadoraNotasScreen',
+    );
+
+    final controller = CalculatorController.to;
+
+    controller.makeEditable();
+
     return Scaffold(
       appBar: CustomAppBar(
         title: Text("Calculadora de notas"),
@@ -97,22 +69,24 @@ class _CalculadoraNotasScreenState extends State<CalculadoraNotasScreen> {
                     children: <Widget>[
                       Column(
                         children: <Widget>[
-                          Text(
-                            _asignatura?.notaFinalCalculada
-                                    .toStringAsFixed(1) ??
-                                "--",
-                            style: TextStyle(
-                              fontSize: 40,
-                              fontWeight: FontWeight.bold,
+                          Obx(
+                            () => Text(
+                              controller.calculatedFinalGrade
+                                      ?.toStringAsFixed(1) ??
+                                  "--",
+                              style: TextStyle(
+                                fontSize: 40,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
-                          Text(
+                          /* Text(
                             _asignatura!.estadoCalculado,
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                             ),
-                          ),
+                          ), */
                         ],
                       ),
                       Container(width: 10),
@@ -135,36 +109,37 @@ class _CalculadoraNotasScreenState extends State<CalculadoraNotasScreen> {
                               Container(
                                 width: 60,
                                 margin: EdgeInsets.only(left: 15),
-                                child: TextField(
-                                  controller: _examenController,
-                                  textAlign: TextAlign.center,
-                                  onChanged: (String valor) {
-                                    num? nota = num.tryParse(valor);
-                                    if (valor.isEmpty || nota == null) {
-                                      nota = 0;
-                                    }
-                                    setState(() {
-                                      _asignatura!.notaExamen = nota;
-                                    });
-                                  },
-                                  enabled: _asignatura!.puedeDarExamen,
-                                  decoration: InputDecoration(
-                                    hintText: (_asignatura != null &&
-                                            _asignatura!.puedeDarExamen)
-                                        ? "≥${_asignatura!.examenMinimoCalculado.toStringAsFixed(1)}"
-                                        : "",
-                                    filled: !(_asignatura != null &&
-                                        _asignatura!.puedeDarExamen),
-                                    fillColor: Colors.grey.withOpacity(0.2),
-                                    disabledBorder: MainTheme
-                                        .theme.inputDecorationTheme.border!
-                                        .copyWith(
-                                            borderSide: BorderSide(
-                                      color: Colors.grey[300]!,
-                                    )),
+                                child: Obx(
+                                  () => TextField(
+                                    textAlign: TextAlign.center,
+                                    onChanged: (String value) {
+                                      controller.examGrade.value =
+                                          double.tryParse(
+                                        value.replaceAll(",", "."),
+                                      );
+                                    },
+                                    enabled: controller.canTakeExam,
+                                    decoration: InputDecoration(
+                                      hintText: controller.canTakeExam &&
+                                              controller
+                                                      .minimumRequiredExamGrade !=
+                                                  null
+                                          ? "≥${controller.minimumRequiredExamGrade!.toStringAsFixed(1)}"
+                                          : "",
+                                      filled: !controller.canTakeExam,
+                                      fillColor: Colors.grey.withOpacity(0.2),
+                                      disabledBorder: MainTheme
+                                          .theme.inputDecorationTheme.border!
+                                          .copyWith(
+                                              borderSide: BorderSide(
+                                        color: Colors.grey[300]!,
+                                      )),
+                                    ),
+                                    keyboardType:
+                                        TextInputType.numberWithOptions(
+                                      decimal: true,
+                                    ),
                                   ),
-                                  keyboardType: TextInputType.numberWithOptions(
-                                      decimal: true),
                                 ),
                               ),
                             ],
@@ -188,9 +163,10 @@ class _CalculadoraNotasScreenState extends State<CalculadoraNotasScreen> {
                                     disabledBorder: MainTheme
                                         .theme.inputDecorationTheme.border!
                                         .copyWith(
-                                            borderSide: BorderSide(
-                                      color: Colors.transparent,
-                                    )),
+                                      borderSide: BorderSide(
+                                        color: Colors.transparent,
+                                      ),
+                                    ),
                                   ),
                                   keyboardType: TextInputType.numberWithOptions(
                                       decimal: true),
@@ -228,20 +204,47 @@ class _CalculadoraNotasScreenState extends State<CalculadoraNotasScreen> {
                 ),
                 Container(
                   padding: EdgeInsets.all(20),
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    physics: ClampingScrollPhysics(),
-                    itemBuilder: (context, i) {
-                      Evaluacion evaluacion = _asignatura!.notasParciales[i];
-                      return NotaListItem(
-                        evaluacion: evaluacion,
-                        esSimulacion: true,
-                        onChanged: (String nota, String porcentaje) {
-                          _onCambioNota(nota, porcentaje, i);
+                  child: Column(
+                    children: [
+                      Obx(
+                        () => ListView.separated(
+                          shrinkWrap: true,
+                          physics: ClampingScrollPhysics(),
+                          separatorBuilder: (context, index) =>
+                              SizedBox(height: 10),
+                          itemBuilder: (context, i) {
+                            REvaluacion evaluacion =
+                                controller.partialGrades[i];
+                            return NotaListItem(
+                              evaluacion: IEvaluacion.fromRemote(evaluacion),
+                              gradeController:
+                                  controller.gradeTextFieldControllers[i],
+                              percentageController:
+                                  controller.percentageTextFieldControllers[i],
+                              onChanged: (evaluacion) {
+                                controller.changeGradeAt(i, evaluacion);
+                              },
+                              onDelete: () {
+                                controller.removeGradeAt(i);
+                              },
+                            );
+                          },
+                          itemCount: controller.partialGrades.length,
+                        ),
+                      ),
+                      SizedBox(height: 16),
+                      TextButton(
+                        onPressed: () {
+                          controller.addGrade(
+                            IEvaluacion(
+                              nota: null,
+                              porcentaje: null,
+                            ),
+                          );
                         },
-                      );
-                    },
-                    itemCount: _asignatura!.notasParciales.length,
+                        child: Text("Agregar nota"),
+                      ),
+                    ],
                   ),
                 ),
               ],

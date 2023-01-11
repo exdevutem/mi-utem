@@ -1,13 +1,11 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-
 import 'package:get_storage/get_storage.dart';
-import 'package:recase/recase.dart';
-
 import 'package:mi_utem/models/evaluacion.dart';
 import 'package:mi_utem/models/usuario.dart';
 import 'package:mi_utem/themes/theme.dart';
+import 'package:recase/recase.dart';
 
 class Asignatura {
   String? id;
@@ -18,7 +16,7 @@ class Asignatura {
   String? docente;
   String? seccion;
   Color? colorAsignatura;
-  List<Evaluacion> notasParciales;
+  List<REvaluacion> notasParciales;
   num? notaExamen;
   num? notaPresentacion;
   num? notaFinal;
@@ -90,7 +88,7 @@ class Asignatura {
           json['docente'] != null ? ReCase(json['docente']).titleCase : null,
       seccion: json['seccion'],
       notasParciales: json['notasParciales'] != null
-          ? Evaluacion.fromJsonList(json['notasParciales'])
+          ? REvaluacion.fromJsonList(json['notasParciales'])
           : [],
       notaFinal: json['notaFinal'] != null ? json['notaFinal'] : null,
       notaPresentacion:

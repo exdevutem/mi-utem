@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
+import 'dart:developer';
 
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mdi/mdi.dart';
-
 import 'package:mi_utem/models/asignatura.dart';
 import 'package:mi_utem/screens/asignatura_estudiantes_tab.dart';
 import 'package:mi_utem/screens/asignatura_notas_tab.dart';
@@ -59,7 +59,8 @@ class _AsignaturaScreenState extends State<AsignaturaScreen>
   }
 
   bool get _mostrarCalculadora {
-    return _asignaturaConNotas != null && _selectedIndex == 1;
+    log("mostrar calculadora: ${_asignaturaConNotas != null} $_selectedIndex");
+    return _selectedIndex == 1;
   }
 
   @override
@@ -75,7 +76,8 @@ class _AsignaturaScreenState extends State<AsignaturaScreen>
                   onPressed: () {
                     Get.to(
                       () => CalculadoraNotasScreen(
-                          asignaturaInicial: _asignaturaConNotas),
+                        asignaturaInicial: widget.asignatura,
+                      ),
                     );
                   },
                 ),

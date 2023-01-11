@@ -1,11 +1,10 @@
 import 'dart:developer';
 
-import 'package:flutter/material.dart';
-
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_masked_text/flutter_masked_text.dart';
-
+import 'package:mi_utem/controllers/calculator_controller.dart';
 import 'package:mi_utem/models/asignatura.dart';
 import 'package:mi_utem/models/evaluacion.dart';
 import 'package:mi_utem/services/asignaturas_service.dart';
@@ -62,17 +61,20 @@ class _AsignaturaNotasTabState extends State<AsignaturaNotasTab> {
 
       log(asignatura?.notasParciales.toString() ?? "null");
 
+      CalculatorController.to.loadGradesFromAsignatura(asignatura!);
+
+      log(CalculatorController.to.partialGrades.toString());
+
       setState(() {
         _asignatura = asignatura;
         _examenController.text =
-            asignatura?.notaExamen?.toStringAsFixed(1) ?? "S/N";
+            asignatura.notaExamen?.toStringAsFixed(1) ?? "S/N";
         _presentacionController.text =
-            asignatura?.notaPresentacion?.toStringAsFixed(1) ?? "S/N";
+            asignatura.notaPresentacion?.toStringAsFixed(1) ?? "S/N";
         _asignatura = asignatura;
       });
 
-      if (asignatura?.notasParciales != null &&
-          asignatura!.notasParciales.length > 0 &&
+      if (asignatura.notasParciales.length > 0 &&
           _remoteConfig!.getBool(ConfigService.CALCULADORA_MOSTRAR)) {
         widget.onNotas!(asignatura);
       }
@@ -232,9 +234,12 @@ class _AsignaturaNotasTabState extends State<AsignaturaNotasTab> {
                       shrinkWrap: true,
                       physics: ClampingScrollPhysics(),
                       itemBuilder: (context, i) {
-                        Evaluacion evaluacion = _asignatura!.notasParciales[i];
+                        REvaluacion evaluacion = _asignatura!.notasParciales[i];
                         return NotaListItem(
-                          evaluacion: evaluacion,
+                          evaluacion: IEvaluacion.fromRemote(evaluacion),
+                          /* onChanged: (evaluacion) {
+                            _controller.chag(evaluacion, nota);
+                          } */
                         );
                       },
                       itemCount: _asignatura!.notasParciales.length,

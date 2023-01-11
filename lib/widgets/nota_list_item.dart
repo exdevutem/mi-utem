@@ -1,105 +1,142 @@
 import 'package:flutter/material.dart';
-
 import 'package:flutter_masked_text/flutter_masked_text.dart';
-
+import 'package:get/get.dart';
+import 'package:mi_utem/controllers/calculator_controller.dart';
 import 'package:mi_utem/models/evaluacion.dart';
 import 'package:mi_utem/themes/theme.dart';
 
-class NotaListItem extends StatefulWidget {
-  final Evaluacion? evaluacion;
-  final bool esSimulacion;
-  final Function? onChanged;
+class NotaListItem extends StatelessWidget {
+  final IEvaluacion evaluacion;
+  final TextEditingController? gradeController;
+  final TextEditingController? percentageController;
+  final Function(IEvaluacion)? onChanged;
+  final Function()? onDelete;
 
-  NotaListItem(
-      {Key? key, this.esSimulacion = false, this.evaluacion, this.onChanged})
-      : super(key: key);
+  NotaListItem({
+    Key? key,
+    required this.evaluacion,
+    this.gradeController,
+    this.percentageController,
+    this.onChanged,
+    this.onDelete,
+  }) : super(key: key);
 
-  @override
-  State<StatefulWidget> createState() => _NotaListItemState();
-}
+  final _controller = CalculatorController.to;
 
-class _NotaListItemState extends State<NotaListItem> {
-  MaskedTextController _notaController = new MaskedTextController(mask: '0.0');
-  MaskedTextController _porcentajeController =
-      new MaskedTextController(mask: '000');
-
-  @override
-  void initState() {
-    super.initState();
-    if (widget.evaluacion!.porcentaje != null) {
-      _porcentajeController.text = widget.evaluacion!.porcentaje.toString();
-    }
-    if (widget.evaluacion!.nota != null) {
-      _notaController.text = widget.evaluacion!.nota?.toStringAsFixed(1) ?? "";
-    }
+  String? get _suggestedGrade {
+    return _controller.suggestedGrade?.toStringAsFixed(1);
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-    _notaController.dispose();
-    _porcentajeController.dispose();
+  String? get _suggestedPercentage {
+    return _controller.suggestedPercentage?.toStringAsFixed(0);
+  }
+
+  bool get _editable {
+    return evaluacion.editable ||
+        _controller.freeEditable.value && onChanged != null;
   }
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-      child: Flex(
-        direction: Axis.horizontal,
-        mainAxisSize: MainAxisSize.max,
-        children: <Widget>[
-          Flexible(
-            child: Center(
-              child: Container(
-                  width: 60, child: Text(widget.evaluacion!.descripcion)),
+    final defaultGradeController = MaskedTextController(
+      mask: "0.0",
+      text: evaluacion.nota?.toStringAsFixed(1) ?? "",
+    );
+    final defaultPercentageController = MaskedTextController(
+      mask: "000",
+      text: evaluacion.porcentaje?.toStringAsFixed(0) ?? "",
+    );
+
+    return Flex(
+      direction: Axis.horizontal,
+      mainAxisSize: MainAxisSize.max,
+      children: <Widget>[
+        Container(
+          width: 90,
+          child: Text(
+            evaluacion.descripcion ?? "Nota",
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+        SizedBox(width: 16),
+        Flexible(
+          flex: 3,
+          child: Center(
+            child: TextField(
+              controller: gradeController ?? defaultGradeController,
+              enabled: _editable,
+              onChanged: (String value) {
+                final grade = double.tryParse(
+                  value.replaceAll(",", "."),
+                );
+
+                final changedGrade = evaluacion.copyWith(nota: grade);
+                changedGrade.nota = grade;
+
+                onChanged?.call(changedGrade);
+
+                //_controller.changeGradeAt(widget.index, changedGrade);
+              },
+              textAlign: TextAlign.center,
+              decoration: InputDecoration(
+                hintText: _suggestedGrade ?? "0.0",
+                disabledBorder:
+                    MainTheme.theme.inputDecorationTheme.border!.copyWith(
+                  borderSide: BorderSide(
+                    color: Colors.transparent,
+                  ),
+                ),
+              ),
+              keyboardType: TextInputType.numberWithOptions(decimal: true),
             ),
           ),
-          Flexible(
-              child: Center(
-                  child: Container(
-                      width: 60,
-                      child: TextField(
-                        controller: _notaController,
-                        enabled: widget.esSimulacion,
-                        onChanged: (String valor) => widget.onChanged!(
-                            valor, _porcentajeController.text),
-                        textAlign: TextAlign.center,
-                        decoration: InputDecoration(
-                          hintText: widget.esSimulacion ? "0.0" : "--",
-                          disabledBorder: MainTheme
-                              .theme.inputDecorationTheme.border!
-                              .copyWith(
-                                  borderSide: BorderSide(
-                            color: Colors.transparent,
-                          )),
-                        ),
-                        keyboardType:
-                            TextInputType.numberWithOptions(decimal: true),
-                      )))),
-          Flexible(
-              child: Center(
-                  child: Container(
-                      width: 60,
-                      child: TextField(
-                        controller: _porcentajeController,
-                        textAlign: TextAlign.center,
-                        onChanged: (String valor) =>
-                            widget.onChanged!(_notaController.text, valor),
-                        enabled: widget.esSimulacion,
-                        decoration: InputDecoration(
-                            hintText: "Peso",
-                            suffixText: "%",
-                            disabledBorder: MainTheme
-                                .theme.inputDecorationTheme.border!
-                                .copyWith(
-                                    borderSide: BorderSide(
-                              color: Colors.transparent,
-                            ))),
-                        keyboardType: TextInputType.number,
-                      ))))
-        ],
-      ),
+        ),
+        SizedBox(width: 16),
+        Flexible(
+          flex: 4,
+          child: Center(
+            child: TextField(
+              controller: percentageController ?? defaultPercentageController,
+              textAlign: TextAlign.center,
+              onChanged: (String value) {
+                final percentage = int.tryParse(value);
+
+                final changedGrade =
+                    evaluacion.copyWith(porcentaje: percentage);
+                changedGrade.porcentaje = percentage;
+
+                onChanged?.call(changedGrade);
+
+                //_controller.changeGradeAt(widget.index, changedGrade);
+              },
+              enabled: _editable,
+              decoration: InputDecoration(
+                hintText: _suggestedPercentage ?? "Peso",
+                suffixText: "%",
+                disabledBorder:
+                    MainTheme.theme.inputDecorationTheme.border!.copyWith(
+                  borderSide: BorderSide(
+                    color: Colors.transparent,
+                  ),
+                ),
+              ),
+              keyboardType: TextInputType.phone,
+            ),
+          ),
+        ),
+        SizedBox(width: 20),
+        if (onDelete != null)
+          GestureDetector(
+            onTap: () {
+              onDelete?.call();
+              //_controller.removeGradeAt(widget.index);
+            },
+            child: Icon(
+              Icons.delete,
+              color: Get.theme.primaryColor,
+            ),
+          )
+      ],
     );
   }
 }
