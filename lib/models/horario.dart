@@ -183,7 +183,7 @@ class Periodo {
 }
 
 class BloqueHorario {
-  String? asignatura;
+  Asignatura? asignatura;
   String? sala;
   String? codigo;
 
@@ -197,11 +197,14 @@ class BloqueHorario {
     if (json == null) {
       return BloqueHorario();
     }
-    return BloqueHorario(
-        asignatura: json['asignatura']['nombre'],
+
+    BloqueHorario bloque = BloqueHorario(
+        asignatura: Asignatura.fromJson(json['asignatura']),
         sala: json['asignatura']['sala'],
         codigo:
             "${json['asignatura']['codigo']}/${json['asignatura']['seccion']}");
+
+    return bloque;
   }
 
   static List<List<BloqueHorario>>? fromJsonMatrix(dynamic json) {

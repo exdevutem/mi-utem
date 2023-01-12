@@ -1,13 +1,8 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-
-import 'package:get_storage/get_storage.dart';
-import 'package:recase/recase.dart';
-
 import 'package:mi_utem/models/evaluacion.dart';
 import 'package:mi_utem/models/usuario.dart';
 import 'package:mi_utem/themes/theme.dart';
+import 'package:recase/recase.dart';
 
 class Asignatura {
   String? id;
@@ -17,7 +12,6 @@ class Asignatura {
   String? estado;
   String? docente;
   String? seccion;
-  Color? colorAsignatura;
   List<REvaluacion> notasParciales;
   num? notaExamen;
   num? notaPresentacion;
@@ -34,7 +28,6 @@ class Asignatura {
     this.id,
     this.nombre,
     this.codigo,
-    this.colorAsignatura,
     this.tipoHora,
     this.estado,
     this.notasParciales = const [],
@@ -52,42 +45,18 @@ class Asignatura {
     this.tipoSala,
   });
 
-  Future<void> addColor(List<Color> colores) async {
-    GetStorage box = GetStorage();
-    List<Color> coloresFiltrados = colores;
-
-    Map<String, dynamic> json = {};
-
-    if (box.hasData('coloresAsignaturas')) {
-      json = jsonDecode(box.read('coloresAsignaturas')!);
-    }
-
-    List<Color> coloresUsados = json.values.map((c) => Color(c)).toList();
-    coloresFiltrados.retainWhere((c) => !coloresUsados.contains(c));
-
-    if (!json.containsKey(this.codigo)) {
-      this.colorAsignatura = coloresFiltrados[0];
-      json[this.codigo!] = coloresFiltrados[0].value;
-      box.write('coloresAsignaturas', jsonEncode(json));
-    } else {
-      this.colorAsignatura = Color(json[this.codigo!]!);
-    }
-  }
-
   factory Asignatura.fromJson(Map<String, dynamic>? json) {
     if (json == null) {
       return Asignatura();
     }
 
-    var asignaturaParseada = Asignatura(
+    return Asignatura(
       id: json['id'],
       codigo: json['codigo'],
-      nombre: json['nombre'] != null ? ReCase(json['nombre']).titleCase : null,
-      tipoHora:
-          json['tipoHora'] != null ? ReCase(json['tipoHora']).titleCase : null,
-      estado: json['estado'] != null ? ReCase(json['estado']).titleCase : null,
-      docente:
-          json['docente'] != null ? ReCase(json['docente']).titleCase : null,
+      nombre: ReCase(json['nombre'] ?? '').titleCase,
+      tipoHora: ReCase(json['tipoHora'] ?? '').titleCase,
+      estado: ReCase(json['estado'] ?? '').titleCase,
+      docente: ReCase(json['docente'] ?? '').titleCase,
       seccion: json['seccion'],
       notasParciales: json['notasParciales'] != null
           ? REvaluacion.fromJsonList(json['notasParciales'])
@@ -97,24 +66,13 @@ class Asignatura {
           json['notaPresentacion'] != null ? json['notaPresentacion'] : null,
       notaExamen: json['notaExamen'] != null ? json['notaExamen'] : null,
       // estudiantes: Usuario.fromJsonList(json["estudiantes"]),
-      asistencia: json['asistenciaAlDia'] != null
-          ? Asistencia(asistidos: json['asistenciaAlDia'])
-          : null,
-      tipoAsignatura: json['tipoAsignatura'] != null
-          ? ReCase(json['tipoAsignatura'].toString()).titleCase
-          : null,
-      sala: json['sala'] != null ? ReCase(json['sala']).titleCase : null,
+      asistencia: Asistencia(asistidos: json['asistenciaAlDia']),
+      // tipoAsignatura: ReCase(json['tipoAsignatura'].toString()).titleCase,
+      sala: ReCase(json['sala'] ?? '').titleCase,
       horario: json['horario'],
       intentos: json['intentos'] != null ? int.parse(json['intentos']) : 0,
-      tipoSala:
-          json['tipoSala'] != null ? ReCase(json['tipoSala']).titleCase : null,
+      tipoSala: ReCase(json['tipoSala'] ?? '').titleCase,
     );
-
-    if (asignaturaParseada.codigo != null) {
-      List<Color> colores = Colors.primaries.toList()..shuffle();
-      asignaturaParseada.addColor(colores);
-    }
-    return asignaturaParseada;
   }
 
   static List<Asignatura> fromJsonList(dynamic json) {
@@ -211,10 +169,10 @@ class Asignatura {
 }
 
 class Asistencia {
-  num total;
-  num asistidos;
-  num noAsistidos;
-  num sinRegistro;
+  num? total;
+  num? asistidos;
+  num? noAsistidos;
+  num? sinRegistro;
 
   Asistencia({
     this.total = 0,

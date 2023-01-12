@@ -16,6 +16,7 @@ class MainTheme {
 
   static const Color darkGrey = Color(0xff363636);
   static const Color grey = Color(0xff7f7f7f);
+  static const Color mediumGrey = Color(0xFFBDBDBD);
   static const Color lightGrey = Color(0xfff1f1f1);
 
   static double elevation = 0;
@@ -187,5 +188,70 @@ class MainTheme {
           color: grey,
           fontSize: 14,
         ),
+      );
+}
+
+class HorarioText extends Text {
+  HorarioText._(
+    String text, {
+    Key? key,
+    required TextAlign textAlign,
+    required Color color,
+    int? maxLines,
+    required bool bold,
+    double? wordSpacing,
+    double? letterSpacing,
+  }) : super(
+          text,
+          key: key,
+          maxLines: maxLines,
+          textAlign: textAlign,
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: bold ? FontWeight.bold : FontWeight.normal,
+            color: color,
+            wordSpacing: wordSpacing,
+            letterSpacing: letterSpacing,
+          ),
+        );
+
+  factory HorarioText.classCode(
+    String text, {
+    Color color = Colors.white,
+    TextAlign textAlign = TextAlign.center,
+  }) =>
+      HorarioText._(
+        text,
+        bold: false,
+        color: color,
+        textAlign: textAlign,
+      );
+
+  factory HorarioText.className(
+    String text, {
+    Color color = Colors.white,
+    TextAlign textAlign = TextAlign.center,
+  }) =>
+      HorarioText._(
+        text,
+        maxLines: 3,
+        bold: true,
+        letterSpacing: 0.5,
+        wordSpacing: 1,
+        color: color,
+        textAlign: textAlign,
+      );
+
+  factory HorarioText.classLocation(
+    String text, {
+    Color color = Colors.white,
+    TextAlign textAlign = TextAlign.center,
+  }) =>
+      HorarioText._(
+        text,
+        maxLines: 2,
+        bold: false,
+        color: color,
+        textAlign: textAlign,
       );
 }
