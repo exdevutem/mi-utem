@@ -2,10 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get_storage/get_storage.dart';
-
 import 'package:mi_utem/models/rut.dart';
 import 'package:mi_utem/models/usuario.dart';
+import 'package:mi_utem/services/auth_service.dart';
 import 'package:mi_utem/utils/dio_miutem_client.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 class PerfilService {
   static final Dio _dio = DioMiUtemClient.authDio;
@@ -26,15 +27,32 @@ class PerfilService {
       String? correoUtem = box.read("correoUtem");
       String? correoPersonal = box.read("correoPersonal");
 
+      if (await AuthService.isLoggedIn()) {
+        Sentry.configureScope(
+          (scope) => scope.setUser(
+            SentryUser(
+              id: correoUtem,
+              email: correoPersonal,
+              name: nombres,
+              data: {
+                "rut": rut?.toString(),
+              },
+              ipAddress: "{{auto}}",
+            ),
+          ),
+        );
+      }
+
       return Usuario(
-          token: token,
-          nombres: nombres,
-          fotoUrl: fotoUrl,
-          nombre: nombre,
-          apellidos: apellidos,
-          rut: rut,
-          correoUtem: correoUtem,
-          correoPersonal: correoPersonal);
+        token: token,
+        nombres: nombres,
+        fotoUrl: fotoUrl,
+        nombre: nombre,
+        apellidos: apellidos,
+        rut: rut,
+        correoUtem: correoUtem,
+        correoPersonal: correoPersonal,
+      );
     } catch (e) {
       print(e);
       throw e;

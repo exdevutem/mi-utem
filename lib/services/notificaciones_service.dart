@@ -9,7 +9,6 @@ import 'package:mi_utem/widgets/custom_alert_dialog.dart';
 
 class NotificationsService {
   static AwesomeNotifications get notification => AwesomeNotifications();
-  static ReceivedAction? _initialAction;
 
   static Future initialize() async {
     try {
@@ -37,15 +36,11 @@ class NotificationsService {
         debug: true,
       );
 
-      // Get initial notification action is optional
-      _initialAction = await AwesomeNotifications()
-          .getInitialNotificationAction(removeFromActionEvents: false);
-
       NotificationsService.notification
           .setListeners(onActionReceivedMethod: _onActionReceivedMethod);
 
       String? fcmToken = await FirebaseMessaging.instance.getToken();
-      print("Firebase token: $fcmToken");
+      print("Firebase Cloud Messaging token: $fcmToken");
     } catch (e) {
       print('Error ${e.toString()}');
     }

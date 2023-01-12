@@ -120,7 +120,19 @@ class MainTheme {
           ),
         ),
         primaryColor: primaryColor,
-        accentColor: primaryLightColor,
+        colorScheme: ColorScheme(
+          brightness: Brightness.light,
+          primary: primaryColor,
+          onPrimary: Colors.white,
+          secondary: primaryLightColor,
+          onSecondary: primaryDarkColor,
+          error: reprobadoColor,
+          onError: Colors.white,
+          background: lightGrey,
+          onBackground: darkGrey,
+          surface: lightGrey,
+          onSurface: darkGrey,
+        ),
       );
 
   static TextTheme get textTheme => TextTheme(

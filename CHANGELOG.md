@@ -28,6 +28,14 @@ Tipos de cambios
 
 ## [Unreleased]
 
+## Add
+
+- Pantalla de horario cuenta con colores aleatorios por asignatura guardados en caché
+
+### Fixed
+
+- Ahora soporta todos los estados de carrera
+
 ## [2.8.4] - 2022-05-30Z
 
 ### Added
