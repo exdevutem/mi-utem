@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:dio_http_cache/dio_http_cache.dart';
-
 import 'package:mi_utem/models/carrera.dart';
 import 'package:mi_utem/utils/dio_miutem_client.dart';
 
@@ -35,8 +34,19 @@ class CarreraService {
     );
 
     List<Carrera> carreras = Carrera.fromJsonList(response.data);
-    Carrera activa = carreras
-        .firstWhere((carrera) => carrera.estado!.toLowerCase() == "regular");
+
+    final estados = ["Regular", "Causal de Eliminacion"]
+        .reversed
+        .map((e) => e.toLowerCase())
+        .toList();
+
+    carreras.sort(
+      (a, b) => estados.indexOf(b.estado!.toLowerCase()).compareTo(
+            estados.indexOf(a.estado!.toLowerCase()),
+          ),
+    );
+
+    Carrera activa = carreras.first;
 
     return activa;
   }
