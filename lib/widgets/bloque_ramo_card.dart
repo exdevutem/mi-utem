@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
 import 'package:dotted_border/dotted_border.dart';
+import 'package:mi_utem/controllers/horario_controller.dart';
 
 import 'package:mi_utem/models/horario.dart';
+import 'package:mi_utem/themes/theme.dart';
 
 class BloqueRamoCard extends StatelessWidget {
   final Color colorTexto = Colors.white;
@@ -23,15 +25,15 @@ class BloqueRamoCard extends StatelessWidget {
       height: height + 20,
       width: width,
       decoration: BoxDecoration(
-        color: Color(0xFFFFFFFF),
+        color: Colors.white,
         border: Border(
           right: BorderSide(
-            color: Color(0xFFBDBDBD),
+            color: MainTheme.mediumGrey,
             style: BorderStyle.solid,
             width: 1,
           ),
           bottom: BorderSide(
-            color: Color(0xFFBDBDBD),
+            color: MainTheme.mediumGrey,
             style: BorderStyle.solid,
             width: 1,
           ),
@@ -39,73 +41,81 @@ class BloqueRamoCard extends StatelessWidget {
       ),
       child: Padding(
         padding: EdgeInsets.all(10),
-        child: InkWell(
-          child: Container(
-            decoration: BoxDecoration(
-              color: bloque.codigo != null ? Colors.teal : Color(0xFFF1F1F1),
-              borderRadius: BorderRadius.circular(15),
-            ),
-            child: bloque.asignatura != null
-                ? BloqueConInfo(bloque: bloque, colorTexto: colorTexto)
-                : DottedBorder(
-                    strokeWidth: 2,
-                    color: Color(0xFF7F7F7F),
-                    borderType: BorderType.RRect,
-                    radius: Radius.circular(15),
-                    child: Container(),
-                  ),
-          ),
-        ),
+        child: bloque.asignatura == null
+            ? BloqueVacio()
+            : BloqueOcupado(
+                bloque: bloque,
+                width: width,
+                height: height,
+                textColor: colorTexto),
       ),
     );
   }
 }
 
-class BloqueConInfo extends StatelessWidget {
-  const BloqueConInfo({
-    Key? key,
-    required this.bloque,
-    required this.colorTexto,
-  }) : super(key: key);
-
-  final BloqueHorario bloque;
-  final Color colorTexto;
+class BloqueVacio extends StatelessWidget {
+  const BloqueVacio({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Text(
-          "${bloque.codigo}",
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            color: colorTexto,
-            fontSize: 18,
-          ),
+    return Container(
+      decoration: BoxDecoration(
+        color: MainTheme.lightGrey,
+        borderRadius: BorderRadius.circular(15),
+      ),
+      child: DottedBorder(
+        strokeWidth: 2,
+        color: MainTheme.grey,
+        borderType: BorderType.RRect,
+        radius: Radius.circular(15),
+        child: Container(),
+      ),
+    );
+  }
+}
+
+class BloqueOcupado extends StatelessWidget {
+  const BloqueOcupado({
+    Key? key,
+    required this.bloque,
+    required this.width,
+    required this.height,
+    required this.textColor,
+    this.color = Colors.teal,
+  }) : super(key: key);
+
+  final BloqueHorario bloque;
+  final double width;
+  final double height;
+  final Color textColor;
+  final Color? color;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      child: Container(
+        decoration: BoxDecoration(
+          color: HorarioController.to.getColor(bloque.asignatura!),
+          borderRadius: BorderRadius.circular(15),
         ),
-        Text(
-          bloque.asignatura!.toUpperCase(),
-          maxLines: 3,
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            letterSpacing: 0.5,
-            wordSpacing: 1,
-            color: colorTexto,
-            fontSize: 18,
-          ),
+        child: Column(
+          children: <Widget>[
+            HorarioText.classCode(
+              bloque.codigo!,
+              color: textColor,
+            ),
+            HorarioText.className(
+              bloque.asignatura!.nombre!.toUpperCase(),
+              color: textColor,
+            ),
+            HorarioText.classLocation(
+              bloque.sala ?? "Sin sala",
+              color: textColor,
+            ),
+          ],
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         ),
-        Text(
-          bloque.sala != null ? bloque.sala! : "Sin sala",
-          textAlign: TextAlign.center,
-          maxLines: 2,
-          style: TextStyle(
-            color: colorTexto,
-            fontSize: 18,
-          ),
-        )
-      ],
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      ),
     );
   }
 }

@@ -24,12 +24,6 @@ class HorarioService {
 
       Horario horario = Horario.fromJson(response.data);
 
-      for (var dia in horario.horario!) {
-        for (var bloque in dia) {
-          print("HorarioService bloque ${bloque.codigo}");
-        }
-      }
-
       return horario;
     } on DioError catch (e) {
       print(e.message);
