@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:dotted_border/dotted_border.dart';
+import 'package:mi_utem/controllers/horario_controller.dart';
 
 import 'package:mi_utem/models/horario.dart';
 import 'package:mi_utem/themes/theme.dart';
@@ -94,7 +95,7 @@ class BloqueOcupado extends StatelessWidget {
     return InkWell(
       child: Container(
         decoration: BoxDecoration(
-          color: bloque.asignatura!.colorAsignatura,
+          color: HorarioController.to.getColor(bloque.asignatura!),
           borderRadius: BorderRadius.circular(15),
         ),
         child: Column(

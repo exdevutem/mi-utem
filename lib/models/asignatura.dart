@@ -1,9 +1,5 @@
-import 'dart:convert';
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 
-import 'package:get_storage/get_storage.dart';
 import 'package:recase/recase.dart';
 
 import 'package:mi_utem/models/evaluacion.dart';
@@ -18,7 +14,6 @@ class Asignatura {
   String? estado;
   String? docente;
   String? seccion;
-  Color? colorAsignatura;
   List<Evaluacion> notasParciales;
   num? notaExamen;
   num? notaPresentacion;
@@ -35,7 +30,6 @@ class Asignatura {
     this.id,
     this.nombre,
     this.codigo,
-    this.colorAsignatura,
     this.tipoHora,
     this.estado,
     this.notasParciales = const [],

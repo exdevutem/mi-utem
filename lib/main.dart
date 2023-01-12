@@ -7,7 +7,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:mi_utem/controllers/horario_controller.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:sentry/sentry.dart';
 
@@ -31,7 +30,6 @@ void main() async {
     },
     appRunner: () => runApp(MiUtem()),
   );
-  Get.put(HorarioController());
 }
 
 class MiUtem extends StatelessWidget {

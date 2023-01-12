@@ -128,7 +128,12 @@ class _CustomDrawerState extends State<CustomDrawer> {
                       onTap: () async {
                         Widget? screen = _getScreen(e["nombre"]);
                         if (screen != null) {
-                          await Get.to(() => screen);
+                          if (screen is HorarioScreen) {
+                            //TODO: Cambiar cuando haya router
+                            await Get.to(screen, binding: HorarioBinding());
+                          } else {
+                            await Get.to(() => screen);
+                          }
                           ReviewService.checkAndRequestReview();
                         }
                       },

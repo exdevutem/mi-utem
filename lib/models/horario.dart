@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:mi_utem/controllers/horario_controller.dart';
 import 'package:mi_utem/models/asignatura.dart';
 
 class Horario {

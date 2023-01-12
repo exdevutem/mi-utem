@@ -61,7 +61,12 @@ class QuickMenuCard extends StatelessWidget {
           child: InkWell(
             onTap: _route != null
                 ? () {
-                    Get.to(() => _route!);
+                    //TODO: Cambiar cuando haya router
+                    if (_route is HorarioScreen) {
+                      Get.to(_route, binding: HorarioBinding());
+                    } else {
+                      Get.to(() => _route!);
+                    }
                   }
                 : null,
             borderRadius: BorderRadius.all(Radius.circular(15)),
