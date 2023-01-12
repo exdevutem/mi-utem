@@ -28,6 +28,10 @@ Tipos de cambios
 
 ## [Unreleased]
 
+### Fixed
+
+- Ahora soporta todos los estados de carrera
+
 ## [2.8.4] - 2022-05-30Z
 
 ### Added

@@ -7,6 +7,7 @@ import 'package:mi_utem/models/usuario.dart';
 import 'package:mi_utem/services/carreras_service.dart';
 import 'package:mi_utem/services/perfil_service.dart';
 import 'package:mi_utem/utils/dio_miutem_client.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 class AuthService {
   static final Dio _dio = DioMiUtemClient.initDio;
@@ -95,6 +96,9 @@ class AuthService {
           version == versionCorrecta;
 
       if (!isLoggedIn) {
+        Sentry.configureScope(
+          (scope) => scope.setUser(null),
+        );
         await logOut();
       }
 

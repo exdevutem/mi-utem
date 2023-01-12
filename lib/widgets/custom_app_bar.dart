@@ -238,7 +238,7 @@ class CustomAppBar extends AppBar {
   /// The typographic styles to use for text in the app bar. Typically this is
   /// set along with [brightness] [backgroundColor], [iconTheme].
   ///
-  /// If this property is null, then [AppBarTheme.textTheme] of
+  /// If this property is null, then [AppBarTheme] of
   /// [ThemeData.appBarTheme] is used. If that is also null, then
   /// [ThemeData.primaryTextTheme] is used.
   final TextTheme? textTheme;

@@ -12,7 +12,7 @@ import 'package:mi_utem/services/config_service.dart';
 import 'package:mi_utem/services/notificaciones_service.dart';
 import 'package:mi_utem/themes/theme.dart';
 import 'package:responsive_framework/responsive_framework.dart';
-import 'package:sentry/sentry.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,10 +22,12 @@ void main() async {
   await Firebase.initializeApp();
   await ConfigService.getInstance();
   await NotificationsService.initialize();
-  await Sentry.init(
+  await SentryFlutter.init(
     (options) {
       options.dsn =
           'https://0af59b2ad2b44f4e8c9cad4ea8d5f32e@o507661.ingest.sentry.io/5599080';
+      options.attachScreenshot = true;
+      options.tracesSampleRate = 1.0;
     },
     appRunner: () => runApp(MiUtem()),
   );
@@ -42,7 +44,10 @@ class MiUtem extends StatelessWidget {
       title: 'Mi UTEM',
       theme: MainTheme.theme,
       home: SplashScreen(),
-      navigatorObservers: [FirebaseAnalyticsObserver(analytics: analytics)],
+      navigatorObservers: [
+        FirebaseAnalyticsObserver(analytics: analytics),
+        SentryNavigatorObserver(),
+      ],
       builder: (context, widget) => ResponsiveWrapper.builder(
         widget,
         maxWidth: 1200,
