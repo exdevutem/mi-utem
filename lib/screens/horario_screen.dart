@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:mi_utem/controllers/horario_controller.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:share_plus/share_plus.dart';
@@ -107,6 +108,7 @@ class _HorarioScreenState extends State<HorarioScreen> {
 
   Future<Horario> _getHorario() async {
     Horario horario = await HorarioService.getHorario();
+    HorarioController.to.setRandomColorsByHorario(horario);
     setState(() {
       _horario = horario;
     });
@@ -239,11 +241,7 @@ class _HorarioScreenState extends State<HorarioScreen> {
                 alignPanAxis: false,
                 clipBehavior: Clip.none,
                 constrained: false,
-                onInteractionUpdate: (interaction) {
-                  if (interaction.scale >= 0.8) {
-                    print("HEY");
-                  }
-                },
+                onInteractionUpdate: (interaction) {},
                 child: Screenshot(
                   controller: _screenshotController,
                   child: SafeArea(
