@@ -28,6 +28,8 @@ Tipos de cambios
 
 ## [Unreleased]
 
+## [2.9.0] - 2023-01-15Z
+
 ## Add
 
 - Pantalla de horario cuenta con colores aleatorios por asignatura guardados en caché
@@ -64,5 +66,6 @@ Tipos de cambios
 ### Removed
 
 - Lista de estudiantes en la pantalla de asignatura
+- Perfil de profesores
 - Perfil de profesores
 - Perfil de profesores
