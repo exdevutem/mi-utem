@@ -5,7 +5,6 @@ def ensure_keychain()
   create_keychain(
     name: ENV["KEYCHAIN_NAME"],
     password: ENV["KEYCHAIN_PASSWORD"],
-    default_keychain: true,
     unlock: true,
     timeout: 0,
   )
@@ -55,8 +54,8 @@ lane :ios_build_and_upload do |options|
     ensure_keychain()
     unlock_keychain(
       path: ENV["KEYCHAIN_NAME"],
-    password: ENV["KEYCHAIN_PASSWORD"],
-      set_default: true
+      password: ENV["KEYCHAIN_PASSWORD"],
+      set_default: is_ci
     )
     sync_code_signing(
       type: "appstore",
