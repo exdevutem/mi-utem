@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter_masked_text/flutter_masked_text.dart';
 import 'package:get/get.dart';
 import 'package:mi_utem/models/asignatura.dart';
@@ -8,15 +6,16 @@ import 'package:mi_utem/models/evaluacion.dart';
 class CalculatorController extends GetxController {
   static const maxPercentage = 100;
   static const maxGrade = 7;
-  static const minimumGradeForExam = 3;
+  static const minimumGradeForExam = 2.95;
   static const passingGrade = 3.95;
   static const examFinalWeight = 0.4;
-  static const presentationFinalWeight = maxPercentage - examFinalWeight;
+  static const presentationFinalWeight = 1 - examFinalWeight;
 
   final partialGrades = <IEvaluacion>[].obs;
   final percentageTextFieldControllers = <MaskedTextController>[].obs;
   final gradeTextFieldControllers = <MaskedTextController>[].obs;
   final examGrade = Rxn<double>();
+  final examGradeTextFieldController = MaskedTextController(mask: "0.0");
   final freeEditable = false.obs;
 
   static CalculatorController get to => Get.find();
@@ -41,6 +40,7 @@ class CalculatorController extends GetxController {
       final weight = (partialGrade.porcentaje ?? 0) / maxPercentage;
       presentationGrade += (partialGrade.nota ?? 0) * weight;
     }
+
     return presentationGrade != 0 ? presentationGrade : null;
   }
 
@@ -55,19 +55,19 @@ class CalculatorController extends GetxController {
   }
 
   bool get canTakeExam {
-    return calculatedPresentationGrade != null &&
+    return !hasMissingPartialGrade &&
+        calculatedPresentationGrade != null &&
         calculatedPresentationGrade! >= minimumGradeForExam &&
-        calculatedFinalGrade! < passingGrade;
+        calculatedPresentationGrade! < passingGrade;
   }
 
   double? get minimumRequiredExamGrade {
-    if (examGrade.value == null) {
-      if (calculatedPresentationGrade! < passingGrade) {
-        final weightedFinalGrade =
-            calculatedPresentationGrade! * presentationFinalWeight;
-        return (passingGrade - weightedFinalGrade) / examFinalWeight;
-      }
+    if (canTakeExam) {
+      final weightedPresentationGrade =
+          calculatedPresentationGrade! * presentationFinalWeight;
+      return (passingGrade - weightedPresentationGrade) / examFinalWeight;
     }
+
     return null;
   }
 
@@ -80,7 +80,6 @@ class CalculatorController extends GetxController {
   }
 
   double get missingPercentage {
-    log("missingPercentage: $maxPercentage - $percentageOfPartialGrades");
     return maxPercentage - percentageOfPartialGrades;
   }
 
@@ -114,7 +113,6 @@ class CalculatorController extends GetxController {
   double get percentageWithoutGrade {
     double percentage = 0;
     for (var partialGrade in partialGrades) {
-      log("percentageWithoutGrade ${partialGrade.nota} ${partialGrade.porcentaje}");
       if (partialGrade.nota == null) {
         percentage += (partialGrade.porcentaje ?? (suggestedPercentage ?? 0));
       }
@@ -127,7 +125,6 @@ class CalculatorController extends GetxController {
   }
 
   double? get suggestedGrade {
-    log("minimumMissingPartialGradesValue percentageWithoutGrade $percentageWithoutGrade $maxPercentage");
     if (hasMissingPartialGrade && percentageWithoutGrade > 0) {
       final weightOfMissingGrades = percentageWithoutGrade / maxPercentage;
       final requiredGradeValue =
@@ -155,14 +152,8 @@ class CalculatorController extends GetxController {
       final partialGrade = IEvaluacion.fromRemote(evaluacion);
       addGrade(partialGrade);
     }
-  }
 
-  void _printCurrentGrades() {
-    log("\n__________________________");
-    for (final partialGrade in partialGrades) {
-      log("${partialGrade.descripcion} | ${partialGrade.nota?.toStringAsFixed(1)} | ${partialGrade.porcentaje?.toStringAsFixed(0)}%");
-    }
-    log("__________________________\n");
+    setExamGrade(asignatura.notaExamen);
   }
 
   void changeGradeAt(int index, IEvaluacion changedGrade) {
@@ -170,10 +161,23 @@ class CalculatorController extends GetxController {
     if (grade.editable || freeEditable.value) {
       partialGrades[index] = changedGrade;
 
-      _printCurrentGrades();
+      if (hasMissingPartialGrade) {
+        clearExamGrade();
+      }
     } else {
       throw Exception("No se puede editar una nota que está asignada");
     }
+  }
+
+  void clearExamGrade() {
+    examGrade.value = null;
+    examGradeTextFieldController.text = "";
+  }
+
+  void setExamGrade(num? grade) {
+    examGrade.value = grade?.toDouble();
+    examGradeTextFieldController.text =
+        grade?.toDouble().toStringAsFixed(1) ?? "";
   }
 
   void addGrade(IEvaluacion grade) {
@@ -181,16 +185,15 @@ class CalculatorController extends GetxController {
     percentageTextFieldControllers.add(
       MaskedTextController(
         mask: "000",
-        text: grade.porcentaje?.toStringAsFixed(0) ?? "",
+        text: grade.porcentaje?.toDouble().toStringAsFixed(0) ?? "",
       ),
     );
     gradeTextFieldControllers.add(
       MaskedTextController(
         mask: "0.0",
-        text: grade.nota?.toStringAsFixed(1) ?? "",
+        text: grade.nota?.toDouble().toStringAsFixed(1) ?? "",
       ),
     );
-    _printCurrentGrades();
   }
 
   void removeGradeAt(int index) {

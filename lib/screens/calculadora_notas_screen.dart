@@ -1,6 +1,5 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_masked_text/flutter_masked_text.dart';
 import 'package:get/get.dart';
 import 'package:mi_utem/controllers/calculator_controller.dart';
 import 'package:mi_utem/models/asignatura.dart';
@@ -17,11 +16,6 @@ class CalculadoraNotasScreen extends StatelessWidget {
     Key? key,
     this.asignaturaInicial,
   }) : super(key: key);
-
-  final MaskedTextController _examenController =
-      new MaskedTextController(mask: '0.0');
-  final MaskedTextController _presentacionController =
-      new MaskedTextController(mask: '0.0');
 
   @override
   Widget build(BuildContext context) {
@@ -107,10 +101,12 @@ class CalculadoraNotasScreen extends StatelessWidget {
                                 style: TextStyle(fontSize: 16),
                               ),
                               Container(
-                                width: 60,
+                                width: 80,
                                 margin: EdgeInsets.only(left: 15),
                                 child: Obx(
                                   () => TextField(
+                                    controller:
+                                        controller.examGradeTextFieldController,
                                     textAlign: TextAlign.center,
                                     onChanged: (String value) {
                                       controller.examGrade.value =
@@ -120,20 +116,19 @@ class CalculadoraNotasScreen extends StatelessWidget {
                                     },
                                     enabled: controller.canTakeExam,
                                     decoration: InputDecoration(
-                                      hintText: controller.canTakeExam &&
-                                              controller
-                                                      .minimumRequiredExamGrade !=
-                                                  null
-                                          ? "≥${controller.minimumRequiredExamGrade!.toStringAsFixed(1)}"
-                                          : "",
+                                      hintText: controller
+                                              .minimumRequiredExamGrade
+                                              ?.toStringAsFixed(1) ??
+                                          "",
                                       filled: !controller.canTakeExam,
                                       fillColor: Colors.grey.withOpacity(0.2),
                                       disabledBorder: MainTheme
                                           .theme.inputDecorationTheme.border!
                                           .copyWith(
-                                              borderSide: BorderSide(
-                                        color: Colors.grey[300]!,
-                                      )),
+                                        borderSide: BorderSide(
+                                          color: Colors.grey[300]!,
+                                        ),
+                                      ),
                                     ),
                                     keyboardType:
                                         TextInputType.numberWithOptions(
@@ -145,35 +140,44 @@ class CalculadoraNotasScreen extends StatelessWidget {
                             ],
                           ),
                           Container(height: 10),
-                          Row(
-                            children: [
-                              Text(
-                                "Presentacion",
-                                style: TextStyle(fontSize: 16),
-                              ),
-                              Container(
-                                width: 60,
-                                margin: EdgeInsets.only(left: 15),
-                                child: TextField(
-                                  controller: _presentacionController,
-                                  textAlign: TextAlign.center,
-                                  enabled: false,
-                                  decoration: InputDecoration(
-                                    hintText: "Nota",
-                                    disabledBorder: MainTheme
-                                        .theme.inputDecorationTheme.border!
-                                        .copyWith(
-                                      borderSide: BorderSide(
-                                        color: Colors.transparent,
+                          Obx(
+                            () => Row(
+                              children: [
+                                Text(
+                                  "Pres.",
+                                  style: TextStyle(fontSize: 16),
+                                ),
+                                Container(
+                                  width: 80,
+                                  margin: EdgeInsets.only(left: 15),
+                                  child: TextField(
+                                    controller: TextEditingController(
+                                      text: controller
+                                              .calculatedPresentationGrade
+                                              ?.toStringAsFixed(1) ??
+                                          "",
+                                    ),
+                                    textAlign: TextAlign.center,
+                                    enabled: false,
+                                    decoration: InputDecoration(
+                                      hintText: "Nota",
+                                      disabledBorder: MainTheme
+                                          .theme.inputDecorationTheme.border!
+                                          .copyWith(
+                                        borderSide: BorderSide(
+                                          color: Colors.transparent,
+                                        ),
                                       ),
                                     ),
+                                    keyboardType:
+                                        TextInputType.numberWithOptions(
+                                      decimal: true,
+                                    ),
                                   ),
-                                  keyboardType: TextInputType.numberWithOptions(
-                                      decimal: true),
                                 ),
-                              ),
-                            ],
-                          )
+                              ],
+                            ),
+                          ),
                         ],
                       ),
                     ],
@@ -217,6 +221,7 @@ class CalculadoraNotasScreen extends StatelessWidget {
                                 controller.partialGrades[i];
                             return NotaListItem(
                               evaluacion: IEvaluacion.fromRemote(evaluacion),
+                              editable: true,
                               gradeController:
                                   controller.gradeTextFieldControllers[i],
                               percentageController:

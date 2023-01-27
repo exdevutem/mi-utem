@@ -7,6 +7,7 @@ import 'package:mi_utem/themes/theme.dart';
 
 class NotaListItem extends StatelessWidget {
   final IEvaluacion evaluacion;
+  final bool editable;
   final TextEditingController? gradeController;
   final TextEditingController? percentageController;
   final Function(IEvaluacion)? onChanged;
@@ -15,6 +16,7 @@ class NotaListItem extends StatelessWidget {
   NotaListItem({
     Key? key,
     required this.evaluacion,
+    this.editable = false,
     this.gradeController,
     this.percentageController,
     this.onChanged,
@@ -23,17 +25,12 @@ class NotaListItem extends StatelessWidget {
 
   final _controller = CalculatorController.to;
 
-  String? get _suggestedGrade {
-    return _controller.suggestedGrade?.toStringAsFixed(1);
+  String get _suggestedGrade {
+    return _controller.suggestedGrade?.toStringAsFixed(1) ?? "0.0";
   }
 
   String? get _suggestedPercentage {
     return _controller.suggestedPercentage?.toStringAsFixed(0);
-  }
-
-  bool get _editable {
-    return evaluacion.editable ||
-        _controller.freeEditable.value && onChanged != null;
   }
 
   @override
@@ -46,6 +43,10 @@ class NotaListItem extends StatelessWidget {
       mask: "000",
       text: evaluacion.porcentaje?.toStringAsFixed(0) ?? "",
     );
+
+    final showSuggestedGrade = editable;
+
+    final hintText = showSuggestedGrade ? _suggestedGrade : "--";
 
     return Flex(
       direction: Axis.horizontal,
@@ -64,7 +65,7 @@ class NotaListItem extends StatelessWidget {
           child: Center(
             child: TextField(
               controller: gradeController ?? defaultGradeController,
-              enabled: _editable,
+              enabled: editable,
               onChanged: (String value) {
                 final grade = double.tryParse(
                   value.replaceAll(",", "."),
@@ -79,7 +80,7 @@ class NotaListItem extends StatelessWidget {
               },
               textAlign: TextAlign.center,
               decoration: InputDecoration(
-                hintText: _suggestedGrade ?? "0.0",
+                hintText: hintText,
                 disabledBorder:
                     MainTheme.theme.inputDecorationTheme.border!.copyWith(
                   borderSide: BorderSide(
@@ -109,7 +110,7 @@ class NotaListItem extends StatelessWidget {
 
                 //_controller.changeGradeAt(widget.index, changedGrade);
               },
-              enabled: _editable,
+              enabled: editable,
               decoration: InputDecoration(
                 hintText: _suggestedPercentage ?? "Peso",
                 suffixText: "%",

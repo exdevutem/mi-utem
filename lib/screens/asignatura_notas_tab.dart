@@ -1,14 +1,10 @@
-import 'dart:developer';
-
 import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_masked_text/flutter_masked_text.dart';
 import 'package:mi_utem/controllers/calculator_controller.dart';
 import 'package:mi_utem/models/asignatura.dart';
 import 'package:mi_utem/models/evaluacion.dart';
 import 'package:mi_utem/services/asignaturas_service.dart';
-import 'package:mi_utem/services/config_service.dart';
 import 'package:mi_utem/themes/theme.dart';
 import 'package:mi_utem/widgets/custom_error_widget.dart';
 import 'package:mi_utem/widgets/loading_indicator.dart';
@@ -17,11 +13,9 @@ import 'package:mi_utem/widgets/pull_to_refresh.dart';
 
 class AsignaturaNotasTab extends StatefulWidget {
   final Asignatura asignatura;
-  final Function(Asignatura)? onNotas;
 
   AsignaturaNotasTab({
     Key? key,
-    this.onNotas,
     required this.asignatura,
   }) : super(key: key);
 
@@ -30,20 +24,12 @@ class AsignaturaNotasTab extends StatefulWidget {
 }
 
 class _AsignaturaNotasTabState extends State<AsignaturaNotasTab> {
-  MaskedTextController _examenController =
-      new MaskedTextController(mask: '0.0');
-  MaskedTextController _presentacionController =
-      new MaskedTextController(mask: '0.0');
-
   late Future<Asignatura?> _futureAsignatura;
   Asignatura? _asignatura;
-
-  FirebaseRemoteConfig? _remoteConfig;
 
   @override
   void initState() {
     super.initState();
-    _remoteConfig = ConfigService.config;
     FirebaseAnalytics.instance
         .setCurrentScreen(screenName: 'AsignaturaNotasTab');
     _futureAsignatura = _getNotasByCodigoAsignatura();
@@ -52,32 +38,17 @@ class _AsignaturaNotasTabState extends State<AsignaturaNotasTab> {
   Future<Asignatura?> _getNotasByCodigoAsignatura(
       [bool refresh = false]) async {
     try {
-      Asignatura? asignatura =
-          await AsignaturasService.getNotasByCodigoAsignatura(
+      final asignatura = await AsignaturasService.getNotasByCodigoAsignatura(
         widget.asignatura.codigo,
         widget.asignatura.id,
         refresh,
       );
 
-      log(asignatura?.notasParciales.toString() ?? "null");
-
-      CalculatorController.to.loadGradesFromAsignatura(asignatura!);
-
-      log(CalculatorController.to.partialGrades.toString());
-
       setState(() {
-        _asignatura = asignatura;
-        _examenController.text =
-            asignatura.notaExamen?.toStringAsFixed(1) ?? "S/N";
-        _presentacionController.text =
-            asignatura.notaPresentacion?.toStringAsFixed(1) ?? "S/N";
         _asignatura = asignatura;
       });
 
-      if (asignatura.notasParciales.length > 0 &&
-          _remoteConfig!.getBool(ConfigService.CALCULADORA_MOSTRAR)) {
-        widget.onNotas!(asignatura);
-      }
+      CalculatorController.to.loadGradesFromAsignatura(asignatura);
 
       return asignatura;
     } catch (e) {
@@ -91,7 +62,6 @@ class _AsignaturaNotasTabState extends State<AsignaturaNotasTab> {
 
   @override
   Widget build(BuildContext context) {
-    //_procesarNotas(prueba);
     return FutureBuilder(
       future: _futureAsignatura,
       builder: (context, snapshot) {
@@ -109,6 +79,16 @@ class _AsignaturaNotasTabState extends State<AsignaturaNotasTab> {
           } else if (snapshot.hasData &&
               (_asignatura?.notasParciales != null &&
                   _asignatura!.notasParciales.length > 0)) {
+            final asignatura = snapshot.data as Asignatura;
+            final examGradeController = MaskedTextController(
+              mask: '0.0',
+              text: asignatura.notaExamen?.toStringAsFixed(1) ?? "",
+            );
+            final presentationGradeController = MaskedTextController(
+              mask: '0.0',
+              text: asignatura.notaPresentacion?.toStringAsFixed(1) ?? "",
+            );
+
             content = ListView(
               physics: AlwaysScrollableScrollPhysics(),
               padding: EdgeInsets.all(10),
@@ -170,7 +150,7 @@ class _AsignaturaNotasTabState extends State<AsignaturaNotasTab> {
                                         width: 60,
                                         margin: EdgeInsets.only(left: 15),
                                         child: TextField(
-                                          controller: _examenController,
+                                          controller: examGradeController,
                                           textAlign: TextAlign.center,
                                           enabled: false,
                                           decoration: InputDecoration(
@@ -192,14 +172,15 @@ class _AsignaturaNotasTabState extends State<AsignaturaNotasTab> {
                                   Row(
                                     children: [
                                       Text(
-                                        "Presentacion",
+                                        "Presentación",
                                         style: TextStyle(fontSize: 16),
                                       ),
                                       Container(
                                         width: 60,
                                         margin: EdgeInsets.only(left: 15),
                                         child: TextField(
-                                          controller: _presentacionController,
+                                          controller:
+                                              presentationGradeController,
                                           textAlign: TextAlign.center,
                                           enabled: false,
                                           decoration: InputDecoration(

@@ -1,8 +1,6 @@
-import 'package:flutter/material.dart';
-
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import 'package:mi_utem/models/asignatura.dart';
 import 'package:mi_utem/widgets/custom_error_widget.dart';
 import 'package:mi_utem/widgets/loading_indicator.dart';
@@ -142,21 +140,25 @@ class _AsignaturaResumenTabState extends State<AsignaturaResumenTab> {
                               //     : null,
                             ),
                             Divider(height: 5, indent: 20, endIndent: 20),
-                            ListTile(
-                              title: Text("Tipo de asignatura"),
-                              subtitle: Text(_asignatura.tipoAsignatura!),
-                            ),
-                            Divider(height: 5, indent: 20, endIndent: 20),
+                            if (_asignatura.tipoAsignatura != null) ...[
+                              ListTile(
+                                title: Text("Tipo de asignatura"),
+                                subtitle: Text(_asignatura.tipoAsignatura!),
+                              ),
+                              Divider(height: 5, indent: 20, endIndent: 20),
+                            ],
                             ListTile(
                               title: Text("Tipo de hora"),
                               subtitle: Text(_asignatura.tipoHora!),
                             ),
                             Divider(height: 5, indent: 20, endIndent: 20),
-                            ListTile(
-                              title: Text("Horario"),
-                              subtitle: Text(_asignatura.horario!),
-                            ),
-                            Divider(height: 5, indent: 20, endIndent: 20),
+                            if (_asignatura.horario != null) ...[
+                              ListTile(
+                                title: Text("Horario"),
+                                subtitle: Text(_asignatura.horario!),
+                              ),
+                              Divider(height: 5, indent: 20, endIndent: 20),
+                            ],
                             ListTile(
                               title: Text("Intentos"),
                               subtitle: Text(_asignatura.intentos.toString()),
