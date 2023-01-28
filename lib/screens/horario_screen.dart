@@ -182,7 +182,7 @@ class HorarioScreen extends GetView<HorarioController> {
             transformationController: _controller,
             maxScale: 1,
             minScale: 0.1,
-            alignPanAxis: false,
+            panAxis: PanAxis.aligned,
             clipBehavior: Clip.none,
             constrained: false,
             onInteractionUpdate: (interaction) {},

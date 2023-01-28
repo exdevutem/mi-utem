@@ -52,7 +52,7 @@ class NoticiaCard extends StatelessWidget {
                         titulo!,
                         maxLines: 3,
                         overflow: TextOverflow.ellipsis,
-                        style: Get.theme.textTheme.bodyText1,
+                        style: Get.theme.textTheme.bodyLarge,
                       ),
 
                       /* Text(

@@ -100,7 +100,7 @@ class _MainScreenState extends State<MainScreen> {
                 child: MarkdownBody(
                   data: _greetingText,
                   styleSheet: MarkdownStyleSheet(
-                    p: Get.textTheme.headline2!
+                    p: Get.textTheme.displayMedium!
                         .copyWith(fontWeight: FontWeight.normal),
                   ),
                 ),

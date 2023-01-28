@@ -64,13 +64,13 @@ class _LoginTextFormFieldState extends State<LoginTextFormField> {
           labelStyle: TextStyle(
               color: _focusNode!.hasFocus
                   ? Get.theme.primaryColor
-                  : (_error ? Get.theme.errorColor : Color(0x80FFFFFF))),
+                  : (_error ? Get.theme.colorScheme.error : Color(0x80FFFFFF))),
           errorStyle: TextStyle(color: Colors.red),
           hintStyle: TextStyle(color: Color(0x80FFFFFF)),
           prefixIcon: Icon(widget.icon,
               color: _focusNode!.hasFocus
                   ? Get.theme.primaryColor
-                  : (_error ? Get.theme.errorColor : Colors.white)),
+                  : (_error ? Get.theme.colorScheme.error : Colors.white)),
           hintText: widget.hintText,
           labelText: widget.labelText,
         ),
