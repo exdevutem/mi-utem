@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 
-import 'package:badges/badges.dart';
+import 'package:badges/badges.dart' as badge;
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:get/get.dart';
 import 'package:mdi/mdi.dart';
@@ -109,8 +109,8 @@ class _CustomDrawerState extends State<CustomDrawer> {
                           fontPackage: e["icono"]["fontPackage"])),
                       title: Text(e["nombre"]),
                       trailing: e["esNuevo"]
-                          ? Badge(
-                              shape: BadgeShape.square,
+                          ? badge.Badge(
+                              shape: badge.BadgeShape.square,
                               borderRadius: BorderRadius.circular(10),
                               padding: EdgeInsets.symmetric(
                                   horizontal: 6, vertical: 3),
