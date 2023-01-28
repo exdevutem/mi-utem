@@ -79,28 +79,33 @@ class _ClassBlock extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      child: Container(
-        decoration: BoxDecoration(
-          color: HorarioController.to.getColor(block.asignatura!) ?? color,
+    return Container(
+      decoration: BoxDecoration(
+        color: HorarioController.to.getColor(block.asignatura!) ?? color,
+        borderRadius: BorderRadius.circular(15),
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
           borderRadius: BorderRadius.circular(15),
-        ),
-        child: Column(
-          children: <Widget>[
-            HorarioText.classCode(
-              block.codigo!,
-              color: textColor,
-            ),
-            HorarioText.className(
-              block.asignatura!.nombre!.toUpperCase(),
-              color: textColor,
-            ),
-            HorarioText.classLocation(
-              block.sala ?? "Sin sala",
-              color: textColor,
-            ),
-          ],
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          onTap: () {},
+          child: Column(
+            children: <Widget>[
+              HorarioText.classCode(
+                block.codigo!,
+                color: textColor,
+              ),
+              HorarioText.className(
+                block.asignatura!.nombre!.toUpperCase(),
+                color: textColor,
+              ),
+              HorarioText.classLocation(
+                block.sala ?? "Sin sala",
+                color: textColor,
+              ),
+            ],
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          ),
         ),
       ),
     );

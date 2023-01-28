@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:mi_utem/controllers/horario_controller.dart';
+import 'package:mi_utem/models/horario.dart';
 import 'package:mi_utem/screens/horario/widgets/horario_main_scroller.dart';
 import 'package:mi_utem/services/config_service.dart';
 import 'package:mi_utem/services/review_service.dart';
@@ -32,31 +33,31 @@ class HorarioScreen extends GetView<HorarioController> {
           Obx(
             () => controller.horario.value != null
                 ? IconButton(
-                    onPressed: () {
-                      _screenshotController
-                          .capture(delay: const Duration(milliseconds: 10))
-                          .then((Uint8List? image) async {
-                        if (image != null) {
-                          final directory =
-                              await getApplicationDocumentsDirectory();
-                          final imagePath =
-                              await File('${directory.path}/horario.png')
-                                  .create();
-                          await imagePath.writeAsBytes(image);
-
-                          /// Share Plugin
-                          await Share.shareXFiles([XFile(imagePath.path)]);
-                        }
-                      }).catchError((onError) {
-                        print(onError);
-                      });
-                    },
+                    onPressed: () =>
+                        _captureScreenshot(controller.horario.value!),
                     icon: Icon(Icons.share),
                   )
                 : Container(),
           )
         ],
       );
+
+  void _captureScreenshot(Horario horario) async {
+    final horarioScroller = HorarioMainScroller(
+      horario: horario,
+    );
+    final image = await _screenshotController.captureFromWidget(
+      horarioScroller.basicHorario,
+      targetSize: Size(horarioScroller.totalWidth, horarioScroller.totalHeight),
+    );
+
+    final directory = await getApplicationDocumentsDirectory();
+    final imagePath = await File('${directory.path}/horario.png').create();
+    await imagePath.writeAsBytes(image);
+
+    /// Share Plugin
+    await Share.shareXFiles([XFile(imagePath.path)]);
+  }
 
   Future<void> _onRefresh() async {
     await controller.getHorarioData();

@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 class HorarioIndicator extends StatefulWidget {
-  static const _height = 5.0;
-  static const _circleRadius = 10.0;
+  static const _height = 2.0;
+  static const _circleRadius = 8.0;
 
   final EdgeInsets initialMargin;
   final double heightByMinute;
