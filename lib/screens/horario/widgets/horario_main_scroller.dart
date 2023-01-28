@@ -152,6 +152,8 @@ class _HorarioMainScrollerState extends State<HorarioMainScroller> {
 
       final contentXPosition = _blockContentController.value.getTranslation().x;
 
+      _periodHeaderController.value.setTranslationRaw(0, yPosition, 0);
+
       _blockContentController.value
           .setTranslationRaw(contentXPosition, yPosition, 0);
 

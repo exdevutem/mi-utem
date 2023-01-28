@@ -67,6 +67,8 @@ class _ClassBlock extends StatelessWidget {
   final double height;
   final Color textColor;
   final Color? color;
+  final Function(BloqueHorario)? onTap;
+  final Function(BloqueHorario)? onLongPress;
 
   const _ClassBlock({
     Key? key,
@@ -75,6 +77,8 @@ class _ClassBlock extends StatelessWidget {
     required this.height,
     required this.textColor,
     this.color = Colors.teal,
+    this.onTap,
+    this.onLongPress,
   }) : super(key: key);
 
   @override
@@ -88,7 +92,9 @@ class _ClassBlock extends StatelessWidget {
         color: Colors.transparent,
         child: InkWell(
           borderRadius: BorderRadius.circular(15),
-          onTap: () {},
+          onTap: onTap != null ? () => onTap?.call(block) : null,
+          onLongPress:
+              onLongPress != null ? () => onLongPress?.call(block) : null,
           child: Column(
             children: <Widget>[
               HorarioText.classCode(
