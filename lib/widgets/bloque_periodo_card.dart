@@ -23,18 +23,6 @@ class BloquePeriodoCard extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: Color(0xFFF5F5F5),
-        border: Border(
-          right: BorderSide(
-            color: Color(0xFFBDBDBD),
-            style: BorderStyle.solid,
-            width: 1,
-          ),
-          bottom: BorderSide(
-            color: Color(0xFFBDBDBD),
-            style: BorderStyle.solid,
-            width: 1,
-          ),
-        ),
       ),
       height: height,
       width: width,
