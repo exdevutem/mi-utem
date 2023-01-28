@@ -8,6 +8,7 @@ class HorarioDaysHeader extends StatelessWidget {
   final double height;
   final double dayWidth;
   final Color borderColor;
+  final Color backgroundColor;
   final double borderWidth;
 
   const HorarioDaysHeader({
@@ -16,6 +17,7 @@ class HorarioDaysHeader extends StatelessWidget {
     required this.height,
     required this.dayWidth,
     this.borderColor = MainTheme.dividerColor,
+    this.backgroundColor = MainTheme.lightGrey,
     this.borderWidth = 2,
   });
 
@@ -28,7 +30,7 @@ class HorarioDaysHeader extends StatelessWidget {
                 day: day!,
                 height: height,
                 width: dayWidth,
-                active: false,
+                backgroundColor: backgroundColor,
               ),
             )
             .toList(),
@@ -41,7 +43,7 @@ class HorarioDaysHeader extends StatelessWidget {
     return Table(
       defaultColumnWidth: FixedColumnWidth(dayWidth),
       border: TableBorder(
-        horizontalInside: BorderSide(
+        verticalInside: BorderSide(
           color: borderColor,
           style: BorderStyle.solid,
           width: borderWidth,

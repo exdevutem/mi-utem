@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:mi_utem/themes/theme.dart';
 
 class HorarioCorner extends StatelessWidget {
   final double height;
   final double width;
+  final Color backgroundColor;
 
   const HorarioCorner({
     Key? key,
     required this.height,
     required this.width,
+    this.backgroundColor = MainTheme.lightGrey,
   });
 
   List<TableRow> get _children => [
@@ -16,7 +19,7 @@ class HorarioCorner extends StatelessWidget {
             Container(
               height: height,
               width: width,
-              color: Color(0xFFBDBDBD),
+              color: backgroundColor,
             ),
           ],
         ),

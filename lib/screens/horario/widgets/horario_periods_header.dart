@@ -8,6 +8,7 @@ class HorarioPeriodsHeader extends StatelessWidget {
   final double periodHeight;
   final double width;
   final Color borderColor;
+  final Color backgroundColor;
   final double borderWidth;
 
   const HorarioPeriodsHeader({
@@ -15,6 +16,7 @@ class HorarioPeriodsHeader extends StatelessWidget {
     required this.horario,
     required this.periodHeight,
     required this.width,
+    this.backgroundColor = MainTheme.lightGrey,
     this.borderColor = MainTheme.dividerColor,
     this.borderWidth = 2,
   });
@@ -32,7 +34,7 @@ class HorarioPeriodsHeader extends StatelessWidget {
                 fin: horario.horasTermino[e.key],
                 height: periodHeight,
                 width: width,
-                active: false,
+                backgroundColor: backgroundColor,
               ),
             ],
           ),
