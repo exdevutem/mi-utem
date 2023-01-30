@@ -334,10 +334,10 @@ packages:
     dependency: "direct main"
     description:
       name: extended_image
-      sha256: d7e32f19a5c5ee3bfbcb3ff68492d3857bae00acd56e38048a8d53218871998b
+      sha256: "5854d0d05ee0c687d1852af9db05f15cfe058520fa56f417075705c5bce965d4"
       url: "https://pub.dev"
     source: hosted
-    version: "6.3.4"
+    version: "6.4.0"
   extended_image_library:
     dependency: transitive
     description:
