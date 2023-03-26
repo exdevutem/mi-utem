@@ -1,9 +1,12 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_uxcam/flutter_uxcam.dart';
+import 'package:flutter_uxcam/flutter_uxcam_observer.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:mi_utem/screens/splash_screen.dart';
@@ -37,6 +40,16 @@ class MiUtem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final uxCamProd = "fxkjj5ulr7vb4yf";
+    final uxCamDev = "0y6p88obpgiug1g";
+
+    FlutterUxcam.optIntoSchematicRecordings();
+    FlutterUxConfig config = FlutterUxConfig(
+      userAppKey: kDebugMode ? uxCamDev : uxCamProd,
+      enableAutomaticScreenNameTagging: true,
+    );
+    FlutterUxcam.startWithConfiguration(config);
+
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Mi UTEM',
@@ -45,6 +58,7 @@ class MiUtem extends StatelessWidget {
       navigatorObservers: [
         FirebaseAnalyticsObserver(analytics: analytics),
         SentryNavigatorObserver(),
+        FlutterUxcamNavigatorObserver()
       ],
       builder: (context, widget) => ResponsiveWrapper.builder(
         widget,
