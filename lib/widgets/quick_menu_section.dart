@@ -39,7 +39,7 @@ class _QuickMenuSectionState extends State<QuickMenuSection> {
           padding: EdgeInsets.symmetric(horizontal: 20),
           child: Text(
             "Acceso rápido".toUpperCase(),
-            style: Get.textTheme.subtitle1!.copyWith(
+            style: Get.textTheme.titleMedium!.copyWith(
               fontWeight: FontWeight.bold,
             ),
           ),

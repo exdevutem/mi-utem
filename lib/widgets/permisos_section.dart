@@ -33,7 +33,7 @@ class _PermisosCovidSectionState extends State<PermisosCovidSection> {
             children: [
               Text(
                 "Permisos activos".toUpperCase(),
-                style: Get.textTheme.subtitle1!.copyWith(
+                style: Get.textTheme.titleMedium!.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
               ),

@@ -57,8 +57,8 @@ class CustomAppBar extends AppBar {
               ),
             ),
           ),
-          toolbarTextStyle: textTheme?.bodyText2,
-          titleTextStyle: textTheme?.headline6,
+          toolbarTextStyle: textTheme?.bodyMedium,
+          titleTextStyle: textTheme?.titleLarge,
         );
 
   /// A widget to display before the [title].

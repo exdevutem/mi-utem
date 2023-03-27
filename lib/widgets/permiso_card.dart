@@ -40,7 +40,7 @@ class PermisoCard extends StatelessWidget {
                         Text(permiso.perfil!),
                         Text(
                           permiso.motivo!,
-                          style: Get.textTheme.bodyText1!.copyWith(
+                          style: Get.textTheme.bodyLarge!.copyWith(
                             color: MainTheme.primaryColor,
                             fontWeight: FontWeight.bold,
                           ),
@@ -48,7 +48,7 @@ class PermisoCard extends StatelessWidget {
                         if (permiso.campus != null)
                           Text(
                             "${permiso.campus ?? ''} (${permiso.campus!})",
-                            style: Get.textTheme.bodyText2!.copyWith(
+                            style: Get.textTheme.bodyMedium!.copyWith(
                               fontWeight: FontWeight.bold,
                             ),
                           ),
