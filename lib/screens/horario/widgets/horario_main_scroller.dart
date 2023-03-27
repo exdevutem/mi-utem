@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:mi_utem/controllers/horario_controller.dart';
 import 'package:mi_utem/models/horario.dart';
 import 'package:mi_utem/screens/horario/widgets/horario_blocks_content.dart';
 import 'package:mi_utem/screens/horario/widgets/horario_corner.dart';
 import 'package:mi_utem/screens/horario/widgets/horario_days_header.dart';
 import 'package:mi_utem/screens/horario/widgets/horario_indicator.dart';
 import 'package:mi_utem/screens/horario/widgets/horario_periods_header.dart';
-import 'package:vector_math/vector_math_64.dart' as vector;
 
 class HorarioMainScroller extends StatefulWidget {
   static const double blockWidth = 320.0;
@@ -21,14 +21,18 @@ class HorarioMainScroller extends StatefulWidget {
   static const double defaultMinScale = 0.1;
 
   final Horario horario;
+  final bool showActive;
+  final HorarioController controller;
 
   const HorarioMainScroller({
     Key? key,
     required this.horario,
+    required this.controller,
+    this.showActive = true,
   }) : super(key: key);
 
   @override
-  State<HorarioMainScroller> createState() => _HorarioMainScrollerState();
+  _HorarioMainScrollerState createState() => _HorarioMainScrollerState();
 
   int get daysCount => horario.horarioEnlazado[0].length;
   int get periodsCount => horario.horarioEnlazado.length ~/ 2;
@@ -47,15 +51,19 @@ class HorarioMainScroller extends StatefulWidget {
       );
 
   Widget get _horarioDaysHeader => HorarioDaysHeader(
+        controller: controller,
         horario: horario,
         height: dayHeight,
         dayWidth: dayWidth,
+        showActiveDay: showActive,
       );
 
   Widget get _horarioPeriodsHeader => HorarioPeriodsHeader(
+        controller: controller,
         horario: horario,
         width: periodWidth,
         periodHeight: periodHeight,
+        showActivePeriod: showActive,
       );
 
   Widget get _horarioCorner => HorarioCorner(
@@ -85,98 +93,21 @@ class HorarioMainScroller extends StatefulWidget {
 }
 
 class _HorarioMainScrollerState extends State<HorarioMainScroller> {
-  double _zoom = 0.5;
-
-  final _blockContentController = TransformationController();
-  final _daysHeaderController = TransformationController();
-  final _periodHeaderController = TransformationController();
-  final _cornerController = TransformationController();
-
   @override
   void initState() {
-    _initController(_blockContentController);
-    _initController(_daysHeaderController);
-    _initController(_periodHeaderController);
-    _initController(_cornerController);
-
-    _blockContentController.addListener(() {
-      final xPosition = _blockContentController.value.getTranslation().x;
-      final yPosition = _blockContentController.value.getTranslation().y;
-      final zoom = _blockContentController.value.getMaxScaleOnAxis();
-
-      _daysHeaderController.value.setTranslationRaw(xPosition, 0, 0);
-      _periodHeaderController.value.setTranslationRaw(0, yPosition, 0);
-
-      _daysHeaderController.value.setDiagonal(
-        vector.Vector4(zoom, zoom, zoom, 1),
-      );
-      _periodHeaderController.value.setDiagonal(
-        vector.Vector4(zoom, zoom, zoom, 1),
-      );
-      _cornerController.value.setDiagonal(
-        vector.Vector4(zoom, zoom, zoom, 1),
-      );
-
-      setState(() {
-        _zoom = zoom;
-      });
+    widget.controller.blockContentController.addListener(() {
+      setState(() {});
     });
-
-    _daysHeaderController.addListener(() {
-      final xPosition = _daysHeaderController.value.getTranslation().x;
-      final zoom = _daysHeaderController.value.getMaxScaleOnAxis();
-
-      final contentYPosition = _blockContentController.value.getTranslation().y;
-
-      _blockContentController.value
-          .setTranslationRaw(xPosition, contentYPosition, 0);
-
-      _blockContentController.value.setDiagonal(
-        vector.Vector4(zoom, zoom, zoom, 1),
-      );
-      _periodHeaderController.value.setDiagonal(
-        vector.Vector4(zoom, zoom, zoom, 1),
-      );
-      _cornerController.value.setDiagonal(
-        vector.Vector4(zoom, zoom, zoom, 1),
-      );
-
-      setState(() {
-        _zoom = zoom;
-      });
+    widget.controller.cornerController.addListener(() {
+      setState(() {});
     });
-
-    _periodHeaderController.addListener(() {
-      final yPosition = _periodHeaderController.value.getTranslation().y;
-      final zoom = _periodHeaderController.value.getMaxScaleOnAxis();
-
-      final contentXPosition = _blockContentController.value.getTranslation().x;
-
-      _periodHeaderController.value.setTranslationRaw(0, yPosition, 0);
-
-      _blockContentController.value
-          .setTranslationRaw(contentXPosition, yPosition, 0);
-
-      _blockContentController.value.setDiagonal(
-        vector.Vector4(zoom, zoom, zoom, 1),
-      );
-      _daysHeaderController.value.setDiagonal(
-        vector.Vector4(zoom, zoom, zoom, 1),
-      );
-      _cornerController.value.setDiagonal(
-        vector.Vector4(zoom, zoom, zoom, 1),
-      );
-
-      setState(() {
-        _zoom = zoom;
-      });
+    widget.controller.periodHeaderController.addListener(() {
+      setState(() {});
+    });
+    widget.controller.daysHeaderController.addListener(() {
+      setState(() {});
     });
     super.initState();
-  }
-
-  void _initController(TransformationController controller) {
-    controller.value = Matrix4.identity();
-    controller.value.setDiagonal(vector.Vector4(_zoom, _zoom, _zoom, 1));
   }
 
   @override
@@ -189,11 +120,13 @@ class _HorarioMainScrollerState extends State<HorarioMainScroller> {
             height: widget.periodsHeight,
             width: widget.daysWidth,
             margin: EdgeInsets.only(
-              top: HorarioMainScroller.dayHeight * _zoom,
-              left: HorarioMainScroller.periodWidth * _zoom,
+              top: HorarioMainScroller.dayHeight * widget.controller.zoom.value,
+              left: HorarioMainScroller.periodWidth *
+                  widget.controller.zoom.value,
             ),
             child: InteractiveViewer(
-              transformationController: _blockContentController,
+              transformationController:
+                  widget.controller.blockContentController,
               maxScale: HorarioMainScroller.defaultMaxScale,
               minScale: HorarioMainScroller.defaultMinScale,
               alignPanAxis: false,
@@ -209,10 +142,11 @@ class _HorarioMainScrollerState extends State<HorarioMainScroller> {
             width: widget.daysWidth,
             height: HorarioMainScroller.dayHeight,
             margin: EdgeInsets.only(
-              left: HorarioMainScroller.periodWidth * _zoom,
+              left: HorarioMainScroller.periodWidth *
+                  widget.controller.zoom.value,
             ),
             child: InteractiveViewer(
-              transformationController: _daysHeaderController,
+              transformationController: widget.controller.daysHeaderController,
               maxScale: HorarioMainScroller.defaultMaxScale,
               minScale: HorarioMainScroller.defaultMinScale,
               alignPanAxis: false,
@@ -229,7 +163,7 @@ class _HorarioMainScrollerState extends State<HorarioMainScroller> {
             width: HorarioMainScroller.periodWidth,
             height: HorarioMainScroller.dayHeight,
             child: InteractiveViewer(
-              transformationController: _cornerController,
+              transformationController: widget.controller.cornerController,
               maxScale: HorarioMainScroller.defaultMaxScale,
               minScale: HorarioMainScroller.defaultMinScale,
               alignPanAxis: false,
@@ -247,10 +181,11 @@ class _HorarioMainScrollerState extends State<HorarioMainScroller> {
             width: HorarioMainScroller.periodWidth,
             height: widget.periodsHeight,
             margin: EdgeInsets.only(
-              top: HorarioMainScroller.dayHeight * _zoom,
+              top: HorarioMainScroller.dayHeight * widget.controller.zoom.value,
             ),
             child: InteractiveViewer(
-              transformationController: _periodHeaderController,
+              transformationController:
+                  widget.controller.periodHeaderController,
               maxScale: HorarioMainScroller.defaultMaxScale,
               minScale: HorarioMainScroller.defaultMinScale,
               alignPanAxis: false,
@@ -263,6 +198,7 @@ class _HorarioMainScrollerState extends State<HorarioMainScroller> {
                   children: [
                     widget._horarioPeriodsHeader,
                     HorarioIndicator(
+                      controller: widget.controller,
                       maxWidth: widget.daysWidth,
                       initialMargin: EdgeInsets.only(
                         top: HorarioMainScroller.dayHeight,

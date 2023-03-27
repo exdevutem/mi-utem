@@ -22,14 +22,20 @@ class HorarioScreen extends GetView<HorarioController> {
     Key? key,
   }) : super(key: key);
 
-  final bool _dayActive = true;
-
   final FirebaseRemoteConfig? _remoteConfig = ConfigService.config;
   final ScreenshotController _screenshotController = ScreenshotController();
 
   CustomAppBar get _appBar => CustomAppBar(
         title: Text("Horario"),
         actions: [
+          Obx(
+            () => controller.horario.value != null
+                ? IconButton(
+                    onPressed: () => _moveViewportToCurrentTime(),
+                    icon: Icon(Icons.center_focus_strong),
+                  )
+                : Container(),
+          ),
           Obx(
             () => controller.horario.value != null
                 ? IconButton(
@@ -42,9 +48,15 @@ class HorarioScreen extends GetView<HorarioController> {
         ],
       );
 
+  void _moveViewportToCurrentTime() {
+    //controller.moveViewportToCurrentTime();
+  }
+
   void _captureScreenshot(Horario horario) async {
     final horarioScroller = HorarioMainScroller(
+      controller: controller,
       horario: horario,
+      showActive: false,
     );
     final image = await _screenshotController.captureFromWidget(
       horarioScroller.basicHorario,
@@ -104,6 +116,7 @@ class HorarioScreen extends GetView<HorarioController> {
             child: Screenshot(
               controller: _screenshotController,
               child: HorarioMainScroller(
+                controller: controller,
                 horario: controller.horario.value!,
               ),
             ),

@@ -1,11 +1,13 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:mi_utem/controllers/horario_controller.dart';
 
 class HorarioIndicator extends StatefulWidget {
   static const _height = 2.0;
   static const _circleRadius = 8.0;
 
+  final HorarioController controller;
   final EdgeInsets initialMargin;
   final double heightByMinute;
   final double maxWidth;
@@ -13,6 +15,7 @@ class HorarioIndicator extends StatefulWidget {
 
   const HorarioIndicator({
     Key? key,
+    required this.controller,
     required this.initialMargin,
     required this.heightByMinute,
     required this.maxWidth,
@@ -41,39 +44,45 @@ class _HorarioIndicatorState extends State<HorarioIndicator> {
     super.dispose();
   }
 
-  double get _minutesFromEight =>
-      DateTime.now().hour * 60 + DateTime.now().minute - 480;
-
   double get _centerLineYPosition =>
-      widget.initialMargin.top + (_minutesFromEight * widget.heightByMinute);
+      (widget.controller.minutesFromStart * widget.heightByMinute);
 
   double get _startLineXPosition => widget.initialMargin.left;
 
   @override
   Widget build(BuildContext context) {
+    final circleTop = _centerLineYPosition - HorarioIndicator._circleRadius;
+    final circleLeft = _startLineXPosition - HorarioIndicator._circleRadius;
+
+    final lineTop = _centerLineYPosition - HorarioIndicator._height / 2;
+    final lineLeft = _startLineXPosition;
+
     return Stack(
       children: [
-        Container(
-          margin: EdgeInsets.only(
-            top: _centerLineYPosition - HorarioIndicator._circleRadius,
-            left: _startLineXPosition - HorarioIndicator._circleRadius,
+        if (circleTop > 0 && circleLeft > 0)
+          Container(
+            margin: EdgeInsets.only(
+              top: circleTop,
+              left: circleLeft,
+            ),
+            height: HorarioIndicator._circleRadius * 2,
+            width: HorarioIndicator._circleRadius * 2,
+            decoration: BoxDecoration(
+              color: widget.color,
+              borderRadius:
+                  BorderRadius.circular(HorarioIndicator._circleRadius),
+            ),
           ),
-          height: HorarioIndicator._circleRadius * 2,
-          width: HorarioIndicator._circleRadius * 2,
-          decoration: BoxDecoration(
+        if (lineTop > 0 && lineLeft > 0)
+          Container(
+            margin: EdgeInsets.only(
+              top: lineTop,
+              left: lineLeft,
+            ),
+            height: HorarioIndicator._height,
+            width: widget.maxWidth,
             color: widget.color,
-            borderRadius: BorderRadius.circular(HorarioIndicator._circleRadius),
           ),
-        ),
-        Container(
-          margin: EdgeInsets.only(
-            top: _centerLineYPosition - HorarioIndicator._height / 2,
-            left: _startLineXPosition,
-          ),
-          height: HorarioIndicator._height,
-          width: widget.maxWidth,
-          color: widget.color,
-        ),
       ],
     );
   }

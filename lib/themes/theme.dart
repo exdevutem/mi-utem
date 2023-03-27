@@ -138,55 +138,55 @@ class MainTheme {
       );
 
   static TextTheme get textTheme => TextTheme(
-        headline1: TextStyle(
+        displayLarge: TextStyle(
           fontWeight: FontWeight.bold,
           fontSize: 36,
           color: darkGrey,
         ),
-        headline2: TextStyle(
+        displayMedium: TextStyle(
           fontWeight: FontWeight.bold,
           fontSize: 30,
           color: darkGrey,
         ),
-        headline3: TextStyle(
+        displaySmall: TextStyle(
           fontWeight: FontWeight.bold,
           fontSize: 26,
           color: darkGrey,
         ),
-        headline4: TextStyle(
+        headlineMedium: TextStyle(
           fontSize: 24,
           fontWeight: FontWeight.bold,
           color: darkGrey,
         ),
-        headline5: TextStyle(
+        headlineSmall: TextStyle(
           fontWeight: FontWeight.bold,
           fontSize: 22,
           color: grey,
         ),
-        headline6: TextStyle(
+        titleLarge: TextStyle(
           fontSize: 20,
           color: grey,
         ),
-        subtitle1: TextStyle(
+        titleMedium: TextStyle(
           fontWeight: FontWeight.normal,
           fontSize: 18,
           color: darkGrey,
         ),
-        subtitle2: TextStyle(
+        titleSmall: TextStyle(
           fontSize: 16,
           color: grey,
         ),
-        button: TextStyle(
+        labelLarge: TextStyle(
           fontSize: 18,
           fontWeight: FontWeight.bold,
           color: Colors.white,
         ),
-        bodyText1: TextStyle(
+        bodyLarge: TextStyle(
           color: darkGrey,
           fontWeight: FontWeight.w500,
           fontSize: 16,
         ),
-        bodyText2: TextStyle(
+        bodyMedium: TextStyle(
           color: grey,
           fontSize: 14,
         ),

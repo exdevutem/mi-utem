@@ -141,7 +141,7 @@ class LoadedScreen extends StatelessWidget {
             Container(height: 20),
             Text(
               "Permiso generado el ${f.format(permiso.fechaSolicitud!)}",
-              style: Get.textTheme.caption,
+              style: Get.textTheme.bodySmall,
             ),
             Container(height: 20),
           ],
@@ -174,11 +174,11 @@ class UsuarioDetalle extends StatelessWidget {
                 Text(
                   usuario.nombre!,
                   maxLines: 2,
-                  style: Get.textTheme.bodyText1,
+                  style: Get.textTheme.bodyLarge,
                 ),
                 Text(
                   usuario.rut!.formateado(true),
-                  style: Get.textTheme.bodyText2,
+                  style: Get.textTheme.bodyMedium,
                 ),
               ],
             ),
@@ -272,14 +272,14 @@ class BloqueDetalle extends StatelessWidget {
               Text(
                 top.toUpperCase(),
                 maxLines: 2,
-                style: Get.textTheme.caption!.copyWith(
+                style: Get.textTheme.bodySmall!.copyWith(
                   fontWeight: FontWeight.bold,
                   color: MainTheme.grey,
                 ),
               ),
               Text(
                 bottom ?? "Sin información",
-                style: Get.textTheme.bodyText1,
+                style: Get.textTheme.bodyLarge,
               ),
             ],
           ),

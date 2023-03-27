@@ -1,21 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:mi_utem/controllers/horario_controller.dart';
 import 'package:mi_utem/models/horario.dart';
 import 'package:mi_utem/themes/theme.dart';
 import 'package:mi_utem/widgets/bloque_dias_card.dart';
 
 class HorarioDaysHeader extends StatelessWidget {
+  final HorarioController? controller;
   final Horario horario;
   final double height;
   final double dayWidth;
   final Color borderColor;
   final Color backgroundColor;
   final double borderWidth;
+  final bool showActiveDay;
 
   const HorarioDaysHeader({
     Key? key,
+    this.controller,
     required this.horario,
     required this.height,
     required this.dayWidth,
+    this.showActiveDay = true,
     this.borderColor = MainTheme.dividerColor,
     this.backgroundColor = MainTheme.lightGrey,
     this.borderWidth = 2,
@@ -25,11 +30,15 @@ class HorarioDaysHeader extends StatelessWidget {
     return [
       TableRow(
         children: horario.diasHorario
+            .asMap()
+            .entries
             .map(
-              (day) => BloqueDiasCard(
-                day: day!,
+              (entry) => BloqueDiasCard(
+                day: entry.value!,
                 height: height,
                 width: dayWidth,
+                active: showActiveDay &&
+                    entry.key == controller?.indexOfCurrentDayStartingAtMonday,
                 backgroundColor: backgroundColor,
               ),
             )
