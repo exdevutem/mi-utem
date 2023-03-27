@@ -1,11 +1,14 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:mi_utem/controllers/horario_controller.dart';
 
 class HorarioIndicator extends StatefulWidget {
   static const _height = 2.0;
-  static const _circleRadius = 8.0;
+  static const _circleRadius = 10.0;
 
   final HorarioController controller;
   final EdgeInsets initialMargin;
@@ -59,20 +62,6 @@ class _HorarioIndicatorState extends State<HorarioIndicator> {
 
     return Stack(
       children: [
-        if (circleTop > 0 && circleLeft > 0)
-          Container(
-            margin: EdgeInsets.only(
-              top: circleTop,
-              left: circleLeft,
-            ),
-            height: HorarioIndicator._circleRadius * 2,
-            width: HorarioIndicator._circleRadius * 2,
-            decoration: BoxDecoration(
-              color: widget.color,
-              borderRadius:
-                  BorderRadius.circular(HorarioIndicator._circleRadius),
-            ),
-          ),
         if (lineTop > 0 && lineLeft > 0)
           Container(
             margin: EdgeInsets.only(
@@ -82,6 +71,43 @@ class _HorarioIndicatorState extends State<HorarioIndicator> {
             height: HorarioIndicator._height,
             width: widget.maxWidth,
             color: widget.color,
+          ),
+        if (circleTop > 0 && circleLeft > 0)
+          GestureDetector(
+            onTap: () {
+              log("Tapped indicator");
+            },
+            child: Obx(
+              () => AnimatedContainer(
+                duration: const Duration(milliseconds: 300),
+                margin: EdgeInsets.only(
+                  top: circleTop,
+                  left: circleLeft,
+                ),
+                height: HorarioIndicator._circleRadius * 2,
+                width: widget.controller.indicatorIsOpen.value
+                    ? 50
+                    : HorarioIndicator._circleRadius * 2,
+                decoration: BoxDecoration(
+                  color: widget.color,
+                  borderRadius:
+                      BorderRadius.circular(HorarioIndicator._circleRadius),
+                ),
+                child: widget.controller.indicatorIsOpen.value
+                    ? Center(
+                        child: Text(
+                          "17:22",
+                          overflow: TextOverflow.fade,
+                          maxLines: 1,
+                          textAlign: TextAlign.center,
+                          style: Get.textTheme.bodySmall?.copyWith(
+                            color: Colors.white,
+                          ),
+                        ),
+                      )
+                    : Container(),
+              ),
+            ),
           ),
       ],
     );

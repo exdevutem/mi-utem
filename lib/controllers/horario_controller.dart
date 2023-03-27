@@ -23,6 +23,7 @@ class HorarioController extends GetxController {
   final loadingHorario = false.obs;
   final usedColors = <Color>[];
   final zoom = 0.5.obs;
+  final indicatorIsOpen = false.obs;
 
   final blockContentController = TransformationController();
   final daysHeaderController = TransformationController();

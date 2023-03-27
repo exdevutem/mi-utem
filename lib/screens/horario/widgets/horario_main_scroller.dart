@@ -109,6 +109,11 @@ class _HorarioMainScrollerState extends State<HorarioMainScroller> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
       color: Colors.white,
