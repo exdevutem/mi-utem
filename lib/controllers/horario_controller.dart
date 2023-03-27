@@ -1,14 +1,17 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:mi_utem/models/asignatura.dart';
 import 'package:mi_utem/models/horario.dart';
+import 'package:mi_utem/screens/horario/widgets/horario_main_scroller.dart';
+import 'package:mi_utem/services/config_service.dart';
 import 'package:mi_utem/services/horarios_service.dart';
 import 'package:vector_math/vector_math_64.dart' as vector;
 
 class HorarioController extends GetxController {
+  static const daysCount = 6;
+  static const periodsCount = 9;
+
   static const startTime = "7:55";
   static const periodDuration = Duration(minutes: 90);
   static const periodGap = Duration(minutes: 5);
@@ -37,7 +40,7 @@ class HorarioController extends GetxController {
     return availableColors;
   }
 
-  DateTime _now = DateTime.parse("2023-03-27 09:45:00");
+  DateTime _now = DateTime.parse("2023-03-29 14:45:00");
 
   double get minutesFromStart {
     final now = _now;
@@ -52,10 +55,10 @@ class HorarioController extends GetxController {
     return now.difference(startDateTime).inMinutes.toDouble();
   }
 
-  int get indexOfCurrentDayStartingAtMonday {
+  int? get indexOfCurrentDayStartingAtMonday {
     final now = _now;
     final day = now.weekday;
-    return day - 1;
+    return day > daysCount ? null : day - 1;
   }
 
   int? get indexOfCurrentPeriod {
@@ -65,8 +68,6 @@ class HorarioController extends GetxController {
 
     final period = minutes ~/ periodBlockDuration;
     final minutesModule = minutes % periodBlockDuration;
-
-    log("minutes $minutes period $period minutesModule: $minutesModule periodBlockDuration: $periodBlockDuration periodGap: ${periodGap.inMinutes} other ${periodBlockDuration - periodGap.inMinutes}");
 
     if (minutesModule >= periodGap.inMinutes &&
         minutesModule <= (periodBlockDuration - periodGap.inMinutes)) {
@@ -84,10 +85,9 @@ class HorarioController extends GetxController {
   }
 
   void _init() {
-    _initController(blockContentController);
-    _initController(daysHeaderController);
-    _initController(periodHeaderController);
-    _initController(cornerController);
+    zoom.value = ConfigService.config.getDouble(ConfigService.HORARIO_ZOOM);
+
+    _initControllers();
 
     _setScrollControllerListeners();
   }
@@ -180,10 +180,72 @@ class HorarioController extends GetxController {
     });
   }
 
-  void _initController(TransformationController controller) {
-    controller.value = Matrix4.identity();
-    controller.value
+  void _initControllers() {
+    blockContentController.value = Matrix4.identity();
+    periodHeaderController.value = Matrix4.identity();
+    daysHeaderController.value = Matrix4.identity();
+    cornerController.value = Matrix4.identity();
+
+    moveViewportToCurrentPeriodAndDay();
+
+    blockContentController.value
         .setDiagonal(vector.Vector4(zoom.value, zoom.value, zoom.value, 1));
+    periodHeaderController.value
+        .setDiagonal(vector.Vector4(zoom.value, zoom.value, zoom.value, 1));
+    daysHeaderController.value
+        .setDiagonal(vector.Vector4(zoom.value, zoom.value, zoom.value, 1));
+    cornerController.value
+        .setDiagonal(vector.Vector4(zoom.value, zoom.value, zoom.value, 1));
+  }
+
+  void moveViewportToCurrentPeriodAndDay() {
+    final periodIndex = indexOfCurrentPeriod ?? 0;
+    final dayIndex = indexOfCurrentDayStartingAtMonday ?? 0;
+
+    moveViewportToPeriodIndexAndDayIndex(periodIndex, dayIndex);
+  }
+
+  void moveViewportToPeriodIndexAndDayIndex(int periodIndex, int dayIndex) {
+    final blockWidth = HorarioMainScroller.blockWidth;
+    final x = (dayIndex * blockWidth) + (blockWidth / 2);
+
+    final blockHeight = HorarioMainScroller.blockHeight;
+    final y = (periodIndex * blockHeight) + (blockHeight / 2);
+
+    moveViewportTo(x, y);
+  }
+
+  void moveViewportTo(double x, double y) {
+    final viewportWidth = Get.width - Get.mediaQuery.padding.horizontal;
+    final viewportHeight = Get.height - Get.mediaQuery.padding.vertical;
+
+    x = (x + (HorarioMainScroller.periodWidth / 2)) * zoom.value -
+        (viewportWidth / 2);
+    y = (y + (HorarioMainScroller.dayHeight / 2)) * zoom.value -
+        (viewportHeight / 2);
+
+    x = x < 0 ? 0 : x;
+    y = y < 0 ? 0 : y;
+
+    final maxXPosition =
+        (HorarioMainScroller.daysWidth + HorarioMainScroller.periodWidth) *
+                zoom.value -
+            viewportWidth;
+    final maxYPosition =
+        (HorarioMainScroller.periodsHeight + HorarioMainScroller.dayHeight) *
+                zoom.value -
+            viewportHeight +
+            kToolbarHeight;
+
+    x = x > maxXPosition ? maxXPosition : x;
+    y = y > maxYPosition ? maxYPosition : y;
+
+    blockContentController.value.setTranslationRaw(-x, -y, 0);
+    periodHeaderController.value.setTranslationRaw(0, -y, 0);
+    daysHeaderController.value.setTranslationRaw(-x, 0, 0);
+
+    // ignore: invalid_use_of_visible_for_testing_member, invalid_use_of_protected_member
+    blockContentController.notifyListeners();
   }
 
   void addAsignaturaAndSetColor(Asignatura asignatura, {Color? color}) {

@@ -1,8 +1,7 @@
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
-
 import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mdi/mdi.dart';
 
@@ -308,24 +307,24 @@ class ConfigService {
 
   static ConfigService? _instance;
 
-  static FirebaseRemoteConfig? _remoteConfig;
+  static late FirebaseRemoteConfig _remoteConfig;
 
-  static FirebaseRemoteConfig? get config => _remoteConfig;
+  static FirebaseRemoteConfig get config => _remoteConfig;
 
   static Future<ConfigService?> getInstance() async {
     if (_instance == null) {
       _remoteConfig = FirebaseRemoteConfig.instance;
-      await initialise();
+      await initialize();
     } else {
       await update();
     }
     return _instance;
   }
 
-  static Future initialise() async {
+  static Future initialize() async {
     try {
-      await _remoteConfig!.setDefaults(defaults);
-      await _remoteConfig!.fetchAndActivate();
+      await _remoteConfig.setDefaults(defaults);
+      await _remoteConfig.fetchAndActivate();
     } catch (exception) {
       print(
           'Unable to fetch remote config. Cached or default values will be used');
@@ -334,11 +333,11 @@ class ConfigService {
 
   static Future update() async {
     try {
-      await _remoteConfig!.setConfigSettings(RemoteConfigSettings(
+      await _remoteConfig.setConfigSettings(RemoteConfigSettings(
           minimumFetchInterval: Duration.zero,
           fetchTimeout: Duration(minutes: 1)));
-      await _remoteConfig!.fetchAndActivate();
-      await _remoteConfig!.setConfigSettings(RemoteConfigSettings(
+      await _remoteConfig.fetchAndActivate();
+      await _remoteConfig.setConfigSettings(RemoteConfigSettings(
           minimumFetchInterval: Duration(hours: 12),
           fetchTimeout: Duration(minutes: 1)));
     } catch (exception) {

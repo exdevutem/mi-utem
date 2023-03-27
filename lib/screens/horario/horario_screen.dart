@@ -1,14 +1,12 @@
 import 'dart:io';
 
 import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:mi_utem/controllers/horario_controller.dart';
 import 'package:mi_utem/models/horario.dart';
 import 'package:mi_utem/screens/horario/widgets/horario_main_scroller.dart';
-import 'package:mi_utem/services/config_service.dart';
 import 'package:mi_utem/services/review_service.dart';
 import 'package:mi_utem/widgets/custom_app_bar.dart';
 import 'package:mi_utem/widgets/loading_indicator.dart';
@@ -17,13 +15,14 @@ import 'package:path_provider/path_provider.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:share_plus/share_plus.dart';
 
-class HorarioScreen extends GetView<HorarioController> {
+class HorarioScreen extends StatelessWidget {
   HorarioScreen({
     Key? key,
   }) : super(key: key);
 
-  final FirebaseRemoteConfig? _remoteConfig = ConfigService.config;
   final ScreenshotController _screenshotController = ScreenshotController();
+
+  final HorarioController controller = Get.put(HorarioController());
 
   CustomAppBar get _appBar => CustomAppBar(
         title: Text("Horario"),
@@ -49,7 +48,7 @@ class HorarioScreen extends GetView<HorarioController> {
       );
 
   void _moveViewportToCurrentTime() {
-    //controller.moveViewportToCurrentTime();
+    controller.moveViewportToCurrentPeriodAndDay();
   }
 
   void _captureScreenshot(Horario horario) async {
@@ -60,7 +59,8 @@ class HorarioScreen extends GetView<HorarioController> {
     );
     final image = await _screenshotController.captureFromWidget(
       horarioScroller.basicHorario,
-      targetSize: Size(horarioScroller.totalWidth, horarioScroller.totalHeight),
+      targetSize:
+          Size(HorarioMainScroller.totalWidth, HorarioMainScroller.totalHeight),
     );
 
     final directory = await getApplicationDocumentsDirectory();
@@ -77,7 +77,7 @@ class HorarioScreen extends GetView<HorarioController> {
 
   @override
   Widget build(BuildContext context) {
-    double zoom = _remoteConfig!.getDouble(ConfigService.HORARIO_ZOOM);
+    controller.getHorarioData();
 
     ReviewService.addScreen("HorarioScreen");
     FirebaseAnalytics.instance.setCurrentScreen(screenName: 'HorarioScreen');

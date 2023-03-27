@@ -34,14 +34,12 @@ class HorarioMainScroller extends StatefulWidget {
   @override
   _HorarioMainScrollerState createState() => _HorarioMainScrollerState();
 
-  int get daysCount => horario.horarioEnlazado[0].length;
-  int get periodsCount => horario.horarioEnlazado.length ~/ 2;
+  static double get daysWidth => dayWidth * HorarioController.daysCount;
+  static double get periodsHeight =>
+      periodHeight * HorarioController.periodsCount;
 
-  double get daysWidth => dayWidth * daysCount;
-  double get periodsHeight => periodHeight * periodsCount;
-
-  double get totalWidth => daysWidth + periodWidth;
-  double get totalHeight => periodsHeight + dayHeight;
+  static double get totalWidth => daysWidth + periodWidth;
+  static double get totalHeight => periodsHeight + dayHeight;
 
   Widget get _horarioBlocksContent => HorarioBlocksContent(
         horario: horario,
@@ -117,8 +115,8 @@ class _HorarioMainScrollerState extends State<HorarioMainScroller> {
       child: Stack(
         children: [
           Container(
-            height: widget.periodsHeight,
-            width: widget.daysWidth,
+            height: HorarioMainScroller.periodsHeight,
+            width: HorarioMainScroller.daysWidth,
             margin: EdgeInsets.only(
               top: HorarioMainScroller.dayHeight * widget.controller.zoom.value,
               left: HorarioMainScroller.periodWidth *
@@ -139,7 +137,7 @@ class _HorarioMainScrollerState extends State<HorarioMainScroller> {
             ),
           ),
           Container(
-            width: widget.daysWidth,
+            width: HorarioMainScroller.daysWidth,
             height: HorarioMainScroller.dayHeight,
             margin: EdgeInsets.only(
               left: HorarioMainScroller.periodWidth *
@@ -179,7 +177,7 @@ class _HorarioMainScrollerState extends State<HorarioMainScroller> {
           ),
           Container(
             width: HorarioMainScroller.periodWidth,
-            height: widget.periodsHeight,
+            height: HorarioMainScroller.periodsHeight,
             margin: EdgeInsets.only(
               top: HorarioMainScroller.dayHeight * widget.controller.zoom.value,
             ),
@@ -199,7 +197,7 @@ class _HorarioMainScrollerState extends State<HorarioMainScroller> {
                     widget._horarioPeriodsHeader,
                     HorarioIndicator(
                       controller: widget.controller,
-                      maxWidth: widget.daysWidth,
+                      maxWidth: HorarioMainScroller.daysWidth,
                       initialMargin: EdgeInsets.only(
                         top: HorarioMainScroller.dayHeight,
                         left: HorarioMainScroller.periodWidth,
