@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get_storage/get_storage.dart';
+
 import 'package:mi_utem/models/rut.dart';
 import 'package:mi_utem/models/usuario.dart';
 import 'package:mi_utem/services/auth_service.dart';

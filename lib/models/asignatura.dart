@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-
-import 'package:recase/recase.dart';
-
 import 'package:mi_utem/models/evaluacion.dart';
 import 'package:mi_utem/models/usuario.dart';
 import 'package:mi_utem/themes/theme.dart';
+import 'package:recase/recase.dart';
 
 class Asignatura {
   String? id;
@@ -14,7 +12,7 @@ class Asignatura {
   String? estado;
   String? docente;
   String? seccion;
-  List<Evaluacion> notasParciales;
+  List<REvaluacion> notasParciales;
   num? notaExamen;
   num? notaPresentacion;
   num? notaFinal;
@@ -60,10 +58,10 @@ class Asignatura {
       estado: ReCase(json['estado'] ?? '').titleCase,
       docente: ReCase(json['docente'] ?? '').titleCase,
       seccion: json['seccion'],
-      notasParciales: Evaluacion.fromJsonList(json['notasParciales']),
-      notaFinal: json['notaFinal'],
-      notaPresentacion: json['notaPresentacion'],
-      notaExamen: json['notaExamen'],
+      notasParciales: REvaluacion.fromJsonList(json['notasParciales']),
+      notaFinal: json['notaFinal'] as num?,
+      notaPresentacion: json['notaPresentacion'] as num?,
+      notaExamen: json['notaExamen'] as num?,
       // estudiantes: Usuario.fromJsonList(json["estudiantes"]),
       asistencia: Asistencia(asistidos: json['asistenciaAlDia']),
       // tipoAsignatura: ReCase(json['tipoAsignatura'].toString()).titleCase,
@@ -93,76 +91,6 @@ class Asignatura {
         return MainTheme.reprobadoColor;
       default:
         return MainTheme.inscritoColor;
-    }
-  }
-
-  num get notaPresentacionCalculada {
-    double presentacion = 0;
-    for (var evaluacion in notasParciales) {
-      if (evaluacion.nota != null && evaluacion.porcentaje != null) {
-        presentacion += evaluacion.nota! * (evaluacion.porcentaje! / 100);
-      }
-    }
-
-    return presentacion;
-  }
-
-  bool get estanTodasLasNotas {
-    for (var evaluacion in notasParciales) {
-      if (evaluacion.nota == null) {
-        return false;
-      }
-    }
-    return true;
-  }
-
-  bool get puedeDarExamen {
-    if (estanTodasLasNotas) {
-      return 2.95 <= this.notaPresentacionCalculada &&
-          this.notaPresentacionCalculada < 3.95;
-    }
-    return false;
-  }
-
-  bool get estaReprobandoCalculado {
-    return notaPresentacionCalculada < 2.95;
-  }
-
-  bool get estaAprobandoCalculado {
-    return notaPresentacionCalculada >= 3.95;
-  }
-
-  Color get colorPorEstadoCalculado {
-    if (estanTodasLasNotas) {
-      if (estaAprobandoCalculado) {
-        return MainTheme.aprobadoColor;
-      } else if (estaReprobandoCalculado) {
-        return MainTheme.reprobadoColor;
-      }
-    }
-    return MainTheme.inscritoColor;
-  }
-
-  String get estadoCalculado {
-    if (estanTodasLasNotas) {
-      if (estaAprobandoCalculado) {
-        return "Aprobado";
-      } else if (estaReprobandoCalculado) {
-        return "Reprobado";
-      }
-    }
-    return "Inscrito";
-  }
-
-  num get examenMinimoCalculado {
-    return (((3.95 - notaPresentacionCalculada * 0.6) / 0.4) * 10).ceil() / 10;
-  }
-
-  num get notaFinalCalculada {
-    if (puedeDarExamen && notaExamen != null) {
-      return notaPresentacionCalculada * 0.6 + notaExamen! * 0.4;
-    } else {
-      return notaPresentacionCalculada;
     }
   }
 }

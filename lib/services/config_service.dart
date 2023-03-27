@@ -275,6 +275,20 @@ class ConfigService {
         "route": "/AsignaturasScreen",
       },
       {
+        "nombre": "Calculadora",
+        "degradado": {
+          "colors": ["#000046", "#1CB5E0"],
+          "begin": [0, -1],
+          "end": [0, 1]
+        },
+        "icono": {
+          "codePoint": Mdi.calculator.codePoint,
+          "fontFamily": "Material Design Icons",
+          "fontPackage": "mdi"
+        },
+        "route": "/CalculadoraNotasScreen"
+      },
+      {
         "nombre": "Horario",
         "degradado": {
           "colors": ["#F55B9A", "#F9B16E"],
