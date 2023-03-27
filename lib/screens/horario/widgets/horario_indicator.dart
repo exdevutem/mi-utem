@@ -1,14 +1,13 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:mi_utem/controllers/horario_controller.dart';
 
 class HorarioIndicator extends StatefulWidget {
   static const _height = 2.0;
   static const _circleRadius = 10.0;
+  static const _tapAreaRadius = 15.0;
 
   final HorarioController controller;
   final EdgeInsets initialMargin;
@@ -54,8 +53,12 @@ class _HorarioIndicatorState extends State<HorarioIndicator> {
 
   @override
   Widget build(BuildContext context) {
-    final circleTop = _centerLineYPosition - HorarioIndicator._circleRadius;
-    final circleLeft = _startLineXPosition - HorarioIndicator._circleRadius;
+    final circleTapAreaTop = _centerLineYPosition -
+        HorarioIndicator._circleRadius -
+        HorarioIndicator._tapAreaRadius;
+    final circleTapAreaLeft = _startLineXPosition -
+        HorarioIndicator._circleRadius -
+        HorarioIndicator._tapAreaRadius;
 
     final lineTop = _centerLineYPosition - HorarioIndicator._height / 2;
     final lineLeft = _startLineXPosition;
@@ -72,44 +75,114 @@ class _HorarioIndicatorState extends State<HorarioIndicator> {
             width: widget.maxWidth,
             color: widget.color,
           ),
-        if (circleTop > 0 && circleLeft > 0)
-          GestureDetector(
-            onTap: () {
-              log("Tapped indicator");
-            },
-            child: Obx(
-              () => AnimatedContainer(
-                duration: const Duration(milliseconds: 300),
-                margin: EdgeInsets.only(
-                  top: circleTop,
-                  left: circleLeft,
-                ),
-                height: HorarioIndicator._circleRadius * 2,
-                width: widget.controller.indicatorIsOpen.value
-                    ? 50
-                    : HorarioIndicator._circleRadius * 2,
+        if (circleTapAreaTop > 0 && circleTapAreaLeft > 0)
+          Container(
+            margin: EdgeInsets.only(
+              top: circleTapAreaTop,
+              left: circleTapAreaLeft,
+            ),
+            child: GestureDetector(
+              onTap: () {
+                widget.controller.indicatorIsOpen.value =
+                    !widget.controller.indicatorIsOpen.value;
+              },
+              child: Container(
+                padding: EdgeInsets.all(HorarioIndicator._tapAreaRadius),
                 decoration: BoxDecoration(
-                  color: widget.color,
-                  borderRadius:
-                      BorderRadius.circular(HorarioIndicator._circleRadius),
+                  borderRadius: BorderRadius.circular(
+                    HorarioIndicator._tapAreaRadius * 2,
+                  ),
                 ),
-                child: widget.controller.indicatorIsOpen.value
-                    ? Center(
-                        child: Text(
-                          "17:22",
-                          overflow: TextOverflow.fade,
-                          maxLines: 1,
-                          textAlign: TextAlign.center,
-                          style: Get.textTheme.bodySmall?.copyWith(
-                            color: Colors.white,
-                          ),
-                        ),
-                      )
-                    : Container(),
+                child: Obx(
+                  () => AnimatedContainer(
+                    duration: const Duration(milliseconds: 300),
+                    height: HorarioIndicator._circleRadius * 2,
+                    width: widget.controller.indicatorIsOpen.value
+                        ? 50
+                        : HorarioIndicator._circleRadius * 2,
+                    decoration: BoxDecoration(
+                      color: widget.color,
+                      borderRadius:
+                          BorderRadius.circular(HorarioIndicator._circleRadius),
+                    ),
+                    child: widget.controller.indicatorIsOpen.value
+                        ? Center(
+                            child: _TickerTimeText(time: DateTime.now()),
+                          )
+                        : Container(),
+                  ),
+                ),
               ),
             ),
           ),
       ],
+    );
+  }
+}
+
+class _TickerTimeText extends StatefulWidget {
+  final DateTime time;
+
+  const _TickerTimeText({
+    Key? key,
+    required this.time,
+  }) : super(key: key);
+
+  @override
+  State<_TickerTimeText> createState() => __TickerTimeTextState();
+}
+
+class __TickerTimeTextState extends State<_TickerTimeText> {
+  Timer? _timer;
+  bool _showColon = true;
+
+  @override
+  void initState() {
+    _timer = Timer.periodic(
+      Duration(seconds: 1),
+      (Timer t) => setState(() {
+        _showColon = !_showColon;
+      }),
+    );
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  String get _timeHour => "${widget.time.hour}";
+  String get _timeMinutes => "${widget.time.minute}";
+
+  @override
+  Widget build(BuildContext context) {
+    return RichText(
+      overflow: TextOverflow.fade,
+      maxLines: 1,
+      text: TextSpan(
+        children: [
+          TextSpan(
+            text: _timeHour,
+            style: Get.textTheme.bodySmall?.copyWith(
+              color: Colors.white,
+            ),
+          ),
+          TextSpan(
+            text: ":",
+            style: Get.textTheme.bodySmall?.copyWith(
+              color: _showColon ? Colors.white : Colors.transparent,
+            ),
+          ),
+          TextSpan(
+            text: _timeMinutes,
+            style: Get.textTheme.bodySmall?.copyWith(
+              color: Colors.white,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

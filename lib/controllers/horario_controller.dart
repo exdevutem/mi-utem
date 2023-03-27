@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -24,6 +26,7 @@ class HorarioController extends GetxController {
   final usedColors = <Color>[];
   final zoom = 0.5.obs;
   final indicatorIsOpen = false.obs;
+  final isCenteredInCurrentPeriodAndDay = false.obs;
 
   final blockContentController = TransformationController();
   final daysHeaderController = TransformationController();
@@ -94,6 +97,7 @@ class HorarioController extends GetxController {
   }
 
   Future<void> getHorarioData() async {
+    log("getHorarioData");
     loadingHorario.value = true;
     horario.value = await HorarioService.getHorario();
     _setRandomColorsByHorario();
@@ -110,6 +114,12 @@ class HorarioController extends GetxController {
         }
       }
     }
+  }
+
+  void _onChangeAnyController() {
+    indicatorIsOpen.value = false;
+    isCenteredInCurrentPeriodAndDay.value = false;
+    update();
   }
 
   void _setScrollControllerListeners() {
@@ -132,6 +142,7 @@ class HorarioController extends GetxController {
       );
 
       zoom.value = currentZoom;
+      _onChangeAnyController();
     });
 
     daysHeaderController.addListener(() {
@@ -154,6 +165,7 @@ class HorarioController extends GetxController {
       );
 
       zoom.value = currentZoom;
+      _onChangeAnyController();
     });
 
     periodHeaderController.addListener(() {
@@ -178,25 +190,14 @@ class HorarioController extends GetxController {
       );
 
       zoom.value = currentZoom;
+      _onChangeAnyController();
     });
   }
 
   void _initControllers() {
-    blockContentController.value = Matrix4.identity();
-    periodHeaderController.value = Matrix4.identity();
-    daysHeaderController.value = Matrix4.identity();
-    cornerController.value = Matrix4.identity();
-
     moveViewportToCurrentPeriodAndDay();
 
-    blockContentController.value
-        .setDiagonal(vector.Vector4(zoom.value, zoom.value, zoom.value, 1));
-    periodHeaderController.value
-        .setDiagonal(vector.Vector4(zoom.value, zoom.value, zoom.value, 1));
-    daysHeaderController.value
-        .setDiagonal(vector.Vector4(zoom.value, zoom.value, zoom.value, 1));
-    cornerController.value
-        .setDiagonal(vector.Vector4(zoom.value, zoom.value, zoom.value, 1));
+    setZoom(zoom.value);
   }
 
   void moveViewportToCurrentPeriodAndDay() {
@@ -204,6 +205,8 @@ class HorarioController extends GetxController {
     final dayIndex = indexOfCurrentDayStartingAtMonday ?? 0;
 
     moveViewportToPeriodIndexAndDayIndex(periodIndex, dayIndex);
+
+    isCenteredInCurrentPeriodAndDay.value = true;
   }
 
   void moveViewportToPeriodIndexAndDayIndex(int periodIndex, int dayIndex) {
@@ -245,8 +248,24 @@ class HorarioController extends GetxController {
     periodHeaderController.value.setTranslationRaw(0, -y, 0);
     daysHeaderController.value.setTranslationRaw(-x, 0, 0);
 
-    // ignore: invalid_use_of_visible_for_testing_member, invalid_use_of_protected_member
-    blockContentController.notifyListeners();
+    _onChangeAnyController();
+  }
+
+  void setZoom(double zoom) {
+    blockContentController.value.setDiagonal(
+      vector.Vector4(zoom, zoom, zoom, 1),
+    );
+    periodHeaderController.value.setDiagonal(
+      vector.Vector4(zoom, zoom, zoom, 1),
+    );
+    daysHeaderController.value.setDiagonal(
+      vector.Vector4(zoom, zoom, zoom, 1),
+    );
+    cornerController.value.setDiagonal(
+      vector.Vector4(zoom, zoom, zoom, 1),
+    );
+
+    _onChangeAnyController();
   }
 
   void addAsignaturaAndSetColor(Asignatura asignatura, {Color? color}) {

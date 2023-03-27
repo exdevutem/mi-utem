@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:mi_utem/controllers/horario_controller.dart';
 import 'package:mi_utem/models/horario.dart';
 import 'package:mi_utem/screens/horario/widgets/horario_blocks_content.dart';
@@ -93,18 +94,6 @@ class HorarioMainScroller extends StatefulWidget {
 class _HorarioMainScrollerState extends State<HorarioMainScroller> {
   @override
   void initState() {
-    widget.controller.blockContentController.addListener(() {
-      setState(() {});
-    });
-    widget.controller.cornerController.addListener(() {
-      setState(() {});
-    });
-    widget.controller.periodHeaderController.addListener(() {
-      setState(() {});
-    });
-    widget.controller.daysHeaderController.addListener(() {
-      setState(() {});
-    });
     super.initState();
   }
 
@@ -117,105 +106,110 @@ class _HorarioMainScrollerState extends State<HorarioMainScroller> {
   Widget build(BuildContext context) {
     return Container(
       color: Colors.white,
-      child: Stack(
-        children: [
-          Container(
-            height: HorarioMainScroller.periodsHeight,
-            width: HorarioMainScroller.daysWidth,
-            margin: EdgeInsets.only(
-              top: HorarioMainScroller.dayHeight * widget.controller.zoom.value,
-              left: HorarioMainScroller.periodWidth *
-                  widget.controller.zoom.value,
-            ),
-            child: InteractiveViewer(
-              transformationController:
-                  widget.controller.blockContentController,
-              maxScale: HorarioMainScroller.defaultMaxScale,
-              minScale: HorarioMainScroller.defaultMinScale,
-              alignPanAxis: false,
-              clipBehavior: Clip.none,
-              constrained: false,
-              onInteractionUpdate: (interaction) {},
-              child: SafeArea(
-                child: widget._horarioBlocksContent,
+      child: GetBuilder<HorarioController>(builder: (controller) {
+        return Stack(
+          children: [
+            Container(
+              height: HorarioMainScroller.periodsHeight,
+              width: HorarioMainScroller.daysWidth,
+              margin: EdgeInsets.only(
+                top: HorarioMainScroller.dayHeight *
+                    widget.controller.zoom.value,
+                left: HorarioMainScroller.periodWidth *
+                    widget.controller.zoom.value,
               ),
-            ),
-          ),
-          Container(
-            width: HorarioMainScroller.daysWidth,
-            height: HorarioMainScroller.dayHeight,
-            margin: EdgeInsets.only(
-              left: HorarioMainScroller.periodWidth *
-                  widget.controller.zoom.value,
-            ),
-            child: InteractiveViewer(
-              transformationController: widget.controller.daysHeaderController,
-              maxScale: HorarioMainScroller.defaultMaxScale,
-              minScale: HorarioMainScroller.defaultMinScale,
-              alignPanAxis: false,
-              scaleEnabled: false,
-              clipBehavior: Clip.none,
-              constrained: false,
-              onInteractionUpdate: (interaction) {},
-              child: SafeArea(
-                child: widget._horarioDaysHeader,
-              ),
-            ),
-          ),
-          Container(
-            width: HorarioMainScroller.periodWidth,
-            height: HorarioMainScroller.dayHeight,
-            child: InteractiveViewer(
-              transformationController: widget.controller.cornerController,
-              maxScale: HorarioMainScroller.defaultMaxScale,
-              minScale: HorarioMainScroller.defaultMinScale,
-              alignPanAxis: false,
-              scaleEnabled: false,
-              panEnabled: false,
-              clipBehavior: Clip.none,
-              constrained: false,
-              onInteractionUpdate: (interaction) {},
-              child: SafeArea(
-                child: widget._horarioCorner,
-              ),
-            ),
-          ),
-          Container(
-            width: HorarioMainScroller.periodWidth,
-            height: HorarioMainScroller.periodsHeight,
-            margin: EdgeInsets.only(
-              top: HorarioMainScroller.dayHeight * widget.controller.zoom.value,
-            ),
-            child: InteractiveViewer(
-              transformationController:
-                  widget.controller.periodHeaderController,
-              maxScale: HorarioMainScroller.defaultMaxScale,
-              minScale: HorarioMainScroller.defaultMinScale,
-              alignPanAxis: false,
-              scaleEnabled: false,
-              clipBehavior: Clip.none,
-              constrained: false,
-              onInteractionUpdate: (interaction) {},
-              child: SafeArea(
-                child: Stack(
-                  children: [
-                    widget._horarioPeriodsHeader,
-                    HorarioIndicator(
-                      controller: widget.controller,
-                      maxWidth: HorarioMainScroller.daysWidth,
-                      initialMargin: EdgeInsets.only(
-                        top: HorarioMainScroller.dayHeight,
-                        left: HorarioMainScroller.periodWidth,
-                      ),
-                      heightByMinute: HorarioMainScroller.blockHeight / 100,
-                    ),
-                  ],
+              child: InteractiveViewer(
+                transformationController:
+                    widget.controller.blockContentController,
+                maxScale: HorarioMainScroller.defaultMaxScale,
+                minScale: HorarioMainScroller.defaultMinScale,
+                alignPanAxis: false,
+                clipBehavior: Clip.none,
+                constrained: false,
+                onInteractionUpdate: (interaction) {},
+                child: SafeArea(
+                  child: widget._horarioBlocksContent,
                 ),
               ),
             ),
-          ),
-        ],
-      ),
+            Container(
+              width: HorarioMainScroller.daysWidth,
+              height: HorarioMainScroller.dayHeight,
+              margin: EdgeInsets.only(
+                left: HorarioMainScroller.periodWidth *
+                    widget.controller.zoom.value,
+              ),
+              child: InteractiveViewer(
+                transformationController:
+                    widget.controller.daysHeaderController,
+                maxScale: HorarioMainScroller.defaultMaxScale,
+                minScale: HorarioMainScroller.defaultMinScale,
+                alignPanAxis: false,
+                scaleEnabled: false,
+                clipBehavior: Clip.none,
+                constrained: false,
+                onInteractionUpdate: (interaction) {},
+                child: SafeArea(
+                  child: widget._horarioDaysHeader,
+                ),
+              ),
+            ),
+            Container(
+              width: HorarioMainScroller.periodWidth,
+              height: HorarioMainScroller.dayHeight,
+              child: InteractiveViewer(
+                transformationController: widget.controller.cornerController,
+                maxScale: HorarioMainScroller.defaultMaxScale,
+                minScale: HorarioMainScroller.defaultMinScale,
+                alignPanAxis: false,
+                scaleEnabled: false,
+                panEnabled: false,
+                clipBehavior: Clip.none,
+                constrained: false,
+                onInteractionUpdate: (interaction) {},
+                child: SafeArea(
+                  child: widget._horarioCorner,
+                ),
+              ),
+            ),
+            Container(
+              width: HorarioMainScroller.periodWidth,
+              height: HorarioMainScroller.periodsHeight,
+              margin: EdgeInsets.only(
+                top: HorarioMainScroller.dayHeight *
+                    widget.controller.zoom.value,
+              ),
+              child: InteractiveViewer(
+                transformationController:
+                    widget.controller.periodHeaderController,
+                maxScale: HorarioMainScroller.defaultMaxScale,
+                minScale: HorarioMainScroller.defaultMinScale,
+                alignPanAxis: false,
+                scaleEnabled: false,
+                clipBehavior: Clip.none,
+                constrained: false,
+                onInteractionUpdate: (interaction) {},
+                child: SafeArea(
+                  child: Stack(
+                    children: [
+                      widget._horarioPeriodsHeader,
+                      HorarioIndicator(
+                        controller: widget.controller,
+                        maxWidth: HorarioMainScroller.daysWidth,
+                        initialMargin: EdgeInsets.only(
+                          top: HorarioMainScroller.dayHeight,
+                          left: HorarioMainScroller.periodWidth,
+                        ),
+                        heightByMinute: HorarioMainScroller.blockHeight / 100,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        );
+      }),
     );
   }
 }

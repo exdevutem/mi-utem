@@ -28,7 +28,8 @@ class HorarioScreen extends StatelessWidget {
         title: Text("Horario"),
         actions: [
           Obx(
-            () => controller.horario.value != null
+            () => controller.horario.value != null &&
+                    !controller.isCenteredInCurrentPeriodAndDay.value
                 ? IconButton(
                     onPressed: () => _moveViewportToCurrentTime(),
                     icon: Icon(Icons.center_focus_strong),
@@ -92,7 +93,8 @@ class HorarioScreen extends StatelessWidget {
       appBar: _appBar,
       body: Obx(
         () {
-          if (controller.loadingHorario.value ||
+          if ((controller.loadingHorario.value &&
+                  controller.horario.value == null) ||
               controller.horario.value == null) {
             return Container(
               padding: EdgeInsets.all(20),
