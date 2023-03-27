@@ -40,7 +40,7 @@ class HorarioController extends GetxController {
     return availableColors;
   }
 
-  DateTime _now = DateTime.parse("2023-03-29 14:45:00");
+  DateTime _now = DateTime.now();
 
   double get minutesFromStart {
     final now = _now;
