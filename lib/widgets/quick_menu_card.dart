@@ -90,7 +90,7 @@ class QuickMenuCard extends StatelessWidget {
                     card["nombre"],
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: Get.textTheme.headline6!.copyWith(
+                    style: Get.textTheme.titleLarge!.copyWith(
                       color: Colors.white,
                     ),
                     textAlign: TextAlign.center,

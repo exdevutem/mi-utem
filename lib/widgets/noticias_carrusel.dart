@@ -50,7 +50,7 @@ class _NoticiasSectionState extends State<NoticiasSection> {
           padding: EdgeInsets.symmetric(horizontal: 20),
           child: Text(
             "Noticias".toUpperCase(),
-            style: Get.textTheme.subtitle1!.copyWith(
+            style: Get.textTheme.titleMedium!.copyWith(
               fontWeight: FontWeight.bold,
             ),
           ),
