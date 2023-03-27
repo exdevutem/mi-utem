@@ -9,6 +9,7 @@ import 'package:mi_utem/widgets/custom_alert_dialog.dart';
 
 class NotificationsService {
   static AwesomeNotifications get notification => AwesomeNotifications();
+  static ReceivedAction? _initialAction;
 
   static Future initialize() async {
     try {

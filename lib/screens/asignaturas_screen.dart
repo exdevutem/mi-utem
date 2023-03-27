@@ -1,11 +1,12 @@
-import 'package:flutter/material.dart';
-
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
+import 'package:mdi/mdi.dart';
 import 'package:mi_utem/models/asignatura.dart';
 import 'package:mi_utem/screens/asignatura_screen.dart';
+import 'package:mi_utem/screens/calculadora_notas_screen.dart';
 import 'package:mi_utem/services/asignaturas_service.dart';
+import 'package:mi_utem/services/config_service.dart';
 import 'package:mi_utem/widgets/custom_app_bar.dart';
 import 'package:mi_utem/widgets/custom_error_widget.dart';
 import 'package:mi_utem/widgets/loading_indicator.dart';
@@ -43,11 +44,29 @@ class _AsignaturasScreenState extends State<AsignaturasScreen> {
     await _getAsignaturas(true);
   }
 
+  bool get _mostrarCalculadora {
+    return ConfigService.config?.getBool(ConfigService.CALCULADORA_MOSTRAR) ??
+        false;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
         title: Text("Asignaturas"),
+        actions: _mostrarCalculadora
+            ? [
+                IconButton(
+                  icon: Icon(Mdi.calculator),
+                  tooltip: "Calculadora",
+                  onPressed: () {
+                    Get.to(
+                      () => CalculadoraNotasScreen(),
+                    );
+                  },
+                ),
+              ]
+            : [],
       ),
       body: FutureBuilder<List<Asignatura>>(
         future: _futureAsignaturas,

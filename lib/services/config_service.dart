@@ -1,8 +1,7 @@
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
-
 import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mdi/mdi.dart';
 
@@ -274,6 +273,20 @@ class ConfigService {
           "fontFamily": 'MaterialIcons'
         },
         "route": "/AsignaturasScreen",
+      },
+      {
+        "nombre": "Calculadora",
+        "degradado": {
+          "colors": ["#000046", "#1CB5E0"],
+          "begin": [0, -1],
+          "end": [0, 1]
+        },
+        "icono": {
+          "codePoint": Mdi.calculator.codePoint,
+          "fontFamily": "Material Design Icons",
+          "fontPackage": "mdi"
+        },
+        "route": "/CalculadoraNotasScreen"
       },
       {
         "nombre": "Horario",

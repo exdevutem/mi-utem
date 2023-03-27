@@ -1,9 +1,6 @@
-import 'dart:developer';
-
 import 'package:dio/dio.dart';
 import 'package:dio_http_cache/dio_http_cache.dart';
 import 'package:get_storage/get_storage.dart';
-
 import 'package:mi_utem/models/asignatura.dart';
 import 'package:mi_utem/utils/dio_miutem_client.dart';
 
@@ -55,7 +52,7 @@ class AsignaturasService {
     }
   }
 
-  static Future<Asignatura?> getNotasByCodigoAsignatura(
+  static Future<Asignatura> getNotasByCodigoAsignatura(
       String? codigo, String? asignaturaId,
       [bool refresh = false]) async {
     String carreraId = box.read('carreraId')!;
@@ -79,11 +76,10 @@ class AsignaturasService {
               asignaturas.firstWhere((a) => a.codigo == codigo);
           return asignatura;
         } else {
-          return null;
+          throw Exception("No se encontró la asignatura");
         }
       } else {
         Asignatura asignatura = Asignatura.fromJson(response.data);
-        log("AAAA ${asignatura.toString()}");
         return asignatura;
       }
     } on DioError catch (e) {

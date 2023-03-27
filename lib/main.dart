@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:mi_utem/controllers/calculator_controller.dart';
 import 'package:mi_utem/screens/splash_screen.dart';
 import 'package:mi_utem/services/config_service.dart';
 import 'package:mi_utem/services/notificaciones_service.dart';
@@ -34,6 +35,7 @@ void main() async {
 
 class MiUtem extends StatelessWidget {
   final FirebaseAnalytics analytics = FirebaseAnalytics.instance;
+  final calculatorController = Get.put(CalculatorController());
 
   @override
   Widget build(BuildContext context) {
