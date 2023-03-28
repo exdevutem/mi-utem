@@ -1,16 +1,14 @@
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
-
 import 'package:badges/badges.dart' as badge;
 import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mdi/mdi.dart';
-
 import 'package:mi_utem/models/usuario.dart';
 import 'package:mi_utem/screens/asignaturas_screen.dart';
 import 'package:mi_utem/screens/credencial_screen.dart';
-import 'package:mi_utem/screens/horario_screen.dart';
+import 'package:mi_utem/screens/horario/horario_screen.dart';
 import 'package:mi_utem/screens/login_screen.dart';
 import 'package:mi_utem/screens/usuario_screen.dart';
 import 'package:mi_utem/services/auth_service.dart';

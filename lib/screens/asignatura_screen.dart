@@ -49,8 +49,7 @@ class AsignaturaScreen extends StatelessWidget {
       ];
 
   bool get _mostrarCalculadora {
-    return ConfigService.config?.getBool(ConfigService.CALCULADORA_MOSTRAR) ??
-        false;
+    return ConfigService.config.getBool(ConfigService.CALCULADORA_MOSTRAR);
   }
 
   int get _initialIndex {

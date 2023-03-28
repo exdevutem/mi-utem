@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mi_utem/themes/theme.dart';
 
 class BloquePeriodoCard extends StatelessWidget {
   final String? inicio;
@@ -7,6 +8,7 @@ class BloquePeriodoCard extends StatelessWidget {
   final double height;
   final double width;
   final bool active;
+  final Color backgroundColor;
 
   BloquePeriodoCard({
     Key? key,
@@ -15,31 +17,20 @@ class BloquePeriodoCard extends StatelessWidget {
     required this.fin,
     required this.height,
     required this.width,
-    required this.active,
+    this.backgroundColor = MainTheme.lightGrey,
+    this.active = false,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Color(0xFFF5F5F5),
-        border: Border(
-          right: BorderSide(
-            color: Color(0xFFBDBDBD),
-            style: BorderStyle.solid,
-            width: 1,
-          ),
-          bottom: BorderSide(
-            color: Color(0xFFBDBDBD),
-            style: BorderStyle.solid,
-            width: 1,
-          ),
-        ),
+        color: backgroundColor,
       ),
       height: height,
       width: width,
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           Text(
             inicio!,

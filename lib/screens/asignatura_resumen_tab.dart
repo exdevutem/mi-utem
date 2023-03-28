@@ -77,7 +77,7 @@ class _AsignaturaResumenTabState extends State<AsignaturaResumenTab> {
                               width: double.infinity,
                               child: Text(
                                 "Resumen".toUpperCase(),
-                                style: Get.textTheme.headlineMedium,
+                                style: Get.textTheme.subtitle2,
                                 textAlign: TextAlign.left,
                               ),
                             ),
