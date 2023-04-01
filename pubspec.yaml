@@ -10,6 +10,7 @@ environment:
 
 dependencies:
   awesome_notifications: ^0.7.4+1
+  awesome_notifications_fcm: ^0.7.4+1
   badges: ^2.0.2
   barcode_widget: ^2.0.3
   barcode_image: ^2.0.2
@@ -29,9 +30,8 @@ dependencies:
   dotted_border: ^2.0.0+2
   extended_image: ^6.0.2+1
   firebase_analytics: ^10.1.0
-  firebase_core: ^2.4.1
+  firebase_core: 2.7.1
   firebase_in_app_messaging: ^0.7.0+10
-  firebase_messaging: ^14.2.1
   firebase_remote_config: ^3.0.9
   flare_flutter: ^3.0.2
   flutter:
@@ -63,7 +63,6 @@ dependencies:
   screenshot: ^1.2.3
   sentry_flutter: ^6.18.2
   share_plus: ^6.3.0
-  shared_preferences: ^2.0.7
   simple_gesture_detector: ^0.2.0
   url_launcher: ^6.1.7
   video_player: ^2.1.0
@@ -72,6 +71,8 @@ dependencies:
   intl: ^0.17.0
   get_storage: ^2.0.3
   hexcolor: ^3.0.1
+  shared_preferences: ^2.0.20
+  device_info_plus: ^8.1.0
   
 
 dependency_overrides:

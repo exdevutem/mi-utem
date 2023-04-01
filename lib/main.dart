@@ -34,12 +34,16 @@ void main() async {
 }
 
 class MiUtem extends StatelessWidget {
+  static final GlobalKey<NavigatorState> navigatorKey =
+      GlobalKey<NavigatorState>();
+
   final FirebaseAnalytics analytics = FirebaseAnalytics.instance;
   final calculatorController = Get.put(CalculatorController());
 
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
+      navigatorKey: MiUtem.navigatorKey,
       debugShowCheckedModeBanner: false,
       title: 'Mi UTEM',
       theme: MainTheme.theme,
