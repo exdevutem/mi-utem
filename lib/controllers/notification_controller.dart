@@ -67,11 +67,6 @@ class NotificationController {
     } else {
       print("FOREGROUND");
     }
-
-    print("starting long task");
-    await Future.delayed(Duration(seconds: 4));
-    final url = Uri.parse("http://google.com");
-    print("long task done");
   }
 
   /// Use this method to detect when a new fcm token is received
