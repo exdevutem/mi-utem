@@ -10,7 +10,7 @@ import 'package:mi_utem/controllers/calculator_controller.dart';
 import 'package:mi_utem/screens/splash_screen.dart';
 import 'package:mi_utem/services/background_service.dart';
 import 'package:mi_utem/services/config_service.dart';
-import 'package:mi_utem/services/notificaciones_service.dart';
+import 'package:mi_utem/services/notification_service.dart';
 import 'package:mi_utem/themes/theme.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
@@ -23,7 +23,7 @@ void main() async {
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   await Firebase.initializeApp();
   await ConfigService.getInstance();
-  await NotificationsService.initialize();
+  await NotificationService.initialize();
   await BackgroundService.initAndStart();
   await SentryFlutter.init(
     (options) {

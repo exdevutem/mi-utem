@@ -4,6 +4,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:mi_utem/models/asignatura.dart';
 import 'package:mi_utem/services/asignaturas_service.dart';
 import 'package:mi_utem/services/grades_service.dart';
+import 'package:mi_utem/services/notification_service.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 class GradesChangesController {
@@ -134,25 +135,33 @@ class GradesChangesController {
 
   static Future<Map<String, GradeChangeType>> checkIfGradesHasChange() async {
     final carreraId = box.read('carreraId');
+
     if (carreraId != null) {
-      List<String?>? suscribedAsignaturas =
+      final suscribedAsignaturasJson =
           box.read('$suscribedAsignaturasPrefix$carreraId');
+      List<Asignatura>? suscribedAsignaturas;
 
-      log('checkIfGradesHasChange suscribedAsignaturas_$carreraId 1: $suscribedAsignaturas');
+      log('checkIfGradesHasChange suscribedAsignaturas_$carreraId (JSON) 1: $suscribedAsignaturasJson');
 
-      if (suscribedAsignaturas == null) {
+      if (suscribedAsignaturasJson == null) {
         log('checkIfGradesHasChange was null, getting asignaturas');
         final asignaturas = await AsignaturasService.getAsignaturas();
-        final asignaturasIds = asignaturas.map((e) => e.id).toList();
-        suscribedAsignaturas = asignaturasIds;
-        box.write('$suscribedAsignaturasPrefix$carreraId', asignaturasIds);
+        final asignaturasJson = asignaturas.map((e) => e.toJson()).toList();
+        suscribedAsignaturas = asignaturas;
+        box.write('$suscribedAsignaturasPrefix$carreraId', asignaturasJson);
+      } else {
+        log('checkIfGradesHasChange was null, getting asignaturas');
+        suscribedAsignaturas =
+            Asignatura.fromJsonList(suscribedAsignaturasJson);
       }
 
-      log('checkIfGradesHasChange suscribedAsignaturas_$carreraId 2: $suscribedAsignaturas');
+      log('checkIfGradesHasChange suscribedAsignaturas_$carreraId 2: ${suscribedAsignaturas.map((e) => e.codigo).toString()}');
 
-      for (String? asignaturaId in suscribedAsignaturas) {
-        if (asignaturaId != null) {
-          log('checkIfGradesHasChange asignaturaId: $asignaturaId');
+      for (Asignatura? asignatura in suscribedAsignaturas) {
+        final asignaturaId = asignatura?.id;
+        if (asignatura != null && asignaturaId != null) {
+          final asignaturaCodigo = asignatura.codigo;
+          log('checkIfGradesHasChange ($asignaturaCodigo) $asignaturaId');
           final updatedAsignatura = await GradesService.getGrades(
             asignaturaId,
             forceRefresh: true,
@@ -166,12 +175,42 @@ class GradesChangesController {
 
           await saveGrades(asignaturaId, updatedAsignatura);
 
-          log('checkIfGradesHasChange asignaturaId: $asignaturaId changeType: $changeType');
+          log('checkIfGradesHasChange asignaturaId: $asignaturaCodigo changeType: $changeType');
+
+          _notificateChange(asignatura, changeType);
         }
       }
     }
 
     return {};
+  }
+
+  static void _notificateChange(Asignatura asignatura, GradeChangeType change) {
+    final asignaturaName = asignatura.nombre ?? asignatura.codigo;
+
+    String? title;
+    String? body;
+
+    switch (change) {
+      case GradeChangeType.gradeSetted:
+        title = 'Tienes una nueva nota';
+        body = '$asignaturaName: se ha agregado una nota';
+        break;
+      case GradeChangeType.gradeUpdated:
+        title = 'Una nota ha cambiado';
+        body = '$asignaturaName: se ha actualizado una nota';
+        break;
+      case GradeChangeType.gradeDeleted:
+        title = 'Una nota se ha borrado';
+        body = '$asignaturaName: se ha eliminado una nota';
+        break;
+      default:
+        break;
+    }
+
+    if (title != null && body != null) {
+      NotificationService.showGradeChangeNotification(title, body, asignatura);
+    }
   }
 }
 

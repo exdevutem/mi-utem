@@ -1,8 +1,7 @@
 import 'dart:async';
 
 import 'package:background_fetch/background_fetch.dart';
-import 'package:mi_utem/services/asignaturas_service.dart';
-import 'package:mi_utem/services/grades_service.dart';
+import 'package:mi_utem/controllers/grades_changes_controller.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 class BackgroundController {
@@ -49,10 +48,7 @@ class BackgroundService {
           level: SentryLevel.debug,
         );
 
-        final asignaturas = await AsignaturasService.getAsignaturas(true);
-        final notas = await GradesService.getGrades(asignaturas.first.id!);
-
-        print("[BackgroundFetch] Notas: ${notas.toString()}");
+        await GradesChangesController.checkIfGradesHasChange();
 
         BackgroundFetch.finish(taskId);
       },

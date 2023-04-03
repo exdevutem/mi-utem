@@ -1,17 +1,15 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flare_flutter/flare_actor.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:package_info_plus/package_info_plus.dart';
-
 import 'package:mi_utem/models/usuario.dart';
 import 'package:mi_utem/screens/login_screen.dart';
 import 'package:mi_utem/screens/main_screen.dart';
 import 'package:mi_utem/services/auth_service.dart';
-import 'package:mi_utem/services/notificaciones_service.dart';
+import 'package:mi_utem/services/notification_service.dart';
 import 'package:mi_utem/services/perfil_service.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 class SplashScreen extends StatefulWidget {
   SplashScreen({Key? key}) : super(key: key);
@@ -68,7 +66,7 @@ class _SplashScreenState extends State<SplashScreen> {
     print("_cambiarPantalla $_ruta $_terminoAnimacion");
     if (_terminoAnimacion && _ruta != null) {
       Get.offAll(_ruta);
-      await NotificationsService.requestUserPermissionIfNecessary();
+      await NotificationService.requestUserPermissionIfNecessary();
     }
   }
 
