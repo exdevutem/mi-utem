@@ -72,7 +72,6 @@ dependencies:
   get_storage: ^2.0.3
   hexcolor: ^3.0.1
   shared_preferences: ^2.0.20
-  device_info_plus: ^8.1.0
   background_fetch: ^1.1.5
   
 
