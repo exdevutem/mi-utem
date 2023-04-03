@@ -45,6 +45,17 @@ class Asignatura {
     this.tipoSala,
   });
 
+  Color get colorPorEstado {
+    switch (estado) {
+      case "Aprobado":
+        return MainTheme.aprobadoColor;
+      case "Reprobado":
+        return MainTheme.reprobadoColor;
+      default:
+        return MainTheme.inscritoColor;
+    }
+  }
+
   factory Asignatura.fromJson(Map<String, dynamic>? json) {
     if (json == null) {
       return Asignatura();
@@ -67,7 +78,8 @@ class Asignatura {
       // tipoAsignatura: ReCase(json['tipoAsignatura'].toString()).titleCase,
       sala: ReCase(json['sala'] ?? '').titleCase,
       horario: json['horario'],
-      intentos: json['intentos'] != null ? int.parse(json['intentos']) : 0,
+      intentos:
+          json['intentos'] != null ? int.parse(json['intentos'].toString()) : 0,
       tipoSala: ReCase(json['tipoSala'] ?? '').titleCase,
     );
   }
@@ -83,15 +95,27 @@ class Asignatura {
     return list;
   }
 
-  Color get colorPorEstado {
-    switch (estado) {
-      case "Aprobado":
-        return MainTheme.aprobadoColor;
-      case "Reprobado":
-        return MainTheme.reprobadoColor;
-      default:
-        return MainTheme.inscritoColor;
-    }
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'codigo': codigo,
+      'nombre': nombre,
+      'tipoHora': tipoHora,
+      'estado': estado,
+      'docente': docente,
+      'seccion': seccion,
+      'notasParciales': notasParciales.map((nota) => nota.toJson()).toList(),
+      'notaFinal': notaFinal,
+      'notaPresentacion': notaPresentacion,
+      'notaExamen': notaExamen,
+      'estudiantes': estudiantes,
+      'asistencia': asistencia?.toJson(),
+      'tipoAsignatura': tipoAsignatura,
+      'sala': sala,
+      'horario': horario,
+      'intentos': intentos,
+      'tipoSala': tipoSala,
+    };
   }
 }
 
@@ -129,5 +153,14 @@ class Asistencia {
       list.add(Asistencia.fromJson(item));
     }
     return list;
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'total': total,
+      'asistidos': asistidos,
+      'noAsistidos': noAsistidos,
+      'sinRegistro': sinRegistro,
+    };
   }
 }
