@@ -45,8 +45,7 @@ class _AsignaturasScreenState extends State<AsignaturasScreen> {
   }
 
   bool get _mostrarCalculadora {
-    return ConfigService.config?.getBool(ConfigService.CALCULADORA_MOSTRAR) ??
-        false;
+    return ConfigService.config.getBool(ConfigService.CALCULADORA_MOSTRAR);
   }
 
   @override
