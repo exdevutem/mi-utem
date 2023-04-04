@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:get_storage/get_storage.dart';
 import 'package:mi_utem/models/asignatura.dart';
 import 'package:mi_utem/services/asignaturas_service.dart';
+import 'package:mi_utem/services/auth_service.dart';
 import 'package:mi_utem/services/grades_service.dart';
 import 'package:mi_utem/services/notification_service.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
@@ -134,50 +135,52 @@ class GradesChangesController {
   }
 
   static Future<Map<String, GradeChangeType>> checkIfGradesHasChange() async {
-    final carreraId = box.read('carreraId');
+    final isLogged = await AuthService.isLoggedIn();
 
-    if (carreraId != null) {
-      final suscribedAsignaturasJson =
-          box.read('$suscribedAsignaturasPrefix$carreraId');
-      List<Asignatura>? suscribedAsignaturas;
+    if (isLogged) {
+      final carreraId = box.read('carreraId');
 
-      log('checkIfGradesHasChange suscribedAsignaturas_$carreraId (JSON) 1: $suscribedAsignaturasJson');
+      if (carreraId != null) {
+        final suscribedAsignaturasJson =
+            box.read('$suscribedAsignaturasPrefix$carreraId');
+        List<Asignatura>? suscribedAsignaturas;
 
-      if (suscribedAsignaturasJson == null) {
-        log('checkIfGradesHasChange was null, getting asignaturas');
-        final asignaturas = await AsignaturasService.getAsignaturas();
-        final asignaturasJson = asignaturas.map((e) => e.toJson()).toList();
-        suscribedAsignaturas = asignaturas;
-        box.write('$suscribedAsignaturasPrefix$carreraId', asignaturasJson);
-      } else {
-        log('checkIfGradesHasChange was null, getting asignaturas');
-        suscribedAsignaturas =
-            Asignatura.fromJsonList(suscribedAsignaturasJson);
-      }
+        log('checkIfGradesHasChange suscribedAsignaturas_$carreraId (JSON) 1: $suscribedAsignaturasJson');
 
-      log('checkIfGradesHasChange suscribedAsignaturas_$carreraId 2: ${suscribedAsignaturas.map((e) => e.codigo).toString()}');
+        if (suscribedAsignaturasJson == null) {
+          log('checkIfGradesHasChange was null, getting asignaturas');
+          final asignaturas = await AsignaturasService.getAsignaturas();
+          final asignaturasJson = asignaturas.map((e) => e.toJson()).toList();
+          suscribedAsignaturas = asignaturas;
+          box.write('$suscribedAsignaturasPrefix$carreraId', asignaturasJson);
+        } else {
+          log('checkIfGradesHasChange was null, getting asignaturas');
+          suscribedAsignaturas =
+              Asignatura.fromJsonList(suscribedAsignaturasJson);
+        }
 
-      for (Asignatura? asignatura in suscribedAsignaturas) {
-        final asignaturaId = asignatura?.id;
-        if (asignatura != null && asignaturaId != null) {
-          final asignaturaCodigo = asignatura.codigo;
-          log('checkIfGradesHasChange ($asignaturaCodigo) $asignaturaId');
-          final updatedAsignatura = await GradesService.getGrades(
-            asignaturaId,
-            forceRefresh: true,
-            saveGrades: false,
-          );
+        log('checkIfGradesHasChange suscribedAsignaturas_$carreraId 2: ${suscribedAsignaturas.map((e) => e.codigo).toString()}');
 
-          final changeType = compareGrades(
-            asignaturaId,
-            updatedAsignatura,
-          );
+        for (Asignatura? asignatura in suscribedAsignaturas) {
+          final asignaturaId = asignatura?.id;
+          if (asignatura != null && asignaturaId != null) {
+            final asignaturaCodigo = asignatura.codigo;
+            log('checkIfGradesHasChange ($asignaturaCodigo) $asignaturaId');
+            final updatedAsignatura = await GradesService.getGrades(
+              asignaturaId,
+              forceRefresh: true,
+              saveGrades: false,
+            );
 
-          await saveGrades(asignaturaId, updatedAsignatura);
+            final changeType = compareGrades(
+              asignaturaId,
+              updatedAsignatura,
+            );
 
-          log('checkIfGradesHasChange asignaturaId: $asignaturaCodigo changeType: $changeType');
+            await saveGrades(asignaturaId, updatedAsignatura);
 
-          _notificateChange(asignatura, changeType);
+            _notificateChange(asignatura, changeType);
+          }
         }
       }
     }
@@ -209,7 +212,27 @@ class GradesChangesController {
     }
 
     if (title != null && body != null) {
+      Sentry.captureMessage(
+        'Asignatura has changed and notificated',
+        level: SentryLevel.debug,
+        withScope: (scope) {
+          scope.setTag('asignaturaId', asignatura.id.toString());
+          scope.setTag('asignaturaCodigo', asignatura.codigo.toString());
+          scope.setTag('change', change.toString());
+        },
+      );
+
       NotificationService.showGradeChangeNotification(title, body, asignatura);
+    } else if (change != GradeChangeType.noChange) {
+      Sentry.captureMessage(
+        'Asignatura has changed but not notificated',
+        level: SentryLevel.warning,
+        withScope: (scope) {
+          scope.setTag('asignaturaId', asignatura.id.toString());
+          scope.setTag('asignaturaCodigo', asignatura.codigo.toString());
+          scope.setTag('change', change.toString());
+        },
+      );
     }
   }
 }
