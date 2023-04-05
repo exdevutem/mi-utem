@@ -2,18 +2,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get_storage/get_storage.dart';
-
 import 'package:mi_utem/models/rut.dart';
 import 'package:mi_utem/models/usuario.dart';
-import 'package:mi_utem/services/auth_service.dart';
 import 'package:mi_utem/utils/dio_miutem_client.dart';
-import 'package:sentry_flutter/sentry_flutter.dart';
 
 class PerfilService {
   static final Dio _dio = DioMiUtemClient.authDio;
   static final GetStorage box = GetStorage();
 
-  static Future<Usuario> getLocalUsuario() async {
+  static Usuario getLocalUsuario() {
     try {
       String? token = box.read("token");
       String? nombres = box.read("nombres");
@@ -27,22 +24,6 @@ class PerfilService {
           : null;
       String? correoUtem = box.read("correoUtem");
       String? correoPersonal = box.read("correoPersonal");
-
-      if (await AuthService.isLoggedIn()) {
-        Sentry.configureScope(
-          (scope) => scope.setUser(
-            SentryUser(
-              id: correoUtem,
-              email: correoPersonal,
-              name: nombres,
-              data: {
-                "rut": rut?.toString(),
-              },
-              ipAddress: "{{auto}}",
-            ),
-          ),
-        );
-      }
 
       return Usuario(
         token: token,

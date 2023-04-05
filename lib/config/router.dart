@@ -1,8 +1,7 @@
+import 'dart:developer';
+
 import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
-import 'package:go_router/go_router.dart';
 import 'package:mi_utem/models/asignatura.dart';
 import 'package:mi_utem/screens/asignaturas_screen.dart';
 import 'package:mi_utem/screens/calculadora_notas_screen.dart';
@@ -16,8 +15,6 @@ import 'package:mi_utem/services/auth_service.dart';
 import 'package:mi_utem/services/perfil_service.dart';
 import 'package:mi_utem/widgets/acerca_screen.dart';
 
-final _box = GetStorage();
-
 final routerDelegate = BeamerDelegate(
   initialPath: '/splash',
   locationBuilder: RoutesLocationBuilder(
@@ -26,7 +23,7 @@ final routerDelegate = BeamerDelegate(
       '/acerca': (context, state, data) => AcercaScreen(),
       '/login': (context, state, data) => LoginScreen(),
       '/': (context, state, data) {
-        final usuario = UserService.getLocalUsuario();
+        final usuario = PerfilService.getLocalUsuario();
 
         return MainScreen(usuario: usuario);
       },
@@ -40,17 +37,15 @@ final routerDelegate = BeamerDelegate(
         );
       },
       '/horario': (context, state, data) {
-        final carreraId = _box.read('carreraId');
-
         return BeamPage(
-          key: ValueKey('horario-$carreraId'),
-          title: 'Horario $carreraId',
+          key: ValueKey('horario'),
+          title: 'Horario',
           popToNamed: '/',
           type: BeamPageType.scaleTransition,
-          child: HorarioScreen(carreraId: carreraId),
+          child: HorarioScreen(),
         );
       },
-      '/carreras/:carreraId/horario': (context, state, data) {
+/*       '/carreras/:carreraId/horario': (context, state, data) {
         final carreraId = state.pathParameters['carreraId']!;
 
         return BeamPage(
@@ -60,19 +55,17 @@ final routerDelegate = BeamerDelegate(
           type: BeamPageType.scaleTransition,
           child: HorarioScreen(carreraId: carreraId),
         );
-      },
+      }, */
       '/asignaturas': (context, state, data) {
-        final carreraId = _box.read('carreraId');
-
         return BeamPage(
-          key: ValueKey('asignaturas-$carreraId'),
-          title: 'Asignaturas $carreraId',
+          key: ValueKey('asignaturas'),
+          title: 'Asignaturas',
           popToNamed: '/',
           type: BeamPageType.scaleTransition,
-          child: AsignaturasScreen(carreraId: carreraId),
+          child: AsignaturasScreen(),
         );
       },
-      '/carreras/:carreraId/asignaturas': (context, state, data) {
+/*       '/carreras/:carreraId/asignaturas': (context, state, data) {
         final carreraId = state.pathParameters['carreraId']!;
 
         return BeamPage(
@@ -82,7 +75,7 @@ final routerDelegate = BeamerDelegate(
           type: BeamPageType.scaleTransition,
           child: AsignaturasScreen(carreraId: carreraId),
         );
-      }
+      } */
     },
   ),
   guards: [
@@ -90,17 +83,21 @@ final routerDelegate = BeamerDelegate(
       pathPatterns: ['/splash', '/login', '/acerca'],
       guardNonMatching: true,
       check: (context, location) => AuthService.isLoggedIn(),
+      onCheckFailed: (context, location) =>
+          log('guardNonMatching: true onCheckFailed'),
       beamToNamed: (origin, target) => '/login',
     ),
     BeamGuard(
       pathPatterns: ['/splash', '/login', '/acerca'],
       check: (context, location) => !AuthService.isLoggedIn(),
+      onCheckFailed: (context, location) =>
+          log('guardNonMatching: false onCheckFailed'),
       beamToNamed: (origin, target) => '/',
     )
   ],
 );
 
-final router = GoRouter(
+/* final router = GoRouter(
   navigatorKey: Get.key,
   debugLogDiagnostics: true,
   initialLocation: "/",
@@ -131,4 +128,4 @@ final router = GoRouter(
 
     return null;
   },
-);
+); */
