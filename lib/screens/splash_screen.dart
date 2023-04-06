@@ -1,17 +1,11 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-
+import 'package:beamer/beamer.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flare_flutter/flare_actor.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:package_info_plus/package_info_plus.dart';
-
-import 'package:mi_utem/models/usuario.dart';
-import 'package:mi_utem/screens/login_screen.dart';
-import 'package:mi_utem/screens/main_screen.dart';
-import 'package:mi_utem/services/auth_service.dart';
 import 'package:mi_utem/services/notificaciones_service.dart';
-import 'package:mi_utem/services/perfil_service.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 class SplashScreen extends StatefulWidget {
   SplashScreen({Key? key}) : super(key: key);
@@ -37,37 +31,20 @@ class _SplashScreenState extends State<SplashScreen> {
         systemNavigationBarIconBrightness: Brightness.light,
       ),
     );
-    _validarToken();
   }
 
   bool _terminoAnimacion = false;
-  Widget? _ruta;
 
   void _onEndAnimacion() async {
     _terminoAnimacion = true;
     _cambiarPantalla();
   }
 
-  void _validarToken() async {
-    try {
-      bool isLoggedIn = await AuthService.isLoggedIn();
-      if (isLoggedIn) {
-        Usuario usuario = await PerfilService.getLocalUsuario();
-        _ruta = MainScreen(usuario: usuario);
-      } else {
-        _ruta = LoginScreen();
-      }
-    } catch (e) {
-      _ruta = LoginScreen();
-    }
-
-    _cambiarPantalla();
-  }
-
   void _cambiarPantalla() async {
-    print("_cambiarPantalla $_ruta $_terminoAnimacion");
-    if (_terminoAnimacion && _ruta != null) {
-      Get.offAll(_ruta);
+    if (_terminoAnimacion) {
+      Beamer.of(context).beamToNamed(
+        '/',
+      );
       await NotificationsService.requestUserPermissionIfNecessary();
     }
   }

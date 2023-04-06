@@ -1,10 +1,8 @@
+import 'package:beamer/beamer.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:mdi/mdi.dart';
 import 'package:mi_utem/models/asignatura.dart';
-import 'package:mi_utem/screens/asignatura_screen.dart';
-import 'package:mi_utem/screens/calculadora_notas_screen.dart';
 import 'package:mi_utem/services/asignaturas_service.dart';
 import 'package:mi_utem/services/config_service.dart';
 import 'package:mi_utem/widgets/custom_app_bar.dart';
@@ -60,8 +58,8 @@ class _AsignaturasScreenState extends State<AsignaturasScreen> {
                   icon: Icon(Mdi.calculator),
                   tooltip: "Calculadora",
                   onPressed: () {
-                    Get.to(
-                      () => CalculadoraNotasScreen(),
+                    Beamer.of(context).beamToNamed(
+                      "/calculadora-notas",
                     );
                   },
                 ),
@@ -90,8 +88,9 @@ class _AsignaturasScreenState extends State<AsignaturasScreen> {
                       Asignatura asignatura = _asignaturas[i];
                       return ListTile(
                         onTap: () {
-                          Get.to(
-                            () => AsignaturaScreen(asignatura: asignatura),
+                          Beamer.of(context).beamToNamed(
+                            "/asignatura",
+                            data: asignatura,
                           );
                         },
                         title: Text(

@@ -6,8 +6,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:mi_utem/config/router.dart';
 import 'package:mi_utem/controllers/calculator_controller.dart';
-import 'package:mi_utem/screens/splash_screen.dart';
 import 'package:mi_utem/services/config_service.dart';
 import 'package:mi_utem/services/notificaciones_service.dart';
 import 'package:mi_utem/themes/theme.dart';
@@ -39,11 +39,11 @@ class MiUtem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
+    return GetMaterialApp.router(
+      routerDelegate: routerDelegate,
       debugShowCheckedModeBanner: false,
       title: 'Mi UTEM',
       theme: MainTheme.theme,
-      home: SplashScreen(),
       navigatorObservers: [
         FirebaseAnalyticsObserver(analytics: analytics),
         SentryNavigatorObserver(),

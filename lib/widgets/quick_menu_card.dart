@@ -1,3 +1,4 @@
+import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gradient_widgets/gradient_widgets.dart';
@@ -12,7 +13,22 @@ class QuickMenuCard extends StatelessWidget {
 
   final Map<String, dynamic> card;
 
-  Widget? get _route {
+  String? get _route {
+    switch (card["route"]) {
+      case "/AsignaturasScreen":
+        return "/asignaturas";
+      case "/HorarioScreen":
+        return "/horario";
+      case "/CalculadoraNotasScreen":
+        return "/calculadora-notas";
+      case "/CredencialScreen":
+        return "/credencial";
+      default:
+        return null;
+    }
+  }
+
+  Widget? get _routeWidget {
     switch (card["route"]) {
       case "/AsignaturasScreen":
         return AsignaturasScreen();
@@ -62,12 +78,10 @@ class QuickMenuCard extends StatelessWidget {
           child: InkWell(
             onTap: _route != null
                 ? () {
+                    Beamer.of(context).beamToNamed(
+                      _route!,
+                    );
                     //TODO: Cambiar cuando haya router
-                    if (_route is HorarioScreen) {
-                      Get.to(_route, binding: HorarioBinding());
-                    } else {
-                      Get.to(() => _route!);
-                    }
                   }
                 : null,
             borderRadius: BorderRadius.all(Radius.circular(15)),

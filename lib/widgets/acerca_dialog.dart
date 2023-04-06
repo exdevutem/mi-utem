@@ -1,11 +1,9 @@
 import 'dart:async';
 
+import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
-
 import 'package:mi_utem/widgets/acerca_aplicacion_content.dart';
-import 'package:mi_utem/widgets/acerca_screen.dart';
 
 class AcercaDialog extends StatefulWidget {
   AcercaDialog({
@@ -96,7 +94,9 @@ class _AcercaDialogState extends State<AcercaDialog> {
                                   ? null
                                   : () {
                                       Get.back();
-                                      Get.to(() => AcercaScreen());
+                                      Beamer.of(context).beamToNamed(
+                                        '/acerca',
+                                      );
                                     },
                             ),
                           ],
