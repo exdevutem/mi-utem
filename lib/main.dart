@@ -8,20 +8,23 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:mi_utem/controllers/calculator_controller.dart';
 import 'package:mi_utem/screens/splash_screen.dart';
+import 'package:mi_utem/services/background_service.dart';
 import 'package:mi_utem/services/config_service.dart';
-import 'package:mi_utem/services/notificaciones_service.dart';
+import 'package:mi_utem/services/notification_service.dart';
 import 'package:mi_utem/themes/theme.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   await dotenv.load();
   await GetStorage.init();
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   await Firebase.initializeApp();
   await ConfigService.getInstance();
-  await NotificationsService.initialize();
+  await NotificationService.initialize();
+  await BackgroundService.initAndStart();
   await SentryFlutter.init(
     (options) {
       options.dsn =
@@ -34,12 +37,16 @@ void main() async {
 }
 
 class MiUtem extends StatelessWidget {
+  static final GlobalKey<NavigatorState> navigatorKey =
+      GlobalKey<NavigatorState>();
+
   final FirebaseAnalytics analytics = FirebaseAnalytics.instance;
   final calculatorController = Get.put(CalculatorController());
 
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
+      navigatorKey: MiUtem.navigatorKey,
       debugShowCheckedModeBanner: false,
       title: 'Mi UTEM',
       theme: MainTheme.theme,

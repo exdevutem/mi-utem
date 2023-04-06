@@ -34,6 +34,14 @@ class REvaluacion {
     }
     return list;
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      porcentajeKey: porcentaje,
+      descripcionKey: descripcion,
+      notaKey: nota,
+    };
+  }
 }
 
 class IEvaluacion extends REvaluacion {
