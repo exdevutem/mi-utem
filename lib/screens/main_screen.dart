@@ -3,10 +3,12 @@ import "dart:math";
 
 import "package:firebase_analytics/firebase_analytics.dart";
 import "package:firebase_remote_config/firebase_remote_config.dart";
+import 'package:flutter/foundation.dart';
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:flutter_markdown/flutter_markdown.dart";
 import "package:get/get.dart";
+import 'package:mi_utem/controllers/grades_changes_controller.dart';
 import 'package:mi_utem/models/permiso_covid.dart';
 import "package:mi_utem/models/usuario.dart";
 import "package:mi_utem/services/config_service.dart";
@@ -85,6 +87,18 @@ class _MainScreenState extends State<MainScreen> {
     return Scaffold(
       appBar: CustomAppBar(title: Text("Inicio")),
       drawer: CustomDrawer(usuario: widget.usuario),
+      floatingActionButton: kDebugMode
+          ? FloatingActionButton(
+              onPressed: () {
+                GradesChangesController.checkIfGradesHasChange();
+              },
+              tooltip: "Probar notificaciones de notas",
+              child: Icon(
+                Icons.notifications,
+                color: Colors.white,
+              ),
+            )
+          : null,
       body: PullToRefresh(
         onRefresh: () async => await _getPermisos(refresh: true),
         child: SingleChildScrollView(

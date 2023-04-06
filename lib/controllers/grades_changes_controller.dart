@@ -96,42 +96,49 @@ class GradesChangesController {
   ) {
     log('compareGrades asignaturaId: $asignaturaId');
 
-    final oldAsignatura =
-        Asignatura.fromJson(box.read('$savedGradesPrefix$asignaturaId'));
+    final oldAsignaturaJson = box.read('$savedGradesPrefix$asignaturaId');
 
-    log(oldAsignatura.toString());
+    if (oldAsignaturaJson != null) {
+      final oldAsignatura = Asignatura.fromJson(oldAsignaturaJson);
 
-    final oldAsignaturaLength = oldAsignatura.notasParciales.length;
-    final updatedAsiganturaLength = updatedAsigantura.notasParciales.length;
+      log(oldAsignatura.toString());
 
-    log('compareGrades oldAsignaturaLength: $oldAsignaturaLength');
-    log('compareGrades updatedAsiganturaLength: $updatedAsiganturaLength');
+      final oldAsignaturaLength = oldAsignatura.notasParciales.length;
+      final updatedAsiganturaLength = updatedAsigantura.notasParciales.length;
 
-    if (oldAsignaturaLength == 0) {
-      if (updatedAsiganturaLength == 0) {
-        return GradeChangeType.noChange;
-      } else {
-        if (_hasAGradeWithValue(updatedAsigantura)) {
-          return GradeChangeType.gradeSetted;
+      log('compareGrades oldAsignaturaLength: $oldAsignaturaLength');
+      log('compareGrades updatedAsiganturaLength: $updatedAsiganturaLength');
+
+      if (oldAsignaturaLength == 0) {
+        if (updatedAsiganturaLength == 0) {
+          return GradeChangeType.noChange;
         } else {
-          return GradeChangeType.weightersSetted;
+          if (_hasAGradeWithValue(updatedAsigantura)) {
+            return GradeChangeType.gradeSetted;
+          } else {
+            return GradeChangeType.weightersSetted;
+          }
         }
-      }
-    } else {
-      if (updatedAsiganturaLength == 0) {
-        return GradeChangeType.weightersDeleted;
       } else {
-        if (oldAsignaturaLength != updatedAsiganturaLength) {
-          return GradeChangeType.weightersUpdated;
+        if (updatedAsiganturaLength == 0) {
+          return GradeChangeType.weightersDeleted;
         } else {
-          if (_hasAWeighterDiferrence(oldAsignatura, updatedAsigantura)) {
+          if (oldAsignaturaLength != updatedAsiganturaLength) {
             return GradeChangeType.weightersUpdated;
           } else {
-            return _getGradeValueChangeType(oldAsignatura, updatedAsigantura);
+            if (_hasAWeighterDiferrence(oldAsignatura, updatedAsigantura)) {
+              return GradeChangeType.weightersUpdated;
+            } else {
+              return _getGradeValueChangeType(oldAsignatura, updatedAsigantura);
+            }
           }
         }
       }
+    } else {
+      log('compareGrades oldAsignaturaJson was null');
     }
+
+    return GradeChangeType.noChange;
   }
 
   static Future<Map<String, GradeChangeType>> checkIfGradesHasChange() async {

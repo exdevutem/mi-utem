@@ -35,7 +35,7 @@ class PerfilService {
               email: correoPersonal,
               name: nombres,
               data: {
-                "rut": rut?.toString(),
+                "rut": rut?.formateado(false),
               },
               ipAddress: "{{auto}}",
             ),
