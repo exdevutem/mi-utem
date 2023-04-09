@@ -94,8 +94,6 @@ class GradesChangesController {
     String asignaturaId,
     Asignatura updatedAsigantura,
   ) {
-    log('compareGrades asignaturaId: $asignaturaId');
-
     final oldAsignaturaJson = box.read('$savedGradesPrefix$asignaturaId');
 
     if (oldAsignaturaJson != null) {
@@ -105,9 +103,6 @@ class GradesChangesController {
 
       final oldAsignaturaLength = oldAsignatura.notasParciales.length;
       final updatedAsiganturaLength = updatedAsigantura.notasParciales.length;
-
-      log('compareGrades oldAsignaturaLength: $oldAsignaturaLength');
-      log('compareGrades updatedAsiganturaLength: $updatedAsiganturaLength');
 
       if (oldAsignaturaLength == 0) {
         if (updatedAsiganturaLength == 0) {
@@ -142,7 +137,7 @@ class GradesChangesController {
   }
 
   static Future<Map<String, GradeChangeType>> checkIfGradesHasChange() async {
-    final isLogged = await AuthService.isLoggedIn();
+    final isLogged = AuthService.isLoggedIn();
 
     if (isLogged) {
       final carreraId = box.read('carreraId');
@@ -152,27 +147,19 @@ class GradesChangesController {
             box.read('$suscribedAsignaturasPrefix$carreraId');
         List<Asignatura>? suscribedAsignaturas;
 
-        log('checkIfGradesHasChange suscribedAsignaturas_$carreraId (JSON) 1: $suscribedAsignaturasJson');
-
         if (suscribedAsignaturasJson == null) {
-          log('checkIfGradesHasChange was null, getting asignaturas');
           final asignaturas = await AsignaturasService.getAsignaturas();
           final asignaturasJson = asignaturas.map((e) => e.toJson()).toList();
           suscribedAsignaturas = asignaturas;
           box.write('$suscribedAsignaturasPrefix$carreraId', asignaturasJson);
         } else {
-          log('checkIfGradesHasChange was null, getting asignaturas');
           suscribedAsignaturas =
               Asignatura.fromJsonList(suscribedAsignaturasJson);
         }
 
-        log('checkIfGradesHasChange suscribedAsignaturas_$carreraId 2: ${suscribedAsignaturas.map((e) => e.codigo).toString()}');
-
         for (Asignatura? asignatura in suscribedAsignaturas) {
           final asignaturaId = asignatura?.id;
           if (asignatura != null && asignaturaId != null) {
-            final asignaturaCodigo = asignatura.codigo;
-            log('checkIfGradesHasChange ($asignaturaCodigo) $asignaturaId');
             final updatedAsignatura = await GradesService.getGrades(
               asignaturaId,
               forceRefresh: true,
@@ -233,7 +220,7 @@ class GradesChangesController {
     } else if (change != GradeChangeType.noChange) {
       Sentry.captureMessage(
         'Asignatura has changed but not notificated',
-        level: SentryLevel.warning,
+        level: SentryLevel.debug,
         withScope: (scope) {
           scope.setTag('asignaturaId', asignatura.id.toString());
           scope.setTag('asignaturaCodigo', asignatura.codigo.toString());

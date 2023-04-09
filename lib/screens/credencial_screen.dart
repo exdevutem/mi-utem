@@ -3,6 +3,7 @@ import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 import 'package:mdi/mdi.dart';
 import 'package:mi_utem/models/carrera.dart';
 import 'package:mi_utem/models/usuario.dart';
+import 'package:mi_utem/services/analytics_service.dart';
 import 'package:mi_utem/services/carreras_service.dart';
 import 'package:mi_utem/services/perfil_service.dart';
 import 'package:mi_utem/services/review_service.dart';
@@ -98,9 +99,7 @@ class _CredencialScreenState extends State<CredencialScreen> {
                       usuario: _usuario,
                       carrera: _carreraActiva,
                       controller: _flipController,
-                      onFlip: (direction) {
-                        setState(() {});
-                      },
+                      onFlip: (direction) => _onFlip(),
                     ),
                   ),
                 );
@@ -154,5 +153,10 @@ class _CredencialScreenState extends State<CredencialScreen> {
         },
       ),
     );
+  }
+
+  void _onFlip() {
+    AnalyticsService.logEvent("credencial_flip");
+    setState(() {});
   }
 }

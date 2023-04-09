@@ -12,14 +12,9 @@ class BackgroundController {
     String taskId = task.taskId;
     bool isTimeout = task.timeout;
     if (isTimeout) {
-      // This task has exceeded its allowed running-time.
-      // You must stop what you're doing and immediately .finish(taskId)
-      print("[BackgroundFetch] Headless task timed-out: $taskId");
       BackgroundFetch.finish(taskId);
       return;
     }
-    print('[BackgroundFetch] Headless event received.');
-    // Do your work here...
     BackgroundFetch.finish(taskId);
   }
 }
@@ -43,11 +38,6 @@ class BackgroundService {
         requiredNetworkType: NetworkType.NONE,
       ),
       (String taskId) async {
-        Sentry.captureMessage(
-          "BackgroundFetch event received $taskId",
-          level: SentryLevel.debug,
-        );
-
         await GradesChangesController.checkIfGradesHasChange();
 
         BackgroundFetch.finish(taskId);
@@ -57,17 +47,11 @@ class BackgroundService {
           "BackgroundFetch task timeout $taskId",
           level: SentryLevel.warning,
         );
-        print("[BackgroundFetch] TASK TIMEOUT taskId: $taskId");
         BackgroundFetch.finish(taskId);
       },
     );
 
-    BackgroundFetch.start().then((int status) {
-      Sentry.captureMessage(
-        "BackgroundFetch start success with status $status",
-        level: SentryLevel.debug,
-      );
-    }).catchError((e, stackTrace) {
+    BackgroundFetch.start().then((int status) {}).catchError((e, stackTrace) {
       Sentry.captureException(e, stackTrace: stackTrace);
     });
   }

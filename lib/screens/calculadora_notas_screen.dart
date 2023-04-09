@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mi_utem/controllers/calculator_controller.dart';
 import 'package:mi_utem/models/evaluacion.dart';
+import 'package:mi_utem/services/analytics_service.dart';
 import 'package:mi_utem/themes/theme.dart';
 import 'package:mi_utem/widgets/custom_app_bar.dart';
 import 'package:mi_utem/widgets/nota_list_item.dart';
@@ -218,9 +219,7 @@ class CalculadoraNotasScreen extends StatelessWidget {
                               onChanged: (evaluacion) {
                                 controller.changeGradeAt(i, evaluacion);
                               },
-                              onDelete: () {
-                                controller.removeGradeAt(i);
-                              },
+                              onDelete: () => _deleteGrade(controller, i),
                             );
                           },
                           itemCount: controller.partialGrades.length,
@@ -228,14 +227,7 @@ class CalculadoraNotasScreen extends StatelessWidget {
                       ),
                       SizedBox(height: 16),
                       TextButton(
-                        onPressed: () {
-                          controller.addGrade(
-                            IEvaluacion(
-                              nota: null,
-                              porcentaje: null,
-                            ),
-                          );
-                        },
+                        onPressed: () => _addGrade(controller),
                         child: Text("Agregar nota"),
                       ),
                     ],
@@ -245,6 +237,21 @@ class CalculadoraNotasScreen extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  void _deleteGrade(CalculatorController controller, int index) {
+    AnalyticsService.logEvent("calculator_delete_grade");
+    controller.removeGradeAt(index);
+  }
+
+  void _addGrade(CalculatorController controller) {
+    AnalyticsService.logEvent("calculator_add_grade");
+    controller.addGrade(
+      IEvaluacion(
+        nota: null,
+        porcentaje: null,
       ),
     );
   }

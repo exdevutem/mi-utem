@@ -2,6 +2,7 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:mi_utem/controllers/horario_controller.dart';
 import 'package:mi_utem/models/horario.dart';
+import 'package:mi_utem/services/analytics_service.dart';
 import 'package:mi_utem/themes/theme.dart';
 
 class ClassBlockCard extends StatelessWidget {
@@ -34,8 +35,30 @@ class ClassBlockCard extends StatelessWidget {
                 width: width,
                 height: height,
                 textColor: textColor,
+                onTap: _onTap,
+                onLongPress: _onLongPress,
               ),
       ),
+    );
+  }
+
+  _onTap(BloqueHorario block) {
+    AnalyticsService.logEvent(
+      "horario_class_block_tap",
+      parameters: {
+        "asignatura": block.asignatura?.nombre,
+        "codigo": block.asignatura?.codigo,
+      },
+    );
+  }
+
+  _onLongPress(BloqueHorario block) {
+    AnalyticsService.logEvent(
+      "horario_class_block_long_press",
+      parameters: {
+        "asignatura": block.asignatura?.nombre,
+        "codigo": block.asignatura?.codigo,
+      },
     );
   }
 }
@@ -67,8 +90,8 @@ class _ClassBlock extends StatelessWidget {
   final double height;
   final Color textColor;
   final Color? color;
-  final Function(BloqueHorario)? onTap;
-  final Function(BloqueHorario)? onLongPress;
+  final void Function(BloqueHorario)? onTap;
+  final void Function(BloqueHorario)? onLongPress;
 
   const _ClassBlock({
     Key? key,
