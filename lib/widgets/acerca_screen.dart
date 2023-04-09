@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
@@ -8,6 +7,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:mi_utem/config/routes.dart';
 import 'package:mi_utem/models/usuario.dart';
+import 'package:mi_utem/services/analytics_service.dart';
 import 'package:mi_utem/services/config_service.dart';
 import 'package:mi_utem/widgets/acerca_aplicacion_content.dart';
 import 'package:mi_utem/widgets/custom_app_bar.dart';
@@ -109,8 +109,8 @@ class _AcercaScreenState extends State<AcercaScreen> {
                                 child: InkWell(
                                   customBorder: CircleBorder(),
                                   onTap: () async {
-                                    FirebaseAnalytics.instance.logEvent(
-                                      name: "acerca_club_social_click",
+                                    AnalyticsService.logEvent(
+                                      "acerca_club_social_tap",
                                       parameters: {
                                         "red": red['nombre'],
                                       },
@@ -179,8 +179,8 @@ class _AcercaScreenState extends State<AcercaScreen> {
                                           nombres: creador['nombre'],
                                           fotoUrl: creador['fotoUrl']),
                                       onImageTap: (context, imageProvider) {
-                                        FirebaseAnalytics.instance.logEvent(
-                                          name: "acerca_person_image_click",
+                                        AnalyticsService.logEvent(
+                                          "acerca_person_image_tap",
                                           parameters: {
                                             "persona": creador['nombre'],
                                           },
@@ -230,10 +230,8 @@ class _AcercaScreenState extends State<AcercaScreen> {
                                                     customBorder:
                                                         CircleBorder(),
                                                     onTap: () async {
-                                                      FirebaseAnalytics.instance
-                                                          .logEvent(
-                                                        name:
-                                                            "acerca_person_social_click",
+                                                      AnalyticsService.logEvent(
+                                                        "acerca_person_social_tap",
                                                         parameters: {
                                                           "persona":
                                                               creador['nombre'],

@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:dio/dio.dart';
-import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -13,6 +12,7 @@ import 'package:get/get.dart';
 import 'package:mi_utem/config/routes.dart';
 import 'package:mi_utem/helpers/snackbars.dart';
 import 'package:mi_utem/models/usuario.dart';
+import 'package:mi_utem/services/analytics_service.dart';
 import 'package:mi_utem/services/auth_service.dart';
 import 'package:mi_utem/services/config_service.dart';
 import 'package:mi_utem/widgets/acerca_dialog.dart';
@@ -249,12 +249,8 @@ class _LoginScreenState extends State<LoginScreen> {
         bool esPrimeraVez = await AuthService.esPrimeraVez();
         Usuario usuario = await AuthService.login(correo, contrasenia, true);
 
-        FirebaseAnalytics.instance.logLogin();
-        FirebaseAnalytics.instance.setUserId(id: usuario.correoUtem);
-        if (usuario.rut != null) {
-          FirebaseAnalytics.instance.setUserProperty(
-              name: "rut", value: usuario.rut!.numero.toString());
-        }
+        AnalyticsService.logEvent('login');
+        AnalyticsService.setUser(usuario);
 
         Get.toNamed(
           Routes.home,

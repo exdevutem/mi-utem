@@ -1,7 +1,6 @@
 import "dart:convert";
 import "dart:math";
 
-import "package:firebase_analytics/firebase_analytics.dart";
 import "package:firebase_remote_config/firebase_remote_config.dart";
 import 'package:flutter/foundation.dart';
 import "package:flutter/material.dart";
@@ -11,6 +10,7 @@ import "package:get/get.dart";
 import 'package:mi_utem/controllers/grades_changes_controller.dart';
 import 'package:mi_utem/models/permiso_covid.dart';
 import "package:mi_utem/models/usuario.dart";
+import 'package:mi_utem/services/analytics_service.dart';
 import "package:mi_utem/services/config_service.dart";
 import "package:mi_utem/services/perfil_service.dart";
 import 'package:mi_utem/services/permisos_covid_service.dart';
@@ -50,8 +50,6 @@ class _MainScreenState extends State<MainScreen> {
         systemNavigationBarIconBrightness: Brightness.light,
       ),
     );
-
-    FirebaseAnalytics.instance.logEvent(name: "home");
 
     ReviewService.addScreen("MainScreen");
     ReviewService.checkAndRequestReview();
@@ -140,7 +138,7 @@ class _MainScreenState extends State<MainScreen> {
                         snackPosition: SnackPosition.BOTTOM,
                         margin: EdgeInsets.all(20),
                       );
-                      FirebaseAnalytics.instance.logEvent(name: "pronto_eg");
+                      AnalyticsService.logEvent("show_pronto_eg");
                     }
                   }
                 },

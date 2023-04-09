@@ -1,6 +1,6 @@
-import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:mi_utem/models/asignatura.dart';
+import 'package:mi_utem/services/analytics_service.dart';
 import 'package:mi_utem/services/asignaturas_service.dart';
 import 'package:mi_utem/widgets/custom_error_widget.dart';
 import 'package:mi_utem/widgets/loading_indicator.dart';
@@ -62,9 +62,8 @@ class _AsignaturaEstudiantesTabState extends State<AsignaturaEstudiantesTab> {
             itemBuilder: (context, i) {
               return ListTile(
                 onTap: () {
-                  FirebaseAnalytics.instance.logEvent(
-                    name: 'asignatura_estudiante_click',
-                    parameters: null,
+                  AnalyticsService.logEvent(
+                    'asignatura_estudiante_tap',
                   );
                 },
               );

@@ -1,4 +1,3 @@
-import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 import 'package:mdi/mdi.dart';
@@ -93,12 +92,6 @@ class _CredencialScreenState extends State<CredencialScreen> {
               if (_usuario!.rut != null &&
                   _carreraActiva!.nombre != null &&
                   _carreraActiva!.nombre!.isNotEmpty) {
-                FirebaseAnalytics.instance.setUserProperty(
-                    name: "carreraActiva", value: _carreraActiva!.nombre!);
-                FirebaseAnalytics.instance.setUserProperty(
-                    name: "estadoCarreraActiva",
-                    value: _carreraActiva!.estado!);
-
                 return Center(
                   child: SafeArea(
                     child: CredencialCard(

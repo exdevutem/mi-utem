@@ -1,15 +1,13 @@
-import 'package:flutter/material.dart';
-
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:url_launcher/url_launcher.dart';
-
 import 'package:mi_utem/models/noticia.dart';
+import 'package:mi_utem/services/analytics_service.dart';
 import 'package:mi_utem/services/noticias_service.dart';
 import 'package:mi_utem/widgets/custom_error_widget.dart';
 import 'package:mi_utem/widgets/loading_indicator.dart';
 import 'package:mi_utem/widgets/noticia_card.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class NoticiasSection extends StatefulWidget {
   NoticiasSection({Key? key}) : super(key: key);
@@ -79,8 +77,7 @@ class _NoticiasSectionState extends State<NoticiasSection> {
                     subtitulo: noticias[i].subtitulo,
                     imagenUrl: noticias[i].featuredMedia?.guid,
                     onTap: () {
-                      FirebaseAnalytics.instance
-                          .logEvent(name: "noticia_click");
+                      AnalyticsService.logEvent("noticia_tap");
                       _launchURL(noticias[i].link!);
                     },
                   ),
