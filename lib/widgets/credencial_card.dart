@@ -141,12 +141,14 @@ class _CredencialCardState extends State<CredencialCard> {
                             vertical: 5,
                             horizontal: 10,
                           ),
-                          child: BarcodeWidget(
-                            barcode: Barcode.code39(),
-                            data: "${widget.usuario!.rut!.numero}",
-                            width: 200,
-                            height: 50,
-                            drawText: false,
+                          child: OccludeWrapper(
+                            child: BarcodeWidget(
+                              barcode: Barcode.code39(),
+                              data: "${widget.usuario!.rut!.numero}",
+                              width: 200,
+                              height: 50,
+                              drawText: false,
+                            ),
                           ),
                         ),
                         Container(height: 10),

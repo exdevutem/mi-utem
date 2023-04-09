@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:barcode_image/barcode_image.dart';
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_uxcam/widgets/occlude_wrapper.dart';
 import 'package:get/get.dart';
 import 'package:image/image.dart' as dartImage;
 import 'package:intl/intl.dart';
@@ -93,6 +94,7 @@ class LoadedScreen extends StatelessWidget {
       () => ImageViewScreen(
         imageProvider: MemoryImage(data),
         heroTag: heroTag,
+        occlude: true,
       ),
       routeName: Routes.imageView,
     );
@@ -127,12 +129,14 @@ class LoadedScreen extends StatelessWidget {
                   child: Container(
                     color: Colors.white,
                     padding: EdgeInsets.all(10),
-                    child: BarcodeWidget(
-                      barcode: Barcode.qrCode(),
-                      height: 200,
-                      width: 200,
-                      data: permiso.codigoQr!,
-                      drawText: false,
+                    child: OccludeWrapper(
+                      child: BarcodeWidget(
+                        barcode: Barcode.qrCode(),
+                        height: 200,
+                        width: 200,
+                        data: permiso.codigoQr!,
+                        drawText: false,
+                      ),
                     ),
                   ),
                 ),
