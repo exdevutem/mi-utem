@@ -14,7 +14,6 @@ dependencies:
   badges: ^2.0.2
   barcode_widget: ^2.0.3
   barcode_image: ^2.0.2
-  beamer: ^1.5.3
   cached_network_image: ^3.2.0
   carousel_slider: ^4.0.0
   charts_flutter:
@@ -75,6 +74,7 @@ dependencies:
   hexcolor: ^3.0.1
   shared_preferences: ^2.0.20
   background_fetch: ^1.1.5
+  flutter_uxcam: ^2.3.0
 
 dependency_overrides:
   qr: ^3.0.0

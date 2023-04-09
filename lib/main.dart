@@ -1,11 +1,15 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_uxcam/flutter_uxcam.dart';
+import 'package:flutter_uxcam/flutter_uxcam_observer.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:mi_utem/config/constants.dart';
 import 'package:mi_utem/config/logger.dart';
 import 'package:mi_utem/config/router.dart';
 import 'package:mi_utem/controllers/calculator_controller.dart';
@@ -43,6 +47,13 @@ class MiUtem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    FlutterUxcam.optIntoSchematicRecordings();
+    FlutterUxConfig config = FlutterUxConfig(
+      userAppKey: kDebugMode ? Constants.uxCamProdKey : Constants.uxCamProdKey,
+      enableAutomaticScreenNameTagging: true,
+    );
+    FlutterUxcam.startWithConfiguration(config);
+
     return GetMaterialApp(
       getPages: pages,
       initialRoute: '/splash',
@@ -58,6 +69,7 @@ class MiUtem extends StatelessWidget {
           },
         ),
         SentryNavigatorObserver(),
+        FlutterUxcamNavigatorObserver()
       ],
       builder: (context, widget) => ResponsiveWrapper.builder(
         widget,
