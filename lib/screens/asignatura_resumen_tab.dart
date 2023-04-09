@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mi_utem/models/asignatura.dart';
 import 'package:mi_utem/widgets/custom_error_widget.dart';
+import 'package:mi_utem/widgets/field_list_tile.dart';
 import 'package:mi_utem/widgets/loading_indicator.dart';
 import 'package:mi_utem/widgets/pull_to_refresh.dart';
 
@@ -74,37 +75,32 @@ class _AsignaturaResumenTabState extends State<AsignaturaResumenTab> {
                               width: double.infinity,
                               child: Text(
                                 "Resumen".toUpperCase(),
-                                style: Get.textTheme.headlineMedium,
+                                style: Get.textTheme.bodyLarge,
                                 textAlign: TextAlign.left,
                               ),
                             ),
-                            ListTile(
-                              title: Text("Nombre"),
-                              subtitle: Text(widget.asignatura!.nombre!),
+                            FieldListTile(
+                              title: "Nombre",
+                              value: widget.asignatura!.nombre!,
                             ),
                             Divider(height: 5, indent: 20, endIndent: 20),
-                            ListTile(
-                              title: Text("Código"),
-                              subtitle: Text(
-                                widget.asignatura!.codigo!,
-                              ),
+                            FieldListTile(
+                              title: "Código",
+                              value: widget.asignatura!.codigo!,
                             ),
                             if (_asignatura.seccion != null &&
                                 _asignatura.seccion!.isNotEmpty)
                               Divider(height: 5, indent: 20, endIndent: 20),
                             if (_asignatura.seccion != null &&
                                 _asignatura.seccion!.isNotEmpty)
-                              ListTile(
-                                title: Text("Sección"),
-                                subtitle: Text(
-                                  _asignatura.seccion.toString(),
-                                ),
+                              FieldListTile(
+                                title: "Sección",
+                                value: _asignatura.seccion.toString(),
                               ),
                             Divider(height: 5, indent: 20, endIndent: 20),
-                            ListTile(
-                              title: Text("Docente"),
-                              subtitle:
-                                  Text(_asignatura.docente ?? "Sin docente"),
+                            FieldListTile(
+                              title: "Docente",
+                              value: _asignatura.docente ?? "Sin docente",
                               // trailing: _asignatura.docente != null
                               //     ? Badge(
                               //         shape: BadgeShape.square,
@@ -138,32 +134,32 @@ class _AsignaturaResumenTabState extends State<AsignaturaResumenTab> {
                             ),
                             Divider(height: 5, indent: 20, endIndent: 20),
                             if (_asignatura.tipoAsignatura != null) ...[
-                              ListTile(
-                                title: Text("Tipo de asignatura"),
-                                subtitle: Text(_asignatura.tipoAsignatura!),
+                              FieldListTile(
+                                title: "Tipo de asignatura",
+                                value: _asignatura.tipoAsignatura!,
                               ),
                               Divider(height: 5, indent: 20, endIndent: 20),
                             ],
-                            ListTile(
-                              title: Text("Tipo de hora"),
-                              subtitle: Text(_asignatura.tipoHora!),
+                            FieldListTile(
+                              title: "Tipo de hora",
+                              value: _asignatura.tipoHora!,
                             ),
                             Divider(height: 5, indent: 20, endIndent: 20),
                             if (_asignatura.horario != null) ...[
-                              ListTile(
-                                title: Text("Horario"),
-                                subtitle: Text(_asignatura.horario!),
+                              FieldListTile(
+                                title: "Horario",
+                                value: _asignatura.horario!,
                               ),
                               Divider(height: 5, indent: 20, endIndent: 20),
                             ],
-                            ListTile(
-                              title: Text("Intentos"),
-                              subtitle: Text(_asignatura.intentos.toString()),
+                            FieldListTile(
+                              title: "Intentos",
+                              value: _asignatura.intentos.toString(),
                             ),
                             Divider(height: 5, indent: 20, endIndent: 20),
-                            ListTile(
-                              title: Text("Sala"),
-                              subtitle: Text(_asignatura.sala!),
+                            FieldListTile(
+                              title: "Sala",
+                              value: _asignatura.sala!,
                             ),
                           ],
                         ),
