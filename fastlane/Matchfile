@@ -1,3 +1,5 @@
 storage_mode("git")
 
+git_url(ENV["MATCH_REPO_GIT_URL"])
+
 type("development")

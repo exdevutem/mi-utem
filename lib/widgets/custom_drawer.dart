@@ -1,23 +1,20 @@
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
-
 import 'package:badges/badges.dart' as badge;
 import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mdi/mdi.dart';
-
+import 'package:mi_utem/config/routes.dart';
 import 'package:mi_utem/models/usuario.dart';
 import 'package:mi_utem/screens/asignaturas_screen.dart';
 import 'package:mi_utem/screens/credencial_screen.dart';
-import 'package:mi_utem/screens/horario_screen.dart';
-import 'package:mi_utem/screens/login_screen.dart';
+import 'package:mi_utem/screens/horario/horario_screen.dart';
 import 'package:mi_utem/screens/usuario_screen.dart';
 import 'package:mi_utem/services/auth_service.dart';
 import 'package:mi_utem/services/config_service.dart';
 import 'package:mi_utem/services/review_service.dart';
 import 'package:mi_utem/themes/theme.dart';
-import 'package:mi_utem/widgets/acerca_screen.dart';
 import 'package:mi_utem/widgets/profile_photo.dart';
 
 class CustomDrawer extends StatefulWidget {
@@ -47,6 +44,24 @@ class _CustomDrawerState extends State<CustomDrawer> {
         return HorarioScreen();
       case "Credencial":
         return CredencialScreen();
+      // case "Docentes":
+      //   return DocentesScreen();
+      //   break;
+      default:
+        return null;
+    }
+  }
+
+  String? _getRoute(String? name) {
+    switch (name) {
+      case "Perfil":
+        return Routes.perfil;
+      case "Asignaturas":
+        return Routes.asignaturas;
+      case "Horario":
+        return Routes.horario;
+      case "Credencial":
+        return Routes.credencial;
       // case "Docentes":
       //   return DocentesScreen();
       //   break;
@@ -126,14 +141,9 @@ class _CustomDrawerState extends State<CustomDrawer> {
                             )
                           : null,
                       onTap: () async {
-                        Widget? screen = _getScreen(e["nombre"]);
-                        if (screen != null) {
-                          if (screen is HorarioScreen) {
-                            //TODO: Cambiar cuando haya router
-                            await Get.to(screen, binding: HorarioBinding());
-                          } else {
-                            await Get.to(() => screen);
-                          }
+                        String? route = _getRoute(e["nombre"]);
+                        if (route != null) {
+                          Get.toNamed(route);
                           ReviewService.checkAndRequestReview();
                         }
                       },
@@ -148,7 +158,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                             leading: Icon(Mdi.heart),
                             title: Text('Acerca de Mi UTEM'),
                             onTap: () async {
-                              await Get.to(() => AcercaScreen());
+                              await Get.toNamed(Routes.about);
                               ReviewService.checkAndRequestReview();
                             },
                           ),
@@ -158,7 +168,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                             onTap: () async {
                               await AuthService.logOut();
 
-                              await Get.offAll(LoginScreen());
+                              await Get.offAllNamed(Routes.home);
                             },
                           ),
                         ],

@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:math';
 
-import 'package:beamer/beamer.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
@@ -11,6 +10,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:get/get.dart';
+import 'package:mi_utem/config/routes.dart';
 import 'package:mi_utem/helpers/snackbars.dart';
 import 'package:mi_utem/models/usuario.dart';
 import 'package:mi_utem/services/auth_service.dart';
@@ -54,7 +54,6 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
 
-    FirebaseAnalytics.instance.setCurrentScreen(screenName: 'LoginScreen');
     _correoController.text = "";
     _contraseniaController.text = "";
 
@@ -204,8 +203,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                               data: _creditText,
                                             ),
                                             onTap: () {
-                                              Beamer.of(context)
-                                                  .beamToNamed('/acerca');
+                                              Get.toNamed(
+                                                Routes.about,
+                                              );
                                             },
                                           ),
                                         ),
@@ -256,7 +256,9 @@ class _LoginScreenState extends State<LoginScreen> {
               name: "rut", value: usuario.rut!.numero.toString());
         }
 
-        Beamer.of(context).beamToNamed('/');
+        Get.toNamed(
+          Routes.home,
+        );
 
         if (esPrimeraVez) {
           Get.dialog(

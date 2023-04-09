@@ -1,6 +1,7 @@
-import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:mdi/mdi.dart';
+import 'package:mi_utem/config/routes.dart';
 import 'package:mi_utem/models/asignatura.dart';
 import 'package:mi_utem/screens/asignatura_estudiantes_tab.dart';
 import 'package:mi_utem/screens/asignatura_notas_tab.dart';
@@ -48,8 +49,7 @@ class AsignaturaScreen extends StatelessWidget {
       ];
 
   bool get _mostrarCalculadora {
-    return ConfigService.config?.getBool(ConfigService.CALCULADORA_MOSTRAR) ??
-        false;
+    return ConfigService.config.getBool(ConfigService.CALCULADORA_MOSTRAR);
   }
 
   int get _initialIndex {
@@ -73,9 +73,8 @@ class AsignaturaScreen extends StatelessWidget {
                     icon: Icon(Mdi.calculator),
                     tooltip: "Calculadora",
                     onPressed: () {
-                      Beamer.of(context).beamToNamed(
-                        "/calculadora-notas",
-                        data: asignatura,
+                      Get.toNamed(
+                        Routes.calculadoraNotas,
                       );
                     },
                   ),

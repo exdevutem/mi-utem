@@ -1,5 +1,5 @@
 # Uncomment this line to define a global platform for your project
-platform :ios, '12.0'
+platform :ios, '13.0'
 
 # CocoaPods analytics sends network stats synchronously affecting flutter build latency.
 ENV['COCOAPODS_DISABLE_STATS'] = 'true'
@@ -36,9 +36,15 @@ end
 
 post_install do |installer|
   installer.pods_project.targets.each do |target|
+    if target.respond_to?(:product_type) and target.product_type == "com.apple.product-type.bundle"
+      target.build_configurations.each do |config|
+          config.build_settings['CODE_SIGNING_ALLOWED'] = 'NO'
+      end
+    end
+    
     flutter_additional_ios_build_settings(target)
     target.build_configurations.each do |config|
-      config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '12.0'
+      config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '13.0'
       config.build_settings['EXCLUDED_ARCHS[sdk=iphonesimulator*]'] = 'arm64'
 
       # You can enable the permissions needed here. For example to enable camera
@@ -96,3 +102,15 @@ post_install do |installer|
     end
   end
 end
+
+################  Awesome Notifications FCM pod mod  ###################
+awesome_fcm_pod_file = File.expand_path(File.join('plugins', 'awesome_notifications_fcm', 'ios', 'Scripts', 'AwesomeFcmPodFile'), '.symlinks')
+require awesome_fcm_pod_file
+target 'MiUtemNotificationServiceExtension' do
+  use_frameworks!
+  use_modular_headers!
+  
+  install_awesome_fcm_ios_pod_target File.dirname(File.realpath(__FILE__))
+end
+update_awesome_fcm_service_target('MiUtemNotificationServiceExtension', File.dirname(File.realpath(__FILE__)), flutter_root)
+################  Awesome Notifications FCM pod mod  ###################

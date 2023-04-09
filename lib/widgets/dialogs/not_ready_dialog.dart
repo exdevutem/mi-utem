@@ -1,6 +1,7 @@
-import 'package:beamer/beamer.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:mi_utem/config/routes.dart';
 import 'package:mi_utem/themes/theme.dart';
 import 'package:mi_utem/widgets/error_dialog.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -77,7 +78,7 @@ class NotReadyDialog extends StatelessWidget {
               ),
               recognizer: TapGestureRecognizer()
                 ..onTap = () {
-                  Beamer.of(context).beamToNamed('/acerca');
+                  Get.toNamed(Routes.about);
                 },
             ),
           ],

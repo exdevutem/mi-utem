@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:mi_utem/models/rut.dart';
 import 'package:mi_utem/models/usuario.dart';
+import 'package:mi_utem/services/notification_service.dart';
 import 'package:mi_utem/utils/dio_miutem_client.dart';
 
 class PerfilService {
@@ -24,6 +24,22 @@ class PerfilService {
           : null;
       String? correoUtem = box.read("correoUtem");
       String? correoPersonal = box.read("correoPersonal");
+
+/*       if (await AuthService.isLoggedIn()) {
+        Sentry.configureScope(
+          (scope) => scope.setUser(
+            SentryUser(
+              id: correoUtem,
+              email: correoPersonal,
+              name: nombres,
+              data: {
+                "rut": rut?.formateado(false),
+              },
+              ipAddress: "{{auto}}",
+            ),
+          ),
+        );
+      } */
 
       return Usuario(
         token: token,
@@ -63,7 +79,7 @@ class PerfilService {
   }
 
   static Future<void> deleteFcmToken() async {
-    String? fcmToken = await FirebaseMessaging.instance.getToken();
+    String? fcmToken = await NotificationService.fcm.requestFirebaseAppToken();
     CollectionReference usuariosCollection =
         FirebaseFirestore.instance.collection('usuarios');
 
@@ -86,7 +102,8 @@ class PerfilService {
 
   static Future<void> saveFcmToken() async {
     try {
-      String? fcmToken = await FirebaseMessaging.instance.getToken();
+      String? fcmToken =
+          await NotificationService.fcm.requestFirebaseAppToken();
       Usuario usuario = await PerfilService.getLocalUsuario();
       CollectionReference usuariosCollection =
           FirebaseFirestore.instance.collection('usuarios');

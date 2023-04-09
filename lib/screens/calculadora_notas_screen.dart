@@ -1,29 +1,18 @@
-import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mi_utem/controllers/calculator_controller.dart';
-import 'package:mi_utem/models/asignatura.dart';
 import 'package:mi_utem/models/evaluacion.dart';
-import 'package:mi_utem/services/review_service.dart';
 import 'package:mi_utem/themes/theme.dart';
 import 'package:mi_utem/widgets/custom_app_bar.dart';
 import 'package:mi_utem/widgets/nota_list_item.dart';
 
 class CalculadoraNotasScreen extends StatelessWidget {
-  final Asignatura? asignaturaInicial;
-
   CalculadoraNotasScreen({
     Key? key,
-    this.asignaturaInicial,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    ReviewService.addScreen("CalculadoraNotasScreen");
-    FirebaseAnalytics.instance.setCurrentScreen(
-      screenName: 'CalculadoraNotasScreen',
-    );
-
     final controller = CalculatorController.to;
 
     controller.makeEditable();

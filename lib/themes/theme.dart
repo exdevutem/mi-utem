@@ -19,6 +19,8 @@ class MainTheme {
   static const Color mediumGrey = Color(0xFFBDBDBD);
   static const Color lightGrey = Color(0xfff1f1f1);
 
+  static const Color dividerColor = mediumGrey;
+
   static double elevation = 0;
 
   static ThemeData get theme => ThemeData(

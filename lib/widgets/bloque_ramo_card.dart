@@ -1,60 +1,47 @@
-import 'package:flutter/material.dart';
-
 import 'package:dotted_border/dotted_border.dart';
+import 'package:flutter/material.dart';
 import 'package:mi_utem/controllers/horario_controller.dart';
-
 import 'package:mi_utem/models/horario.dart';
 import 'package:mi_utem/themes/theme.dart';
 
-class BloqueRamoCard extends StatelessWidget {
-  final Color colorTexto = Colors.white;
+class ClassBlockCard extends StatelessWidget {
+  final BloqueHorario? block;
   final double width;
   final double height;
-  final BloqueHorario bloque;
+  final double internalMargin;
+  final Color textColor;
 
-  BloqueRamoCard({
+  ClassBlockCard({
     Key? key,
-    required this.bloque,
+    required this.block,
     required this.width,
     required this.height,
+    this.internalMargin = 0,
+    this.textColor = Colors.white,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: height + 20,
+      height: height,
       width: width,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border(
-          right: BorderSide(
-            color: MainTheme.mediumGrey,
-            style: BorderStyle.solid,
-            width: 1,
-          ),
-          bottom: BorderSide(
-            color: MainTheme.mediumGrey,
-            style: BorderStyle.solid,
-            width: 1,
-          ),
-        ),
-      ),
       child: Padding(
-        padding: EdgeInsets.all(10),
-        child: bloque.asignatura == null
-            ? BloqueVacio()
-            : BloqueOcupado(
-                bloque: bloque,
+        padding: EdgeInsets.all(internalMargin),
+        child: block?.asignatura == null
+            ? _EmptyBlock()
+            : _ClassBlock(
+                block: block!,
                 width: width,
                 height: height,
-                textColor: colorTexto),
+                textColor: textColor,
+              ),
       ),
     );
   }
 }
 
-class BloqueVacio extends StatelessWidget {
-  const BloqueVacio({Key? key}) : super(key: key);
+class _EmptyBlock extends StatelessWidget {
+  const _EmptyBlock({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -74,46 +61,57 @@ class BloqueVacio extends StatelessWidget {
   }
 }
 
-class BloqueOcupado extends StatelessWidget {
-  const BloqueOcupado({
-    Key? key,
-    required this.bloque,
-    required this.width,
-    required this.height,
-    required this.textColor,
-    this.color = Colors.teal,
-  }) : super(key: key);
-
-  final BloqueHorario bloque;
+class _ClassBlock extends StatelessWidget {
+  final BloqueHorario block;
   final double width;
   final double height;
   final Color textColor;
   final Color? color;
+  final Function(BloqueHorario)? onTap;
+  final Function(BloqueHorario)? onLongPress;
+
+  const _ClassBlock({
+    Key? key,
+    required this.block,
+    required this.width,
+    required this.height,
+    required this.textColor,
+    this.color = Colors.teal,
+    this.onTap,
+    this.onLongPress,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      child: Container(
-        decoration: BoxDecoration(
-          color: HorarioController.to.getColor(bloque.asignatura!),
+    return Container(
+      decoration: BoxDecoration(
+        color: HorarioController.to.getColor(block.asignatura!) ?? color,
+        borderRadius: BorderRadius.circular(15),
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
           borderRadius: BorderRadius.circular(15),
-        ),
-        child: Column(
-          children: <Widget>[
-            HorarioText.classCode(
-              bloque.codigo!,
-              color: textColor,
-            ),
-            HorarioText.className(
-              bloque.asignatura!.nombre!.toUpperCase(),
-              color: textColor,
-            ),
-            HorarioText.classLocation(
-              bloque.sala ?? "Sin sala",
-              color: textColor,
-            ),
-          ],
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          onTap: onTap != null ? () => onTap?.call(block) : null,
+          onLongPress:
+              onLongPress != null ? () => onLongPress?.call(block) : null,
+          child: Column(
+            children: <Widget>[
+              HorarioText.classCode(
+                block.codigo!,
+                color: textColor,
+              ),
+              HorarioText.className(
+                block.asignatura!.nombre!.toUpperCase(),
+                color: textColor,
+              ),
+              HorarioText.classLocation(
+                block.sala ?? "Sin sala",
+                color: textColor,
+              ),
+            ],
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          ),
         ),
       ),
     );

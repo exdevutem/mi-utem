@@ -1,10 +1,9 @@
-import 'package:beamer/beamer.dart';
-import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:mi_utem/services/notificaciones_service.dart';
+import 'package:mi_utem/config/routes.dart';
+import 'package:mi_utem/services/notification_service.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -20,7 +19,6 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    FirebaseAnalytics.instance.setCurrentScreen(screenName: 'SplashScreen');
 
     SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(
@@ -42,10 +40,10 @@ class _SplashScreenState extends State<SplashScreen> {
 
   void _cambiarPantalla() async {
     if (_terminoAnimacion) {
-      Beamer.of(context).beamToNamed(
-        '/',
+      Get.offAllNamed(
+        Routes.home,
       );
-      await NotificationsService.requestUserPermissionIfNecessary();
+      await NotificationService.requestUserPermissionIfNecessary();
     }
   }
 

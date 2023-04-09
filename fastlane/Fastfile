@@ -5,6 +5,17 @@ default_platform(:mobile)
 
 platform :mobile do
 
+  lane :sync_match do
+    match(
+      app_identifier: [ENV["APP_IDENTIFIER_IOS"], ENV["APP_IDENTIFIER_IOS"] + ".MiUtemNotificationServiceExtension"],
+      type: "appstore",
+      git_url: ENV["MATCH_REPO_GIT_URL"],
+      readonly: is_ci,
+      keychain_name: ENV["KEYCHAIN_NAME"],
+      keychain_password: ENV["KEYCHAIN_PASSWORD"],
+    )
+  end
+
   lane :translate_changelog do |options|
     changelog = options[:changelog]
 
@@ -78,7 +89,7 @@ platform :mobile do
     skip_slack = false
     is_ci = false
 
-    if options[:type] == "release" && options[:type] == "beta"
+    if options[:type] == "release" || options[:type] == "beta"
       type = options[:type]
     end
 

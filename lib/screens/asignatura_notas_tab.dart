@@ -1,10 +1,9 @@
-import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_masked_text/flutter_masked_text.dart';
 import 'package:mi_utem/controllers/calculator_controller.dart';
 import 'package:mi_utem/models/asignatura.dart';
 import 'package:mi_utem/models/evaluacion.dart';
-import 'package:mi_utem/services/asignaturas_service.dart';
+import 'package:mi_utem/services/grades_service.dart';
 import 'package:mi_utem/themes/theme.dart';
 import 'package:mi_utem/widgets/custom_error_widget.dart';
 import 'package:mi_utem/widgets/loading_indicator.dart';
@@ -30,18 +29,15 @@ class _AsignaturaNotasTabState extends State<AsignaturaNotasTab> {
   @override
   void initState() {
     super.initState();
-    FirebaseAnalytics.instance
-        .setCurrentScreen(screenName: 'AsignaturaNotasTab');
     _futureAsignatura = _getNotasByCodigoAsignatura();
   }
 
   Future<Asignatura?> _getNotasByCodigoAsignatura(
       [bool refresh = false]) async {
     try {
-      final asignatura = await AsignaturasService.getNotasByCodigoAsignatura(
-        widget.asignatura.codigo,
-        widget.asignatura.id,
-        refresh,
+      final asignatura = await GradesService.getGrades(
+        widget.asignatura.id!,
+        forceRefresh: refresh,
       );
 
       setState(() {

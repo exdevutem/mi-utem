@@ -1,9 +1,7 @@
-import 'package:flutter/material.dart';
-
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 import 'package:mdi/mdi.dart';
-
 import 'package:mi_utem/models/carrera.dart';
 import 'package:mi_utem/models/usuario.dart';
 import 'package:mi_utem/services/carreras_service.dart';
@@ -33,7 +31,6 @@ class _CredencialScreenState extends State<CredencialScreen> {
   @override
   void initState() {
     ReviewService.addScreen("CredencialScreen");
-    FirebaseAnalytics.instance.setCurrentScreen(screenName: 'CredencialScreen');
     _secureScreen();
     _future = _getData();
     super.initState();

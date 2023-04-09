@@ -57,7 +57,9 @@ lane :ios_build_and_upload do |options|
       password: ENV["KEYCHAIN_PASSWORD"],
       set_default: is_ci
     )
-    sync_code_signing(
+    
+    match(
+      app_identifier: [ENV["APP_IDENTIFIER_IOS"], ENV["APP_IDENTIFIER_IOS"] + ".MiUtemNotificationServiceExtension"],
       type: "appstore",
       git_url: ENV["MATCH_REPO_GIT_URL"],
       readonly: is_ci,

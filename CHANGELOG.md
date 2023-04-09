@@ -28,9 +28,28 @@ Tipos de cambios
 
 ## [Unreleased]
 
+## [2.11.2] - 2023-04-06
+
+Esta versión del changelog contiene cambios hechos en 2.10, debido a que no se documentaron!
+
+### Added
+
+- Calculadora de notas
+- Indicador en pantalla de Horario
+- Integración con Awesome Notifications y Background fetch.
+
+### Fixed
+
+- Comportamientos de scroll y zoom en horario
+- Capturas de pantalla en horario
+- Configuración de iOS para horario
+- Correcciones varias de Horario
+- Errores cuando el usuario no tiene las notas guardadas
+- Errores de Fastline.
+
 ## [2.9.0] - 2023-01-15Z
 
-## Add
+### Added
 
 - Pantalla de horario cuenta con colores aleatorios por asignatura guardados en caché
 

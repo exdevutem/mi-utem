@@ -1,8 +1,9 @@
-import 'package:beamer/beamer.dart';
-import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:mdi/mdi.dart';
+import 'package:mi_utem/config/routes.dart';
 import 'package:mi_utem/models/asignatura.dart';
+import 'package:mi_utem/screens/asignatura_screen.dart';
 import 'package:mi_utem/services/asignaturas_service.dart';
 import 'package:mi_utem/services/config_service.dart';
 import 'package:mi_utem/widgets/custom_app_bar.dart';
@@ -24,8 +25,6 @@ class _AsignaturasScreenState extends State<AsignaturasScreen> {
   @override
   void initState() {
     super.initState();
-    FirebaseAnalytics.instance
-        .setCurrentScreen(screenName: 'AsignaturasScreen');
     _futureAsignaturas = _getAsignaturas();
   }
 
@@ -43,8 +42,7 @@ class _AsignaturasScreenState extends State<AsignaturasScreen> {
   }
 
   bool get _mostrarCalculadora {
-    return ConfigService.config?.getBool(ConfigService.CALCULADORA_MOSTRAR) ??
-        false;
+    return ConfigService.config.getBool(ConfigService.CALCULADORA_MOSTRAR);
   }
 
   @override
@@ -58,8 +56,8 @@ class _AsignaturasScreenState extends State<AsignaturasScreen> {
                   icon: Icon(Mdi.calculator),
                   tooltip: "Calculadora",
                   onPressed: () {
-                    Beamer.of(context).beamToNamed(
-                      "/calculadora-notas",
+                    Get.toNamed(
+                      Routes.calculadoraNotas,
                     );
                   },
                 ),
@@ -88,9 +86,11 @@ class _AsignaturasScreenState extends State<AsignaturasScreen> {
                       Asignatura asignatura = _asignaturas[i];
                       return ListTile(
                         onTap: () {
-                          Beamer.of(context).beamToNamed(
-                            "/asignatura",
-                            data: asignatura,
+                          Get.to(
+                            () => AsignaturaScreen(
+                              asignatura: asignatura,
+                            ),
+                            routeName: Routes.asignatura,
                           );
                         },
                         title: Text(

@@ -1,14 +1,12 @@
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
-
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import 'package:url_launcher/url_launcher.dart';
-
+import 'package:mi_utem/config/routes.dart';
 import 'package:mi_utem/models/usuario.dart';
 import 'package:mi_utem/services/config_service.dart';
 import 'package:mi_utem/widgets/acerca_aplicacion_content.dart';
@@ -16,6 +14,7 @@ import 'package:mi_utem/widgets/custom_app_bar.dart';
 import 'package:mi_utem/widgets/default_network_image.dart';
 import 'package:mi_utem/widgets/image_view_screen.dart';
 import 'package:mi_utem/widgets/profile_photo.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AcercaScreen extends StatefulWidget {
   AcercaScreen({
@@ -188,7 +187,9 @@ class _AcercaScreenState extends State<AcercaScreen> {
                                         );
                                         Get.to(
                                           () => ImageViewScreen(
-                                              imageProvider: imageProvider),
+                                            imageProvider: imageProvider,
+                                          ),
+                                          routeName: Routes.imageView,
                                         );
                                       }),
                                   Container(width: 20),

@@ -51,42 +51,4 @@ class AsignaturasService {
       throw e;
     }
   }
-
-  static Future<Asignatura> getNotasByCodigoAsignatura(
-      String? codigo, String? asignaturaId,
-      [bool refresh = false]) async {
-    String carreraId = box.read('carreraId')!;
-    String uri = "/v1/carreras/$carreraId/asignaturas/$asignaturaId/notas";
-
-    try {
-      Map<String, dynamic> query = {"semestre": false};
-      Response response = await _dio.get(
-        uri,
-        options: buildCacheOptions(
-          Duration(days: 7),
-          forceRefresh: refresh,
-        ),
-        queryParameters: query,
-      );
-
-      if (response.data is Iterable) {
-        List<Asignatura> asignaturas = Asignatura.fromJsonList(response.data);
-        if (asignaturas.length > 0) {
-          Asignatura asignatura =
-              asignaturas.firstWhere((a) => a.codigo == codigo);
-          return asignatura;
-        } else {
-          throw Exception("No se encontró la asignatura");
-        }
-      } else {
-        Asignatura asignatura = Asignatura.fromJson(response.data);
-        return asignatura;
-      }
-    } on DioError catch (e) {
-      print(e.message);
-      throw e;
-    } catch (e) {
-      throw e;
-    }
-  }
 }

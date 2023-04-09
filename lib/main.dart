@@ -6,22 +6,26 @@ import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:mi_utem/config/logger.dart';
 import 'package:mi_utem/config/router.dart';
 import 'package:mi_utem/controllers/calculator_controller.dart';
+import 'package:mi_utem/services/background_service.dart';
 import 'package:mi_utem/services/config_service.dart';
-import 'package:mi_utem/services/notificaciones_service.dart';
+import 'package:mi_utem/services/notification_service.dart';
 import 'package:mi_utem/themes/theme.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   await dotenv.load();
   await GetStorage.init();
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   await Firebase.initializeApp();
   await ConfigService.getInstance();
-  await NotificationsService.initialize();
+  await NotificationService.initialize();
+  await BackgroundService.initAndStart();
   await SentryFlutter.init(
     (options) {
       options.dsn =
@@ -39,13 +43,20 @@ class MiUtem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp.router(
-      routerDelegate: routerDelegate,
+    return GetMaterialApp(
+      getPages: pages,
+      initialRoute: '/splash',
       debugShowCheckedModeBanner: false,
       title: 'Mi UTEM',
       theme: MainTheme.theme,
       navigatorObservers: [
-        FirebaseAnalyticsObserver(analytics: analytics),
+        FirebaseAnalyticsObserver(
+          analytics: analytics,
+          nameExtractor: (settings) {
+            logger.d('Analytics: ${settings.name}');
+            return settings.name;
+          },
+        ),
         SentryNavigatorObserver(),
       ],
       builder: (context, widget) => ResponsiveWrapper.builder(

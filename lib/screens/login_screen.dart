@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:math';
 
-import 'package:beamer/beamer.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
@@ -13,6 +12,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:get/get.dart';
+import 'package:mi_utem/config/routes.dart';
 import 'package:mi_utem/models/usuario.dart';
 import 'package:mi_utem/services/auth_service.dart';
 import 'package:mi_utem/services/config_service.dart';
@@ -55,7 +55,6 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
 
-    FirebaseAnalytics.instance.setCurrentScreen(screenName: 'LoginScreen');
     _correo = null;
     _contrasenia = null;
     _controller = VideoPlayerController.asset('assets/videos/login_bg.mp4')
@@ -259,9 +258,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                                   data: _creditText,
                                                 ),
                                                 onTap: () {
-                                                  Beamer.of(context)
-                                                      .beamToNamed(
-                                                    '/acerca',
+                                                  Get.toNamed(
+                                                    Routes.about,
                                                   );
                                                 },
                                               ),
@@ -291,8 +289,9 @@ class _LoginScreenState extends State<LoginScreen> {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
       if (_correo == "error@utem.cl") {
-        Get.dialog(
-          ErrorDialog(
+        showDialog(
+          context: context,
+          builder: (context) => ErrorDialog(
             contenido: Container(
               height: 100,
               child: FlareActor(
@@ -319,8 +318,9 @@ class _LoginScreenState extends State<LoginScreen> {
           margin: EdgeInsets.all(20),
         );
       } else {
-        Get.dialog(
-          LoadingDialog(),
+        showDialog(
+          context: context,
+          builder: (context) => LoadingDialog(),
           barrierDismissible: false,
         );
 
@@ -336,8 +336,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 name: "rut", value: usuario.rut!.numero.toString());
           }
 
-          Beamer.of(context).beamToNamed(
-            '/',
+          Get.offAllNamed(
+            Routes.home,
           );
 
           if (esPrimeraVez) {
@@ -350,8 +350,9 @@ class _LoginScreenState extends State<LoginScreen> {
           Get.back();
           if (e.response?.statusCode == 403) {
             if (e.response?.data["codigoInterno"]?.toString() == "4") {
-              Get.dialog(
-                ErrorDialog(
+              showDialog(
+                context: context,
+                builder: (context) => ErrorDialog(
                   mensaje: RichText(
                     textAlign: TextAlign.center,
                     text: TextSpan(
@@ -416,8 +417,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                           recognizer: TapGestureRecognizer()
                             ..onTap = () {
-                              Beamer.of(context).beamToNamed(
-                                '/acerca',
+                              Get.toNamed(
+                                Routes.about,
                               );
                             },
                         ),
@@ -439,8 +440,9 @@ class _LoginScreenState extends State<LoginScreen> {
           } else if (e.response?.statusCode != null &&
               e.response!.statusCode.toString().startsWith("5")) {
             print(e.response?.data);
-            Get.dialog(
-              ErrorDialog(
+            showDialog(
+              context: context,
+              builder: (context) => ErrorDialog(
                 contenido: Container(
                   height: 200,
                   child: FlareActor(

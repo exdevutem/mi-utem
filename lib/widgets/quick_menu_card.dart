@@ -1,12 +1,8 @@
-import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gradient_widgets/gradient_widgets.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:mi_utem/screens/asignaturas_screen.dart';
-import 'package:mi_utem/screens/calculadora_notas_screen.dart';
-import 'package:mi_utem/screens/credencial_screen.dart';
-import 'package:mi_utem/screens/horario_screen.dart';
+import 'package:mi_utem/config/routes.dart';
 
 class QuickMenuCard extends StatelessWidget {
   const QuickMenuCard({Key? key, required this.card}) : super(key: key);
@@ -16,28 +12,13 @@ class QuickMenuCard extends StatelessWidget {
   String? get _route {
     switch (card["route"]) {
       case "/AsignaturasScreen":
-        return "/asignaturas";
+        return Routes.asignaturas;
       case "/HorarioScreen":
-        return "/horario";
+        return Routes.horario;
       case "/CalculadoraNotasScreen":
-        return "/calculadora-notas";
+        return Routes.calculadoraNotas;
       case "/CredencialScreen":
-        return "/credencial";
-      default:
-        return null;
-    }
-  }
-
-  Widget? get _routeWidget {
-    switch (card["route"]) {
-      case "/AsignaturasScreen":
-        return AsignaturasScreen();
-      case "/HorarioScreen":
-        return HorarioScreen();
-      case "/CalculadoraNotasScreen":
-        return CalculadoraNotasScreen();
-      case "/CredencialScreen":
-        return CredencialScreen();
+        return Routes.credencial;
       default:
         return null;
     }
@@ -78,10 +59,9 @@ class QuickMenuCard extends StatelessWidget {
           child: InkWell(
             onTap: _route != null
                 ? () {
-                    Beamer.of(context).beamToNamed(
+                    Get.toNamed(
                       _route!,
                     );
-                    //TODO: Cambiar cuando haya router
                   }
                 : null,
             borderRadius: BorderRadius.all(Radius.circular(15)),
