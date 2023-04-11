@@ -7,10 +7,6 @@ import 'package:get/get.dart';
 import 'package:mdi/mdi.dart';
 import 'package:mi_utem/config/routes.dart';
 import 'package:mi_utem/models/usuario.dart';
-import 'package:mi_utem/screens/asignaturas_screen.dart';
-import 'package:mi_utem/screens/credencial_screen.dart';
-import 'package:mi_utem/screens/horario/horario_screen.dart';
-import 'package:mi_utem/screens/usuario_screen.dart';
 import 'package:mi_utem/services/auth_service.dart';
 import 'package:mi_utem/services/config_service.dart';
 import 'package:mi_utem/services/review_service.dart';
@@ -34,24 +30,6 @@ class _CustomDrawerState extends State<CustomDrawer> {
     _remoteConfig = ConfigService.config;
   }
 
-  Widget? _getScreen(String? nombre) {
-    switch (nombre) {
-      case "Perfil":
-        return UsuarioScreen();
-      case "Asignaturas":
-        return AsignaturasScreen();
-      case "Horario":
-        return HorarioScreen();
-      case "Credencial":
-        return CredencialScreen();
-      // case "Docentes":
-      //   return DocentesScreen();
-      //   break;
-      default:
-        return null;
-    }
-  }
-
   String? _getRoute(String? name) {
     switch (name) {
       case "Perfil":
@@ -66,7 +44,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
       //   return DocentesScreen();
       //   break;
       default:
-        return null;
+        return Routes.home;
     }
   }
 

@@ -90,7 +90,7 @@ class _DocentesScreenState extends State<DocentesScreen> {
                     builder: (context, snapshot) {
                       if (snapshot.hasError) {
                         return CustomErrorWidget(
-                          texto: "Ocurrió un error al obtener los docentes",
+                          title: "Ocurrió un error al obtener los docentes",
                           error: snapshot.error,
                         );
                       } else {
@@ -133,7 +133,7 @@ class _DocentesScreenState extends State<DocentesScreen> {
                           } else {
                             return CustomErrorWidget(
                               emoji: "🤔",
-                              texto:
+                              title:
                                   "Parece que no se encontraron docentes que coincidan con tu búsqueda",
                             );
                           }
@@ -150,7 +150,7 @@ class _DocentesScreenState extends State<DocentesScreen> {
                   )
                 : CustomErrorWidget(
                     emoji: "💅",
-                    texto: "Escribe para buscar un docente",
+                    title: "Escribe para buscar un docente",
                   ),
           ],
         ),

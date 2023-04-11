@@ -68,7 +68,7 @@ class _AsignaturaNotasTabState extends State<AsignaturaNotasTab> {
             content = SingleChildScrollView(
               physics: AlwaysScrollableScrollPhysics(),
               child: CustomErrorWidget(
-                texto: "Ocurrió un error al cargar las notas",
+                title: "Ocurrió un error al cargar las notas",
                 error: snapshot.error,
               ),
             );
@@ -233,7 +233,7 @@ class _AsignaturaNotasTabState extends State<AsignaturaNotasTab> {
                   padding: EdgeInsets.all(20),
                   child: CustomErrorWidget(
                     emoji: "🤔",
-                    texto: "Parece que aún no hay ponderadores",
+                    title: "Parece que aún no hay ponderadores",
                     error: snapshot.error,
                   ),
                 ),

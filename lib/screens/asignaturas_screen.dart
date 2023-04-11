@@ -69,7 +69,7 @@ class _AsignaturasScreenState extends State<AsignaturasScreen> {
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return CustomErrorWidget(
-                texto: "Ocurrió un error al obtener las asignaturas",
+                title: "Ocurrió un error al obtener las asignaturas",
                 error: snapshot.error);
           } else {
             if (snapshot.hasData && snapshot.data != null) {
@@ -108,7 +108,7 @@ class _AsignaturasScreenState extends State<AsignaturasScreen> {
               } else {
                 return CustomErrorWidget(
                   emoji: "🤔",
-                  texto: "Parece que no se encontraron asignaturas",
+                  title: "Parece que no se encontraron asignaturas",
                 );
               }
             } else {

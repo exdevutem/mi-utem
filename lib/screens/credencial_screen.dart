@@ -52,7 +52,7 @@ class _CredencialScreenState extends State<CredencialScreen> {
 
   Future _getData() async {
     try {
-      Usuario usuario = await PerfilService.getLocalUsuario();
+      Usuario usuario = PerfilService.getLocalUsuario();
       Carrera activa = await CarreraService.getCarreraActiva();
       setState(() {
         _usuario = usuario;
@@ -86,7 +86,7 @@ class _CredencialScreenState extends State<CredencialScreen> {
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return CustomErrorWidget(
-                texto: "Ocurrió un error al generar tu crendencial",
+                title: "Ocurrió un error al generar tu crendencial",
                 error: snapshot.error);
           } else {
             if (snapshot.hasData) {

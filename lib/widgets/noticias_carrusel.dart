@@ -59,7 +59,7 @@ class _NoticiasSectionState extends State<NoticiasSection> {
           builder: (context, snapshot) {
             if (snapshot.hasError) {
               return CustomErrorWidget(
-                  texto: "Ocurrió un error al obtener las noticias",
+                  title: "Ocurrió un error al obtener las noticias",
                   error: snapshot.error);
             } else {
               if (snapshot.hasData && snapshot.data!.length > 0) {

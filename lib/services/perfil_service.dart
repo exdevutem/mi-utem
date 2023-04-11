@@ -69,7 +69,7 @@ class PerfilService {
 
       box.write('fotoUrl', fotoUrl);
 
-      Usuario usuario = await getLocalUsuario();
+      Usuario usuario = getLocalUsuario();
 
       return usuario;
     } on DioError catch (e) {
@@ -104,7 +104,7 @@ class PerfilService {
     try {
       String? fcmToken =
           await NotificationService.fcm.requestFirebaseAppToken();
-      Usuario usuario = await PerfilService.getLocalUsuario();
+      Usuario usuario = PerfilService.getLocalUsuario();
       CollectionReference usuariosCollection =
           FirebaseFirestore.instance.collection('usuarios');
 

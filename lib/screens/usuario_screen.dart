@@ -58,7 +58,7 @@ class _UsuarioScreenState extends State<UsuarioScreen> {
           _usuario = usuario;
         });
       } else {
-        usuario = await PerfilService.getLocalUsuario();
+        usuario = PerfilService.getLocalUsuario();
         setState(() {
           _usuario = usuario;
         });
@@ -279,7 +279,7 @@ class _UsuarioScreenState extends State<UsuarioScreen> {
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return CustomErrorWidget(
-                texto: "Ocurrió un error al obtener el perfil",
+                title: "Ocurrió un error al obtener el perfil",
                 error: snapshot.error);
           } else {
             if (snapshot.hasData) {

@@ -50,7 +50,7 @@ class _AsignaturaResumenTabState extends State<AsignaturaResumenTab> {
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return CustomErrorWidget(
-            texto: "Ocurrió un error al obtener el resumen de la asignatura",
+            title: "Ocurrió un error al obtener el resumen de la asignatura",
             error: snapshot.error,
           );
         } else {

@@ -40,6 +40,9 @@ class GradesChangesController {
 
         if (oldValue.nota != updatedValue.nota) {
           if (oldValue.nota == null && updatedValue.nota != null) {
+            Sentry.configureScope(
+              (scope) => scope.setExtra('newGrade', updatedValue.nota),
+            );
             currentChange = GradeChangeType.gradeSetted;
           } else if (oldValue.nota != null && updatedValue.nota == null) {
             currentChange = currentChange ?? GradeChangeType.gradeDeleted;

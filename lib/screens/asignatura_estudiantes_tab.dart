@@ -41,7 +41,7 @@ class _AsignaturaEstudiantesTabState extends State<AsignaturaEstudiantesTab> {
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return CustomErrorWidget(
-            texto: "Ocurrió un error trayendo a los estudiantes",
+            title: "Ocurrió un error trayendo a los estudiantes",
             error: snapshot.error,
           );
         }
