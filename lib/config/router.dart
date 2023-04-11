@@ -14,13 +14,13 @@ import 'package:mi_utem/services/perfil_service.dart';
 import 'package:mi_utem/widgets/acerca_screen.dart';
 
 final _loginPage = GetPage(
-  name: '/login',
+  name: Routes.login,
   page: () => LoginScreen(),
   middlewares: [OnlyNoAuthMiddleware()],
 );
 
-final _mainPage = GetPage(
-  name: '/',
+final _homePage = GetPage(
+  name: Routes.home,
   page: () {
     final usuario = PerfilService.getLocalUsuario();
 
@@ -39,7 +39,7 @@ final pages = <GetPage>[
     page: () => AcercaScreen(),
   ),
   _loginPage,
-  _mainPage,
+  _homePage,
   GetPage(
     name: Routes.perfil,
     page: () => UsuarioScreen(),
@@ -73,7 +73,7 @@ class OnlyAuthMiddleware extends GetMiddleware {
   RouteSettings? redirect(String? page) {
     final isLoggedIn = AuthService.isLoggedIn();
     if (!isLoggedIn) {
-      return const RouteSettings(name: '/login');
+      return const RouteSettings(name: Routes.login);
     }
     return null;
   }
@@ -84,7 +84,7 @@ class OnlyNoAuthMiddleware extends GetMiddleware {
   RouteSettings? redirect(String? page) {
     final isLoggedIn = AuthService.isLoggedIn();
     if (isLoggedIn) {
-      return const RouteSettings(name: '/');
+      return const RouteSettings(name: Routes.home);
     }
     return null;
   }

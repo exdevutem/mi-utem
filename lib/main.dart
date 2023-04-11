@@ -12,6 +12,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:mi_utem/config/constants.dart';
 import 'package:mi_utem/config/logger.dart';
 import 'package:mi_utem/config/router.dart';
+import 'package:mi_utem/config/routes.dart';
 import 'package:mi_utem/controllers/calculator_controller.dart';
 import 'package:mi_utem/services/background_service.dart';
 import 'package:mi_utem/services/config_service.dart';
@@ -32,8 +33,7 @@ void main() async {
   await BackgroundService.initAndStart();
   await SentryFlutter.init(
     (options) {
-      options.dsn =
-          'https://0af59b2ad2b44f4e8c9cad4ea8d5f32e@o507661.ingest.sentry.io/5599080';
+      options.dsn = Constants.sentryDsn;
       options.attachScreenshot = true;
       options.tracesSampleRate = 1.0;
     },
@@ -49,14 +49,14 @@ class MiUtem extends StatelessWidget {
   Widget build(BuildContext context) {
     FlutterUxcam.optIntoSchematicRecordings();
     FlutterUxConfig config = FlutterUxConfig(
-      userAppKey: kDebugMode ? Constants.uxCamProdKey : Constants.uxCamProdKey,
+      userAppKey: kDebugMode ? Constants.uxCamDevKey : Constants.uxCamProdKey,
       enableAutomaticScreenNameTagging: true,
     );
     FlutterUxcam.startWithConfiguration(config);
 
     return GetMaterialApp(
       getPages: pages,
-      initialRoute: '/splash',
+      initialRoute: Routes.splash,
       debugShowCheckedModeBanner: false,
       title: 'Mi UTEM',
       theme: MainTheme.theme,
