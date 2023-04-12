@@ -10,13 +10,15 @@ import 'package:flutter_uxcam/flutter_uxcam_observer.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:mi_utem/config/constants.dart';
-import 'package:mi_utem/config/logger.dart';
 import 'package:mi_utem/config/router.dart';
 import 'package:mi_utem/config/routes.dart';
 import 'package:mi_utem/controllers/calculator_controller.dart';
+import 'package:mi_utem/services/analytics_service.dart';
+import 'package:mi_utem/services/auth_service.dart';
 import 'package:mi_utem/services/background_service.dart';
 import 'package:mi_utem/services/config_service.dart';
 import 'package:mi_utem/services/notification_service.dart';
+import 'package:mi_utem/services/perfil_service.dart';
 import 'package:mi_utem/themes/theme.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
@@ -41,9 +43,26 @@ void main() async {
   );
 }
 
-class MiUtem extends StatelessWidget {
+class MiUtem extends StatefulWidget {
+  @override
+  State<MiUtem> createState() => _MiUtemState();
+}
+
+class _MiUtemState extends State<MiUtem> {
   final FirebaseAnalytics analytics = FirebaseAnalytics.instance;
+
   final calculatorController = Get.put(CalculatorController());
+
+  @override
+  void initState() {
+    if (AuthService.isLoggedIn()) {
+      final user = PerfilService.getLocalUsuario();
+      AnalyticsService.setUser(user);
+    } else {
+      AnalyticsService.removeUser();
+    }
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,6 +70,7 @@ class MiUtem extends StatelessWidget {
     FlutterUxConfig config = FlutterUxConfig(
       userAppKey: kDebugMode ? Constants.uxCamDevKey : Constants.uxCamProdKey,
       enableAutomaticScreenNameTagging: true,
+      enableMultiSessionRecord: true,
     );
     FlutterUxcam.startWithConfiguration(config);
 
@@ -61,13 +81,7 @@ class MiUtem extends StatelessWidget {
       title: 'Mi UTEM',
       theme: MainTheme.theme,
       navigatorObservers: [
-        FirebaseAnalyticsObserver(
-          analytics: analytics,
-          nameExtractor: (settings) {
-            logger.d('Analytics: ${settings.name}');
-            return settings.name;
-          },
-        ),
+        FirebaseAnalyticsObserver(analytics: analytics),
         SentryNavigatorObserver(),
         FlutterUxcamNavigatorObserver()
       ],

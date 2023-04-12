@@ -133,6 +133,6 @@ class HorarioScreen extends StatelessWidget {
 class HorarioBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<HorarioController>(() => HorarioController());
+    Get.put<HorarioController>(HorarioController(), permanent: true);
   }
 }

@@ -25,22 +25,6 @@ class PerfilService {
       String? correoUtem = box.read("correoUtem");
       String? correoPersonal = box.read("correoPersonal");
 
-/*       if (await AuthService.isLoggedIn()) {
-        Sentry.configureScope(
-          (scope) => scope.setUser(
-            SentryUser(
-              id: correoUtem,
-              email: correoPersonal,
-              name: nombres,
-              data: {
-                "rut": rut?.formateado(false),
-              },
-              ipAddress: "{{auto}}",
-            ),
-          ),
-        );
-      } */
-
       return Usuario(
         token: token,
         nombres: nombres,
