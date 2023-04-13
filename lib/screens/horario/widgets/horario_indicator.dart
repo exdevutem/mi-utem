@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mi_utem/controllers/horario_controller.dart';
+import 'package:mi_utem/services/analytics_service.dart';
 
 class HorarioIndicator extends StatefulWidget {
   static const _height = 2.0;
@@ -82,10 +83,7 @@ class _HorarioIndicatorState extends State<HorarioIndicator> {
               left: circleTapAreaLeft,
             ),
             child: GestureDetector(
-              onTap: () {
-                widget.controller.indicatorIsOpen.value =
-                    !widget.controller.indicatorIsOpen.value;
-              },
+              onTap: () => _onIndicatorDotTap(),
               child: Container(
                 padding: EdgeInsets.all(HorarioIndicator._tapAreaRadius),
                 decoration: BoxDecoration(
@@ -117,6 +115,12 @@ class _HorarioIndicatorState extends State<HorarioIndicator> {
           ),
       ],
     );
+  }
+
+  _onIndicatorDotTap() {
+    AnalyticsService.logEvent('horario_indicator_dot_tap');
+    widget.controller.indicatorIsOpen.value =
+        !widget.controller.indicatorIsOpen.value;
   }
 }
 

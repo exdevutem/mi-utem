@@ -2,26 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gradient_widgets/gradient_widgets.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:mi_utem/screens/asignaturas_screen.dart';
-import 'package:mi_utem/screens/calculadora_notas_screen.dart';
-import 'package:mi_utem/screens/credencial_screen.dart';
-import 'package:mi_utem/screens/horario/horario_screen.dart';
+import 'package:mi_utem/config/routes.dart';
 
 class QuickMenuCard extends StatelessWidget {
   const QuickMenuCard({Key? key, required this.card}) : super(key: key);
 
   final Map<String, dynamic> card;
 
-  Widget? get _route {
+  String? get _route {
     switch (card["route"]) {
       case "/AsignaturasScreen":
-        return AsignaturasScreen();
+        return Routes.asignaturas;
       case "/HorarioScreen":
-        return HorarioScreen();
+        return Routes.horario;
       case "/CalculadoraNotasScreen":
-        return CalculadoraNotasScreen();
+        return Routes.calculadoraNotas;
       case "/CredencialScreen":
-        return CredencialScreen();
+        return Routes.credencial;
       default:
         return null;
     }
@@ -62,12 +59,9 @@ class QuickMenuCard extends StatelessWidget {
           child: InkWell(
             onTap: _route != null
                 ? () {
-                    //TODO: Cambiar cuando haya router
-                    if (_route is HorarioScreen) {
-                      Get.to(_route, binding: HorarioBinding());
-                    } else {
-                      Get.to(() => _route!);
-                    }
+                    Get.toNamed(
+                      _route!,
+                    );
                   }
                 : null,
             borderRadius: BorderRadius.all(Radius.circular(15)),

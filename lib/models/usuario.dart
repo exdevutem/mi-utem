@@ -1,6 +1,5 @@
-import 'package:recase/recase.dart';
-
 import 'package:mi_utem/models/rut.dart';
+import 'package:recase/recase.dart';
 
 class Usuario {
   String? nombre;
@@ -93,5 +92,18 @@ class Usuario {
       }
       return letters.join("");
     }
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'nombreCompleto': nombreCompleto,
+      'correoUtem': correoUtem,
+      'correoPersonal': correoPersonal,
+      'token': token,
+      'fotoUrl': fotoUrl,
+      'nombres': nombres,
+      'apellidos': apellidos,
+      'rut': rut?.toString(),
+    };
   }
 }

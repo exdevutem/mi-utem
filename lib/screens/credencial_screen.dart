@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-
-import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 import 'package:mdi/mdi.dart';
-
 import 'package:mi_utem/models/carrera.dart';
 import 'package:mi_utem/models/usuario.dart';
+import 'package:mi_utem/services/analytics_service.dart';
 import 'package:mi_utem/services/carreras_service.dart';
 import 'package:mi_utem/services/perfil_service.dart';
 import 'package:mi_utem/services/review_service.dart';
@@ -33,7 +31,6 @@ class _CredencialScreenState extends State<CredencialScreen> {
   @override
   void initState() {
     ReviewService.addScreen("CredencialScreen");
-    FirebaseAnalytics.instance.setCurrentScreen(screenName: 'CredencialScreen');
     _secureScreen();
     _future = _getData();
     super.initState();
@@ -55,7 +52,7 @@ class _CredencialScreenState extends State<CredencialScreen> {
 
   Future _getData() async {
     try {
-      Usuario usuario = await PerfilService.getLocalUsuario();
+      Usuario usuario = PerfilService.getLocalUsuario();
       Carrera activa = await CarreraService.getCarreraActiva();
       setState(() {
         _usuario = usuario;
@@ -89,28 +86,20 @@ class _CredencialScreenState extends State<CredencialScreen> {
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return CustomErrorWidget(
-                texto: "Ocurrió un error al generar tu crendencial",
+                title: "Ocurrió un error al generar tu crendencial",
                 error: snapshot.error);
           } else {
             if (snapshot.hasData) {
               if (_usuario!.rut != null &&
                   _carreraActiva!.nombre != null &&
                   _carreraActiva!.nombre!.isNotEmpty) {
-                FirebaseAnalytics.instance.setUserProperty(
-                    name: "carreraActiva", value: _carreraActiva!.nombre!);
-                FirebaseAnalytics.instance.setUserProperty(
-                    name: "estadoCarreraActiva",
-                    value: _carreraActiva!.estado!);
-
                 return Center(
                   child: SafeArea(
                     child: CredencialCard(
                       usuario: _usuario,
                       carrera: _carreraActiva,
                       controller: _flipController,
-                      onFlip: (direction) {
-                        setState(() {});
-                      },
+                      onFlip: (direction) => _onFlip(),
                     ),
                   ),
                 );
@@ -164,5 +153,10 @@ class _CredencialScreenState extends State<CredencialScreen> {
         },
       ),
     );
+  }
+
+  void _onFlip() {
+    AnalyticsService.logEvent("credencial_flip");
+    setState(() {});
   }
 }

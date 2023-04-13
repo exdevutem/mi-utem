@@ -188,6 +188,7 @@ class MainTheme {
         ),
         bodyMedium: TextStyle(
           color: grey,
+          fontWeight: FontWeight.w400,
           fontSize: 14,
         ),
       );

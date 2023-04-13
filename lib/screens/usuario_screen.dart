@@ -1,12 +1,9 @@
 import 'dart:core';
 
-import 'package:flutter/material.dart';
-
 import 'package:clipboard/clipboard.dart';
-import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:url_launcher/url_launcher.dart';
-
+import 'package:mi_utem/config/routes.dart';
 import 'package:mi_utem/models/asignatura.dart';
 import 'package:mi_utem/models/usuario.dart';
 import 'package:mi_utem/services/docentes_service.dart';
@@ -18,6 +15,7 @@ import 'package:mi_utem/widgets/image_view_screen.dart';
 import 'package:mi_utem/widgets/loading_dialog.dart';
 import 'package:mi_utem/widgets/loading_indicator.dart';
 import 'package:mi_utem/widgets/profile_photo.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class UsuarioScreen extends StatefulWidget {
   final int tipo;
@@ -37,7 +35,6 @@ class _UsuarioScreenState extends State<UsuarioScreen> {
   @override
   void initState() {
     ReviewService.addScreen("UsuarioScreen");
-    FirebaseAnalytics.instance.setCurrentScreen(screenName: 'UsuarioScreen');
     super.initState();
     _usuarioFuture = _getUsuario();
   }
@@ -61,7 +58,7 @@ class _UsuarioScreenState extends State<UsuarioScreen> {
           _usuario = usuario;
         });
       } else {
-        usuario = await PerfilService.getLocalUsuario();
+        usuario = PerfilService.getLocalUsuario();
         setState(() {
           _usuario = usuario;
         });
@@ -282,7 +279,7 @@ class _UsuarioScreenState extends State<UsuarioScreen> {
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return CustomErrorWidget(
-                texto: "Ocurrió un error al obtener el perfil",
+                title: "Ocurrió un error al obtener el perfil",
                 error: snapshot.error);
           } else {
             if (snapshot.hasData) {
@@ -315,8 +312,10 @@ class _UsuarioScreenState extends State<UsuarioScreen> {
                               : null,
                           onImageTap: (context, imageProvider) {
                             Get.to(
-                              () =>
-                                  ImageViewScreen(imageProvider: imageProvider),
+                              () => ImageViewScreen(
+                                imageProvider: imageProvider,
+                              ),
+                              routeName: Routes.imageView,
                             );
                           }),
                     ),

@@ -1,12 +1,12 @@
 import 'dart:io';
 
-import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:mi_utem/controllers/horario_controller.dart';
 import 'package:mi_utem/models/horario.dart';
 import 'package:mi_utem/screens/horario/widgets/horario_main_scroller.dart';
+import 'package:mi_utem/services/analytics_service.dart';
 import 'package:mi_utem/services/review_service.dart';
 import 'package:mi_utem/widgets/custom_app_bar.dart';
 import 'package:mi_utem/widgets/loading_indicator.dart';
@@ -40,7 +40,7 @@ class HorarioScreen extends StatelessWidget {
             () => controller.horario.value != null
                 ? IconButton(
                     onPressed: () =>
-                        _captureScreenshot(controller.horario.value!),
+                        _captureAndShareScreenshot(controller.horario.value!),
                     icon: Icon(Icons.share),
                   )
                 : Container(),
@@ -49,10 +49,12 @@ class HorarioScreen extends StatelessWidget {
       );
 
   void _moveViewportToCurrentTime() {
+    AnalyticsService.logEvent("horario_move_viewport_to_current_time");
     controller.moveViewportToCurrentPeriodAndDay();
   }
 
-  void _captureScreenshot(Horario horario) async {
+  void _captureAndShareScreenshot(Horario horario) async {
+    AnalyticsService.logEvent("horario_capture_and_share_screenshot");
     final horarioScroller = HorarioMainScroller(
       controller: controller,
       horario: horario,
@@ -81,7 +83,6 @@ class HorarioScreen extends StatelessWidget {
     controller.getHorarioData();
 
     ReviewService.addScreen("HorarioScreen");
-    FirebaseAnalytics.instance.setCurrentScreen(screenName: 'HorarioScreen');
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.landscapeRight,
       DeviceOrientation.landscapeLeft,
@@ -132,6 +133,6 @@ class HorarioScreen extends StatelessWidget {
 class HorarioBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<HorarioController>(() => HorarioController());
+    Get.put<HorarioController>(HorarioController(), permanent: true);
   }
 }

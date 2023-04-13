@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
-
+import 'package:mi_utem/config/routes.dart';
 import 'package:mi_utem/models/permiso_covid.dart';
 import 'package:mi_utem/screens/permiso_covid_screen.dart';
 import 'package:mi_utem/themes/theme.dart';
@@ -66,6 +65,7 @@ class PermisoCard extends StatelessWidget {
                   () => PermisoCovidScreen(
                     permiso: permiso,
                   ),
+                  routeName: Routes.permiso,
                 ),
                 child: Center(
                   child: Text(

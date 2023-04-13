@@ -1,10 +1,9 @@
-import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mdi/mdi.dart';
+import 'package:mi_utem/config/routes.dart';
 import 'package:mi_utem/models/asignatura.dart';
 import 'package:mi_utem/screens/asignatura_screen.dart';
-import 'package:mi_utem/screens/calculadora_notas_screen.dart';
 import 'package:mi_utem/services/asignaturas_service.dart';
 import 'package:mi_utem/services/config_service.dart';
 import 'package:mi_utem/widgets/custom_app_bar.dart';
@@ -26,8 +25,6 @@ class _AsignaturasScreenState extends State<AsignaturasScreen> {
   @override
   void initState() {
     super.initState();
-    FirebaseAnalytics.instance
-        .setCurrentScreen(screenName: 'AsignaturasScreen');
     _futureAsignaturas = _getAsignaturas();
   }
 
@@ -59,8 +56,8 @@ class _AsignaturasScreenState extends State<AsignaturasScreen> {
                   icon: Icon(Mdi.calculator),
                   tooltip: "Calculadora",
                   onPressed: () {
-                    Get.to(
-                      () => CalculadoraNotasScreen(),
+                    Get.toNamed(
+                      Routes.calculadoraNotas,
                     );
                   },
                 ),
@@ -72,7 +69,7 @@ class _AsignaturasScreenState extends State<AsignaturasScreen> {
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return CustomErrorWidget(
-                texto: "Ocurrió un error al obtener las asignaturas",
+                title: "Ocurrió un error al obtener las asignaturas",
                 error: snapshot.error);
           } else {
             if (snapshot.hasData && snapshot.data != null) {
@@ -90,7 +87,10 @@ class _AsignaturasScreenState extends State<AsignaturasScreen> {
                       return ListTile(
                         onTap: () {
                           Get.to(
-                            () => AsignaturaScreen(asignatura: asignatura),
+                            () => AsignaturaScreen(
+                              asignatura: asignatura,
+                            ),
+                            routeName: Routes.asignatura,
                           );
                         },
                         title: Text(
@@ -108,7 +108,7 @@ class _AsignaturasScreenState extends State<AsignaturasScreen> {
               } else {
                 return CustomErrorWidget(
                   emoji: "🤔",
-                  texto: "Parece que no se encontraron asignaturas",
+                  title: "Parece que no se encontraron asignaturas",
                 );
               }
             } else {

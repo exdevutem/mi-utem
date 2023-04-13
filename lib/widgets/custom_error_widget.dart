@@ -3,15 +3,15 @@ import 'package:flutter/material.dart';
 
 class CustomErrorWidget extends StatelessWidget {
   final String emoji;
-  final String texto;
+  final String title;
   final Object? error;
 
-  CustomErrorWidget(
-      {Key? key,
-      this.emoji = "😕",
-      this.texto = "Ocurrió un error inesperado",
-      this.error})
-      : super(key: key);
+  CustomErrorWidget({
+    Key? key,
+    this.emoji = "😕",
+    this.title = "Ocurrió un error inesperado",
+    this.error,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -29,19 +29,20 @@ class CustomErrorWidget extends StatelessWidget {
           ),
           Container(height: 15),
           Text(
-            texto,
+            title,
             textAlign: TextAlign.center,
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 18,
             ),
           ),
-          if (error != null) Container(height: 15),
-          if (error != null)
+          if (error != null) ...[
+            Container(height: 15),
             Text(
               error.toString(),
               textAlign: TextAlign.center,
             ),
+          ],
         ],
       ),
     );

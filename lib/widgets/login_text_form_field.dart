@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
 
 class LoginTextFormField extends StatefulWidget {
-  LoginTextFormField(
-      {Key? key,
-      this.hintText,
-      this.labelText,
-      this.icon,
-      this.onSaved,
-      this.obscureText = false,
-      this.validator,
-      this.textCapitalization,
-      this.keyboardType})
-      : super(key: key);
+  LoginTextFormField({
+    Key? key,
+    this.hintText,
+    this.labelText,
+    this.icon,
+    this.onSaved,
+    this.obscureText = false,
+    this.validator,
+    this.textCapitalization,
+    this.keyboardType,
+    this.controller,
+  }) : super(key: key);
 
   final String? hintText, labelText;
   final TextInputType? keyboardType;
@@ -21,6 +21,7 @@ class LoginTextFormField extends StatefulWidget {
   final IconData? icon;
   final Function? onSaved, validator;
   final bool obscureText;
+  final TextEditingController? controller;
 
   @override
   _LoginTextFormFieldState createState() => _LoginTextFormFieldState();
@@ -28,7 +29,8 @@ class LoginTextFormField extends StatefulWidget {
 
 class _LoginTextFormFieldState extends State<LoginTextFormField> {
   FocusNode? _focusNode;
-  TextEditingController? _controller;
+  late TextEditingController _controller =
+      widget.controller ?? TextEditingController();
   bool _error = false;
 
   @override

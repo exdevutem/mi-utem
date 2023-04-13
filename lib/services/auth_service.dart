@@ -1,13 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_storage/get_storage.dart';
-
 import 'package:mi_utem/models/carrera.dart';
 import 'package:mi_utem/models/usuario.dart';
 import 'package:mi_utem/services/carreras_service.dart';
 import 'package:mi_utem/services/perfil_service.dart';
 import 'package:mi_utem/utils/dio_miutem_client.dart';
-import 'package:sentry_flutter/sentry_flutter.dart';
 
 class AuthService {
   static final Dio _dio = DioMiUtemClient.initDio;
@@ -85,7 +83,7 @@ class AuthService {
     }
   }
 
-  static Future<bool> isLoggedIn() async {
+  static bool isLoggedIn() {
     try {
       String? token = box.read("token");
       String? version = box.read("version");
@@ -94,13 +92,6 @@ class AuthService {
           version != null &&
           version.isNotEmpty &&
           version == versionCorrecta;
-
-      if (!isLoggedIn) {
-        Sentry.configureScope(
-          (scope) => scope.setUser(null),
-        );
-        await logOut();
-      }
 
       return isLoggedIn;
     } catch (e) {

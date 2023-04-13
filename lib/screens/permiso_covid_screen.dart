@@ -1,18 +1,18 @@
 import 'dart:typed_data';
 
-import 'package:flutter/material.dart';
-
 import 'package:barcode_image/barcode_image.dart';
 import 'package:barcode_widget/barcode_widget.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_uxcam/widgets/occlude_wrapper.dart';
 import 'package:get/get.dart';
 import 'package:image/image.dart' as dartImage;
 import 'package:intl/intl.dart';
-
+import 'package:mi_utem/config/routes.dart';
 import 'package:mi_utem/models/permiso_covid.dart';
 import 'package:mi_utem/models/usuario.dart';
 import 'package:mi_utem/services/permisos_covid_service.dart';
-import 'package:mi_utem/themes/theme.dart';
 import 'package:mi_utem/widgets/custom_app_bar.dart';
+import 'package:mi_utem/widgets/field_list_tile.dart';
 import 'package:mi_utem/widgets/image_view_screen.dart';
 import 'package:mi_utem/widgets/loading_indicator.dart';
 import 'package:mi_utem/widgets/profile_photo.dart';
@@ -94,7 +94,9 @@ class LoadedScreen extends StatelessWidget {
       () => ImageViewScreen(
         imageProvider: MemoryImage(data),
         heroTag: heroTag,
+        occlude: true,
       ),
+      routeName: Routes.imageView,
     );
   }
 
@@ -127,12 +129,14 @@ class LoadedScreen extends StatelessWidget {
                   child: Container(
                     color: Colors.white,
                     padding: EdgeInsets.all(10),
-                    child: BarcodeWidget(
-                      barcode: Barcode.qrCode(),
-                      height: 200,
-                      width: 200,
-                      data: permiso.codigoQr!,
-                      drawText: false,
+                    child: OccludeWrapper(
+                      child: BarcodeWidget(
+                        barcode: Barcode.qrCode(),
+                        height: 200,
+                        width: 200,
+                        data: permiso.codigoQr!,
+                        drawText: false,
+                      ),
                     ),
                   ),
                 ),
@@ -176,6 +180,7 @@ class UsuarioDetalle extends StatelessWidget {
                   maxLines: 2,
                   style: Get.textTheme.bodyLarge,
                 ),
+                Container(height: 4),
                 Text(
                   usuario.rut!.formateado(true),
                   style: Get.textTheme.bodyMedium,
@@ -208,21 +213,27 @@ class DetallesPermiso extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          BloqueDetalle(top: "Motivo", bottom: motivo),
+          FieldListTile(
+            padding: EdgeInsets.zero,
+            title: "Motivo",
+            value: motivo,
+          ),
           if (campus != null || dependencias != null) Container(height: 20),
           if (campus != null || dependencias != null)
             Row(
               children: [
                 Expanded(
-                  child: BloqueDetalle(
-                    top: "Campus",
-                    bottom: campus,
+                  child: FieldListTile(
+                    padding: EdgeInsets.zero,
+                    title: "Campus",
+                    value: campus,
                   ),
                 ),
                 Expanded(
-                  child: BloqueDetalle(
-                    top: "Dependencias",
-                    bottom: dependencias,
+                  child: FieldListTile(
+                    padding: EdgeInsets.zero,
+                    title: "Dependencias",
+                    value: dependencias,
                   ),
                 ),
               ],
@@ -232,59 +243,23 @@ class DetallesPermiso extends StatelessWidget {
             Row(
               children: [
                 Expanded(
-                  child: BloqueDetalle(
-                    top: "Jornada",
-                    bottom: jornada,
+                  child: FieldListTile(
+                    padding: EdgeInsets.zero,
+                    title: "Jornada",
+                    value: jornada,
                   ),
                 ),
                 Expanded(
-                  child: BloqueDetalle(
-                    top: "Vigencia",
-                    bottom: vigencia,
+                  child: FieldListTile(
+                    padding: EdgeInsets.zero,
+                    title: "Vigencia",
+                    value: vigencia,
                   ),
                 ),
               ],
             ),
         ],
       ),
-    );
-  }
-}
-
-class BloqueDetalle extends StatelessWidget {
-  const BloqueDetalle({
-    Key? key,
-    required this.top,
-    this.bottom,
-  }) : super(key: key);
-
-  final String top;
-  final String? bottom;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                top.toUpperCase(),
-                maxLines: 2,
-                style: Get.textTheme.bodySmall!.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: MainTheme.grey,
-                ),
-              ),
-              Text(
-                bottom ?? "Sin información",
-                style: Get.textTheme.bodyLarge,
-              ),
-            ],
-          ),
-        ),
-      ],
     );
   }
 }

@@ -28,6 +28,16 @@ Tipos de cambios
 
 ## [Unreleased]
 
+### Added
+
+- Integración con UXCam
+- Más eventos de analytics
+
+### Changed
+
+- Ahora el controlador del horario es permanente
+- Nuevo diseño para la pantalla del resumen de asignatura
+
 ## [2.11.2] - 2023-04-06
 
 Esta versión del changelog contiene cambios hechos en 2.10, debido a que no se documentaron!

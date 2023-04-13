@@ -1,9 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
-
-import 'package:mi_utem/widgets/acerca_screen.dart';
+import 'package:mi_utem/config/routes.dart';
 
 final _formKey = GlobalKey<FormState>();
 
@@ -100,7 +98,9 @@ class SadDialog extends StatelessWidget {
                     padding: EdgeInsets.only(top: 20),
                     child: TextButton(
                       onPressed: () async {
-                        Get.to(() => AcercaScreen());
+                        Get.toNamed(
+                          Routes.about,
+                        );
                       },
                       child: Text("Quiero saber más"),
                     ),

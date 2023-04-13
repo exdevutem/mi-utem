@@ -1,4 +1,3 @@
-import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_masked_text/flutter_masked_text.dart';
 import 'package:mi_utem/controllers/calculator_controller.dart';
@@ -30,8 +29,6 @@ class _AsignaturaNotasTabState extends State<AsignaturaNotasTab> {
   @override
   void initState() {
     super.initState();
-    FirebaseAnalytics.instance
-        .setCurrentScreen(screenName: 'AsignaturaNotasTab');
     _futureAsignatura = _getNotasByCodigoAsignatura();
   }
 
@@ -71,7 +68,7 @@ class _AsignaturaNotasTabState extends State<AsignaturaNotasTab> {
             content = SingleChildScrollView(
               physics: AlwaysScrollableScrollPhysics(),
               child: CustomErrorWidget(
-                texto: "Ocurrió un error al cargar las notas",
+                title: "Ocurrió un error al cargar las notas",
                 error: snapshot.error,
               ),
             );
@@ -236,7 +233,7 @@ class _AsignaturaNotasTabState extends State<AsignaturaNotasTab> {
                   padding: EdgeInsets.all(20),
                   child: CustomErrorWidget(
                     emoji: "🤔",
-                    texto: "Parece que aún no hay ponderadores",
+                    title: "Parece que aún no hay ponderadores",
                     error: snapshot.error,
                   ),
                 ),

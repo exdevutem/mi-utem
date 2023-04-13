@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-
-import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:get/get.dart';
-
+import 'package:mi_utem/config/routes.dart';
 import 'package:mi_utem/models/usuario.dart';
 import 'package:mi_utem/screens/usuario_screen.dart';
 import 'package:mi_utem/services/docentes_service.dart';
@@ -32,7 +30,6 @@ class _DocentesScreenState extends State<DocentesScreen> {
     d = Debounce(Duration(seconds: 1), () {
       _getDocentes(_controller.text);
     });
-    FirebaseAnalytics.instance.setCurrentScreen(screenName: 'DocentesScreen');
   }
 
   Future<List<Usuario>> _getDocentes(String nombre) async {
@@ -93,7 +90,7 @@ class _DocentesScreenState extends State<DocentesScreen> {
                     builder: (context, snapshot) {
                       if (snapshot.hasError) {
                         return CustomErrorWidget(
-                          texto: "Ocurrió un error al obtener los docentes",
+                          title: "Ocurrió un error al obtener los docentes",
                           error: snapshot.error,
                         );
                       } else {
@@ -123,8 +120,10 @@ class _DocentesScreenState extends State<DocentesScreen> {
                                   onTap: () async {
                                     await Get.to(
                                       () => UsuarioScreen(
-                                          tipo: 2,
-                                          query: {"nombre": docente.nombre}),
+                                        tipo: 2,
+                                        query: {"nombre": docente.nombre},
+                                      ),
+                                      routeName: Routes.perfil,
                                     );
                                   },
                                 );
@@ -134,7 +133,7 @@ class _DocentesScreenState extends State<DocentesScreen> {
                           } else {
                             return CustomErrorWidget(
                               emoji: "🤔",
-                              texto:
+                              title:
                                   "Parece que no se encontraron docentes que coincidan con tu búsqueda",
                             );
                           }
@@ -151,7 +150,7 @@ class _DocentesScreenState extends State<DocentesScreen> {
                   )
                 : CustomErrorWidget(
                     emoji: "💅",
-                    texto: "Escribe para buscar un docente",
+                    title: "Escribe para buscar un docente",
                   ),
           ],
         ),
