@@ -2,43 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mdi/mdi.dart';
 import 'package:mi_utem/config/routes.dart';
+import 'package:mi_utem/controllers/asignatura_controller.dart';
 import 'package:mi_utem/models/asignatura.dart';
-import 'package:mi_utem/screens/asignatura_screen.dart';
-import 'package:mi_utem/services/asignaturas_service.dart';
 import 'package:mi_utem/services/config_service.dart';
 import 'package:mi_utem/widgets/custom_app_bar.dart';
 import 'package:mi_utem/widgets/custom_error_widget.dart';
 import 'package:mi_utem/widgets/loading_indicator.dart';
 import 'package:mi_utem/widgets/pull_to_refresh.dart';
 
-class AsignaturasScreen extends StatefulWidget {
+class AsignaturasScreen extends GetView<AsignaturaController> {
   AsignaturasScreen({Key? key}) : super(key: key);
 
-  @override
-  _AsignaturasScreenState createState() => _AsignaturasScreenState();
-}
-
-class _AsignaturasScreenState extends State<AsignaturasScreen> {
-  Future<List<Asignatura>>? _futureAsignaturas;
-  late List<Asignatura> _asignaturas;
-
-  @override
-  void initState() {
-    super.initState();
-    _futureAsignaturas = _getAsignaturas();
-  }
-
-  Future<List<Asignatura>> _getAsignaturas([bool refresh = false]) async {
-    List<Asignatura> asignaturas =
-        await AsignaturasService.getAsignaturas(refresh);
-    setState(() {
-      _asignaturas = asignaturas;
-    });
-    return asignaturas;
-  }
-
   Future<void> _onRefresh() async {
-    await _getAsignaturas(true);
+    controller.getAsignaturas();
   }
 
   bool get _mostrarCalculadora {
@@ -64,7 +40,56 @@ class _AsignaturasScreenState extends State<AsignaturasScreen> {
               ]
             : [],
       ),
-      body: FutureBuilder<List<Asignatura>>(
+      body: PullToRefresh(
+        onRefresh: () async {
+          await _onRefresh();
+        },
+        child: Obx(
+          () => controller.isLoading.value
+              ? Container(
+                  padding: EdgeInsets.all(20),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        child: Center(
+                          child: LoadingIndicator(),
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              : controller.asignaturas.isEmpty
+                  ? CustomErrorWidget(
+                      emoji: "🤔",
+                      title: "Parece que no se encontraron asignaturas",
+                    )
+                  : ListView.separated(
+                      physics: AlwaysScrollableScrollPhysics(),
+                      separatorBuilder: (context, index) =>
+                          Divider(height: 5, indent: 20, endIndent: 20),
+                      itemBuilder: (BuildContext context, int i) {
+                        Asignatura asignatura = controller.asignaturas[i];
+                        return ListTile(
+                          onTap: () {
+                            controller.asignatura.value = asignatura;
+                            Get.toNamed(Routes.asignatura);
+                          },
+                          title: Text(
+                            asignatura.nombre ?? "",
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          subtitle: Text(asignatura.codigo ?? ""),
+                          trailing: Text(asignatura.tipoHora ?? ""),
+                        );
+                      },
+                      itemCount: controller.asignaturas.length,
+                    ),
+        ),
+      ),
+
+      /*FutureBuilder<List<Asignatura>>(
         future: _futureAsignaturas,
         builder: (context, snapshot) {
           if (snapshot.hasError) {
@@ -128,7 +153,7 @@ class _AsignaturasScreenState extends State<AsignaturasScreen> {
             }
           }
         },
-      ),
+      ),*/
     );
   }
 }

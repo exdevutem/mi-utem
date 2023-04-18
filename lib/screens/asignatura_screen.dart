@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mdi/mdi.dart';
 import 'package:mi_utem/config/routes.dart';
-import 'package:mi_utem/models/asignatura.dart';
+import 'package:mi_utem/controllers/asignatura_controller.dart';
 import 'package:mi_utem/screens/asignatura_estudiantes_tab.dart';
 import 'package:mi_utem/screens/asignatura_notas_tab.dart';
 import 'package:mi_utem/screens/asignatura_resumen_tab.dart';
@@ -22,29 +22,25 @@ class _ITabs {
   });
 }
 
-class AsignaturaScreen extends StatelessWidget {
-  final Asignatura asignatura;
-
-  AsignaturaScreen({
-    Key? key,
-    required this.asignatura,
-  }) : super(key: key);
+class AsignaturaScreen extends GetView<AsignaturaController> {
+  AsignaturaScreen({Key? key}) : super(key: key);
 
   List<_ITabs> get _tabs => [
         _ITabs(
           label: "Resumen",
-          child: AsignaturaResumenTab(asignatura: asignatura),
+          child: AsignaturaResumenTab(asignatura: controller.asignatura.value),
         ),
         _ITabs(
           label: "Notas",
-          child: AsignaturaNotasTab(asignatura: asignatura),
+          child: AsignaturaNotasTab(asignatura: controller.asignatura.value!),
           initial: true,
         ),
-        if (asignatura.estudiantes != null &&
-            asignatura.estudiantes!.length > 0)
+        if (controller.asignatura.value?.estudiantes != null &&
+            controller.asignatura.value!.estudiantes!.length > 0)
           _ITabs(
             label: "Estudiantes",
-            child: AsignaturaEstudiantesTab(asignatura: asignatura),
+            child: AsignaturaEstudiantesTab(
+                asignatura: controller.asignatura.value),
           ),
       ];
 
@@ -66,7 +62,8 @@ class AsignaturaScreen extends StatelessWidget {
       length: _tabs.length,
       child: Scaffold(
         appBar: CustomAppBar(
-          title: Text(asignatura.nombre ?? "Asigntura sin nombre"),
+          title: Text(
+              controller.asignatura.value?.nombre ?? "Asigntura sin nombre"),
           actions: _mostrarCalculadora
               ? [
                   IconButton(
