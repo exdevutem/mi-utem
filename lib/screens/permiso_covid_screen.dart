@@ -8,59 +8,39 @@ import 'package:get/get.dart';
 import 'package:image/image.dart' as dartImage;
 import 'package:intl/intl.dart';
 import 'package:mi_utem/config/routes.dart';
+import 'package:mi_utem/controllers/qr_pass_controller.dart';
 import 'package:mi_utem/models/permiso_covid.dart';
 import 'package:mi_utem/models/usuario.dart';
-import 'package:mi_utem/services/permisos_covid_service.dart';
 import 'package:mi_utem/widgets/custom_app_bar.dart';
+import 'package:mi_utem/widgets/custom_error_widget.dart';
 import 'package:mi_utem/widgets/field_list_tile.dart';
 import 'package:mi_utem/widgets/image_view_screen.dart';
 import 'package:mi_utem/widgets/loading_indicator.dart';
 import 'package:mi_utem/widgets/profile_photo.dart';
 
-class PermisoCovidScreen extends StatefulWidget {
+class PermisoCovidScreen extends GetView<QrPassController> {
   const PermisoCovidScreen({
     Key? key,
-    required this.permiso,
   }) : super(key: key);
 
-  final PermisoCovid permiso;
-
   @override
-  State<PermisoCovidScreen> createState() => _PermisoCovidScreenState();
-}
-
-class _PermisoCovidScreenState extends State<PermisoCovidScreen> {
-  late Future<PermisoCovid> _propiedades;
-
-  @override
-  void initState() {
-    super.initState();
-    _propiedades = PermisosCovidService.getDetallesPermiso(widget.permiso.id!);
-  }
+  String? get tag => Get.parameters[Routes.passParameter];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(title: Text("Permiso de ingreso")),
-      body: FutureBuilder(
-        future: _propiedades,
-        builder: (BuildContext context, AsyncSnapshot snapshot) {
-          if (snapshot.hasError) {
-            Get.back();
-            return Container();
-          }
-          if (!snapshot.hasData) {
-            return Center(
-              child: LoadingIndicator(
-                message: "Esto tardará un poco, paciencia...",
-              ),
-            );
-          }
-
-          return SingleChildScrollView(
-            child: LoadedScreen(permiso: snapshot.data),
-          );
-        },
+      body: controller.obx(
+        (pass) => SingleChildScrollView(
+          child: LoadedScreen(permiso: pass!),
+        ),
+        onLoading: Center(
+          child: LoadingIndicator(
+            message: "Esto tardará un poco, paciencia...",
+          ),
+        ),
+        onEmpty: Text('No data found'),
+        onError: (error) => CustomErrorWidget(),
       ),
     );
   }
