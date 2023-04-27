@@ -37,6 +37,7 @@ Tipos de cambios
 
 - Ahora el controlador del horario es permanente
 - Nuevo diseño para la pantalla del resumen de asignatura
+- Se eliminó el anuncio de 'gestando nuevas funciones'. La señora vivirá siempre en nuestros corazones.
 
 ## [2.11.2] - 2023-04-06
 
