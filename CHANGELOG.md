@@ -35,6 +35,7 @@ Tipos de cambios
 - Se eliminó el anuncio de 'gestando nuevas funciones'. La señora vivirá siempre en nuestros corazones.
 - Se cambió el estilo de la pantalla de notas/asignaturas. Ahora luce un poquito mejor.
 - Mejora en el caché de los pérmisos QR
+- Se cambió el estilo de la pantalla de notas/asignaturas. Ahora luce un poquito mejor.
 
 ### Fixed
 
