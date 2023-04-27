@@ -37,6 +37,7 @@ Tipos de cambios
 
 - Ahora el controlador del horario es permanente
 - Nuevo diseño para la pantalla del resumen de asignatura
+- Se cambió el estilo de la pantalla de notas/asignaturas. Ahora luce un poquito mejor.
 
 ## [2.11.2] - 2023-04-06
 
