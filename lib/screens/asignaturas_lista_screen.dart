@@ -1,3 +1,4 @@
+import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mdi/mdi.dart';
@@ -6,6 +7,7 @@ import 'package:mi_utem/models/asignatura.dart';
 import 'package:mi_utem/screens/asignatura_detalle_screen.dart';
 import 'package:mi_utem/services/asignaturas_service.dart';
 import 'package:mi_utem/services/config_service.dart';
+import 'package:mi_utem/themes/theme.dart';
 import 'package:mi_utem/widgets/custom_app_bar.dart';
 import 'package:mi_utem/widgets/custom_error_widget.dart';
 import 'package:mi_utem/widgets/loading_indicator.dart';
@@ -78,31 +80,21 @@ class _AsignaturasListaScreenState extends State<AsignaturasListaScreen> {
                   onRefresh: () async {
                     await _onRefresh();
                   },
-                  child: ListView.separated(
-                    physics: AlwaysScrollableScrollPhysics(),
-                    separatorBuilder: (context, index) =>
-                        Divider(height: 5, indent: 20, endIndent: 20),
-                    itemBuilder: (BuildContext context, int i) {
-                      Asignatura asignatura = _asignaturas[i];
-                      return ListTile(
-                        onTap: () {
-                          Get.to(
-                            () => AsignaturaDetalleScreen(
-                              asignatura: asignatura,
-                            ),
-                            routeName: Routes.asignatura,
-                          );
-                        },
-                        title: Text(
-                          asignatura.nombre ?? "",
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        subtitle: Text(asignatura.codigo ?? ""),
-                        trailing: Text(asignatura.tipoHora ?? ""),
-                      );
-                    },
-                    itemCount: _asignaturas.length,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 8.0),
+                    child: ListView.separated(
+                      physics: AlwaysScrollableScrollPhysics(),
+                      separatorBuilder: (context, index) => Divider(
+                        height: 5,
+                        indent: 20,
+                        endIndent: 20,
+                      ),
+                      itemBuilder: (BuildContext context, int i) {
+                        Asignatura asignatura = _asignaturas[i];
+                        return AsignaturaListTile(asignatura: asignatura);
+                      },
+                      itemCount: _asignaturas.length,
+                    ),
                   ),
                 );
               } else {
@@ -128,6 +120,68 @@ class _AsignaturasListaScreenState extends State<AsignaturasListaScreen> {
             }
           }
         },
+      ),
+    );
+  }
+}
+
+class AsignaturaListTile extends StatelessWidget {
+  const AsignaturaListTile({
+    Key? key,
+    required this.asignatura,
+  }) : super(key: key);
+
+  final Asignatura asignatura;
+
+  @override
+  Widget build(BuildContext context) {
+    final ThemeData theme = MainTheme.theme;
+
+    return InkWell(
+      onTap: () => Get.to(
+        () => AsignaturaDetalleScreen(
+          asignatura: asignatura,
+        ),
+        routeName: Routes.asignatura,
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 10.0,
+          vertical: 3.0,
+        ),
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(15)),
+            boxShadow: [BoxShadow(blurRadius: 2, color: Colors.grey)],
+            color: theme.cardColor,
+          ),
+          child: Container(
+            padding: EdgeInsets.all(20),
+            width: double.infinity,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  asignatura.nombre!,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: theme.textTheme.titleMedium,
+                  textAlign: TextAlign.start,
+                ),
+                Container(height: 10),
+                Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(asignatura.codigo!),
+                    Text(asignatura.tipoHora!),
+                  ],
+                )
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
