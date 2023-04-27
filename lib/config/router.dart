@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 import 'package:mi_utem/config/routes.dart';
-import 'package:mi_utem/screens/asignaturas_screen.dart';
+import 'package:mi_utem/screens/asignaturas_lista_screen.dart';
 import 'package:mi_utem/screens/calculadora_notas_screen.dart';
 import 'package:mi_utem/screens/credencial_screen.dart';
 import 'package:mi_utem/screens/horario/horario_screen.dart';
@@ -63,7 +63,7 @@ final pages = <GetPage>[
   ),
   GetPage(
     name: Routes.asignaturas,
-    page: () => AsignaturasScreen(),
+    page: () => AsignaturasListaScreen(),
     middlewares: [OnlyAuthMiddleware()],
   ),
 ];

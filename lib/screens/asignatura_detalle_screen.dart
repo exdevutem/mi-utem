@@ -22,10 +22,10 @@ class _ITabs {
   });
 }
 
-class AsignaturaScreen extends StatelessWidget {
+class AsignaturaDetalleScreen extends StatelessWidget {
   final Asignatura asignatura;
 
-  AsignaturaScreen({
+  AsignaturaDetalleScreen({
     Key? key,
     required this.asignatura,
   }) : super(key: key);

@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:mdi/mdi.dart';
 import 'package:mi_utem/config/routes.dart';
 import 'package:mi_utem/models/asignatura.dart';
-import 'package:mi_utem/screens/asignatura_screen.dart';
+import 'package:mi_utem/screens/asignatura_detalle_screen.dart';
 import 'package:mi_utem/services/asignaturas_service.dart';
 import 'package:mi_utem/services/config_service.dart';
 import 'package:mi_utem/widgets/custom_app_bar.dart';
@@ -11,14 +11,14 @@ import 'package:mi_utem/widgets/custom_error_widget.dart';
 import 'package:mi_utem/widgets/loading_indicator.dart';
 import 'package:mi_utem/widgets/pull_to_refresh.dart';
 
-class AsignaturasScreen extends StatefulWidget {
-  AsignaturasScreen({Key? key}) : super(key: key);
+class AsignaturasListaScreen extends StatefulWidget {
+  AsignaturasListaScreen({Key? key}) : super(key: key);
 
   @override
-  _AsignaturasScreenState createState() => _AsignaturasScreenState();
+  _AsignaturasListaScreenState createState() => _AsignaturasListaScreenState();
 }
 
-class _AsignaturasScreenState extends State<AsignaturasScreen> {
+class _AsignaturasListaScreenState extends State<AsignaturasListaScreen> {
   Future<List<Asignatura>>? _futureAsignaturas;
   late List<Asignatura> _asignaturas;
 
@@ -87,7 +87,7 @@ class _AsignaturasScreenState extends State<AsignaturasScreen> {
                       return ListTile(
                         onTap: () {
                           Get.to(
-                            () => AsignaturaScreen(
+                            () => AsignaturaDetalleScreen(
                               asignatura: asignatura,
                             ),
                             routeName: Routes.asignatura,
