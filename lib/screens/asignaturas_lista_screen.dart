@@ -80,21 +80,31 @@ class _AsignaturasListaScreenState extends State<AsignaturasListaScreen> {
                   onRefresh: () async {
                     await _onRefresh();
                   },
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 8.0),
-                    child: ListView.separated(
-                      physics: AlwaysScrollableScrollPhysics(),
-                      separatorBuilder: (context, index) => Divider(
-                        height: 5,
-                        indent: 20,
-                        endIndent: 20,
-                      ),
-                      itemBuilder: (BuildContext context, int i) {
-                        Asignatura asignatura = _asignaturas[i];
-                        return AsignaturaListTile(asignatura: asignatura);
-                      },
-                      itemCount: _asignaturas.length,
-                    ),
+                  child: ListView.separated(
+                    physics: AlwaysScrollableScrollPhysics(),
+                    separatorBuilder: (context, index) =>
+                        Divider(height: 5, indent: 20, endIndent: 20),
+                    itemBuilder: (BuildContext context, int i) {
+                      Asignatura asignatura = _asignaturas[i];
+                      return ListTile(
+                        onTap: () {
+                          Get.to(
+                            () => AsignaturaDetalleScreen(
+                              asignatura: asignatura,
+                            ),
+                            routeName: Routes.asignatura,
+                          );
+                        },
+                        title: Text(
+                          asignatura.nombre ?? "",
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        subtitle: Text(asignatura.codigo ?? ""),
+                        trailing: Text(asignatura.tipoHora ?? ""),
+                      );
+                    },
+                    itemCount: _asignaturas.length,
                   ),
                 );
               } else {
