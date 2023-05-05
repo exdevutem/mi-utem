@@ -10,5 +10,8 @@ class Routes {
   static const calculadoraNotas = '/calculadora-notas';
   static const imageView = '/image-view';
   static const asignatura = '/asignatura';
-  static const permiso = '/permiso';
+
+  static const passBase = '/pass';
+  static const passParameter = 'passId';
+  static const pass = '$passBase/:$passParameter';
 }

@@ -30,7 +30,7 @@ class _AsignaturasScreenState extends State<AsignaturasScreen> {
 
   Future<List<Asignatura>> _getAsignaturas([bool refresh = false]) async {
     List<Asignatura> asignaturas =
-        await AsignaturasService.getAsignaturas(refresh);
+        await AsignaturasService.getAsignaturas(forceRefresh: refresh);
     setState(() {
       _asignaturas = asignaturas;
     });

@@ -113,7 +113,6 @@ class AuthService {
       box.remove("rut");
       box.remove("version");
       await storage.deleteAll();
-      await DioMiUtemClient.dioCacheManager.clearAll();
       try {
         await PerfilService.deleteFcmToken();
       } catch (e) {}

@@ -29,7 +29,9 @@ class _AsignaturaEstudiantesTabState extends State<AsignaturaEstudiantesTab> {
 
   Future<Asignatura> _getDetalleAsignatura({bool refresh = false}) async {
     Asignatura asignatura = await AsignaturasService.getDetalleAsignatura(
-        widget.asignatura!.codigo, refresh);
+      widget.asignatura!.codigo,
+      forceRefresh: refresh,
+    );
 
     return asignatura;
   }
