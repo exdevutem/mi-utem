@@ -31,6 +31,7 @@ Tipos de cambios
 ### Changed
 
 - Se eliminó el anuncio de 'gestando nuevas funciones'. La señora vivirá siempre en nuestros corazones.
+- Mejora en el caché de los pérmisos QR
 
 ## [2.11.4] 2023-04-13Z
 
