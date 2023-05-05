@@ -10,7 +10,6 @@ import "package:get/get.dart";
 import 'package:mi_utem/controllers/grades_changes_controller.dart';
 import 'package:mi_utem/models/permiso_covid.dart';
 import "package:mi_utem/models/usuario.dart";
-import 'package:mi_utem/services/analytics_service.dart';
 import "package:mi_utem/services/config_service.dart";
 import "package:mi_utem/services/perfil_service.dart";
 import "package:mi_utem/services/review_service.dart";
@@ -107,52 +106,6 @@ class _MainScreenState extends State<MainScreen> {
             QuickMenuSection(),
             Container(height: 20),
             NoticiasSection(),
-            Container(height: 20),
-            GestureDetector(
-              onTap: () {
-                setState(() {
-                  _a = _a + 1;
-                });
-                if (_a >= 11) {
-                  _a = 0;
-                  if (_remoteConfig!.getBool(ConfigService.EG_HABILITADOS)) {
-                    Get.snackbar(
-                      "Error",
-                      _remoteConfig!.getString(ConfigService.PRONTO_EG),
-                      colorText: Colors.white,
-                      backgroundColor: Get.theme.primaryColor,
-                      snackPosition: SnackPosition.BOTTOM,
-                      margin: EdgeInsets.all(20),
-                    );
-                    AnalyticsService.logEvent("show_pronto_eg");
-                  }
-                }
-              },
-              child: Padding(
-                padding: EdgeInsets.all(20),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Icon(
-                      IconData(
-                          _remoteConfig!
-                              .getInt(ConfigService.HOME_PRONTO_ICONO),
-                          fontFamily: "MaterialIcons"),
-                      size: 150,
-                      color: Colors.grey,
-                    ),
-                    Container(
-                      height: 20,
-                    ),
-                    Text(
-                      _remoteConfig!.getString(ConfigService.HOME_PRONTO_TEXTO),
-                      style: TextStyle(color: Colors.grey, fontSize: 16),
-                    )
-                  ],
-                ),
-              ),
-            ),
           ],
         ),
       ),
