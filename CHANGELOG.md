@@ -28,6 +28,12 @@ Tipos de cambios
 
 ## [Unreleased]
 
+### Changed
+
+- Se eliminó el anuncio de 'gestando nuevas funciones'. La señora vivirá siempre en nuestros corazones.
+
+## [2.11.4] 2023-04-13Z
+
 ### Added
 
 - Integración con UXCam
@@ -37,7 +43,6 @@ Tipos de cambios
 
 - Ahora el controlador del horario es permanente
 - Nuevo diseño para la pantalla del resumen de asignatura
-
 ## [2.11.2] - 2023-04-06
 
 Esta versión del changelog contiene cambios hechos en 2.10, debido a que no se documentaron!
