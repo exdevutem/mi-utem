@@ -725,6 +725,9 @@ PODS:
     - Flutter
   - flutter_secure_storage (6.0.0):
     - Flutter
+  - flutter_uxcam (2.3.0):
+    - Flutter
+    - UXCam (~> 3.5.2)
   - FMDB (2.7.5):
     - FMDB/standard (= 2.7.5)
   - FMDB/standard (2.7.5)
@@ -866,6 +869,7 @@ PODS:
     - FMDB (>= 2.7.5)
   - url_launcher_ios (0.0.1):
     - Flutter
+  - UXCam (3.5.3)
   - video_player_avfoundation (0.0.1):
     - Flutter
 
@@ -881,6 +885,7 @@ DEPENDENCIES:
   - Flutter (from `Flutter`)
   - flutter_keyboard_visibility (from `.symlinks/plugins/flutter_keyboard_visibility/ios`)
   - flutter_secure_storage (from `.symlinks/plugins/flutter_secure_storage/ios`)
+  - flutter_uxcam (from `.symlinks/plugins/flutter_uxcam/ios`)
   - image_editor_common (from `.symlinks/plugins/image_editor_common/ios`)
   - image_picker_ios (from `.symlinks/plugins/image_picker_ios/ios`)
   - in_app_review (from `.symlinks/plugins/in_app_review/ios`)
@@ -921,6 +926,7 @@ SPEC REPOS:
     - nanopb
     - PromisesObjC
     - Sentry
+    - UXCam
 
 EXTERNAL SOURCES:
   awesome_notifications:
@@ -945,6 +951,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_keyboard_visibility/ios"
   flutter_secure_storage:
     :path: ".symlinks/plugins/flutter_secure_storage/ios"
+  flutter_uxcam:
+    :path: ".symlinks/plugins/flutter_uxcam/ios"
   image_editor_common:
     :path: ".symlinks/plugins/image_editor_common/ios"
   image_picker_ios:
@@ -994,6 +1002,7 @@ SPEC CHECKSUMS:
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
   flutter_keyboard_visibility: 0339d06371254c3eb25eeb90ba8d17dca8f9c069
   flutter_secure_storage: 23fc622d89d073675f2eaa109381aefbcf5a49be
+  flutter_uxcam: 20bff01a847f3285945cae39a4f8838a9555fc7c
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
   GoogleAppMeasurement: c7d6fff39bf2d829587d74088d582e32d75133c3
   GoogleDataTransport: ea169759df570f4e37bdee1623ec32a7e64e67c4
@@ -1018,6 +1027,7 @@ SPEC CHECKSUMS:
   shared_preferences_foundation: 986fc17f3d3251412d18b0265f9c64113a8c2472
   sqflite: 6d358c025f5b867b29ed92fc697fd34924e11904
   url_launcher_ios: 08a3dfac5fb39e8759aeb0abbd5d9480f30fc8b4
+  UXCam: b4a5cc96965b2f783b8c2c3bc0465cb614972a34
   video_player_avfoundation: 81e49bb3d9fb63dccf9fa0f6d877dc3ddbeac126
 
 PODFILE CHECKSUM: b45b8ab947ae659fc6013bd891f9715f44264ac9

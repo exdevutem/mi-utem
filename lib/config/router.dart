@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 import 'package:mi_utem/config/routes.dart';
 import 'package:mi_utem/screens/asignaturas_lista_screen.dart';
+import 'package:mi_utem/controllers/qr_passes_controller.dart';
 import 'package:mi_utem/screens/calculadora_notas_screen.dart';
 import 'package:mi_utem/screens/credencial_screen.dart';
 import 'package:mi_utem/screens/horario/horario_screen.dart';
 import 'package:mi_utem/screens/login_screen/login_screen.dart';
 import 'package:mi_utem/screens/main_screen.dart';
+import 'package:mi_utem/screens/permiso_covid_screen.dart';
 import 'package:mi_utem/screens/splash_screen.dart';
 import 'package:mi_utem/screens/usuario_screen.dart';
 import 'package:mi_utem/services/auth_service.dart';
@@ -21,6 +23,7 @@ final _loginPage = GetPage(
 
 final _homePage = GetPage(
   name: Routes.home,
+  bindings: [QrPassesBinding()],
   page: () {
     final usuario = PerfilService.getLocalUsuario();
 
@@ -64,6 +67,11 @@ final pages = <GetPage>[
   GetPage(
     name: Routes.asignaturas,
     page: () => AsignaturasListaScreen(),
+    middlewares: [OnlyAuthMiddleware()],
+  ),
+  GetPage(
+    name: Routes.pass,
+    page: () => PermisoCovidScreen(),
     middlewares: [OnlyAuthMiddleware()],
   ),
 ];
