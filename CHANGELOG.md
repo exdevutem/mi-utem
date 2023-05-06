@@ -33,6 +33,10 @@ Tipos de cambios
 - Se eliminó el anuncio de 'gestando nuevas funciones'. La señora vivirá siempre en nuestros corazones.
 - Mejora en el caché de los pérmisos QR
 
+### Fixed
+
+- Ya no se desloggeará a los usuarios erroneamente
+
 ## [2.11.4] 2023-04-13Z
 
 ### Added
