@@ -34,6 +34,10 @@ Tipos de cambios
 - Se cambió el estilo de la pantalla de notas/asignaturas. Ahora luce un poquito mejor.
 - Mejora en el caché de los pérmisos QR
 
+### Fixed
+
+- Ya no se desloggeará a los usuarios erroneamente
+
 ## [2.11.4] 2023-04-13Z
 
 ### Added
