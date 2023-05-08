@@ -5,15 +5,32 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "mi-utem",
-            "request": "launch",
-            "type": "dart"
-        },
-        {
-            "name": "mi-utem (profile mode)",
+            "name": "Dev - Debug",
             "request": "launch",
             "type": "dart",
-            "flutterMode": "profile"
-        }
+            "args": [
+                "--flavor",
+                "dev"
+            ]
+        },
+        {
+            "name": "Prod - Debug",
+            "request": "launch",
+            "type": "dart",
+            "args": [
+                "--flavor",
+                "prod"
+            ]
+        },
+        {
+            "name": "Prod - Release",
+            "request": "launch",
+            "type": "dart",
+            "args": [
+                "--flavor",
+                "dev",
+                "--release"
+            ]
+        },
     ]
 }
