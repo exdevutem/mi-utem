@@ -1063,7 +1063,7 @@ FodyWeavers.xsd
 *.code-workspace
 google-services.json
 api-playstore.json
-GoogleService-Info.plist
+GoogleService-Info*.plist
 android/keystores/*
 */fastlane/report.xml
 .flutter-plugins-dependencies

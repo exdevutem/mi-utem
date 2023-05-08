@@ -15,7 +15,6 @@
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
-		EBA0973A26349C13000C3A87 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = EBA0973926349C13000C3A87 /* GoogleService-Info.plist */; };
 		EBCDF3152A08916400C04BA3 /* prod.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = EBCDF3142A08916400C04BA3 /* prod.xcconfig */; };
 		EBCDF3162A08916400C04BA3 /* prod.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = EBCDF3142A08916400C04BA3 /* prod.xcconfig */; };
 		EBCDF3182A0891B800C04BA3 /* dev.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = EBCDF3172A0891B800C04BA3 /* dev.xcconfig */; };
@@ -92,7 +91,6 @@
 		E3DF90F3A21807C39C03D30F /* Pods-Runner.profile-prod.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile-prod.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile-prod.xcconfig"; sourceTree = "<group>"; };
 		E70F7055917B6FFFAE576207 /* Pods-Runner.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig"; sourceTree = "<group>"; };
 		E89F309C88BB79A4A8742037 /* Pods-MiUtemNotificationServiceExtension.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MiUtemNotificationServiceExtension.debug.xcconfig"; path = "Target Support Files/Pods-MiUtemNotificationServiceExtension/Pods-MiUtemNotificationServiceExtension.debug.xcconfig"; sourceTree = "<group>"; };
-		EBA0973926349C13000C3A87 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		EBCDF3142A08916400C04BA3 /* prod.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = prod.xcconfig; sourceTree = "<group>"; };
 		EBCDF3172A0891B800C04BA3 /* dev.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = dev.xcconfig; sourceTree = "<group>"; };
 		EBD5A0692634F792001BD5C0 /* Runner.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Runner.entitlements; sourceTree = "<group>"; };
@@ -185,7 +183,6 @@
 			children = (
 				EBD5A0692634F792001BD5C0 /* Runner.entitlements */,
 				97C146FA1CF9000F007C117D /* Main.storyboard */,
-				EBA0973926349C13000C3A87 /* GoogleService-Info.plist */,
 				97C146FD1CF9000F007C117D /* Assets.xcassets */,
 				97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */,
 				97C147021CF9000F007C117D /* Info.plist */,
@@ -223,6 +220,7 @@
 			buildConfigurationList = 97C147051CF9000F007C117D /* Build configuration list for PBXNativeTarget "Runner" */;
 			buildPhases = (
 				94E083E75031E6E772DBDA7C /* [CP] Check Pods Manifest.lock */,
+				EB04E4B02A08BA2D00698618 /* Firebase */,
 				9740EEB61CF901F6004384FC /* Run Script */,
 				97C146EA1CF9000F007C117D /* Sources */,
 				97C146EB1CF9000F007C117D /* Frameworks */,
@@ -306,7 +304,6 @@
 				97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */,
 				3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */,
 				EBCDF3182A0891B800C04BA3 /* dev.xcconfig in Resources */,
-				EBA0973A26349C13000C3A87 /* GoogleService-Info.plist in Resources */,
 				EBCDF3152A08916400C04BA3 /* prod.xcconfig in Resources */,
 				97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */,
 				97C146FC1CF9000F007C117D /* Main.storyboard in Resources */,
@@ -412,7 +409,25 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "/bin/sh \"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" build";
+			shellScript = "/bin/sh \"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" build\n";
+		};
+		EB04E4B02A08BA2D00698618 /* Firebase */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = Firebase;
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if [ \"${CONFIGURATION}\" == \"Debug-dev\" ] || [ \"${CONFIGURATION}\" == \"Profile-dev\" ] || [ \"${CONFIGURATION}\" == \"Release-dev\" ] || [ \"${CONFIGURATION}\" == \"Debug\" ]; then\ncp -r \"${PROJECT_DIR}/Runner/Firebase/dev/GoogleService-Info-dev.plist\" \"${PROJECT_DIR}/Runner/GoogleService-Info.plist\"\necho \"Development plist copied\"\nelif [ \"${CONFIGURATION}\" == \"Debug-prod\" ] || [ \"${CONFIGURATION}\" == \"Profile-prod\" ] || [ \"${CONFIGURATION}\" == \"Release-prod\" ] || [ \"${CONFIGURATION}\" == \"Release\" ]; then\ncp -r \"${PROJECT_DIR}/Runner/Firebase/uat/GoogleService-Info-prod.plist\" \"${PROJECT_DIR}/Runner/GoogleService-Info.plist\"\necho \"Production plist copied\"\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
