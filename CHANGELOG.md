@@ -28,6 +28,8 @@ Tipos de cambios
 
 ## [Unreleased]
 
+## [2.11.5] - 2023-05-08Z
+
 ### Changed
 
 - Se eliminó el anuncio de 'gestando nuevas funciones'. La señora vivirá siempre en nuestros corazones.
@@ -105,6 +107,7 @@ Esta versión del changelog contiene cambios hechos en 2.10, debido a que no se 
 ### Removed
 
 - Lista de estudiantes en la pantalla de asignatura
+- Perfil de profesores
 - Perfil de profesores
 - Perfil de profesores
 - Perfil de profesores
