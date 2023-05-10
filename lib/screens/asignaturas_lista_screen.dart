@@ -82,11 +82,8 @@ class _AsignaturasListaScreenState extends State<AsignaturasListaScreen> {
                   },
                   child: Padding(
                     padding: const EdgeInsets.only(top: 8.0),
-                    child: ListView.separated(
+                    child: ListView.builder(
                       physics: AlwaysScrollableScrollPhysics(),
-                      separatorBuilder: (context, index) => Container(
-                        height: 5,
-                      ),
                       itemBuilder: (BuildContext context, int i) {
                         Asignatura asignatura = _asignaturas[i];
                         return AsignaturaListTile(asignatura: asignatura);
@@ -145,14 +142,8 @@ class AsignaturaListTile extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(
           horizontal: 10.0,
-          vertical: 3.0,
         ),
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(15)),
-            boxShadow: [BoxShadow(blurRadius: 2, color: Colors.grey)],
-            color: theme.cardColor,
-          ),
+        child: Card(
           child: Container(
             padding: EdgeInsets.all(20),
             width: double.infinity,
