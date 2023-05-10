@@ -74,6 +74,11 @@ final pages = <GetPage>[
     page: () => PermisoCovidScreen(),
     middlewares: [OnlyAuthMiddleware()],
   ),
+  GetPage(
+    name: Routes.pass,
+    page: () => PermisoCovidScreen(),
+    middlewares: [OnlyAuthMiddleware()],
+  ),
 ];
 
 class OnlyAuthMiddleware extends GetMiddleware {

@@ -28,14 +28,16 @@ Tipos de cambios
 
 ## [Unreleased]
 
+### Changed
+- Se cambió el estilo de la pantalla de notas/asignaturas. Ahora luce un poquito mejor.
+
+
 ## [2.11.5] - 2023-05-08Z
 
 ### Changed
 
 - Se eliminó el anuncio de 'gestando nuevas funciones'. La señora vivirá siempre en nuestros corazones.
-- Se cambió el estilo de la pantalla de notas/asignaturas. Ahora luce un poquito mejor.
 - Mejora en el caché de los pérmisos QR
-- Se cambió el estilo de la pantalla de notas/asignaturas. Ahora luce un poquito mejor.
 
 ### Fixed
 
