@@ -132,18 +132,18 @@ class AsignaturaListTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final ThemeData theme = MainTheme.theme;
 
-    return InkWell(
-      onTap: () => Get.to(
-        () => AsignaturaDetalleScreen(
-          asignatura: asignatura,
-        ),
-        routeName: Routes.asignatura,
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 10.0,
       ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 10.0,
-        ),
-        child: Card(
+      child: Card(
+        child: InkWell(
+          onTap: () => Get.to(
+            () => AsignaturaDetalleScreen(
+              asignatura: asignatura,
+            ),
+            routeName: Routes.asignatura,
+          ),
           child: Container(
             padding: EdgeInsets.all(20),
             width: double.infinity,
