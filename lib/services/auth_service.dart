@@ -11,8 +11,6 @@ class AuthService {
   static final Dio _dio = DioMiUtemClient.initDio;
   static final GetStorage box = GetStorage();
 
-  static final String versionCorrecta = "2.5.2";
-
   static Future<Usuario> login(String? correo, String? contrasenia,
       [bool guardar = false]) async {
     String uri = "/v1/auth";
@@ -49,7 +47,6 @@ class AuthService {
         if (usuario.rut?.numero != null) {
           box.write('rut', usuario.rut!.numero!);
         }
-        box.write('version', versionCorrecta);
         box.write('esAntiguo', true);
 
         if (guardar) {
@@ -86,12 +83,7 @@ class AuthService {
   static bool isLoggedIn() {
     try {
       String? token = box.read("token");
-      String? version = box.read("version");
-      bool isLoggedIn = token != null &&
-          token.isNotEmpty &&
-          version != null &&
-          version.isNotEmpty &&
-          version == versionCorrecta;
+      bool isLoggedIn = token != null && token.isNotEmpty;
 
       return isLoggedIn;
     } catch (e) {
@@ -111,9 +103,7 @@ class AuthService {
       box.remove("apellidos");
       box.remove("fotoUrl");
       box.remove("rut");
-      box.remove("version");
       await storage.deleteAll();
-      await DioMiUtemClient.dioCacheManager.clearAll();
       try {
         await PerfilService.deleteFcmToken();
       } catch (e) {}

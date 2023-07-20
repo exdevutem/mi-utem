@@ -26,7 +26,24 @@ Tipos de cambios
 - `Fixed`: para corrección de errores.
 - `Security`: en caso de vulnerabilidades.
 
-## [Unreleased]
+## [Unreleased] 
+
+### Added
+
+- Se añade controlador para Asignaturas
+
+## [2.11.5] - 2023-05-08Z
+
+### Changed
+
+- Se eliminó el anuncio de 'gestando nuevas funciones'. La señora vivirá siempre en nuestros corazones.
+- Mejora en el caché de los pérmisos QR
+
+### Fixed
+
+- Ya no se desloggeará a los usuarios erroneamente
+
+## [2.11.4] 2023-04-13Z
 
 ### Added
 
@@ -37,8 +54,6 @@ Tipos de cambios
 
 - Ahora el controlador del horario es permanente
 - Nuevo diseño para la pantalla del resumen de asignatura
-- Se añade controlador para Asignaturas
-
 ## [2.11.2] - 2023-04-06
 
 Esta versión del changelog contiene cambios hechos en 2.10, debido a que no se documentaron!
@@ -96,6 +111,7 @@ Esta versión del changelog contiene cambios hechos en 2.10, debido a que no se 
 ### Removed
 
 - Lista de estudiantes en la pantalla de asignatura
+- Perfil de profesores
 - Perfil de profesores
 - Perfil de profesores
 - Perfil de profesores

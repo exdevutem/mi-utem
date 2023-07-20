@@ -13,10 +13,12 @@ class AsignaturasController extends GetxController {
     super.onInit();
   }
 
-  void getAsignaturas([bool refresh = false]) async {
+  void getAsignaturas({
+    bool forceRefresh = false,
+  }) async {
     isLoading.value = true;
     List<Asignatura> response =
-        await AsignaturasService.getAsignaturas(refresh);
+        await AsignaturasService.getAsignaturas(forceRefresh: forceRefresh);
     asignaturas.value = response;
     isLoading.value = false;
 
