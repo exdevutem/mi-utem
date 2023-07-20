@@ -23,8 +23,8 @@ class _ITabs {
   });
 }
 
-class AsignaturaScreen extends GetView<AsignaturaController> {
-  AsignaturaScreen({Key? key}) : super(key: key);
+class AsignaturaDetalleScreen extends GetView<AsignaturaController> {
+  AsignaturaDetalleScreen({Key? key}) : super(key: key);
 
   String? get tag => Get.parameters['asignaturaId'];
 
