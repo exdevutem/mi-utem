@@ -37,6 +37,7 @@ android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     lintOptions {
         disable 'InvalidPackage'
+        checkReleaseBuilds false
     }
 
     defaultConfig {
@@ -67,7 +68,22 @@ android {
             useProguard true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
-    
+        debug {
+            signingConfig signingConfigs.debug
+        }
+    }
+
+    flavorDimensions "flavor-type"
+    productFlavors {
+        dev {
+            dimension "flavor-type"
+            resValue "string", "app_name", "Dev Mi UTEM"
+            applicationIdSuffix ".dev"
+        }
+        prod {
+            resValue "string", "app_name", "Mi UTEM"
+            dimension "flavor-type"    
+        }
     }
 }
 

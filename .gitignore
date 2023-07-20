@@ -1061,9 +1061,11 @@ FodyWeavers.xsd
 # Custom ignores
 *.pem
 *.code-workspace
-google-services.json
+**/prod/google-services.json
+android/app/google-services.json
 api-playstore.json
-GoogleService-Info.plist
+GoogleService-Info*.plist
+!GoogleService-Info-dev.plist
 android/keystores/*
 */fastlane/report.xml
 .flutter-plugins-dependencies
