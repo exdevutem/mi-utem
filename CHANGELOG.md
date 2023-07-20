@@ -26,7 +26,11 @@ Tipos de cambios
 - `Fixed`: para corrección de errores.
 - `Security`: en caso de vulnerabilidades.
 
-## [Unreleased]
+## [Unreleased] 
+
+### Added
+
+- Se añade controlador para Asignaturas
 
 ## [2.11.5] - 2023-05-08Z
 
