@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mdi/mdi.dart';
 import 'package:mi_utem/config/routes.dart';
+import 'package:mi_utem/controllers/asignatura_controller.dart';
 import 'package:mi_utem/models/asignatura.dart';
 import 'package:mi_utem/screens/asignatura_estudiantes_tab.dart';
 import 'package:mi_utem/screens/asignatura_notas_tab.dart';
@@ -22,15 +23,12 @@ class _ITabs {
   });
 }
 
-class AsignaturaDetalleScreen extends StatelessWidget {
-  final Asignatura asignatura;
+class AsignaturaDetalleScreen extends GetView<AsignaturaController> {
+  AsignaturaDetalleScreen({Key? key}) : super(key: key);
 
-  AsignaturaDetalleScreen({
-    Key? key,
-    required this.asignatura,
-  }) : super(key: key);
+  String? get tag => Get.parameters['asignaturaId'];
 
-  List<_ITabs> get _tabs => [
+  List<_ITabs> _getTabs(Asignatura asignatura) => [
         _ITabs(
           label: "Resumen",
           child: AsignaturaResumenTab(asignatura: asignatura),
@@ -52,8 +50,8 @@ class AsignaturaDetalleScreen extends StatelessWidget {
     return ConfigService.config.getBool(ConfigService.CALCULADORA_MOSTRAR);
   }
 
-  int get _initialIndex {
-    final index = _tabs.indexWhere((tab) => tab.initial);
+  int _getInitialIndex(Asignatura asignatura) {
+    final index = _getTabs(asignatura).indexWhere((tab) => tab.initial);
     return index == -1 ? 0 : index;
   }
 
@@ -61,32 +59,41 @@ class AsignaturaDetalleScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     ReviewService.addScreen("AsignaturaScreen");
 
-    return DefaultTabController(
-      initialIndex: _initialIndex,
-      length: _tabs.length,
-      child: Scaffold(
-        appBar: CustomAppBar(
-          title: Text(asignatura.nombre ?? "Asigntura sin nombre"),
-          actions: _mostrarCalculadora
-              ? [
-                  IconButton(
-                    icon: Icon(Mdi.calculator),
-                    tooltip: "Calculadora",
-                    onPressed: () {
-                      Get.toNamed(
-                        Routes.calculadoraNotas,
-                      );
-                    },
-                  ),
-                ]
-              : [],
-          bottom: TabBar(
-            indicatorColor: Colors.white.withOpacity(0.8),
-            tabs: _tabs.map((tab) => Tab(text: tab.label)).toList(),
+    return controller.obx(
+      (asignatura) => DefaultTabController(
+        initialIndex: asignatura != null ? _getInitialIndex(asignatura) : 0,
+        length: asignatura != null ? _getTabs(asignatura).length : 1,
+        child: Scaffold(
+          appBar: CustomAppBar(
+            title: Text(asignatura?.nombre ?? "Asigntura sin nombre"),
+            actions: _mostrarCalculadora
+                ? [
+                    IconButton(
+                      icon: Icon(Mdi.calculator),
+                      tooltip: "Calculadora",
+                      onPressed: () {
+                        Get.toNamed(
+                          Routes.calculadoraNotas,
+                        );
+                      },
+                    ),
+                  ]
+                : [],
+            bottom: asignatura != null
+                ? TabBar(
+                    indicatorColor: Colors.white.withOpacity(0.8),
+                    tabs: _getTabs(asignatura)
+                        .map((tab) => Tab(text: tab.label))
+                        .toList(),
+                  )
+                : null,
           ),
-        ),
-        body: TabBarView(
-          children: _tabs.map((tab) => tab.child).toList(),
+          body: asignatura != null
+              ? TabBarView(
+                  children:
+                      _getTabs(asignatura).map((tab) => tab.child).toList(),
+                )
+              : Container(),
         ),
       ),
     );

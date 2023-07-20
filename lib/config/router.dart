@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 import 'package:mi_utem/config/routes.dart';
+import 'package:mi_utem/screens/asignatura_detalle_screen.dart';
 import 'package:mi_utem/screens/asignaturas_lista_screen.dart';
+import 'package:mi_utem/controllers/asignaturas_controller.dart';
 import 'package:mi_utem/controllers/qr_passes_controller.dart';
 import 'package:mi_utem/screens/calculadora_notas_screen.dart';
 import 'package:mi_utem/screens/credencial_screen.dart';
@@ -68,11 +70,11 @@ final pages = <GetPage>[
     name: Routes.asignaturas,
     page: () => AsignaturasListaScreen(),
     middlewares: [OnlyAuthMiddleware()],
+    binding: AsignaturasBinding(),
   ),
   GetPage(
-    name: Routes.pass,
-    page: () => PermisoCovidScreen(),
-    middlewares: [OnlyAuthMiddleware()],
+    name: '${Routes.asignatura}/:asignaturaId',
+    page: () => AsignaturaDetalleScreen(),
   ),
   GetPage(
     name: Routes.pass,
