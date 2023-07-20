@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 import 'package:mi_utem/config/routes.dart';
-import 'package:mi_utem/controllers/asignatura_controller.dart';
+import 'package:mi_utem/controllers/asignaturas_controller.dart';
 import 'package:mi_utem/screens/asignatura_screen.dart';
 import 'package:mi_utem/screens/asignaturas_screen.dart';
 import 'package:mi_utem/screens/calculadora_notas_screen.dart';
@@ -67,10 +67,10 @@ final pages = <GetPage>[
     name: Routes.asignaturas,
     page: () => AsignaturasScreen(),
     middlewares: [OnlyAuthMiddleware()],
-    binding: AsignaturaBinding(),
+    binding: AsignaturasBinding(),
   ),
   GetPage(
-    name: Routes.asignatura,
+    name: '${Routes.asignatura}/:asignaturaId',
     page: () => AsignaturaScreen(),
   )
 ];

@@ -1,91 +1,49 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_masked_text/flutter_masked_text.dart';
-import 'package:mi_utem/controllers/calculator_controller.dart';
+import 'package:mi_utem/controllers/asignatura_controller.dart';
 import 'package:mi_utem/models/asignatura.dart';
 import 'package:mi_utem/models/evaluacion.dart';
-import 'package:mi_utem/services/grades_service.dart';
 import 'package:mi_utem/themes/theme.dart';
 import 'package:mi_utem/widgets/custom_error_widget.dart';
-import 'package:mi_utem/widgets/loading_indicator.dart';
 import 'package:mi_utem/widgets/nota_list_item.dart';
 import 'package:mi_utem/widgets/pull_to_refresh.dart';
 
-class AsignaturaNotasTab extends StatefulWidget {
-  final Asignatura asignatura;
+class AsignaturaNotasTab extends StatelessWidget {
+  final Asignatura? asignatura;
 
   AsignaturaNotasTab({
     Key? key,
     required this.asignatura,
   }) : super(key: key);
 
-  @override
-  State<StatefulWidget> createState() => _AsignaturaNotasTabState();
-}
-
-class _AsignaturaNotasTabState extends State<AsignaturaNotasTab> {
-  late Future<Asignatura?> _futureAsignatura;
-  Asignatura? _asignatura;
-
-  @override
-  void initState() {
-    super.initState();
-    _futureAsignatura = _getNotasByCodigoAsignatura();
-  }
-
-  Future<Asignatura?> _getNotasByCodigoAsignatura(
-      [bool refresh = false]) async {
-    try {
-      final asignatura = await GradesService.getGrades(
-        widget.asignatura.id!,
-        forceRefresh: refresh,
-      );
-
-      setState(() {
-        _asignatura = asignatura;
-      });
-
-      CalculatorController.to.loadGradesFromAsignatura(asignatura);
-
-      return asignatura;
-    } catch (e) {
-      return null;
+  Future<void> _onRefresh() async {
+    if (asignatura?.id != null) {
+      AsignaturaController(asignatura!.id!).getAsignaturaDetail();
     }
-  }
-
-  Future<Asignatura?> _onRefresh() async {
-    return _getNotasByCodigoAsignatura(true);
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: _futureAsignatura,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState != ConnectionState.waiting) {
-          late Widget content;
+    final examGradeController = MaskedTextController(
+      mask: '0.0',
+      text: asignatura?.notaExamen?.toStringAsFixed(1) ?? "",
+    );
+    final presentationGradeController = MaskedTextController(
+      mask: '0.0',
+      text: asignatura?.notaPresentacion?.toStringAsFixed(1) ?? "",
+    );
 
-          if (snapshot.hasError) {
-            content = SingleChildScrollView(
+    return PullToRefresh(
+      onRefresh: _onRefresh,
+      child: asignatura == null
+          ? SingleChildScrollView(
               physics: AlwaysScrollableScrollPhysics(),
               child: CustomErrorWidget(
                 title: "Ocurrió un error al cargar las notas",
-                error: snapshot.error,
+                error: '',
               ),
-            );
-          } else if (snapshot.hasData &&
-              (_asignatura?.notasParciales != null &&
-                  _asignatura!.notasParciales.length > 0)) {
-            final asignatura = snapshot.data as Asignatura;
-            final examGradeController = MaskedTextController(
-              mask: '0.0',
-              text: asignatura.notaExamen?.toStringAsFixed(1) ?? "",
-            );
-            final presentationGradeController = MaskedTextController(
-              mask: '0.0',
-              text: asignatura.notaPresentacion?.toStringAsFixed(1) ?? "",
-            );
-
-            content = ListView(
+            )
+          : ListView(
               physics: AlwaysScrollableScrollPhysics(),
               padding: EdgeInsets.all(10),
               children: <Widget>[
@@ -95,7 +53,7 @@ class _AsignaturaNotasTabState extends State<AsignaturaNotasTab> {
                       Container(
                         height: 130,
                         width: 10,
-                        color: _asignatura?.colorPorEstado,
+                        color: asignatura!.colorPorEstado,
                       ),
                       Expanded(
                         child: Container(
@@ -107,8 +65,7 @@ class _AsignaturaNotasTabState extends State<AsignaturaNotasTab> {
                               Column(
                                 children: <Widget>[
                                   Text(
-                                    _asignatura?.notaFinal
-                                            ?.toStringAsFixed(1) ??
+                                    asignatura!.notaFinal?.toStringAsFixed(1) ??
                                         "S/N",
                                     style: TextStyle(
                                       fontSize: 40,
@@ -116,7 +73,7 @@ class _AsignaturaNotasTabState extends State<AsignaturaNotasTab> {
                                     ),
                                   ),
                                   Text(
-                                    _asignatura?.estado ?? "---",
+                                    asignatura!.estado ?? "---",
                                     style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
@@ -211,7 +168,7 @@ class _AsignaturaNotasTabState extends State<AsignaturaNotasTab> {
                       shrinkWrap: true,
                       physics: ClampingScrollPhysics(),
                       itemBuilder: (context, i) {
-                        REvaluacion evaluacion = _asignatura!.notasParciales[i];
+                        REvaluacion evaluacion = asignatura!.notasParciales[i];
                         return NotaListItem(
                           evaluacion: IEvaluacion.fromRemote(evaluacion),
                           /* onChanged: (evaluacion) {
@@ -219,39 +176,12 @@ class _AsignaturaNotasTabState extends State<AsignaturaNotasTab> {
                           } */
                         );
                       },
-                      itemCount: _asignatura!.notasParciales.length,
+                      itemCount: asignatura!.notasParciales.length,
                     ),
                   ),
                 ),
               ],
-            );
-          } else {
-            content = SingleChildScrollView(
-              physics: AlwaysScrollableScrollPhysics(),
-              child: Card(
-                child: Container(
-                  padding: EdgeInsets.all(20),
-                  child: CustomErrorWidget(
-                    emoji: "🤔",
-                    title: "Parece que aún no hay ponderadores",
-                    error: snapshot.error,
-                  ),
-                ),
-              ),
-            );
-          }
-          return PullToRefresh(
-            onRefresh: () async {
-              await _onRefresh();
-            },
-            child: content,
-          );
-        } else {
-          return Center(
-            child: LoadingIndicator(),
-          );
-        }
-      },
+            ),
     );
   }
 }

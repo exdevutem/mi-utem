@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mdi/mdi.dart';
 import 'package:mi_utem/config/routes.dart';
-import 'package:mi_utem/controllers/asignatura_controller.dart';
+import 'package:mi_utem/controllers/asignaturas_controller.dart';
 import 'package:mi_utem/models/asignatura.dart';
 import 'package:mi_utem/services/config_service.dart';
 import 'package:mi_utem/widgets/custom_app_bar.dart';
@@ -10,7 +10,7 @@ import 'package:mi_utem/widgets/custom_error_widget.dart';
 import 'package:mi_utem/widgets/loading_indicator.dart';
 import 'package:mi_utem/widgets/pull_to_refresh.dart';
 
-class AsignaturasScreen extends GetView<AsignaturaController> {
+class AsignaturasScreen extends GetView<AsignaturasController> {
   AsignaturasScreen({Key? key}) : super(key: key);
 
   Future<void> _onRefresh() async {
@@ -72,8 +72,8 @@ class AsignaturasScreen extends GetView<AsignaturaController> {
                         Asignatura asignatura = controller.asignaturas[i];
                         return ListTile(
                           onTap: () {
-                            controller.asignatura.value = asignatura;
-                            Get.toNamed(Routes.asignatura);
+                            Get.toNamed(
+                                '${Routes.asignatura}/${asignatura.id}');
                           },
                           title: Text(
                             asignatura.nombre ?? "",

@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:mdi/mdi.dart';
 import 'package:mi_utem/config/routes.dart';
 import 'package:mi_utem/controllers/asignatura_controller.dart';
+import 'package:mi_utem/models/asignatura.dart';
 import 'package:mi_utem/screens/asignatura_estudiantes_tab.dart';
 import 'package:mi_utem/screens/asignatura_notas_tab.dart';
 import 'package:mi_utem/screens/asignatura_resumen_tab.dart';
@@ -25,22 +26,23 @@ class _ITabs {
 class AsignaturaScreen extends GetView<AsignaturaController> {
   AsignaturaScreen({Key? key}) : super(key: key);
 
-  List<_ITabs> get _tabs => [
+  String? get tag => Get.parameters['asignaturaId'];
+
+  List<_ITabs> _getTabs(Asignatura asignatura) => [
         _ITabs(
           label: "Resumen",
-          child: AsignaturaResumenTab(asignatura: controller.asignatura.value),
+          child: AsignaturaResumenTab(asignatura: asignatura),
         ),
         _ITabs(
           label: "Notas",
-          child: AsignaturaNotasTab(asignatura: controller.asignatura.value!),
+          child: AsignaturaNotasTab(asignatura: asignatura),
           initial: true,
         ),
-        if (controller.asignatura.value?.estudiantes != null &&
-            controller.asignatura.value!.estudiantes!.length > 0)
+        if (asignatura.estudiantes != null &&
+            asignatura.estudiantes!.length > 0)
           _ITabs(
             label: "Estudiantes",
-            child: AsignaturaEstudiantesTab(
-                asignatura: controller.asignatura.value),
+            child: AsignaturaEstudiantesTab(asignatura: asignatura),
           ),
       ];
 
@@ -48,8 +50,8 @@ class AsignaturaScreen extends GetView<AsignaturaController> {
     return ConfigService.config.getBool(ConfigService.CALCULADORA_MOSTRAR);
   }
 
-  int get _initialIndex {
-    final index = _tabs.indexWhere((tab) => tab.initial);
+  int _getInitialIndex(Asignatura asignatura) {
+    final index = _getTabs(asignatura).indexWhere((tab) => tab.initial);
     return index == -1 ? 0 : index;
   }
 
@@ -57,33 +59,41 @@ class AsignaturaScreen extends GetView<AsignaturaController> {
   Widget build(BuildContext context) {
     ReviewService.addScreen("AsignaturaScreen");
 
-    return DefaultTabController(
-      initialIndex: _initialIndex,
-      length: _tabs.length,
-      child: Scaffold(
-        appBar: CustomAppBar(
-          title: Text(
-              controller.asignatura.value?.nombre ?? "Asigntura sin nombre"),
-          actions: _mostrarCalculadora
-              ? [
-                  IconButton(
-                    icon: Icon(Mdi.calculator),
-                    tooltip: "Calculadora",
-                    onPressed: () {
-                      Get.toNamed(
-                        Routes.calculadoraNotas,
-                      );
-                    },
-                  ),
-                ]
-              : [],
-          bottom: TabBar(
-            indicatorColor: Colors.white.withOpacity(0.8),
-            tabs: _tabs.map((tab) => Tab(text: tab.label)).toList(),
+    return controller.obx(
+      (asignatura) => DefaultTabController(
+        initialIndex: asignatura != null ? _getInitialIndex(asignatura) : 0,
+        length: asignatura != null ? _getTabs(asignatura).length : 1,
+        child: Scaffold(
+          appBar: CustomAppBar(
+            title: Text(asignatura?.nombre ?? "Asigntura sin nombre"),
+            actions: _mostrarCalculadora
+                ? [
+                    IconButton(
+                      icon: Icon(Mdi.calculator),
+                      tooltip: "Calculadora",
+                      onPressed: () {
+                        Get.toNamed(
+                          Routes.calculadoraNotas,
+                        );
+                      },
+                    ),
+                  ]
+                : [],
+            bottom: asignatura != null
+                ? TabBar(
+                    indicatorColor: Colors.white.withOpacity(0.8),
+                    tabs: _getTabs(asignatura)
+                        .map((tab) => Tab(text: tab.label))
+                        .toList(),
+                  )
+                : null,
           ),
-        ),
-        body: TabBarView(
-          children: _tabs.map((tab) => tab.child).toList(),
+          body: asignatura != null
+              ? TabBarView(
+                  children:
+                      _getTabs(asignatura).map((tab) => tab.child).toList(),
+                )
+              : Container(),
         ),
       ),
     );

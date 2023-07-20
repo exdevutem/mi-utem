@@ -31,7 +31,7 @@ class AsignaturasService {
   }
 
   static Future<Asignatura> getDetalleAsignatura(String? codigo,
-      [bool refresh = false]) async {
+      {bool forceRefresh = false}) async {
     String uri = "/v1/asignaturas/$codigo";
 
     try {
@@ -39,7 +39,7 @@ class AsignaturasService {
         uri,
         options: buildCacheOptions(
           Duration(days: 7),
-          forceRefresh: refresh,
+          forceRefresh: forceRefresh,
         ),
       );
 

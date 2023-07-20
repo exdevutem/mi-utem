@@ -1,32 +1,28 @@
 import 'package:get/get.dart';
 import 'package:mi_utem/models/asignatura.dart';
-import 'package:mi_utem/services/asignaturas_service.dart';
+import 'package:mi_utem/services/grades_service.dart';
 
-class AsignaturaController extends GetxController {
-  final asignaturas = [].obs;
-  final asignatura = Rxn<Asignatura>(null);
-  final isLoading = false.obs;
+class AsignaturaController extends GetxController with StateMixin<Asignatura> {
+  late final String asignaturaId;
 
-  static AsignaturaController get to => Get.find();
+  AsignaturaController(this.asignaturaId);
 
   @override
   void onInit() {
-    getAsignaturas();
+    getAsignaturaDetail();
     super.onInit();
   }
 
-  void getAsignaturas([bool refresh = false]) async {
-    isLoading.value = true;
-    List<Asignatura> response =
-        await AsignaturasService.getAsignaturas(refresh);
-    asignaturas.value = response;
-    isLoading.value = false;
-  }
-}
-
-class AsignaturaBinding extends Bindings {
-  @override
-  void dependencies() {
-    Get.put(AsignaturaController(), permanent: true);
+  void getAsignaturaDetail({bool refresh = false}) async {
+    change(null, status: RxStatus.loading());
+    try {
+      Asignatura asignatura = await GradesService.getGrades(
+        asignaturaId,
+        forceRefresh: refresh,
+      );
+      change(asignatura, status: RxStatus.success());
+    } catch (e) {
+      change(null, status: RxStatus.error(e.toString()));
+    }
   }
 }

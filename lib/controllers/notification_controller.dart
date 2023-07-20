@@ -6,7 +6,6 @@ import 'package:awesome_notifications_fcm/awesome_notifications_fcm.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mi_utem/config/routes.dart';
-import 'package:mi_utem/controllers/asignatura_controller.dart';
 import 'package:mi_utem/models/asignatura.dart';
 import 'package:mi_utem/services/analytics_service.dart';
 
@@ -56,8 +55,7 @@ class NotificationController {
         );
         final asignatura =
             Asignatura.fromJson(jsonDecode(asignaturaJsonString));
-        AsignaturaController.to.asignatura.value = asignatura;
-        Get.toNamed(Routes.asignatura);
+        Get.toNamed('${Routes.asignatura}/${asignatura.id}');
       }
     }
   }
