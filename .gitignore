@@ -1062,6 +1062,7 @@ FodyWeavers.xsd
 *.pem
 *.code-workspace
 **/prod/google-services.json
+android/app/google-services.json
 api-playstore.json
 GoogleService-Info*.plist
 !GoogleService-Info-dev.plist
