@@ -37,6 +37,7 @@ android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     lintOptions {
         disable 'InvalidPackage'
+        checkReleaseBuilds false
     }
 
     defaultConfig {

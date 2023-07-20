@@ -28,7 +28,7 @@
             "type": "dart",
             "args": [
                 "--flavor",
-                "dev",
+                "prod",
                 "--release"
             ]
         },
