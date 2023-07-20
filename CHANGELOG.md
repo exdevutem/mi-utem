@@ -26,7 +26,15 @@ Tipos de cambios
 - `Fixed`: para corrección de errores.
 - `Security`: en caso de vulnerabilidades.
 
-## [Unreleased]
+## [Unreleased] 
+
+### Added
+
+- Se añade controlador para Asignaturas
+
+### Changed
+- Se cambió el estilo de la pantalla de notas/asignaturas. Ahora luce un poquito mejor.
+
 
 ## [2.11.5] - 2023-05-08Z
 
