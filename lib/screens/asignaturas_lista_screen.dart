@@ -15,7 +15,7 @@ class AsignaturasListaScreen extends GetView<AsignaturasController> {
   AsignaturasListaScreen({Key? key}) : super(key: key);
 
   Future<void> _onRefresh() async {
-    controller.getAsignaturas();
+    controller.refreshAsignaturas();
   }
 
   bool get _mostrarCalculadora {
@@ -45,33 +45,48 @@ class AsignaturasListaScreen extends GetView<AsignaturasController> {
         onRefresh: () async {
           await _onRefresh();
         },
-        child: Obx(() => controller.isLoading.value
-            ? Container(
-                padding: EdgeInsets.all(20),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      child: Center(
-                        child: LoadingIndicator(),
-                      ),
-                    ),
-                  ],
-                ),
-              )
-            : controller.asignaturas.isEmpty
-                ? CustomErrorWidget(
-                    emoji: "🤔",
-                    title: "Parece que no se encontraron asignaturas",
-                  )
-                : ListView.builder(
+        child: controller.obx(
+          (asignaturas) => asignaturas == null || asignaturas.isEmpty
+              ? Center(
+                  child: SingleChildScrollView(
                     physics: AlwaysScrollableScrollPhysics(),
-                    itemBuilder: (BuildContext context, int i) {
-                      Asignatura asignatura = controller.asignaturas[i];
-                      return AsignaturaListTile(asignatura: asignatura);
-                    },
-                    itemCount: controller.asignaturas.length,
-                  )),
+                    child: CustomErrorWidget(
+                      emoji: "🤔",
+                      title: "Parece que no se encontraron asignaturas",
+                    ),
+                  ),
+                )
+              : ListView.builder(
+                  physics: AlwaysScrollableScrollPhysics(),
+                  itemBuilder: (BuildContext context, int i) {
+                    Asignatura asignatura = asignaturas[i];
+                    return AsignaturaListTile(asignatura: asignatura);
+                  },
+                  itemCount: asignaturas.length,
+                ),
+          onError: (error) => Center(
+            child: SingleChildScrollView(
+              physics: AlwaysScrollableScrollPhysics(),
+              child: CustomErrorWidget(
+                emoji: "🤔",
+                title: "Ocurrió un error al obtener las asignaturas",
+              ),
+            ),
+          ),
+          onLoading: Container(
+            padding: EdgeInsets.all(20),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: Center(
+                    child: LoadingIndicator(),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }

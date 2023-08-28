@@ -1,4 +1,7 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 class LoginTextFormField extends StatefulWidget {
@@ -13,6 +16,7 @@ class LoginTextFormField extends StatefulWidget {
     this.textCapitalization,
     this.keyboardType,
     this.controller,
+    this.inputFormatters,
   }) : super(key: key);
 
   final String? hintText, labelText;
@@ -22,6 +26,7 @@ class LoginTextFormField extends StatefulWidget {
   final Function? onSaved, validator;
   final bool obscureText;
   final TextEditingController? controller;
+  final List<TextInputFormatter>? inputFormatters;
 
   @override
   _LoginTextFormFieldState createState() => _LoginTextFormFieldState();
@@ -49,6 +54,7 @@ class _LoginTextFormFieldState extends State<LoginTextFormField> {
         controller: _controller,
         textCapitalization: widget.textCapitalization!,
         obscureText: widget.obscureText,
+        inputFormatters: widget.inputFormatters,
         decoration: InputDecoration(
           enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(25),
@@ -80,7 +86,8 @@ class _LoginTextFormFieldState extends State<LoginTextFormField> {
         keyboardType: widget.keyboardType,
         onSaved: (String? value) => widget.onSaved!(value),
         validator: (String? value) {
-          String? errorMsg = widget.validator!(value);
+          log("validator");
+          String? errorMsg = widget.validator?.call(value);
 
           if (errorMsg != null) {
             setState(() => _error = true);

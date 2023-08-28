@@ -17,7 +17,12 @@ class _BackgroundState extends State<_Background> {
 
   @override
   void initState() {
-    _controller = VideoPlayerController.asset('assets/videos/login_bg.mp4')
+    _controller = VideoPlayerController.asset(
+      'assets/videos/login_bg.mp4',
+      videoPlayerOptions: VideoPlayerOptions(
+        mixWithOthers: true,
+      ),
+    )
       ..setVolume(0)
       ..play()
       ..setLooping(true)

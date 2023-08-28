@@ -1,7 +1,7 @@
 import 'package:flutter_masked_text/flutter_masked_text.dart';
 import 'package:get/get.dart';
-import 'package:mi_utem/models/asignatura.dart';
 import 'package:mi_utem/models/evaluacion.dart';
+import 'package:mi_utem/models/grades.dart';
 
 class CalculatorController extends GetxController {
   static const maxPercentage = 100;
@@ -143,17 +143,17 @@ class CalculatorController extends GetxController {
     freeEditable.value = false;
   }
 
-  void loadGradesFromAsignatura(Asignatura asignatura) {
+  void loadGradesFromAsignatura(Grades grades) {
     partialGrades.clear();
     percentageTextFieldControllers.clear();
     gradeTextFieldControllers.clear();
 
-    for (var evaluacion in asignatura.notasParciales) {
+    for (var evaluacion in grades.notasParciales) {
       final partialGrade = IEvaluacion.fromRemote(evaluacion);
       addGrade(partialGrade);
     }
 
-    setExamGrade(asignatura.notaExamen);
+    setExamGrade(grades.notaExamen);
   }
 
   void changeGradeAt(int index, IEvaluacion changedGrade) {

@@ -1,9 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:mi_utem/models/carrera.dart';
 import 'package:mi_utem/models/usuario.dart';
-import 'package:mi_utem/services/carreras_service.dart';
 import 'package:mi_utem/services/perfil_service.dart';
 import 'package:mi_utem/utils/dio_miutem_client.dart';
 
@@ -51,10 +49,6 @@ class AuthService {
 
         if (guardar) {
           await storage.write(key: "contrasenia", value: contrasenia);
-        }
-        Carrera carrera = await CarreraService.getCarreraActiva();
-        if (carrera.id != null) {
-          box.write('carreraId', carrera.id!);
         }
       }
       return usuario;

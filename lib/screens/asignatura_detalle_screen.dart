@@ -10,6 +10,7 @@ import 'package:mi_utem/screens/asignatura_resumen_tab.dart';
 import 'package:mi_utem/services/config_service.dart';
 import 'package:mi_utem/services/review_service.dart';
 import 'package:mi_utem/widgets/custom_app_bar.dart';
+import 'package:mi_utem/widgets/loading_indicator.dart';
 
 class _ITabs {
   final String label;
@@ -35,7 +36,7 @@ class AsignaturaDetalleScreen extends GetView<AsignaturaController> {
         ),
         _ITabs(
           label: "Notas",
-          child: AsignaturaNotasTab(asignatura: asignatura),
+          child: AsignaturaNotasTab(asignaturaId: asignatura.id!),
           initial: true,
         ),
         if (asignatura.estudiantes != null &&
@@ -94,6 +95,12 @@ class AsignaturaDetalleScreen extends GetView<AsignaturaController> {
                       _getTabs(asignatura).map((tab) => tab.child).toList(),
                 )
               : Container(),
+        ),
+      ),
+      onLoading: Scaffold(
+        appBar: CustomAppBar(),
+        body: Center(
+          child: LoadingIndicator(),
         ),
       ),
     );

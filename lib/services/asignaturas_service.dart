@@ -9,10 +9,10 @@ class AsignaturasService {
   static final Dio _dio = DioMiUtemClient.authDio;
   static final GetStorage box = GetStorage();
 
-  static Future<List<Asignatura>> getAsignaturas({
+  static Future<List<Asignatura>> getAsignaturas(
+    String carreraId, {
     bool forceRefresh = false,
   }) async {
-    final carreraId = box.read('carreraId')!;
     final uri = "/v1/carreras/$carreraId/asignaturas";
     final user = PerfilService.getLocalUsuario();
 

@@ -155,11 +155,15 @@ class _LoginScreenState extends State<LoginScreen> {
                               labelText: 'Correo UTEM',
                               textCapitalization: TextCapitalization.none,
                               keyboardType: TextInputType.emailAddress,
+                              inputFormatters: [
+                                FilteringTextInputFormatter.deny(RegExp(" ")),
+                              ],
                               icon: Icons.person,
                               validator: (String value) {
                                 if (value.isEmpty) {
                                   return 'Debe ingresar un correo UTEM';
-                                } else if (!value.endsWith("@utem.cl")) {
+                                } else if (value.contains("@") &&
+                                    !value.endsWith("@utem.cl")) {
                                   return 'Debe ingresar un correo UTEM';
                                 }
                               },
@@ -240,57 +244,59 @@ class _LoginScreenState extends State<LoginScreen> {
         "Usuario o contraseña incorrecta",
       );
     } else {
-      Get.dialog(
-        LoadingDialog(),
-        barrierDismissible: false,
-      );
-
-      try {
-        bool esPrimeraVez = await AuthService.esPrimeraVez();
-        Usuario usuario = await AuthService.login(correo, contrasenia, true);
-
-        AnalyticsService.logEvent('login');
-        AnalyticsService.setUser(usuario);
-
-        Get.toNamed(
-          Routes.home,
+      if (_formKey.currentState?.validate() ?? false) {
+        Get.dialog(
+          LoadingDialog(),
+          barrierDismissible: false,
         );
 
-        if (esPrimeraVez) {
-          Get.dialog(
-            AcercaDialog(),
+        try {
+          bool esPrimeraVez = await AuthService.esPrimeraVez();
+          Usuario usuario = await AuthService.login(correo, contrasenia, true);
+
+          AnalyticsService.logEvent('login');
+          AnalyticsService.setUser(usuario);
+
+          Get.toNamed(
+            Routes.home,
           );
-        }
-      } on DioError catch (e) {
-        print(e.message);
-        Get.back();
-        if (e.response?.statusCode == 403) {
-          if (e.response?.data["codigoInterno"]?.toString() == "4") {
-            Get.dialog(NotReadyDialog());
-          } else {
-            showDefaultSnackbar(
-              "Error",
-              "Usuario o contraseña incorrecta",
+
+          if (esPrimeraVez) {
+            Get.dialog(
+              AcercaDialog(),
             );
           }
-        } else if (e.response?.statusCode != null &&
-            e.response!.statusCode.toString().startsWith("5")) {
-          print(e.response?.data);
-          Get.dialog(MonkeyErrorDialog());
-        } else {
-          print(e.response?.data);
+        } on DioError catch (e) {
+          print(e.message);
+          Get.back();
+          if (e.response?.statusCode == 403) {
+            if (e.response?.data["codigoInterno"]?.toString() == "4") {
+              Get.dialog(NotReadyDialog());
+            } else {
+              showDefaultSnackbar(
+                "Error",
+                "Usuario o contraseña incorrecta",
+              );
+            }
+          } else if (e.response?.statusCode != null &&
+              e.response!.statusCode.toString().startsWith("5")) {
+            print(e.response?.data);
+            Get.dialog(MonkeyErrorDialog());
+          } else {
+            print(e.response?.data);
+            showDefaultSnackbar(
+              "Error",
+              "Ocurrió un error inesperado 😢",
+            );
+          }
+        } catch (e) {
+          print(e.toString());
+          Get.back();
           showDefaultSnackbar(
             "Error",
             "Ocurrió un error inesperado 😢",
           );
         }
-      } catch (e) {
-        print(e.toString());
-        Get.back();
-        showDefaultSnackbar(
-          "Error",
-          "Ocurrió un error inesperado 😢",
-        );
       }
     }
   }

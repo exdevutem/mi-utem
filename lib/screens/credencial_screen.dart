@@ -4,7 +4,6 @@ import 'package:mdi/mdi.dart';
 import 'package:mi_utem/models/carrera.dart';
 import 'package:mi_utem/models/usuario.dart';
 import 'package:mi_utem/services/analytics_service.dart';
-import 'package:mi_utem/services/carreras_service.dart';
 import 'package:mi_utem/services/perfil_service.dart';
 import 'package:mi_utem/services/review_service.dart';
 import 'package:mi_utem/widgets/credencial_card.dart';
@@ -53,10 +52,8 @@ class _CredencialScreenState extends State<CredencialScreen> {
   Future _getData() async {
     try {
       Usuario usuario = PerfilService.getLocalUsuario();
-      Carrera activa = await CarreraService.getCarreraActiva();
       setState(() {
         _usuario = usuario;
-        _carreraActiva = activa;
       });
       return usuario;
     } catch (e) {

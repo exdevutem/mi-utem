@@ -13,6 +13,7 @@ import 'package:mi_utem/config/constants.dart';
 import 'package:mi_utem/config/router.dart';
 import 'package:mi_utem/config/routes.dart';
 import 'package:mi_utem/controllers/calculator_controller.dart';
+import 'package:mi_utem/controllers/carreras_controller.dart';
 import 'package:mi_utem/services/analytics_service.dart';
 import 'package:mi_utem/services/auth_service.dart';
 import 'package:mi_utem/services/background_service.dart';
@@ -79,6 +80,9 @@ class _MiUtemState extends State<MiUtem> {
       initialRoute: Routes.splash,
       debugShowCheckedModeBanner: false,
       title: 'Mi UTEM',
+      initialBinding: BindingsBuilder(() {
+        Get.put(CarrerasController(), permanent: true);
+      }),
       theme: MainTheme.theme,
       navigatorObservers: [
         FirebaseAnalyticsObserver(analytics: analytics),

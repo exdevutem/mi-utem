@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:dio_http_cache/dio_http_cache.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-
 import 'package:mi_utem/services/auth_service.dart';
 
 class DioMiUtemClient {
@@ -66,8 +65,6 @@ class AuthInterceptor extends QueuedInterceptor {
       return super.onError(err, handler);
     }
 
-    AuthService.invalidateToken();
-
     final attempt = err.requestOptions._retryAttempt + 1;
     if (attempt > retries) {
       await _onErrorRefreshingToken();
@@ -95,7 +92,9 @@ class AuthInterceptor extends QueuedInterceptor {
     }
   }
 
-  Future<void> _onErrorRefreshingToken() async {}
+  Future<void> _onErrorRefreshingToken() async {
+    AuthService.invalidateToken();
+  }
 }
 
 extension AuthRequestOptionsX on RequestOptions {

@@ -1,7 +1,9 @@
 import 'dart:developer';
 
 import 'package:get_storage/get_storage.dart';
+import 'package:mi_utem/controllers/carreras_controller.dart';
 import 'package:mi_utem/models/asignatura.dart';
+import 'package:mi_utem/models/grades.dart';
 import 'package:mi_utem/services/asignaturas_service.dart';
 import 'package:mi_utem/services/auth_service.dart';
 import 'package:mi_utem/services/grades_service.dart';
@@ -14,9 +16,8 @@ class GradesChangesController {
 
   static final GetStorage box = GetStorage();
 
-  static Future<void> saveGrades(
-      String asignaturaId, Asignatura asignatura) async {
-    final jsonGrades = asignatura.toJson();
+  static Future<void> saveGrades(String asignaturaId, Grades grades) async {
+    final jsonGrades = grades.toJson();
     jsonGrades['lastUpdate'] = DateTime.now().toIso8601String();
 
     log('Saving grades for $asignaturaId: $jsonGrades');
@@ -25,18 +26,18 @@ class GradesChangesController {
   }
 
   static GradeChangeType _getGradeValueChangeType(
-    Asignatura oldAsignatura,
-    Asignatura updatedAsigantura,
+    Grades oldGrades,
+    Grades updatedGrades,
   ) {
-    final oldAsignaturaLength = oldAsignatura.notasParciales.length;
-    final updatedAsiganturaLength = updatedAsigantura.notasParciales.length;
+    final oldGradesLength = oldGrades.notasParciales.length;
+    final updatedGradesLength = updatedGrades.notasParciales.length;
 
-    if (oldAsignaturaLength == updatedAsiganturaLength) {
+    if (oldGradesLength == updatedGradesLength) {
       GradeChangeType? currentChange;
 
-      for (int i = 0; i < oldAsignaturaLength; i++) {
-        final oldValue = oldAsignatura.notasParciales[i];
-        final updatedValue = updatedAsigantura.notasParciales[i];
+      for (int i = 0; i < oldGradesLength; i++) {
+        final oldValue = oldGrades.notasParciales[i];
+        final updatedValue = updatedGrades.notasParciales[i];
 
         if (oldValue.nota != updatedValue.nota) {
           if (oldValue.nota == null && updatedValue.nota != null) {
@@ -57,7 +58,7 @@ class GradesChangesController {
       }
     } else {
       Sentry.captureMessage(
-        'Asignatura $oldAsignatura.id has a different number of weighters in _getGradeValueChangeType function',
+        'Asignatura $oldGrades.id has a different number of weighters in _getGradeValueChangeType function',
         level: SentryLevel.warning,
       );
     }
@@ -65,16 +66,16 @@ class GradesChangesController {
   }
 
   static bool _hasAWeighterDiferrence(
-    Asignatura oldAsignatura,
-    Asignatura updatedAsigantura,
+    Grades oldGrades,
+    Grades updatedGrades,
   ) {
-    final oldAsignaturaLength = oldAsignatura.notasParciales.length;
-    final updatedAsiganturaLength = updatedAsigantura.notasParciales.length;
+    final oldGradesLength = oldGrades.notasParciales.length;
+    final updatedGradesLength = updatedGrades.notasParciales.length;
 
-    if (oldAsignaturaLength == updatedAsiganturaLength) {
-      for (int i = 0; i < oldAsignaturaLength; i++) {
-        final oldWeighter = oldAsignatura.notasParciales[i];
-        final updatedWeighter = updatedAsigantura.notasParciales[i];
+    if (oldGradesLength == updatedGradesLength) {
+      for (int i = 0; i < oldGradesLength; i++) {
+        final oldWeighter = oldGrades.notasParciales[i];
+        final updatedWeighter = updatedGrades.notasParciales[i];
 
         if (oldWeighter.porcentaje != updatedWeighter.porcentaje) {
           return true;
@@ -82,58 +83,58 @@ class GradesChangesController {
       }
     } else {
       Sentry.captureMessage(
-        'Asignatura $oldAsignatura.id has a different number of weighters in _hasAWeighterDiferrence function',
+        'Asignatura $oldGrades.id has a different number of weighters in _hasAWeighterDiferrence function',
         level: SentryLevel.warning,
       );
     }
     return false;
   }
 
-  static bool _hasAGradeWithValue(Asignatura asignatura) {
+  static bool _hasAGradeWithValue(Grades asignatura) {
     return asignatura.notasParciales.any((element) => element.nota != null);
   }
 
   static GradeChangeType compareGrades(
     String asignaturaId,
-    Asignatura updatedAsigantura,
+    Grades updatedGrades,
   ) {
-    final oldAsignaturaJson = box.read('$savedGradesPrefix$asignaturaId');
+    final oldGradesJson = box.read('$savedGradesPrefix$asignaturaId');
 
-    if (oldAsignaturaJson != null) {
-      final oldAsignatura = Asignatura.fromJson(oldAsignaturaJson);
+    if (oldGradesJson != null) {
+      final oldGrades = Grades.fromJson(oldGradesJson);
 
-      log(oldAsignatura.toString());
+      log(oldGrades.toString());
 
-      final oldAsignaturaLength = oldAsignatura.notasParciales.length;
-      final updatedAsiganturaLength = updatedAsigantura.notasParciales.length;
+      final oldGradesLength = oldGrades.notasParciales.length;
+      final updatedGradesLength = updatedGrades.notasParciales.length;
 
-      if (oldAsignaturaLength == 0) {
-        if (updatedAsiganturaLength == 0) {
+      if (oldGradesLength == 0) {
+        if (updatedGradesLength == 0) {
           return GradeChangeType.noChange;
         } else {
-          if (_hasAGradeWithValue(updatedAsigantura)) {
+          if (_hasAGradeWithValue(updatedGrades)) {
             return GradeChangeType.gradeSetted;
           } else {
             return GradeChangeType.weightersSetted;
           }
         }
       } else {
-        if (updatedAsiganturaLength == 0) {
+        if (updatedGradesLength == 0) {
           return GradeChangeType.weightersDeleted;
         } else {
-          if (oldAsignaturaLength != updatedAsiganturaLength) {
+          if (oldGradesLength != updatedGradesLength) {
             return GradeChangeType.weightersUpdated;
           } else {
-            if (_hasAWeighterDiferrence(oldAsignatura, updatedAsigantura)) {
+            if (_hasAWeighterDiferrence(oldGrades, updatedGrades)) {
               return GradeChangeType.weightersUpdated;
             } else {
-              return _getGradeValueChangeType(oldAsignatura, updatedAsigantura);
+              return _getGradeValueChangeType(oldGrades, updatedGrades);
             }
           }
         }
       }
     } else {
-      log('compareGrades oldAsignaturaJson was null');
+      log('compareGrades oldGradesJson was null');
     }
 
     return GradeChangeType.noChange;
@@ -143,7 +144,8 @@ class GradesChangesController {
     final isLogged = AuthService.isLoggedIn();
 
     if (isLogged) {
-      final carreraId = box.read('carreraId');
+      final carrera = CarrerasController.to.selectedCarrera.value;
+      final carreraId = carrera?.id;
 
       if (carreraId != null) {
         final suscribedAsignaturasJson =
@@ -151,7 +153,8 @@ class GradesChangesController {
         List<Asignatura>? suscribedAsignaturas;
 
         if (suscribedAsignaturasJson == null) {
-          final asignaturas = await AsignaturasService.getAsignaturas();
+          final asignaturas =
+              await AsignaturasService.getAsignaturas(carreraId);
           final asignaturasJson = asignaturas.map((e) => e.toJson()).toList();
           suscribedAsignaturas = asignaturas;
           box.write('$suscribedAsignaturasPrefix$carreraId', asignaturasJson);
@@ -163,7 +166,7 @@ class GradesChangesController {
         for (Asignatura? asignatura in suscribedAsignaturas) {
           final asignaturaId = asignatura?.id;
           if (asignatura != null && asignaturaId != null) {
-            final updatedAsignatura = await GradesService.getGrades(
+            final updatedGrades = await GradesService.getGrades(
               asignaturaId,
               forceRefresh: true,
               saveGrades: false,
@@ -171,10 +174,10 @@ class GradesChangesController {
 
             final changeType = compareGrades(
               asignaturaId,
-              updatedAsignatura,
+              updatedGrades,
             );
 
-            await saveGrades(asignaturaId, updatedAsignatura);
+            await saveGrades(asignaturaId, updatedGrades);
 
             _notificateChange(asignatura, changeType);
           }

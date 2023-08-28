@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mi_utem/models/evaluacion.dart';
+import 'package:mi_utem/models/grades.dart';
 import 'package:mi_utem/models/usuario.dart';
 import 'package:mi_utem/themes/theme.dart';
 import 'package:recase/recase.dart';
@@ -12,11 +12,9 @@ class Asignatura {
   String? estado;
   String? docente;
   String? seccion;
-  List<REvaluacion> notasParciales;
-  num? notaExamen;
-  num? notaPresentacion;
-  num? notaFinal;
+
   Asistencia? asistencia;
+  Grades? grades;
   List<Usuario>? estudiantes;
   String? tipoAsignatura;
   num? intentos;
@@ -30,13 +28,10 @@ class Asignatura {
     this.codigo,
     this.tipoHora,
     this.estado,
-    this.notasParciales = const [],
-    this.notaFinal,
-    this.notaPresentacion,
     this.docente,
     this.seccion,
-    this.notaExamen,
     this.asistencia,
+    this.grades,
     this.estudiantes,
     this.tipoAsignatura,
     this.sala,
@@ -69,10 +64,7 @@ class Asignatura {
       estado: ReCase(json['estado'] ?? '').titleCase,
       docente: ReCase(json['docente'] ?? '').titleCase,
       seccion: json['seccion'],
-      notasParciales: REvaluacion.fromJsonList(json['notasParciales']),
-      notaFinal: json['notaFinal'] as num?,
-      notaPresentacion: json['notaPresentacion'] as num?,
-      notaExamen: json['notaExamen'] as num?,
+      grades: json['notas'] != null ? Grades.fromJson(json['notas']) : null,
       // estudiantes: Usuario.fromJsonList(json["estudiantes"]),
       asistencia: Asistencia(asistidos: json['asistenciaAlDia']),
       // tipoAsignatura: ReCase(json['tipoAsignatura'].toString()).titleCase,
@@ -104,11 +96,8 @@ class Asignatura {
       'estado': estado,
       'docente': docente,
       'seccion': seccion,
-      'notasParciales': notasParciales.map((nota) => nota.toJson()).toList(),
-      'notaFinal': notaFinal,
-      'notaPresentacion': notaPresentacion,
-      'notaExamen': notaExamen,
       'estudiantes': estudiantes,
+      'notas': grades?.toJson(),
       'asistencia': asistencia?.toJson(),
       'tipoAsignatura': tipoAsignatura,
       'sala': sala,
