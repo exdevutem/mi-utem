@@ -29,7 +29,7 @@ lane :ios_flutter do |options|
     cocoapods(use_bundle_exec: false, podfile: "ios")
   end
 
-  sh("flutter", "build", "ios", "--release", "--no-codesign", "--no-tree-shake-icons", "--build-name=#{build_name}", "--build-number=#{build_number}")
+  sh("flutter", "build", "ios", "--release", "--flavor", "prod", "--no-codesign", "--no-tree-shake-icons", "--build-name=#{build_name}", "--build-number=#{build_number}")
 end
 
 lane :ios_build_and_upload do |options|
@@ -71,7 +71,7 @@ lane :ios_build_and_upload do |options|
   
   build_app(
     workspace: "./ios/Runner.xcworkspace",
-    scheme: "Runner",
+    scheme: "prod",
   )
 
   if type == "beta"
