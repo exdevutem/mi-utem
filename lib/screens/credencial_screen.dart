@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 import 'package:mdi/mdi.dart';
+import 'package:mi_utem/controllers/carreras_controller.dart';
 import 'package:mi_utem/models/carrera.dart';
 import 'package:mi_utem/models/usuario.dart';
 import 'package:mi_utem/services/analytics_service.dart';
@@ -24,7 +25,6 @@ class CredencialScreen extends StatefulWidget {
 class _CredencialScreenState extends State<CredencialScreen> {
   Future? _future;
   Usuario? _usuario;
-  Carrera? _carreraActiva;
   FlipController _flipController = FlipController();
 
   @override
@@ -63,6 +63,8 @@ class _CredencialScreenState extends State<CredencialScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Carrera? carreraActiva = CarrerasController.to.selectedCarrera.value;
+
     return Scaffold(
       appBar: CustomAppBar(
         title: Text("Credencial universitaria"),
@@ -88,13 +90,13 @@ class _CredencialScreenState extends State<CredencialScreen> {
           } else {
             if (snapshot.hasData) {
               if (_usuario!.rut != null &&
-                  _carreraActiva!.nombre != null &&
-                  _carreraActiva!.nombre!.isNotEmpty) {
+                  carreraActiva!.nombre != null &&
+                  carreraActiva.nombre!.isNotEmpty) {
                 return Center(
                   child: SafeArea(
                     child: CredencialCard(
                       usuario: _usuario,
-                      carrera: _carreraActiva,
+                      carrera: carreraActiva,
                       controller: _flipController,
                       onFlip: (direction) => _onFlip(),
                     ),

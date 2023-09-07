@@ -3,7 +3,9 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:mi_utem/controllers/carreras_controller.dart';
 import 'package:mi_utem/models/asignatura.dart';
+import 'package:mi_utem/models/carrera.dart';
 import 'package:mi_utem/models/horario.dart';
 import 'package:mi_utem/screens/horario/widgets/horario_main_scroller.dart';
 import 'package:mi_utem/services/config_service.dart';
@@ -83,7 +85,14 @@ class HorarioController extends GetxController {
 
   @override
   onInit() {
-    getHorarioData();
+    if (Get.find<CarrerasController>().selectedCarrera.value != null) {
+      getHorarioData(Get.find<CarrerasController>().selectedCarrera.value);
+    }
+
+    ever<Carrera?>(
+      Get.find<CarrerasController>().selectedCarrera,
+      (carrera) => getHorarioData(carrera),
+    );
     _init();
     super.onInit();
   }
@@ -96,10 +105,14 @@ class HorarioController extends GetxController {
     _setScrollControllerListeners();
   }
 
-  Future<void> getHorarioData() async {
+  Future<void> getHorarioData(Carrera? carrera) async {
     log("getHorarioData");
+    final carreraId = carrera?.id;
+    if (carreraId == null) {
+      return;
+    }
     loadingHorario.value = true;
-    horario.value = await HorarioService.getHorario();
+    horario.value = await HorarioService.getHorario(carreraId);
     _setRandomColorsByHorario();
     loadingHorario.value = false;
   }
