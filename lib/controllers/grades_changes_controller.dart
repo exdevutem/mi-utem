@@ -167,6 +167,7 @@ class GradesChangesController {
           final asignaturaId = asignatura?.id;
           if (asignatura != null && asignaturaId != null) {
             final updatedGrades = await GradesService.getGrades(
+              carreraId,
               asignaturaId,
               forceRefresh: true,
               saveGrades: false,

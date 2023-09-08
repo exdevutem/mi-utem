@@ -8,7 +8,6 @@ import "package:flutter/services.dart";
 import "package:flutter_markdown/flutter_markdown.dart";
 import "package:get/get.dart";
 import 'package:mi_utem/controllers/grades_changes_controller.dart';
-import 'package:mi_utem/models/permiso_covid.dart';
 import "package:mi_utem/models/usuario.dart";
 import "package:mi_utem/services/config_service.dart";
 import "package:mi_utem/services/perfil_service.dart";
@@ -29,8 +28,6 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   late FirebaseRemoteConfig? _remoteConfig;
-  List<PermisoCovid>? _permisos;
-  int _a = 0;
 
   @override
   void initState() {

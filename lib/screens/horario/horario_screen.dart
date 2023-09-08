@@ -10,7 +10,6 @@ import 'package:mi_utem/services/analytics_service.dart';
 import 'package:mi_utem/services/review_service.dart';
 import 'package:mi_utem/widgets/custom_app_bar.dart';
 import 'package:mi_utem/widgets/loading_indicator.dart';
-import 'package:mi_utem/widgets/pull_to_refresh.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:share_plus/share_plus.dart';
@@ -74,14 +73,8 @@ class HorarioScreen extends StatelessWidget {
     await Share.shareXFiles([XFile(imagePath.path)]);
   }
 
-  Future<void> _onRefresh() async {
-    await controller.getHorarioData();
-  }
-
   @override
   Widget build(BuildContext context) {
-    controller.getHorarioData();
-
     ReviewService.addScreen("HorarioScreen");
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.landscapeRight,
@@ -112,16 +105,11 @@ class HorarioScreen extends StatelessWidget {
             );
           }
 
-          return PullToRefresh(
-            onRefresh: () async {
-              await _onRefresh();
-            },
-            child: Screenshot(
-              controller: _screenshotController,
-              child: HorarioMainScroller(
-                controller: controller,
-                horario: controller.horario.value!,
-              ),
+          return Screenshot(
+            controller: _screenshotController,
+            child: HorarioMainScroller(
+              controller: controller,
+              horario: controller.horario.value!,
             ),
           );
         },

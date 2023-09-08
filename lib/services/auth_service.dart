@@ -108,7 +108,7 @@ class AuthService {
   }
 
   static Future<String> refreshToken() async {
-    String uri = "/v1/auth";
+    String uri = "/v1/auth/refresh";
 
     try {
       final FlutterSecureStorage secureStorage = new FlutterSecureStorage();
@@ -119,12 +119,12 @@ class AuthService {
       if (correo != null && contrasenia != null) {
         dynamic data = {'correo': correo, 'contrasenia': contrasenia};
 
-        Response response = await DioMiUtemClient.initDio.post(uri, data: data);
+        Response response = await DioMiUtemClient.authDio.post(uri, data: data);
 
-        Usuario usuario = Usuario.fromJson(response.data);
-        _storeToken(usuario.token!);
+        String token = response.data['token'];
+        _storeToken(token);
 
-        return usuario.token!;
+        return token;
       }
       throw Exception("No se pudo refrescar el token");
     } catch (e) {

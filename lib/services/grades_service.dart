@@ -11,11 +11,11 @@ class GradesService {
   static final GetStorage box = GetStorage();
 
   static Future<Grades> getGrades(
+    String carreraId,
     String asignaturaId, {
     bool forceRefresh = false,
     bool saveGrades = true,
   }) async {
-    final carreraId = box.read('carreraId')!;
     final uri = "/v1/carreras/$carreraId/asignaturas/$asignaturaId/notas";
     final user = PerfilService.getLocalUsuario();
 

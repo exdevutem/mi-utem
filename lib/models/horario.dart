@@ -215,6 +215,7 @@ class BloqueHorario {
     for (var bloque in json) {
       List<BloqueHorario> list = [];
       for (var dia in bloque) {
+        log('dia: $dia');
         list.add(BloqueHorario.fromJson(dia));
       }
       matrix.add(list);

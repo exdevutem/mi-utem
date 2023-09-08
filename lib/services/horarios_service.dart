@@ -9,8 +9,10 @@ class HorarioService {
   static final Dio _dio = DioMiUtemClient.authDio;
   static final GetStorage box = GetStorage();
 
-  static Future<Horario> getHorario({bool forceRefresh = false}) async {
-    final carreraId = box.read('carreraId')!;
+  static Future<Horario> getHorario(
+    String carreraId, {
+    bool forceRefresh = false,
+  }) async {
     final uri = "/v1/carreras/$carreraId/horarios";
     final user = PerfilService.getLocalUsuario();
 
@@ -19,7 +21,7 @@ class HorarioService {
         uri,
         options: buildCacheOptions(
           Duration(days: 30),
-          forceRefresh: forceRefresh,
+          forceRefresh: true,
           subKey: user.rut?.numero.toString(),
         ),
       );

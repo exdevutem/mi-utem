@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_uxcam/widgets/occlude_wrapper.dart';
+import 'package:flutter_uxcam/flutter_uxcam.dart';
 import 'package:get/get.dart';
 import 'package:photo_view/photo_view.dart';
 
