@@ -26,7 +26,14 @@ Tipos de cambios
 - `Fixed`: para corrección de errores.
 - `Security`: en caso de vulnerabilidades.
 
-## [Unreleased] 
+## [Unreleased]
+
+### Changed
+
+- Forma de refrescar token optimizada
+- Se cambia todo para usar controlador de Carrera
+
+## [2.11.6] - 2023-08-30Z
 
 ### Added
 
