@@ -21,7 +21,7 @@ class AsignaturaNotasTab extends GetView<AsignaturaController> {
   String get tag => asignaturaId;
 
   Future<void> _onRefresh() async {
-    controller.getAsignaturaDetail(refresh: true);
+    controller.refreshData();
   }
 
   @override
