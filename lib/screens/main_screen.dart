@@ -9,6 +9,7 @@ import "package:flutter_markdown/flutter_markdown.dart";
 import "package:get/get.dart";
 import 'package:mi_utem/controllers/grades_changes_controller.dart';
 import "package:mi_utem/models/usuario.dart";
+import "package:mi_utem/screens/beca_alimentacion/cupon.dart";
 import "package:mi_utem/services/config_service.dart";
 import "package:mi_utem/services/perfil_service.dart";
 import "package:mi_utem/services/review_service.dart";
@@ -69,6 +70,7 @@ class _MainScreenState extends State<MainScreen> {
     return Scaffold(
       appBar: CustomAppBar(title: Text("Inicio")),
       drawer: CustomDrawer(usuario: widget.usuario),
+      backgroundColor: Colors.grey[200],
       floatingActionButton: kDebugMode
           ? FloatingActionButton(
               onPressed: () {
@@ -86,6 +88,10 @@ class _MainScreenState extends State<MainScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Container(height: 20),
+            BecaAlimentacionCoupon(
+              //code: null,
+              code: "3N14M3ARCX",
+            ),
             Container(
               padding: EdgeInsets.symmetric(horizontal: 20),
               width: double.infinity,
