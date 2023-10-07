@@ -18,6 +18,17 @@ class _InnovaUtemBanner extends State<InnovaUtemBanner> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Container(
+          padding: EdgeInsets.symmetric(horizontal: 20),
+          alignment: Alignment.centerLeft,
+          child: Text(
+            "Novedades".toUpperCase(),
+            style: Get.textTheme.titleMedium!.copyWith(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        Container(height: 10),
+        Container(
           width: 350,
           height: 175,
           child: Card(
