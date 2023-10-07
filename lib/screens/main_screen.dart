@@ -14,6 +14,7 @@ import "package:mi_utem/services/perfil_service.dart";
 import "package:mi_utem/services/review_service.dart";
 import "package:mi_utem/widgets/custom_app_bar.dart";
 import "package:mi_utem/widgets/custom_drawer.dart";
+import "package:mi_utem/widgets/innova_utem_banner.dart";
 import "package:mi_utem/widgets/noticias_carrusel.dart";
 import "package:mi_utem/widgets/permisos_section.dart";
 import "package:mi_utem/widgets/quick_menu_section.dart";
@@ -101,6 +102,8 @@ class _MainScreenState extends State<MainScreen> {
             PermisosCovidSection(),
             Container(height: 20),
             QuickMenuSection(),
+            Container(height: 20),
+            InnovaUtemBanner(),
             Container(height: 20),
             NoticiasSection(),
           ],
