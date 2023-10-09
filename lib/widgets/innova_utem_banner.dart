@@ -32,9 +32,6 @@ class _InnovaUtemBanner extends State<InnovaUtemBanner> {
           height: 175,
           child: Card(
             color: Color(0xFF72147D),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
             child: InkWell(
               onTap: () async {
                 AnalyticsService.logEvent(
