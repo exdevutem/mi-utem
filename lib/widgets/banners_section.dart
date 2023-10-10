@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mi_utem/services/remote_config/remote_config.dart';
 import 'package:mi_utem/widgets/banner.dart';
 
-class BannersSection extends StatefulWidget {
-  const BannersSection({Key? key}) : super(key: key);
+class BannersSection extends StatelessWidget {
+  final List<IBanner> banners;
 
-  @override
-  State<BannersSection> createState() => _InnovaUtemBanner();
-}
+  const BannersSection({
+    Key? key,
+    required this.banners,
+  }) : super(key: key);
 
-class _InnovaUtemBanner extends State<BannersSection> {
   @override
   Widget build(BuildContext context) {
-    final banners = RemoteConfigService.banners;
+    if (banners.isEmpty) {
+      return Container();
+    }
 
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 20),

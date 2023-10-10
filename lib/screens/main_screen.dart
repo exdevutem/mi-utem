@@ -61,6 +61,8 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final banners = RemoteConfigService.banners;
+
     return Scaffold(
       appBar: CustomAppBar(title: Text("Inicio")),
       drawer: CustomDrawer(usuario: widget.usuario),
@@ -97,8 +99,12 @@ class _MainScreenState extends State<MainScreen> {
             Container(height: 20),
             QuickMenuSection(),
             Container(height: 20),
-            BannersSection(),
-            Container(height: 20),
+            if (banners.isNotEmpty) ...[
+              BannersSection(
+                banners: banners,
+              ),
+              Container(height: 20),
+            ],
             NoticiasSection(),
           ],
         ),
