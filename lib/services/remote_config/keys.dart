@@ -1,4 +1,5 @@
 class RemoteConfigServiceKeys {
+  static const String banners = 'banners';
   static const String creditos = 'creditos';
   static const String clubRedes = 'club_redes';
   static const String clubNombre = 'club_nombre';

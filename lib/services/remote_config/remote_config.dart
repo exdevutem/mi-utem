@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mdi/mdi.dart';
 import 'package:mi_utem/services/remote_config/keys.dart';
+import 'package:mi_utem/widgets/banner.dart';
 
 part 'defaults.dart';
 
@@ -23,6 +24,8 @@ class RemoteConfigService {
       _firebaseRemoteConfigInstance.getDouble(key);
   static int _getInt(String key) => _firebaseRemoteConfigInstance.getInt(key);
 
+  static final banners = IBanner.fromJsonList(
+      jsonDecode(_getString(RemoteConfigServiceKeys.banners)));
   static final creditos = _getString(RemoteConfigServiceKeys.creditos);
   static final clubRedes = _getString(RemoteConfigServiceKeys.clubRedes);
   static final clubNombre = _getString(RemoteConfigServiceKeys.clubNombre);

@@ -11,9 +11,9 @@ import "package:mi_utem/models/usuario.dart";
 import "package:mi_utem/services/perfil_service.dart";
 import "package:mi_utem/services/remote_config/remote_config.dart";
 import "package:mi_utem/services/review_service.dart";
+import 'package:mi_utem/widgets/banners_section.dart';
 import "package:mi_utem/widgets/custom_app_bar.dart";
 import "package:mi_utem/widgets/custom_drawer.dart";
-import "package:mi_utem/widgets/innova_utem_banner.dart";
 import "package:mi_utem/widgets/noticias_carrusel.dart";
 import "package:mi_utem/widgets/permisos_section.dart";
 import "package:mi_utem/widgets/quick_menu_section.dart";
@@ -97,7 +97,7 @@ class _MainScreenState extends State<MainScreen> {
             Container(height: 20),
             QuickMenuSection(),
             Container(height: 20),
-            InnovaUtemBanner(),
+            BannersSection(),
             Container(height: 20),
             NoticiasSection(),
           ],
