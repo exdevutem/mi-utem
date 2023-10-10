@@ -16,12 +16,13 @@ import 'package:mi_utem/controllers/carreras_controller.dart';
 import 'package:mi_utem/services/analytics_service.dart';
 import 'package:mi_utem/services/auth_service.dart';
 import 'package:mi_utem/services/background_service.dart';
-import 'package:mi_utem/services/config_service.dart';
 import 'package:mi_utem/services/notification_service.dart';
 import 'package:mi_utem/services/perfil_service.dart';
 import 'package:mi_utem/themes/theme.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
+
+import 'services/remote_config/remote_config.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,7 +31,7 @@ void main() async {
   await GetStorage.init();
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   await Firebase.initializeApp();
-  await ConfigService.getInstance();
+  await RemoteConfigService.initialize();
   await NotificationService.initialize();
   await BackgroundService.initAndStart();
   await SentryFlutter.init(

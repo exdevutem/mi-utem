@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -8,7 +7,7 @@ import 'package:get/get.dart';
 import 'package:mi_utem/config/routes.dart';
 import 'package:mi_utem/models/usuario.dart';
 import 'package:mi_utem/services/analytics_service.dart';
-import 'package:mi_utem/services/config_service.dart';
+import 'package:mi_utem/services/remote_config/remote_config.dart';
 import 'package:mi_utem/widgets/acerca_aplicacion_content.dart';
 import 'package:mi_utem/widgets/custom_app_bar.dart';
 import 'package:mi_utem/widgets/default_network_image.dart';
@@ -16,23 +15,10 @@ import 'package:mi_utem/widgets/image_view_screen.dart';
 import 'package:mi_utem/widgets/profile_photo.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class AcercaScreen extends StatefulWidget {
+class AcercaScreen extends StatelessWidget {
   AcercaScreen({
     Key? key,
   }) : super(key: key);
-
-  @override
-  State<StatefulWidget> createState() => _AcercaScreenState();
-}
-
-class _AcercaScreenState extends State<AcercaScreen> {
-  FirebaseRemoteConfig? _remoteConfig;
-
-  @override
-  void initState() {
-    super.initState();
-    _remoteConfig = ConfigService.config;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,15 +49,11 @@ class _AcercaScreenState extends State<AcercaScreen> {
                           width: 150,
                           height: 150,
                           child: DefaultNetworkImage(
-                            url: _remoteConfig!.getString(
-                              ConfigService.CLUB_LOGO,
-                            ),
+                            url: RemoteConfigService.clubLogo,
                           )),
                       Container(height: 20),
                       Text(
-                        _remoteConfig!.getString(
-                          ConfigService.CLUB_NOMBRE,
-                        ),
+                        RemoteConfigService.clubNombre,
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 20,
@@ -89,16 +71,12 @@ class _AcercaScreenState extends State<AcercaScreen> {
                             color: Colors.grey[700],
                           ),
                         ),
-                        data: _remoteConfig!.getString(
-                          ConfigService.CLUB_DESCRIPCION,
-                        ),
+                        data: RemoteConfigService.clubDescripcion,
                       ),
                       Container(height: 20),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: jsonDecode(_remoteConfig!.getString(
-                          ConfigService.CLUB_REDES,
-                        ))
+                        children: jsonDecode(RemoteConfigService.clubRedes)
                             .map<Widget>(
                               (red) => Container(
                                 margin: EdgeInsets.symmetric(horizontal: 5),
@@ -166,9 +144,7 @@ class _AcercaScreenState extends State<AcercaScreen> {
                         ),
                       ),
                       Container(height: 10),
-                      ...jsonDecode(_remoteConfig!.getString(
-                        ConfigService.MIUTEM_DESARROLLADORES,
-                      ))
+                      ...jsonDecode(RemoteConfigService.miutemDesarrolladores)
                           .map<Widget>(
                             (creador) => Container(
                               padding: EdgeInsets.symmetric(vertical: 10),

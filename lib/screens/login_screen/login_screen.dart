@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:dio/dio.dart';
-import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
@@ -14,7 +13,7 @@ import 'package:mi_utem/helpers/snackbars.dart';
 import 'package:mi_utem/models/usuario.dart';
 import 'package:mi_utem/services/analytics_service.dart';
 import 'package:mi_utem/services/auth_service.dart';
-import 'package:mi_utem/services/config_service.dart';
+import 'package:mi_utem/services/remote_config/remote_config.dart';
 import 'package:mi_utem/widgets/acerca_dialog.dart';
 import 'package:mi_utem/widgets/dialogs/monkey_error_dialog.dart';
 import 'package:mi_utem/widgets/dialogs/not_ready_dialog.dart';
@@ -37,12 +36,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  FirebaseRemoteConfig? _remoteConfig;
-
   @override
   void initState() {
     super.initState();
-    _remoteConfig = ConfigService.config;
 
     SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(
@@ -99,9 +95,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   String get _creditText {
-    List<dynamic> texts = jsonDecode(_remoteConfig!.getString(
-      ConfigService.CREDITOS,
-    ));
+    List<dynamic> texts = jsonDecode(RemoteConfigService.creditos);
 
     Random random = new Random();
 

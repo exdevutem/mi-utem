@@ -7,7 +7,7 @@ import 'package:mi_utem/models/asignatura.dart';
 import 'package:mi_utem/screens/asignatura_estudiantes_tab.dart';
 import 'package:mi_utem/screens/asignatura_notas_tab.dart';
 import 'package:mi_utem/screens/asignatura_resumen_tab.dart';
-import 'package:mi_utem/services/config_service.dart';
+import 'package:mi_utem/services/remote_config/remote_config.dart';
 import 'package:mi_utem/services/review_service.dart';
 import 'package:mi_utem/widgets/custom_app_bar.dart';
 import 'package:mi_utem/widgets/loading_indicator.dart';
@@ -48,7 +48,7 @@ class AsignaturaDetalleScreen extends GetView<AsignaturaController> {
       ];
 
   bool get _mostrarCalculadora {
-    return ConfigService.config.getBool(ConfigService.CALCULADORA_MOSTRAR);
+    return RemoteConfigService.calculadoraMostrar;
   }
 
   int _getInitialIndex(Asignatura asignatura) {

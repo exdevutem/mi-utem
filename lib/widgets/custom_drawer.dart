@@ -1,34 +1,20 @@
 import 'dart:convert';
 
 import 'package:badges/badges.dart' as badge;
-import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mdi/mdi.dart';
 import 'package:mi_utem/config/routes.dart';
 import 'package:mi_utem/models/usuario.dart';
 import 'package:mi_utem/services/auth_service.dart';
-import 'package:mi_utem/services/config_service.dart';
+import 'package:mi_utem/services/remote_config/remote_config.dart';
 import 'package:mi_utem/services/review_service.dart';
 import 'package:mi_utem/themes/theme.dart';
 import 'package:mi_utem/widgets/profile_photo.dart';
 
-class CustomDrawer extends StatefulWidget {
+class CustomDrawer extends StatelessWidget {
   final Usuario usuario;
   CustomDrawer({Key? key, required this.usuario}) : super(key: key);
-
-  @override
-  State<StatefulWidget> createState() => _CustomDrawerState();
-}
-
-class _CustomDrawerState extends State<CustomDrawer> {
-  FirebaseRemoteConfig? _remoteConfig;
-
-  @override
-  void initState() {
-    super.initState();
-    _remoteConfig = ConfigService.config;
-  }
 
   String? _getRoute(String? name) {
     switch (name) {
@@ -49,7 +35,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
   }
 
   List? get _menu {
-    return jsonDecode(_remoteConfig!.getString(ConfigService.DRAWER_MENU))
+    return jsonDecode(RemoteConfigService.drawerMenu)
         .where((e) => e['mostrar'] == true)
         .toList();
   }
@@ -72,16 +58,15 @@ class _CustomDrawerState extends State<CustomDrawer> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   UserAccountsDrawerHeader(
-                    accountEmail: Text(widget.usuario.correoUtem ??
-                        widget.usuario.correoPersonal ??
-                        ""),
+                    accountEmail: Text(
+                        usuario.correoUtem ?? usuario.correoPersonal ?? ""),
                     accountName: Text(
-                      widget.usuario.nombreCompleto ?? "",
+                      usuario.nombreCompleto ?? "",
                       style:
                           TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                     ),
                     currentAccountPicture: ProfilePhoto(
-                      usuario: widget.usuario,
+                      usuario: usuario,
                       radius: 30,
                     ),
                     decoration: BoxDecoration(
