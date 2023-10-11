@@ -28,6 +28,8 @@ Tipos de cambios
 
 ## [Unreleased]
 
+## [2.11.9] - 2023-10-11Z
+
 ### Added
 
 - Sección "Novedades" en inicio
@@ -128,6 +130,7 @@ Esta versión del changelog contiene cambios hechos en 2.10, debido a que no se 
 ### Removed
 
 - Lista de estudiantes en la pantalla de asignatura
+- Perfil de profesores
 - Perfil de profesores
 - Perfil de profesores
 - Perfil de profesores
