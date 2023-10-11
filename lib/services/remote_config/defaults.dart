@@ -1,6 +1,7 @@
 part of 'remote_config.dart';
 
 final _defaults = <String, dynamic>{
+  RemoteConfigServiceKeys.banners: jsonEncode([]),
   RemoteConfigServiceKeys.creditos: jsonEncode(
       ['Hecho con ❤ por el *Club de Desarrollo Experimental* junto a SISEI']),
   RemoteConfigServiceKeys.clubNombre: "Club de Desarrollo Experimental",
