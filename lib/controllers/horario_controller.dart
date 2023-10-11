@@ -8,8 +8,8 @@ import 'package:mi_utem/models/asignatura.dart';
 import 'package:mi_utem/models/carrera.dart';
 import 'package:mi_utem/models/horario.dart';
 import 'package:mi_utem/screens/horario/widgets/horario_main_scroller.dart';
-import 'package:mi_utem/services/config_service.dart';
 import 'package:mi_utem/services/horarios_service.dart';
+import 'package:mi_utem/services/remote_config/remote_config.dart';
 import 'package:vector_math/vector_math_64.dart' as vector;
 
 class HorarioController extends GetxController {
@@ -98,7 +98,7 @@ class HorarioController extends GetxController {
   }
 
   void _init() {
-    zoom.value = ConfigService.config.getDouble(ConfigService.HORARIO_ZOOM);
+    zoom.value = RemoteConfigService.horarioZoom;
 
     _initControllers();
 

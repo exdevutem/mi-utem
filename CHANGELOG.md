@@ -28,6 +28,10 @@ Tipos de cambios
 
 ## [Unreleased]
 
+### Added
+
+- Sección "Novedades" en inicio
+
 ## [2.11.8] - 2023-09-08Z
 
 ### Changed
