@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mi_utem/controllers/calculator_controller.dart';
 import 'package:mi_utem/models/evaluacion.dart';
+import 'package:mi_utem/models/grades.dart';
 import 'package:mi_utem/services/analytics_service.dart';
 import 'package:mi_utem/themes/theme.dart';
 import 'package:mi_utem/widgets/custom_app_bar.dart';
@@ -17,6 +18,11 @@ class CalculadoraNotasScreen extends StatelessWidget {
     final controller = CalculatorController.to;
 
     controller.makeEditable();
+
+    Grades? grades = Get.arguments["grades"];
+    if (grades != null) {
+      controller.loadGrades(grades);
+    }
 
     return Scaffold(
       appBar: CustomAppBar(

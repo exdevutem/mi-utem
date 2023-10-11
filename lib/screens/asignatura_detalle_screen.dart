@@ -73,9 +73,8 @@ class AsignaturaDetalleScreen extends GetView<AsignaturaController> {
                       icon: Icon(Mdi.calculator),
                       tooltip: "Calculadora",
                       onPressed: () {
-                        Get.toNamed(
-                          Routes.calculadoraNotas,
-                        );
+                        Get.toNamed(Routes.calculadoraNotas,
+                            arguments: {"grades": asignatura?.grades});
                       },
                     ),
                   ]
