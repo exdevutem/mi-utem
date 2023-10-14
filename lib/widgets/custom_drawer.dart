@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mdi/mdi.dart';
 import 'package:mi_utem/config/routes.dart';
+import 'package:mi_utem/controllers/user_controller.dart';
 import 'package:mi_utem/models/usuario.dart';
-import 'package:mi_utem/services/auth_service.dart';
 import 'package:mi_utem/services/remote_config/remote_config.dart';
 import 'package:mi_utem/services/review_service.dart';
 import 'package:mi_utem/themes/theme.dart';
@@ -129,7 +129,7 @@ class CustomDrawer extends StatelessWidget {
                             leading: Icon(Mdi.closeCircle),
                             title: Text('Cerrar sesión'),
                             onTap: () async {
-                              await AuthService.logOut();
+                              await UserController.to.logOut();
 
                               await Get.offAllNamed(Routes.home);
                             },

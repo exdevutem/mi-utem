@@ -11,13 +11,10 @@ import 'package:get_storage/get_storage.dart';
 import 'package:mi_utem/config/constants.dart';
 import 'package:mi_utem/config/router.dart';
 import 'package:mi_utem/config/routes.dart';
-import 'package:mi_utem/controllers/calculator_controller.dart';
 import 'package:mi_utem/controllers/carreras_controller.dart';
-import 'package:mi_utem/services/analytics_service.dart';
-import 'package:mi_utem/services/auth_service.dart';
+import 'package:mi_utem/controllers/user_controller.dart';
 import 'package:mi_utem/services/background_service.dart';
 import 'package:mi_utem/services/notification_service.dart';
-import 'package:mi_utem/services/perfil_service.dart';
 import 'package:mi_utem/themes/theme.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
@@ -52,18 +49,18 @@ class MiUtem extends StatefulWidget {
 class _MiUtemState extends State<MiUtem> {
   final FirebaseAnalytics analytics = FirebaseAnalytics.instance;
 
-  final calculatorController = Get.put(CalculatorController());
+/*   final calculatorController = Get.put(CalculatorController());
 
   @override
   void initState() {
-    if (AuthService.isLoggedIn()) {
-      final user = PerfilService.getLocalUsuario();
+    if (UserController.to.isLoggedIn) {
+      final user = UserController.to.getUser();
       AnalyticsService.setUser(user);
     } else {
       AnalyticsService.removeUser();
     }
     super.initState();
-  }
+  } */
 
   @override
   Widget build(BuildContext context) {
@@ -81,6 +78,7 @@ class _MiUtemState extends State<MiUtem> {
       debugShowCheckedModeBanner: false,
       title: 'Mi UTEM',
       initialBinding: BindingsBuilder(() {
+        Get.put(UserController(), permanent: true);
         Get.put(CarrerasController(), permanent: true);
       }),
       theme: MainTheme.theme,

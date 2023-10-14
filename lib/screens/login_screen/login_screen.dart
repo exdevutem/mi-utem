@@ -9,10 +9,10 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:get/get.dart';
 import 'package:mi_utem/config/routes.dart';
+import 'package:mi_utem/controllers/user_controller.dart';
 import 'package:mi_utem/helpers/snackbars.dart';
 import 'package:mi_utem/models/usuario.dart';
 import 'package:mi_utem/services/analytics_service.dart';
-import 'package:mi_utem/services/auth_service.dart';
 import 'package:mi_utem/services/remote_config/remote_config.dart';
 import 'package:mi_utem/widgets/acerca_dialog.dart';
 import 'package:mi_utem/widgets/dialogs/monkey_error_dialog.dart';
@@ -245,8 +245,8 @@ class _LoginScreenState extends State<LoginScreen> {
         );
 
         try {
-          bool esPrimeraVez = await AuthService.esPrimeraVez();
-          Usuario usuario = await AuthService.login(correo, contrasenia, true);
+          bool isFirstTime = UserController.to.isFirstTime;
+          Usuario usuario = await UserController.to.login(correo, contrasenia);
 
           AnalyticsService.logEvent('login');
           AnalyticsService.setUser(usuario);
@@ -255,7 +255,7 @@ class _LoginScreenState extends State<LoginScreen> {
             Routes.home,
           );
 
-          if (esPrimeraVez) {
+          if (isFirstTime) {
             Get.dialog(
               AcercaDialog(),
             );

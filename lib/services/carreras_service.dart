@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:dio_http_cache/dio_http_cache.dart';
+import 'package:mi_utem/controllers/user_controller.dart';
 import 'package:mi_utem/models/carrera.dart';
-import 'package:mi_utem/services/perfil_service.dart';
 import 'package:mi_utem/utils/dio_miutem_client.dart';
 
 class CarreraService {
@@ -9,7 +9,7 @@ class CarreraService {
 
   static Future<List<Carrera>> getCarreras({bool forceRefresh = false}) async {
     const uri = "/v1/carreras";
-    final user = PerfilService.getLocalUsuario();
+    final user = UserController.to.getUser();
 
     Response response = await _dio.get(
       uri,

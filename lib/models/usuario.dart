@@ -1,6 +1,12 @@
 import 'package:mi_utem/models/rut.dart';
 import 'package:recase/recase.dart';
 
+enum Role {
+  hasCareers,
+  hasActiveCareer,
+  hasLunchBenefit,
+}
+
 class Usuario {
   String? nombre;
   String? nombres;
@@ -10,16 +16,19 @@ class Usuario {
   String? token;
   String? fotoUrl;
   Rut? rut;
+  List<Role> roles;
 
-  Usuario(
-      {this.correoUtem,
-      this.correoPersonal,
-      this.token,
-      this.nombres,
-      this.nombre,
-      this.fotoUrl,
-      this.apellidos,
-      this.rut});
+  Usuario({
+    this.correoUtem,
+    this.correoPersonal,
+    this.token,
+    this.nombres,
+    this.nombre,
+    this.fotoUrl,
+    this.apellidos,
+    this.rut,
+    this.roles = const [],
+  });
 
   factory Usuario.fromJson(Map<String, dynamic>? json) {
     if (json == null) {
@@ -99,7 +108,6 @@ class Usuario {
       'nombreCompleto': nombreCompleto,
       'correoUtem': correoUtem,
       'correoPersonal': correoPersonal,
-      'token': token,
       'fotoUrl': fotoUrl,
       'nombres': nombres,
       'apellidos': apellidos,

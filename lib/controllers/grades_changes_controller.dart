@@ -2,10 +2,10 @@ import 'dart:developer';
 
 import 'package:get_storage/get_storage.dart';
 import 'package:mi_utem/controllers/carreras_controller.dart';
+import 'package:mi_utem/controllers/user_controller.dart';
 import 'package:mi_utem/models/asignatura.dart';
 import 'package:mi_utem/models/grades.dart';
 import 'package:mi_utem/services/asignaturas_service.dart';
-import 'package:mi_utem/services/auth_service.dart';
 import 'package:mi_utem/services/grades_service.dart';
 import 'package:mi_utem/services/notification_service.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
@@ -141,7 +141,7 @@ class GradesChangesController {
   }
 
   static Future<Map<String, GradeChangeType>> checkIfGradesHasChange() async {
-    final isLogged = AuthService.isLoggedIn();
+    final isLogged = UserController.to.isLoggedIn;
 
     if (isLogged) {
       final carrera = CarrerasController.to.selectedCarrera.value;

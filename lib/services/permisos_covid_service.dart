@@ -2,8 +2,8 @@ import 'package:dio/dio.dart';
 import 'package:dio_http_cache/dio_http_cache.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:mi_utem/config/logger.dart';
+import 'package:mi_utem/controllers/user_controller.dart';
 import 'package:mi_utem/models/permiso_covid.dart';
-import 'package:mi_utem/services/perfil_service.dart';
 import 'package:mi_utem/utils/dio_miutem_client.dart';
 
 class PermisosCovidService {
@@ -14,7 +14,7 @@ class PermisosCovidService {
       {bool forceRefresh = false}) async {
     const uri = "/v1/permisos";
 
-    final user = PerfilService.getLocalUsuario();
+    final user = UserController.to.getUser();
 
     logger.d("Obteniendo permisos de ${user.rut?.numero}");
 
@@ -42,7 +42,7 @@ class PermisosCovidService {
   }) async {
     final uri = "/v1/permisos/$id";
 
-    final user = PerfilService.getLocalUsuario();
+    final user = UserController.to.getUser();
 
     try {
       Response response = await _dio.post(

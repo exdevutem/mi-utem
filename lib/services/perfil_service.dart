@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:mi_utem/models/rut.dart';
+import 'package:mi_utem/controllers/user_controller.dart';
 import 'package:mi_utem/models/usuario.dart';
 import 'package:mi_utem/services/notification_service.dart';
 import 'package:mi_utem/utils/dio_miutem_client.dart';
@@ -9,37 +9,6 @@ import 'package:mi_utem/utils/dio_miutem_client.dart';
 class PerfilService {
   static final Dio _dio = DioMiUtemClient.authDio;
   static final GetStorage box = GetStorage();
-
-  static Usuario getLocalUsuario() {
-    try {
-      String? token = box.read("token");
-      String? nombres = box.read("nombres");
-      String? apellidos = box.read("apellidos");
-      String? nombre = box.read("nombre");
-      String? fotoUrl = box.read("fotoUrl");
-      Rut? rut = box.read("rut") != null
-          ? (box.read("rut") is int
-              ? Rut.deEntero(box.read("rut"))
-              : Rut.deString(box.read("rut")))
-          : null;
-      String? correoUtem = box.read("correoUtem");
-      String? correoPersonal = box.read("correoPersonal");
-
-      return Usuario(
-        token: token,
-        nombres: nombres,
-        fotoUrl: fotoUrl,
-        nombre: nombre,
-        apellidos: apellidos,
-        rut: rut,
-        correoUtem: correoUtem,
-        correoPersonal: correoPersonal,
-      );
-    } catch (e) {
-      print(e);
-      throw e;
-    }
-  }
 
   static Future<Usuario> changeFoto(String imagen) async {
     String uri = "/v1/usuarios/foto";
@@ -53,7 +22,7 @@ class PerfilService {
 
       box.write('fotoUrl', fotoUrl);
 
-      Usuario usuario = getLocalUsuario();
+      Usuario usuario = UserController.to.getUser();
 
       return usuario;
     } on DioError catch (e) {
@@ -88,7 +57,7 @@ class PerfilService {
     try {
       String? fcmToken =
           await NotificationService.fcm.requestFirebaseAppToken();
-      Usuario usuario = PerfilService.getLocalUsuario();
+      Usuario usuario = UserController.to.getUser();
       CollectionReference usuariosCollection =
           FirebaseFirestore.instance.collection('usuarios');
 

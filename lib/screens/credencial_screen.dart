@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 import 'package:mdi/mdi.dart';
 import 'package:mi_utem/controllers/carreras_controller.dart';
+import 'package:mi_utem/controllers/user_controller.dart';
 import 'package:mi_utem/models/carrera.dart';
 import 'package:mi_utem/models/usuario.dart';
 import 'package:mi_utem/services/analytics_service.dart';
-import 'package:mi_utem/services/perfil_service.dart';
 import 'package:mi_utem/services/review_service.dart';
 import 'package:mi_utem/widgets/credencial_card.dart';
 import 'package:mi_utem/widgets/custom_app_bar.dart';
@@ -51,7 +51,7 @@ class _CredencialScreenState extends State<CredencialScreen> {
 
   Future _getData() async {
     try {
-      Usuario usuario = PerfilService.getLocalUsuario();
+      Usuario usuario = UserController.to.getUser();
       setState(() {
         _usuario = usuario;
       });
