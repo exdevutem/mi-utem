@@ -16,9 +16,13 @@ Si incluyes nuevas dependencias, por favor, haz una lista de las necesarias.
 
 # Checklist:
 
-- [ ] He practicado una revisión de mi propio codigo.
-- [ ] He comentado mi codigo, sobretodo en las partes que pueden resultar dificiles de entender.
-- [ ] Mis cambios no generan nuevas alertas (Warnings).
+- [ ] He hecho una revisión de mi propio codigo.
+- [ ] Hice pruebas en un dispositivo Android real.
+- [ ] Hice pruebas en un dispositivo Android emulador.
+- [ ] Hice pruebas en un dispositivo iOS real.
+- [ ] Hice pruebas en un dispositivo iOS simulador.
+- [ ] Mis cambios no generan nuevos lint Problems.
+- [ ] Agregué mis cambios al CHANGELOG.md.
 - [ ] Este pull request contiene <1000 lineas de codigo (LOC).
 
 
