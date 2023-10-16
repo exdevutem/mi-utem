@@ -7,6 +7,32 @@ enum Role {
   hasLunchBenefit,
 }
 
+extension RoleExtension on Role {
+  String get name {
+    switch (this) {
+      case Role.hasCareers:
+        return 'hasCareers';
+      case Role.hasActiveCareer:
+        return 'hasActiveCareer';
+      case Role.hasLunchBenefit:
+        return 'hasLunchBenefit';
+    }
+  }
+
+  static Role? fromName(String name) {
+    switch (name) {
+      case 'hasCareers':
+        return Role.hasCareers;
+      case 'hasActiveCareer':
+        return Role.hasActiveCareer;
+      case 'hasLunchBenefit':
+        return Role.hasLunchBenefit;
+      default:
+        return null;
+    }
+  }
+}
+
 class Usuario {
   String? nombre;
   String? nombres;
@@ -16,7 +42,6 @@ class Usuario {
   String? token;
   String? fotoUrl;
   Rut? rut;
-  List<Role> roles;
 
   Usuario({
     this.correoUtem,
@@ -27,7 +52,6 @@ class Usuario {
     this.fotoUrl,
     this.apellidos,
     this.rut,
-    this.roles = const [],
   });
 
   factory Usuario.fromJson(Map<String, dynamic>? json) {

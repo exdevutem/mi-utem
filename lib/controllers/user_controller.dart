@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:mi_utem/controllers/carreras_controller.dart';
 import 'package:mi_utem/models/carrera.dart';
 import 'package:mi_utem/models/usuario.dart';
 import 'package:mi_utem/services/analytics_service.dart';
@@ -22,6 +23,23 @@ class UserController extends GetxController {
 
   final user = Rxn<Usuario>(null);
   final selectedCarrera = Rxn<Carrera>();
+
+  List<Role> get roles {
+    final roles = <Role>[];
+
+    if (user.value != null) {
+      final carreras = CarrerasController.to.state;
+      if (carreras != null && carreras.length > 0) {
+        roles.add(Role.hasCareers);
+        final hasActive = carreras.firstWhereOrNull((c) => c.isActive) != null;
+
+        if (hasActive) {
+          roles.add(Role.hasActiveCareer);
+        }
+      }
+    }
+    return roles;
+  }
 
   @override
   void onInit() {
