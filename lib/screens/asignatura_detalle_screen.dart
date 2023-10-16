@@ -75,9 +75,9 @@ class AsignaturaDetalleScreen extends GetView<AsignaturaController> {
                       tooltip: "Calculadora",
                       onPressed: () {
                         Get.toNamed(Routes.calculadoraNotas);
-                        if (asignatura != null) {
+                        if (asignatura?.grades != null) {
                           final calculatorController = CalculatorController.to;
-                          calculatorController.loadGrades(asignatura.grades!);
+                          calculatorController.loadGrades(asignatura!.grades!);
                         }
                       },
                     ),
