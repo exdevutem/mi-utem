@@ -1,7 +1,6 @@
 import 'dart:developer';
 
 import 'package:get_storage/get_storage.dart';
-import 'package:mi_utem/controllers/carreras_controller.dart';
 import 'package:mi_utem/controllers/user_controller.dart';
 import 'package:mi_utem/models/asignatura.dart';
 import 'package:mi_utem/models/grades.dart';
@@ -144,7 +143,7 @@ class GradesChangesController {
     final isLogged = UserController.to.isLoggedIn;
 
     if (isLogged) {
-      final carrera = CarrerasController.to.selectedCarrera.value;
+      final carrera = UserController.to.selectedCarrera.value;
       final carreraId = carrera?.id;
 
       if (carreraId != null) {

@@ -17,7 +17,7 @@ class GradesService {
     bool saveGrades = true,
   }) async {
     final uri = "/v1/carreras/$carreraId/asignaturas/$asignaturaId/notas";
-    final user = UserController.to.getUser();
+    final user = UserController.to.user.value;
 
     Response response = await _dio.get(
       uri,
@@ -25,7 +25,7 @@ class GradesService {
         Duration(days: 1),
         maxStale: Duration(days: 7),
         forceRefresh: forceRefresh,
-        subKey: user.rut?.numero.toString(),
+        subKey: user?.rut?.numero.toString(),
       ),
     );
 

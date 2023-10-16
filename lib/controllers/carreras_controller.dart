@@ -1,25 +1,31 @@
 import 'package:get/get.dart';
+import 'package:mi_utem/controllers/user_controller.dart';
 import 'package:mi_utem/models/carrera.dart';
+import 'package:mi_utem/models/usuario.dart';
 import 'package:mi_utem/services/analytics_service.dart';
 import 'package:mi_utem/services/carreras_service.dart';
 
-class CarrerasController extends GetxController {
-  final carreras = <Carrera>[].obs;
-  final selectedCarrera = Rxn<Carrera>();
-
+class CarrerasController extends GetxController with StateMixin<List<Carrera>> {
   static CarrerasController get to => Get.find();
 
   @override
   void onInit() {
     getCarreras();
 
+    ever<Usuario?>(
+      Get.find<UserController>().user,
+      (carrera) => getCarreras(),
+    );
+
     super.onInit();
   }
 
   void getCarreras() async {
+    change(null, status: RxStatus.loading());
+
     final carreras = await CarreraService.getCarreras(forceRefresh: true);
 
-    this.carreras.value = carreras;
+    change(carreras, status: RxStatus.success());
     _autoSelectCarreraActiva(carreras);
   }
 
@@ -43,6 +49,6 @@ class CarrerasController extends GetxController {
   }
 
   void changeSelectedCarrera(Carrera carrera) {
-    selectedCarrera.value = carrera;
+    UserController.to.selectCarrera(carrera);
   }
 }

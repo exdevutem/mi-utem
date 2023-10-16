@@ -9,14 +9,14 @@ class CarreraService {
 
   static Future<List<Carrera>> getCarreras({bool forceRefresh = false}) async {
     const uri = "/v1/carreras";
-    final user = UserController.to.getUser();
+    final user = UserController.to.user.value;
 
     Response response = await _dio.get(
       uri,
       options: buildCacheOptions(
         Duration(days: 7),
         forceRefresh: forceRefresh,
-        subKey: user.rut?.numero.toString(),
+        subKey: user?.rut?.numero.toString(),
       ),
     );
 

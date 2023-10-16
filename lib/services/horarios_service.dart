@@ -14,7 +14,7 @@ class HorarioService {
     bool forceRefresh = false,
   }) async {
     final uri = "/v1/carreras/$carreraId/horarios";
-    final user = UserController.to.getUser();
+    final user = UserController.to.user.value;
 
     try {
       Response response = await _dio.get(
@@ -22,7 +22,7 @@ class HorarioService {
         options: buildCacheOptions(
           Duration(days: 30),
           forceRefresh: true,
-          subKey: user.rut?.numero.toString(),
+          subKey: user?.rut?.numero.toString(),
         ),
       );
 

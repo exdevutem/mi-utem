@@ -26,9 +26,9 @@ final _homePage = GetPage(
   name: Routes.home,
   bindings: [QrPassesBinding()],
   page: () {
-    final usuario = UserController.to.getUser();
+    final usuario = UserController.to.user.value;
 
-    return MainScreen(usuario: usuario);
+    return MainScreen(usuario: usuario!);
   },
   middlewares: [OnlyAuthMiddleware()],
 );

@@ -14,7 +14,7 @@ class AsignaturasService {
     bool forceRefresh = false,
   }) async {
     final uri = "/v1/carreras/$carreraId/asignaturas";
-    final user = UserController.to.getUser();
+    final user = UserController.to.user.value;
 
     try {
       Response response = await _dio.get(
@@ -22,7 +22,7 @@ class AsignaturasService {
         options: buildCacheOptions(
           Duration(days: 7),
           forceRefresh: forceRefresh,
-          subKey: user.rut?.numero.toString(),
+          subKey: user?.rut?.numero.toString(),
         ),
       );
 
@@ -40,7 +40,7 @@ class AsignaturasService {
     bool forceRefresh = false,
   }) async {
     final uri = "/v1/asignaturas/$codigo";
-    final user = UserController.to.getUser();
+    final user = UserController.to.user.value;
 
     try {
       Response response = await _dio.get(
@@ -48,7 +48,7 @@ class AsignaturasService {
         options: buildCacheOptions(
           Duration(days: 7),
           forceRefresh: forceRefresh,
-          subKey: user.rut?.numero.toString(),
+          subKey: user?.rut?.numero.toString(),
         ),
       );
 

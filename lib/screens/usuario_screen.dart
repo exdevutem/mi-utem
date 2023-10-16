@@ -59,7 +59,7 @@ class _UsuarioScreenState extends State<UsuarioScreen> {
           _usuario = usuario;
         });
       } else {
-        usuario = UserController.to.getUser();
+        usuario = UserController.to.user.value!;
         setState(() {
           _usuario = usuario;
         });
@@ -78,7 +78,7 @@ class _UsuarioScreenState extends State<UsuarioScreen> {
     );
 
     try {
-      Usuario usuario = await PerfilService.changeFoto(imagen);
+      Usuario? usuario = await PerfilService.changeFoto(imagen);
       Get.back();
 
       setState(() {

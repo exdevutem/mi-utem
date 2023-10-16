@@ -10,7 +10,7 @@ class PerfilService {
   static final Dio _dio = DioMiUtemClient.authDio;
   static final GetStorage box = GetStorage();
 
-  static Future<Usuario> changeFoto(String imagen) async {
+  static Future<Usuario?> changeFoto(String imagen) async {
     String uri = "/v1/usuarios/foto";
 
     try {
@@ -22,9 +22,7 @@ class PerfilService {
 
       box.write('fotoUrl', fotoUrl);
 
-      Usuario usuario = UserController.to.getUser();
-
-      return usuario;
+      return UserController.to.user.value;
     } on DioError catch (e) {
       print(e.message);
       throw e;
@@ -57,13 +55,13 @@ class PerfilService {
     try {
       String? fcmToken =
           await NotificationService.fcm.requestFirebaseAppToken();
-      Usuario usuario = UserController.to.getUser();
+      Usuario? usuario = UserController.to.user.value;
       CollectionReference usuariosCollection =
           FirebaseFirestore.instance.collection('usuarios');
 
       await PerfilService.deleteFcmToken();
 
-      usuariosCollection.doc(usuario.rut!.numero.toString()).set(
+      usuariosCollection.doc(usuario!.rut!.numero.toString()).set(
         {
           "fcmTokens": FieldValue.arrayUnion([fcmToken]),
         },

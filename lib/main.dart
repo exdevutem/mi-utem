@@ -41,26 +41,8 @@ void main() async {
   );
 }
 
-class MiUtem extends StatefulWidget {
-  @override
-  State<MiUtem> createState() => _MiUtemState();
-}
-
-class _MiUtemState extends State<MiUtem> {
+class MiUtem extends StatelessWidget {
   final FirebaseAnalytics analytics = FirebaseAnalytics.instance;
-
-/*   final calculatorController = Get.put(CalculatorController());
-
-  @override
-  void initState() {
-    if (UserController.to.isLoggedIn) {
-      final user = UserController.to.getUser();
-      AnalyticsService.setUser(user);
-    } else {
-      AnalyticsService.removeUser();
-    }
-    super.initState();
-  } */
 
   @override
   Widget build(BuildContext context) {

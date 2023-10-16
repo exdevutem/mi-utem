@@ -3,7 +3,9 @@ import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:mi_utem/models/carrera.dart';
 import 'package:mi_utem/models/usuario.dart';
+import 'package:mi_utem/services/analytics_service.dart';
 import 'package:mi_utem/services/auth_service.dart';
 import 'package:mi_utem/services/perfil_service.dart';
 
@@ -18,18 +20,34 @@ class UserController extends GetxController {
 
   static UserController get to => Get.find();
 
+  final user = Rxn<Usuario>(null);
+  final selectedCarrera = Rxn<Carrera>();
+
+  @override
+  void onInit() {
+    super.onInit();
+
+    final user = _getStoredUser();
+    if (user != null) {
+      this.user.value = user;
+    }
+
+    ever(this.user, (Usuario? user) {
+      if (UserController.to.isLoggedIn && user != null) {
+        AnalyticsService.setUser(user);
+      } else {
+        AnalyticsService.removeUser();
+      }
+    });
+  }
+
   Future<Usuario> login(String correo, String contrasenia) async {
     try {
       final user = await AuthService.login(correo, contrasenia);
 
-      if (user.token != null) {
-        _box.write(_storageTokenKey, user.token!);
-      }
-
       _box.write(_storageFirstTimeKey, true);
 
-      await _secureStorage.write(key: _storagePasswordKey, value: contrasenia);
-
+      _storeCredentials(user, contrasenia);
       _storeUser(user);
 
       return user;
@@ -43,19 +61,12 @@ class UserController extends GetxController {
   }
 
   bool get isLoggedIn {
-    try {
-      String? token = _box.read(_storageTokenKey);
-      Usuario? user = _getUser();
-
-      return token != null && token.isNotEmpty && user != null;
-    } catch (e) {
-      return false;
-    }
+    return user.value != null;
   }
 
   Future<void> logOut() async {
     try {
-      _box.remove(_storageTokenKey);
+      invalidateToken();
       _box.remove(_storageUserKey);
       await _secureStorage.deleteAll();
       try {
@@ -69,8 +80,7 @@ class UserController extends GetxController {
 
   Future<String> refreshToken() async {
     try {
-      final user = getUser();
-      final email = user.correoUtem;
+      final email = user.value?.correoUtem;
       final password = await _secureStorage.read(key: _storagePasswordKey);
 
       if (email != null && password != null) {
@@ -86,18 +96,18 @@ class UserController extends GetxController {
     }
   }
 
-  static void _storeUser(Usuario user) async {
-    _box.write(_storageUserKey, jsonEncode(user.toJson()));
+  void _storeUser(Usuario userToStore) async {
+    user.value = userToStore;
+
+    _box.write(_storageUserKey, jsonEncode(userToStore.toJson()));
   }
 
-  Usuario getUser() {
-    final user = _getUser();
-    if (user == null) throw Exception("No se ha encontrado el usuario");
-
-    return user;
+  static void _storeCredentials(Usuario user, String contrasenia) async {
+    _box.write(_storageTokenKey, user.token);
+    await _secureStorage.write(key: _storagePasswordKey, value: contrasenia);
   }
 
-  Usuario? _getUser() {
+  Usuario? _getStoredUser() {
     final user = _box.read(_storageUserKey);
     if (user == null) return null;
 
@@ -105,17 +115,21 @@ class UserController extends GetxController {
   }
 
   static void _storeToken(String token) async {
-    _box.write('token', token);
+    _box.write(_storageTokenKey, token);
   }
 
   String getToken() {
-    final token = _box.read('token');
+    final token = _box.read(_storageTokenKey);
     if (token == null) throw Exception("No se ha encontrado el token");
 
     return token;
   }
 
   void invalidateToken() async {
-    _box.remove('token');
+    _box.remove(_storageTokenKey);
+  }
+
+  void selectCarrera(Carrera carrera) {
+    selectedCarrera.value = carrera;
   }
 }
