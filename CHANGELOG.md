@@ -28,6 +28,10 @@ Tipos de cambios
 
 ## [Unreleased]
 
+### Changed
+
+- Se actualizan dependecias de Flutter
+
 ## [2.11.9] - 2023-10-11Z
 
 ### Added
