@@ -222,7 +222,18 @@ final _defaults = <String, dynamic>{
       "show": true,
       "route": Routes.credencial,
       "requiredRoles": [Role.hasActiveCareer.name],
-      "badge": "Nuevo",
+    },
+    {
+      "title": "Beca alimentación",
+      "icon": {
+        "codePoint": Mdi.ticketConfirmation.codePoint,
+        "fontFamily": 'Material Design Icons',
+        "fontPackage": "mdi"
+      },
+      "show": true,
+      "route": Routes.lunchBenefit,
+      //"requiredRoles": [Role.hasLunchBenefit.name],
+      "badge": "Nuevo"
     },
   ]),
   RemoteConfigServiceKeys.greetings: jsonEncode(['Que gusto verte, **%name**']),

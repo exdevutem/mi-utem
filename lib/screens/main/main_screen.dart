@@ -2,7 +2,6 @@ import 'package:flutter/foundation.dart';
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import 'package:mi_utem/controllers/grades_changes_controller.dart';
-import "package:mi_utem/screens/beca_alimentacion/cupon.dart";
 import "package:mi_utem/screens/main/widgets/greetings.dart";
 import "package:mi_utem/services/perfil_service.dart";
 import "package:mi_utem/services/remote_config/remote_config.dart";
@@ -70,10 +69,6 @@ class _MainScreenState extends State<MainScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Container(height: 20),
-            BecaAlimentacionCoupon(
-              //code: null,
-              code: "3N14M3ARCX",
-            ),
             MainScreenGreetings(),
             Container(height: 20),
             PermisosCovidSection(),

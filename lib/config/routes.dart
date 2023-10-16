@@ -10,6 +10,7 @@ class Routes {
   static const calculadoraNotas = '/calculadora-notas';
   static const imageView = '/image-view';
   static const asignatura = '/asignatura';
+  static const lunchBenefit = '/lunch-benefit';
 
   static const passBase = '/pass';
   static const passParameter = 'passId';
