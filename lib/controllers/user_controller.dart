@@ -4,7 +4,9 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:mi_utem/controllers/carreras_controller.dart';
+import 'package:mi_utem/controllers/lunch_coupons_controller.dart';
 import 'package:mi_utem/models/carrera.dart';
+import 'package:mi_utem/models/lunch_coupon.dart';
 import 'package:mi_utem/models/usuario.dart';
 import 'package:mi_utem/services/analytics_service.dart';
 import 'package:mi_utem/services/auth_service.dart';
@@ -23,23 +25,7 @@ class UserController extends GetxController {
 
   final user = Rxn<Usuario>(null);
   final selectedCarrera = Rxn<Carrera>();
-
-  List<Role> get roles {
-    final roles = <Role>[];
-
-    if (user.value != null) {
-      final carreras = CarrerasController.to.state;
-      if (carreras != null && carreras.length > 0) {
-        roles.add(Role.hasCareers);
-        final hasActive = carreras.firstWhereOrNull((c) => c.isActive) != null;
-
-        if (hasActive) {
-          roles.add(Role.hasActiveCareer);
-        }
-      }
-    }
-    return roles;
-  }
+  final roles = RxList<Role>([]);
 
   @override
   void onInit() {
@@ -56,6 +42,14 @@ class UserController extends GetxController {
       } else {
         AnalyticsService.removeUser();
       }
+    });
+
+    ever(this.selectedCarrera, (Carrera? carrera) {
+      _setRoles();
+    });
+
+    ever(LunchCouponsController.to.state.obs, (List<LunchCoupon>? coupons) {
+      _setRoles();
     });
   }
 
@@ -146,6 +140,26 @@ class UserController extends GetxController {
 
   void invalidateToken() async {
     _box.remove(_storageTokenKey);
+  }
+
+  void _setRoles() {
+    final user = this.user.value;
+    final carreras = CarrerasController.to.state;
+    final coupons = LunchCouponsController.to.state;
+
+    final roles = <Role>[];
+
+    if (user != null) {
+      if (carreras != null && carreras.length > 0) {
+        roles.add(Role.hasCareers);
+        final hasActive = carreras.firstWhereOrNull((c) => c.isActive) != null;
+
+        if (hasActive) {
+          roles.add(Role.hasActiveCareer);
+        }
+      }
+    }
+    this.roles.value = roles;
   }
 
   void selectCarrera(Carrera carrera) {
