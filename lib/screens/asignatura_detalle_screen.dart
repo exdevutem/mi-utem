@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:mdi/mdi.dart';
 import 'package:mi_utem/config/routes.dart';
 import 'package:mi_utem/controllers/asignatura_controller.dart';
+import 'package:mi_utem/controllers/calculator_controller.dart';
 import 'package:mi_utem/models/asignatura.dart';
 import 'package:mi_utem/screens/asignatura_estudiantes_tab.dart';
 import 'package:mi_utem/screens/asignatura_notas_tab.dart';
@@ -73,9 +74,11 @@ class AsignaturaDetalleScreen extends GetView<AsignaturaController> {
                       icon: Icon(Mdi.calculator),
                       tooltip: "Calculadora",
                       onPressed: () {
-                        Get.toNamed(
-                          Routes.calculadoraNotas,
-                        );
+                        Get.toNamed(Routes.calculadoraNotas);
+                        if (asignatura?.grades != null) {
+                          final calculatorController = CalculatorController.to;
+                          calculatorController.loadGrades(asignatura!.grades!);
+                        }
                       },
                     ),
                   ]

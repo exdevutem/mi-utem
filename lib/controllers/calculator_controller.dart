@@ -143,7 +143,7 @@ class CalculatorController extends GetxController {
     freeEditable.value = false;
   }
 
-  void loadGradesFromAsignatura(Grades grades) {
+  void loadGrades(Grades grades) {
     partialGrades.clear();
     percentageTextFieldControllers.clear();
     gradeTextFieldControllers.clear();
