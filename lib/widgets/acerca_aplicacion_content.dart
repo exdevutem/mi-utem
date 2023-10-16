@@ -1,36 +1,20 @@
-import 'package:flutter/material.dart';
-
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:mi_utem/services/remote_config/remote_config.dart';
 
-import 'package:mi_utem/services/config_service.dart';
-
-class AcercaAplicacionContent extends StatefulWidget {
+class AcercaAplicacionContent extends StatelessWidget {
   final String titulo;
   final String? preTitulo;
 
   AcercaAplicacionContent({this.titulo = "Aplicación", this.preTitulo});
 
   @override
-  State<StatefulWidget> createState() => _AcercaAplicacionContentState();
-}
-
-class _AcercaAplicacionContentState extends State<AcercaAplicacionContent> {
-  FirebaseRemoteConfig? _remoteConfig;
-
-  @override
-  void initState() {
-    super.initState();
-    _remoteConfig = ConfigService.config;
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
         CachedNetworkImage(
-          imageUrl: _remoteConfig!.getString(ConfigService.MIUTEM_PORTADA),
+          imageUrl: RemoteConfigService.miutemPortada,
           width: double.infinity,
           fit: BoxFit.cover,
         ),
@@ -38,19 +22,19 @@ class _AcercaAplicacionContentState extends State<AcercaAplicacionContent> {
           padding: EdgeInsets.all(20),
           child: Column(
             children: <Widget>[
-              if (widget.preTitulo != null && widget.preTitulo!.isNotEmpty)
+              if (preTitulo != null && preTitulo!.isNotEmpty)
                 Text(
-                  widget.preTitulo!,
+                  preTitulo!,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 14,
                     color: Colors.grey[700],
                   ),
                 ),
-              if (widget.preTitulo != null && widget.preTitulo!.isNotEmpty)
+              if (preTitulo != null && preTitulo!.isNotEmpty)
                 Container(height: 5),
               Text(
-                widget.titulo,
+                titulo,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 20,
@@ -68,10 +52,7 @@ class _AcercaAplicacionContentState extends State<AcercaAplicacionContent> {
                     color: Colors.grey[700],
                   ),
                 ),
-                data: _remoteConfig!
-                    .getString(
-                      ConfigService.MIUTEM_DESCRIPCION,
-                    )
+                data: RemoteConfigService.miutemDescripcion
                     .replaceAll(r"\n", "\n"),
               ),
             ],

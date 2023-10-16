@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 import 'package:mi_utem/controllers/asignatura_controller.dart';
-import 'package:mi_utem/controllers/carreras_controller.dart';
+import 'package:mi_utem/controllers/user_controller.dart';
 import 'package:mi_utem/models/asignatura.dart';
 import 'package:mi_utem/models/carrera.dart';
 import 'package:mi_utem/services/asignaturas_service.dart';
@@ -11,12 +11,12 @@ class AsignaturasController extends GetxController
   void onInit() {
     change(null, status: RxStatus.loading());
 
-    if (Get.find<CarrerasController>().selectedCarrera.value != null) {
-      getAsignaturas(Get.find<CarrerasController>().selectedCarrera.value);
+    if (Get.find<UserController>().selectedCarrera.value != null) {
+      getAsignaturas(Get.find<UserController>().selectedCarrera.value);
     }
 
     ever<Carrera?>(
-      Get.find<CarrerasController>().selectedCarrera,
+      Get.find<UserController>().selectedCarrera,
       (carrera) => getAsignaturas(carrera, forceRefresh: true),
     );
     super.onInit();
@@ -54,7 +54,7 @@ class AsignaturasController extends GetxController
   }
 
   void refreshAsignaturas() {
-    final carrera = Get.find<CarrerasController>().selectedCarrera.value;
+    final carrera = Get.find<UserController>().selectedCarrera.value;
     getAsignaturas(carrera, forceRefresh: true);
   }
 }

@@ -4,6 +4,7 @@ import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mi_utem/config/routes.dart';
+import 'package:mi_utem/controllers/user_controller.dart';
 import 'package:mi_utem/models/asignatura.dart';
 import 'package:mi_utem/models/usuario.dart';
 import 'package:mi_utem/services/docentes_service.dart';
@@ -58,7 +59,7 @@ class _UsuarioScreenState extends State<UsuarioScreen> {
           _usuario = usuario;
         });
       } else {
-        usuario = PerfilService.getLocalUsuario();
+        usuario = UserController.to.user.value!;
         setState(() {
           _usuario = usuario;
         });
@@ -77,7 +78,7 @@ class _UsuarioScreenState extends State<UsuarioScreen> {
     );
 
     try {
-      Usuario usuario = await PerfilService.changeFoto(imagen);
+      Usuario? usuario = await PerfilService.changeFoto(imagen);
       Get.back();
 
       setState(() {

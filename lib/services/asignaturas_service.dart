@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:dio_http_cache/dio_http_cache.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:mi_utem/controllers/user_controller.dart';
 import 'package:mi_utem/models/asignatura.dart';
-import 'package:mi_utem/services/perfil_service.dart';
 import 'package:mi_utem/utils/dio_miutem_client.dart';
 
 class AsignaturasService {
@@ -14,7 +14,7 @@ class AsignaturasService {
     bool forceRefresh = false,
   }) async {
     final uri = "/v1/carreras/$carreraId/asignaturas";
-    final user = PerfilService.getLocalUsuario();
+    final user = UserController.to.user.value;
 
     try {
       Response response = await _dio.get(
@@ -22,7 +22,7 @@ class AsignaturasService {
         options: buildCacheOptions(
           Duration(days: 7),
           forceRefresh: forceRefresh,
-          subKey: user.rut?.numero.toString(),
+          subKey: user?.rut?.numero.toString(),
         ),
       );
 
@@ -40,7 +40,7 @@ class AsignaturasService {
     bool forceRefresh = false,
   }) async {
     final uri = "/v1/asignaturas/$codigo";
-    final user = PerfilService.getLocalUsuario();
+    final user = UserController.to.user.value;
 
     try {
       Response response = await _dio.get(
@@ -48,7 +48,7 @@ class AsignaturasService {
         options: buildCacheOptions(
           Duration(days: 7),
           forceRefresh: forceRefresh,
-          subKey: user.rut?.numero.toString(),
+          subKey: user?.rut?.numero.toString(),
         ),
       );
 

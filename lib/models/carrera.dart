@@ -1,6 +1,8 @@
 import 'package:recase/recase.dart';
 
 class Carrera {
+  static const _stateActive = 'Regular';
+
   String? id;
   String? nombre;
   String? estado;
@@ -8,6 +10,8 @@ class Carrera {
   String? plan;
 
   Carrera({this.id, this.nombre, this.estado, this.codigo, this.plan});
+
+  bool get isActive => estado == _stateActive;
 
   factory Carrera.fromJson(Map<String, dynamic>? json) {
     if (json == null) {

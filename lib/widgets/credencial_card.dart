@@ -1,22 +1,19 @@
-import 'dart:developer';
-
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_uxcam/flutter_uxcam.dart';
 import 'package:get/get.dart';
 import 'package:mi_utem/models/carrera.dart';
 import 'package:mi_utem/models/usuario.dart';
-import 'package:mi_utem/services/config_service.dart';
+import 'package:mi_utem/services/remote_config/remote_config.dart';
 import 'package:mi_utem/themes/theme.dart';
 import 'package:mi_utem/widgets/flip_widget.dart';
 import 'package:mi_utem/widgets/profile_photo.dart';
 import 'package:simple_gesture_detector/simple_gesture_detector.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class CredencialCard extends StatefulWidget {
+class CredencialCard extends StatelessWidget {
   final Usuario? usuario;
   final Carrera? carrera;
   final FlipController? controller;
@@ -29,20 +26,6 @@ class CredencialCard extends StatefulWidget {
       this.controller,
       this.onFlip})
       : super(key: key);
-
-  @override
-  State<StatefulWidget> createState() => _CredencialCardState();
-}
-
-class _CredencialCardState extends State<CredencialCard> {
-  FirebaseRemoteConfig? _remoteConfig;
-
-  @override
-  void initState() {
-    super.initState();
-    _remoteConfig = ConfigService.config;
-    log("'${widget.usuario!.rut!.numero}'");
-  }
 
   Widget _buildFront() {
     double altoBanner = Get.mediaQuery.size.height * 0.2;
@@ -57,7 +40,7 @@ class _CredencialCardState extends State<CredencialCard> {
             Container(
               margin: EdgeInsets.only(top: altoBanner - 40),
               child: ProfilePhoto(
-                usuario: widget.usuario,
+                usuario: usuario,
                 radius: 50,
                 borderWidth: 5,
               ),
@@ -92,7 +75,7 @@ class _CredencialCardState extends State<CredencialCard> {
               child: Column(
                 children: [
                   Text(
-                    widget.usuario!.nombreCompleto!,
+                    usuario!.nombreCompleto!,
                     maxLines: 2,
                     style: TextStyle(
                       fontSize: 18,
@@ -103,7 +86,7 @@ class _CredencialCardState extends State<CredencialCard> {
                   ),
                   OccludeWrapper(
                     child: Text(
-                      widget.usuario!.rut?.formateado(true) ?? "Sin RUT",
+                      usuario!.rut?.formateado(true) ?? "Sin RUT",
                       style: TextStyle(fontSize: 18),
                       textAlign: TextAlign.center,
                     ),
@@ -112,10 +95,9 @@ class _CredencialCardState extends State<CredencialCard> {
                   Divider(height: 1),
                   Spacer(),
                   Text(
-                    (widget.carrera?.nombre == null ||
-                            widget.carrera!.nombre!.isEmpty
+                    (carrera?.nombre == null || carrera!.nombre!.isEmpty
                         ? "Sin carrera"
-                        : widget.carrera?.nombre!)!,
+                        : carrera?.nombre!)!,
                     maxLines: 3,
                     style: TextStyle(
                       color: MainTheme.primaryDarkColor,
@@ -123,8 +105,8 @@ class _CredencialCardState extends State<CredencialCard> {
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  if (widget.usuario!.rut != null || true) Spacer(),
-                  if (widget.usuario!.rut != null || true)
+                  if (usuario!.rut != null || true) Spacer(),
+                  if (usuario!.rut != null || true)
                     Column(
                       children: [
                         Container(
@@ -144,7 +126,7 @@ class _CredencialCardState extends State<CredencialCard> {
                           child: OccludeWrapper(
                             child: BarcodeWidget(
                               barcode: Barcode.code39(),
-                              data: "${widget.usuario!.rut!.numero}",
+                              data: "${usuario!.rut!.numero}",
                               width: 200,
                               height: 50,
                               drawText: false,
@@ -160,9 +142,7 @@ class _CredencialCardState extends State<CredencialCard> {
                               fontSize: 12,
                             ),
                           ),
-                          data: _remoteConfig!.getString(
-                            ConfigService.CREDENCIAL_BARRAS,
-                          ),
+                          data: RemoteConfigService.credencialBarras,
                         ),
                       ],
                     )
@@ -243,8 +223,7 @@ class _CredencialCardState extends State<CredencialCard> {
                       ),
                       Container(width: 20),
                       CachedNetworkImage(
-                        imageUrl: _remoteConfig!
-                            .getString(ConfigService.CREDENCIAL_SIBUTEM_LOGO),
+                        imageUrl: RemoteConfigService.credencialSibutemLogo,
                         height: 70,
                       )
                     ],
@@ -264,9 +243,7 @@ class _CredencialCardState extends State<CredencialCard> {
                           color: MainTheme.primaryDarkColor,
                         ),
                       ),
-                      data: _remoteConfig!.getString(
-                        ConfigService.CREDENCIAL_DISCLAIMER,
-                      ),
+                      data: RemoteConfigService.credencialDisclaimer,
                     ),
                   ),
                   Container(
@@ -285,10 +262,7 @@ class _CredencialCardState extends State<CredencialCard> {
                       onTapLink: (text, href, title) {
                         launchUrl(Uri.parse(href!));
                       },
-                      data: _remoteConfig!
-                          .getString(
-                            ConfigService.CREDENCIAL_INFO,
-                          )
+                      data: RemoteConfigService.credencialInfo
                           .replaceAll(r"\n", "\n"),
                     ),
                   ),
@@ -308,8 +282,8 @@ class _CredencialCardState extends State<CredencialCard> {
       child: FlipWidget(
         front: _buildFront(),
         back: _buildRear(),
-        controller: widget.controller,
-        onFlip: widget.onFlip,
+        controller: controller,
+        onFlip: onFlip,
       ),
     );
   }

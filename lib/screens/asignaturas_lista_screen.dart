@@ -4,7 +4,7 @@ import 'package:mdi/mdi.dart';
 import 'package:mi_utem/config/routes.dart';
 import 'package:mi_utem/controllers/asignaturas_controller.dart';
 import 'package:mi_utem/models/asignatura.dart';
-import 'package:mi_utem/services/config_service.dart';
+import 'package:mi_utem/services/remote_config/remote_config.dart';
 import 'package:mi_utem/themes/theme.dart';
 import 'package:mi_utem/widgets/custom_app_bar.dart';
 import 'package:mi_utem/widgets/custom_error_widget.dart';
@@ -19,7 +19,7 @@ class AsignaturasListaScreen extends GetView<AsignaturasController> {
   }
 
   bool get _mostrarCalculadora {
-    return ConfigService.config.getBool(ConfigService.CALCULADORA_MOSTRAR);
+    return RemoteConfigService.calculadoraMostrar;
   }
 
   @override

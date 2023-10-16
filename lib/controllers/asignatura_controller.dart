@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:mi_utem/controllers/carreras_controller.dart';
+import 'package:mi_utem/controllers/user_controller.dart';
 import 'package:mi_utem/models/asignatura.dart';
 import 'package:mi_utem/models/carrera.dart';
 import 'package:mi_utem/models/grades.dart';
@@ -19,13 +19,13 @@ class AsignaturaController extends GetxController with StateMixin<Asignatura> {
 
   @override
   void onInit() {
-    _selectedCarrera = Get.find<CarrerasController>().selectedCarrera.value;
+    _selectedCarrera = Get.find<UserController>().selectedCarrera.value;
     if (_selectedCarrera != null) {
-      getAsignaturaDetail(Get.find<CarrerasController>().selectedCarrera.value);
+      getAsignaturaDetail(Get.find<UserController>().selectedCarrera.value);
     }
 
     ever<Carrera?>(
-      Get.find<CarrerasController>().selectedCarrera,
+      Get.find<UserController>().selectedCarrera,
       (carrera) {
         _selectedCarrera = carrera;
         getAsignaturaDetail(carrera, forceRefresh: true);

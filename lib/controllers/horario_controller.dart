@@ -3,13 +3,13 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:mi_utem/controllers/carreras_controller.dart';
+import 'package:mi_utem/controllers/user_controller.dart';
 import 'package:mi_utem/models/asignatura.dart';
 import 'package:mi_utem/models/carrera.dart';
 import 'package:mi_utem/models/horario.dart';
 import 'package:mi_utem/screens/horario/widgets/horario_main_scroller.dart';
-import 'package:mi_utem/services/config_service.dart';
 import 'package:mi_utem/services/horarios_service.dart';
+import 'package:mi_utem/services/remote_config/remote_config.dart';
 import 'package:vector_math/vector_math_64.dart' as vector;
 
 class HorarioController extends GetxController {
@@ -85,12 +85,12 @@ class HorarioController extends GetxController {
 
   @override
   onInit() {
-    if (Get.find<CarrerasController>().selectedCarrera.value != null) {
-      getHorarioData(Get.find<CarrerasController>().selectedCarrera.value);
+    if (Get.find<UserController>().selectedCarrera.value != null) {
+      getHorarioData(Get.find<UserController>().selectedCarrera.value);
     }
 
     ever<Carrera?>(
-      Get.find<CarrerasController>().selectedCarrera,
+      Get.find<UserController>().selectedCarrera,
       (carrera) => getHorarioData(carrera),
     );
     _init();
@@ -98,7 +98,7 @@ class HorarioController extends GetxController {
   }
 
   void _init() {
-    zoom.value = ConfigService.config.getDouble(ConfigService.HORARIO_ZOOM);
+    zoom.value = RemoteConfigService.horarioZoom;
 
     _initControllers();
 

@@ -83,6 +83,7 @@ platform :mobile do
     type = "release"
     skip_android = false
     skip_ios = false
+    skip_clean = false
     skip_match = false
     skip_cocoapods = false
     skip_git_push = false
@@ -99,6 +100,10 @@ platform :mobile do
 
     if options[:skip_ios]
       skip_ios = options[:skip_ios]
+    end
+
+    if options[:skip_clean]
+      skip_clean = options[:skip_clean]
     end
 
     if options[:skip_match]
@@ -132,7 +137,7 @@ platform :mobile do
         changelog: changelog,
         type: type,
         is_ci: is_ci,
-        skip_clean: false,
+        skip_clean: skip_clean,
       )
     end
 
@@ -142,7 +147,7 @@ platform :mobile do
         build_name: build_name,
         changelog: changelog,
         type: type,
-        skip_clean: !skip_android,
+        skip_clean: skip_clean || !skip_android,
         skip_match: skip_match,
         skip_cocoapods: skip_cocoapods,
         is_ci: is_ci,

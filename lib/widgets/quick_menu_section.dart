@@ -1,32 +1,15 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-
-import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:get/get.dart';
-
-import 'package:mi_utem/services/config_service.dart';
+import 'package:mi_utem/services/remote_config/remote_config.dart';
 import 'package:mi_utem/widgets/quick_menu_card.dart';
 
-class QuickMenuSection extends StatefulWidget {
+class QuickMenuSection extends StatelessWidget {
   const QuickMenuSection({Key? key}) : super(key: key);
 
-  @override
-  State<QuickMenuSection> createState() => _QuickMenuSectionState();
-}
-
-class _QuickMenuSectionState extends State<QuickMenuSection> {
-  FirebaseRemoteConfig? _remoteConfig = ConfigService.config;
-
-  @override
-  initState() {
-    super.initState();
-  }
-
   List<dynamic> get _quickMenu {
-    return jsonDecode(_remoteConfig!.getString(
-      ConfigService.QUICK_MENU,
-    ));
+    return jsonDecode(RemoteConfigService.quickMenu);
   }
 
   @override
