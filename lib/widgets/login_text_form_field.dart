@@ -17,6 +17,7 @@ class LoginTextFormField extends StatefulWidget {
     this.keyboardType,
     this.controller,
     this.inputFormatters,
+    this.autofillHints,
   }) : super(key: key);
 
   final String? hintText, labelText;
@@ -27,6 +28,7 @@ class LoginTextFormField extends StatefulWidget {
   final bool obscureText;
   final TextEditingController? controller;
   final List<TextInputFormatter>? inputFormatters;
+  final List<String>? autofillHints;
 
   @override
   _LoginTextFormFieldState createState() => _LoginTextFormFieldState();
@@ -55,6 +57,7 @@ class _LoginTextFormFieldState extends State<LoginTextFormField> {
         textCapitalization: widget.textCapitalization!,
         obscureText: widget.obscureText,
         inputFormatters: widget.inputFormatters,
+        autofillHints: widget.autofillHints,
         decoration: InputDecoration(
           enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(25),
