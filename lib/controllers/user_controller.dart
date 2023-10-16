@@ -90,6 +90,7 @@ class UserController extends GetxController {
       try {
         await PerfilService.deleteFcmToken();
       } catch (e) {}
+      user.value = null;
     } catch (e) {
       print(e.toString());
       throw e;
