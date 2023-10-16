@@ -221,7 +221,7 @@ final _defaults = <String, dynamic>{
       },
       "show": true,
       "route": Routes.credencial,
-      "requiredRoles": ["hasActiveCareer"],
+      "requiredRoles": [Role.hasActiveCareer.name],
       "badge": "Nuevo"
     },
   ]),

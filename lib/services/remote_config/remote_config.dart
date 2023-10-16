@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mdi/mdi.dart';
 import 'package:mi_utem/config/routes.dart';
+import 'package:mi_utem/models/usuario.dart';
 import 'package:mi_utem/services/remote_config/keys.dart';
 import 'package:mi_utem/widgets/banner.dart';
 import 'package:mi_utem/widgets/custom_drawer.dart';
