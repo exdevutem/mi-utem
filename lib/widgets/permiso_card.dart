@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mi_utem/config/routes.dart';
+import 'package:mi_utem/config/routes/routes.dart';
 import 'package:mi_utem/models/permiso_covid.dart';
 import 'package:mi_utem/themes/theme.dart';
 

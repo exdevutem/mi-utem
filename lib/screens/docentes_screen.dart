@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mi_utem/config/routes.dart';
+import 'package:mi_utem/config/routes/routes.dart';
 import 'package:mi_utem/models/usuario.dart';
 import 'package:mi_utem/screens/usuario_screen.dart';
 import 'package:mi_utem/services/docentes_service.dart';

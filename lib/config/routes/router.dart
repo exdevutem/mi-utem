@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
-import 'package:mi_utem/config/routes.dart';
+import 'package:mi_utem/config/routes/routes.dart';
 import 'package:mi_utem/controllers/asignaturas_controller.dart';
 import 'package:mi_utem/controllers/qr_passes_controller.dart';
 import 'package:mi_utem/controllers/user_controller.dart';
-import 'package:mi_utem/screens/asignatura_detalle_screen.dart';
-import 'package:mi_utem/screens/asignaturas_lista_screen.dart';
+import 'package:mi_utem/screens/asignatura/asignatura_detalle_screen.dart';
+import 'package:mi_utem/screens/asignatura/asignaturas_lista_screen.dart';
 import 'package:mi_utem/screens/calculadora_notas_screen.dart';
 import 'package:mi_utem/screens/credencial_screen.dart';
 import 'package:mi_utem/screens/horario/horario_screen.dart';

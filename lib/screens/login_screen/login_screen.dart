@@ -8,7 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:get/get.dart';
-import 'package:mi_utem/config/routes.dart';
+import 'package:mi_utem/config/routes/routes.dart';
 import 'package:mi_utem/controllers/user_controller.dart';
 import 'package:mi_utem/helpers/snackbars.dart';
 import 'package:mi_utem/models/usuario.dart';
