@@ -7,7 +7,7 @@ import 'package:flutter_uxcam/flutter_uxcam.dart';
 import 'package:get/get.dart';
 import 'package:image/image.dart' as dartImage;
 import 'package:intl/intl.dart';
-import 'package:mi_utem/config/routes.dart';
+import 'package:mi_utem/config/routes/routes.dart';
 import 'package:mi_utem/controllers/qr_pass_controller.dart';
 import 'package:mi_utem/models/permiso_covid.dart';
 import 'package:mi_utem/models/usuario.dart';

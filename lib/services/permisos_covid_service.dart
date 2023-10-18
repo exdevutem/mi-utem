@@ -2,8 +2,8 @@ import 'package:dio/dio.dart';
 import 'package:dio_http_cache/dio_http_cache.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:mi_utem/config/logger.dart';
+import 'package:mi_utem/controllers/user_controller.dart';
 import 'package:mi_utem/models/permiso_covid.dart';
-import 'package:mi_utem/services/perfil_service.dart';
 import 'package:mi_utem/utils/dio_miutem_client.dart';
 
 class PermisosCovidService {
@@ -14,9 +14,9 @@ class PermisosCovidService {
       {bool forceRefresh = false}) async {
     const uri = "/v1/permisos";
 
-    final user = PerfilService.getLocalUsuario();
+    final user = UserController.to.user.value;
 
-    logger.d("Obteniendo permisos de ${user.rut?.numero}");
+    logger.d("Obteniendo permisos de ${user?.rut?.numero}");
 
     try {
       Response response = await _dio.post(
@@ -25,7 +25,7 @@ class PermisosCovidService {
           Duration(days: 300),
           maxStale: Duration(days: 300),
           forceRefresh: forceRefresh,
-          subKey: user.rut?.numero.toString(),
+          subKey: user?.rut?.numero.toString(),
         ),
       );
 
@@ -42,7 +42,7 @@ class PermisosCovidService {
   }) async {
     final uri = "/v1/permisos/$id";
 
-    final user = PerfilService.getLocalUsuario();
+    final user = UserController.to.user.value;
 
     try {
       Response response = await _dio.post(
@@ -51,7 +51,7 @@ class PermisosCovidService {
           Duration(days: 180),
           maxStale: Duration(days: 365),
           forceRefresh: forceRefresh,
-          subKey: user.rut?.numero.toString(),
+          subKey: user?.rut?.numero.toString(),
         ),
       );
 

@@ -1,6 +1,38 @@
 import 'package:mi_utem/models/rut.dart';
 import 'package:recase/recase.dart';
 
+enum Role {
+  hasCareers,
+  hasActiveCareer,
+  hasLunchBenefit,
+}
+
+extension RoleExtension on Role {
+  String get name {
+    switch (this) {
+      case Role.hasCareers:
+        return 'hasCareers';
+      case Role.hasActiveCareer:
+        return 'hasActiveCareer';
+      case Role.hasLunchBenefit:
+        return 'hasLunchBenefit';
+    }
+  }
+
+  static Role? fromName(String name) {
+    switch (name) {
+      case 'hasCareers':
+        return Role.hasCareers;
+      case 'hasActiveCareer':
+        return Role.hasActiveCareer;
+      case 'hasLunchBenefit':
+        return Role.hasLunchBenefit;
+      default:
+        return null;
+    }
+  }
+}
+
 class Usuario {
   String? nombre;
   String? nombres;
@@ -11,15 +43,16 @@ class Usuario {
   String? fotoUrl;
   Rut? rut;
 
-  Usuario(
-      {this.correoUtem,
-      this.correoPersonal,
-      this.token,
-      this.nombres,
-      this.nombre,
-      this.fotoUrl,
-      this.apellidos,
-      this.rut});
+  Usuario({
+    this.correoUtem,
+    this.correoPersonal,
+    this.token,
+    this.nombres,
+    this.nombre,
+    this.fotoUrl,
+    this.apellidos,
+    this.rut,
+  });
 
   factory Usuario.fromJson(Map<String, dynamic>? json) {
     if (json == null) {
@@ -99,7 +132,6 @@ class Usuario {
       'nombreCompleto': nombreCompleto,
       'correoUtem': correoUtem,
       'correoPersonal': correoPersonal,
-      'token': token,
       'fotoUrl': fotoUrl,
       'nombres': nombres,
       'apellidos': apellidos,

@@ -4,8 +4,11 @@ import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mdi/mdi.dart';
+import 'package:mi_utem/config/routes/routes.dart';
+import 'package:mi_utem/models/usuario.dart';
 import 'package:mi_utem/services/remote_config/keys.dart';
 import 'package:mi_utem/widgets/banner.dart';
+import 'package:mi_utem/widgets/custom_drawer.dart';
 
 part 'defaults.dart';
 
@@ -55,8 +58,13 @@ class RemoteConfigService {
       _getString(RemoteConfigServiceKeys.homeProntoTexto);
   static final prontoEg = _getString(RemoteConfigServiceKeys.prontoEg);
   static final egHabilitados = _getBool(RemoteConfigServiceKeys.egHabilitados);
-  static final drawerMenu = _getString(RemoteConfigServiceKeys.drawerMenu);
-  static final greetings = _getString(RemoteConfigServiceKeys.greetings);
+  static final drawerMenu = IDrawerItem.fromJsonList(
+      jsonDecode(_getString(RemoteConfigServiceKeys.drawerMenu)));
+  static final greetings =
+      (jsonDecode(_getString(RemoteConfigServiceKeys.greetings))
+              as List<dynamic>)
+          .map((e) => e.toString())
+          .toList();
   static final quickMenu = _getString(RemoteConfigServiceKeys.quickMenu);
 
   factory RemoteConfigService() => instance;

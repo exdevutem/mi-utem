@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:dio_http_cache/dio_http_cache.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:mi_utem/services/auth_service.dart';
+import 'package:mi_utem/controllers/user_controller.dart';
 
 class DioMiUtemClient {
   static const bool isProduction = bool.fromEnvironment('dart.vm.product');
@@ -45,7 +45,7 @@ class AuthInterceptor extends QueuedInterceptor {
     final RequestInterceptorHandler handler,
   ) async {
     try {
-      final token = AuthService.getToken();
+      final token = UserController.to.getToken();
 
       options._setAuthenticationHeader(token);
 
@@ -75,7 +75,7 @@ class AuthInterceptor extends QueuedInterceptor {
 
     // Force refresh auth token
     try {
-      final token = await AuthService.refreshToken();
+      final token = await UserController.to.refreshToken();
 
       log("Refreshing token, attempt $attempt...");
 
@@ -93,7 +93,7 @@ class AuthInterceptor extends QueuedInterceptor {
   }
 
   Future<void> _onErrorRefreshingToken() async {
-    AuthService.invalidateToken();
+    UserController.to.invalidateToken();
   }
 }
 

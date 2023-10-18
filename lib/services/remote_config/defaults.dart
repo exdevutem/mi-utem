@@ -185,53 +185,45 @@ final _defaults = <String, dynamic>{
   RemoteConfigServiceKeys.egHabilitados: true,
   RemoteConfigServiceKeys.drawerMenu: jsonEncode([
     {
-      "nombre": "Perfil",
-      "icono": {
+      "title": "Perfil",
+      "icon": {
         "codePoint": Icons.person.codePoint,
         "fontFamily": 'MaterialIcons'
       },
-      "mostrar": true,
-      "esNuevo": false
+      "route": Routes.perfil,
+      "show": true,
     },
     {
-      "nombre": "Asignaturas",
-      "icono": {
+      "title": "Asignaturas",
+      "icon": {
         "codePoint": Icons.book.codePoint,
         "fontFamily": 'MaterialIcons'
       },
-      "mostrar": true,
-      "esNuevo": false
+      "route": Routes.asignaturas,
+      "show": true,
     },
     {
-      "nombre": "Horario",
-      "icono": {
+      "title": "Horario",
+      "icon": {
         "codePoint": Mdi.clockTimeEight.codePoint,
         "fontFamily": 'Material Design Icons',
         "fontPackage": "mdi"
       },
-      "mostrar": true,
-      "esNuevo": false
+      "route": Routes.horario,
+      "show": true
     },
     {
-      "nombre": "Credencial",
-      "icono": {
+      "title": "Credencial",
+      "icon": {
         "codePoint": Mdi.cardAccountDetails.codePoint,
         "fontFamily": 'Material Design Icons',
         "fontPackage": "mdi"
       },
-      "mostrar": true,
-      "esNuevo": true
+      "show": true,
+      "route": Routes.credencial,
+      "requiredRoles": [Role.hasActiveCareer.name],
+      "badge": "Nuevo"
     },
-    // {
-    //   "nombre": "Docentes",
-    //   "icono": {
-    //     "codePoint": Mdi.accountTie.codePoint,
-    //     "fontFamily": 'Material Design Icons',
-    //     "fontPackage": "mdi"
-    //   },
-    //   "mostrar": true,
-    //   "esNuevo": true
-    // },
   ]),
   RemoteConfigServiceKeys.greetings: jsonEncode(['Que gusto verte, **%name**']),
   RemoteConfigServiceKeys.quickMenu: jsonEncode([
