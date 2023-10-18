@@ -143,37 +143,46 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                             ),
                             Container(height: constraints.maxHeight * 0.1),
-                            LoginTextFormField(
-                              controller: _correoController,
-                              hintText: 'nombre@utem.cl',
-                              labelText: 'Correo UTEM',
-                              textCapitalization: TextCapitalization.none,
-                              keyboardType: TextInputType.emailAddress,
-                              inputFormatters: [
-                                FilteringTextInputFormatter.deny(RegExp(" ")),
-                              ],
-                              icon: Icons.person,
-                              validator: (String value) {
-                                if (value.isEmpty) {
-                                  return 'Debe ingresar un correo UTEM';
-                                } else if (value.contains("@") &&
-                                    !value.endsWith("@utem.cl")) {
-                                  return 'Debe ingresar un correo UTEM';
-                                }
-                              },
-                            ),
-                            LoginTextFormField(
-                              controller: _contraseniaController,
-                              hintText: '• • • • • • • • •',
-                              labelText: 'Contraseña',
-                              textCapitalization: TextCapitalization.none,
-                              icon: Icons.lock,
-                              obscureText: true,
-                              validator: (String value) {
-                                if (value.isEmpty) {
-                                  return 'Debe ingresar una contraseña';
-                                }
-                              },
+                            AutofillGroup(
+                              child: Column(
+                                children: [
+                                  LoginTextFormField(
+                                    controller: _correoController,
+                                    hintText: 'nombre@utem.cl',
+                                    labelText: 'Correo UTEM',
+                                    textCapitalization: TextCapitalization.none,
+                                    keyboardType: TextInputType.emailAddress,
+                                    inputFormatters: [
+                                      FilteringTextInputFormatter.deny(
+                                          RegExp(" ")),
+                                    ],
+                                    icon: Icons.person,
+                                    autofillHints: [AutofillHints.username],
+                                    validator: (String value) {
+                                      if (value.isEmpty) {
+                                        return 'Debe ingresar un correo UTEM';
+                                      } else if (value.contains("@") &&
+                                          !value.endsWith("@utem.cl")) {
+                                        return 'Debe ingresar un correo UTEM';
+                                      }
+                                    },
+                                  ),
+                                  LoginTextFormField(
+                                    controller: _contraseniaController,
+                                    hintText: '• • • • • • • • •',
+                                    labelText: 'Contraseña',
+                                    textCapitalization: TextCapitalization.none,
+                                    icon: Icons.lock,
+                                    obscureText: true,
+                                    autofillHints: [AutofillHints.password],
+                                    validator: (String value) {
+                                      if (value.isEmpty) {
+                                        return 'Debe ingresar una contraseña';
+                                      }
+                                    },
+                                  )
+                                ],
+                              ),
                             ),
                             TextButton(
                               onPressed: () => _login(),
