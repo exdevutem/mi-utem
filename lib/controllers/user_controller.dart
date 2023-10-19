@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
@@ -6,7 +8,6 @@ import 'package:get_storage/get_storage.dart';
 import 'package:mi_utem/controllers/carreras_controller.dart';
 import 'package:mi_utem/controllers/lunch_coupons_controller.dart';
 import 'package:mi_utem/models/carrera.dart';
-import 'package:mi_utem/models/lunch_coupon.dart';
 import 'package:mi_utem/models/usuario.dart';
 import 'package:mi_utem/services/analytics_service.dart';
 import 'package:mi_utem/services/auth_service.dart';
@@ -26,6 +27,8 @@ class UserController extends GetxController {
   final user = Rxn<Usuario>(null);
   final selectedCarrera = Rxn<Carrera>();
   final roles = RxList<Role>([]);
+
+  FutureOr<String?>? _tokenRefresher;
 
   @override
   void onInit() {
@@ -48,7 +51,7 @@ class UserController extends GetxController {
       _setRoles();
     });
 
-    ever(LunchCouponsController.to.state.obs, (List<LunchCoupon>? coupons) {
+    ever(LunchBenefitController.to.state.obs, (LunchBenefit? couponsView) {
       _setRoles();
     });
   }
@@ -92,13 +95,33 @@ class UserController extends GetxController {
   }
 
   Future<String> refreshToken() async {
+    log("refreshToken");
+
+    if (_tokenRefresher != null) {
+      log("refreshToken _tokenRefresher != null $_tokenRefresher");
+      final token = await (_tokenRefresher as FutureOr<String>);
+
+      log("refreshToken _tokenRefresher != null token $token");
+
+      return token;
+    }
+
+    log("refreshToken _tokenRefresher == null");
+
     try {
       final email = user.value?.correoUtem;
       final password = await _secureStorage.read(key: _storagePasswordKey);
 
+      log("refreshToken _tokenRefresher == null email $email password $password");
+
       if (email != null && password != null) {
-        final token = await AuthService.refreshToken(email, password);
+        _tokenRefresher = AuthService.refreshToken(email, password);
+        final token = await (_tokenRefresher as FutureOr<String>);
         _storeToken(token);
+
+        _tokenRefresher = null;
+
+        log("refreshToken _tokenRefresher == null token $token");
 
         return token;
       }
@@ -145,7 +168,7 @@ class UserController extends GetxController {
   void _setRoles() {
     final user = this.user.value;
     final carreras = CarrerasController.to.state;
-    final coupons = LunchCouponsController.to.state;
+    final lunchBenefit = LunchBenefitController.to.state;
 
     final roles = <Role>[];
 
@@ -157,6 +180,10 @@ class UserController extends GetxController {
         if (hasActive) {
           roles.add(Role.hasActiveCareer);
         }
+      }
+
+      if (lunchBenefit?.hasBenefit == true) {
+        roles.add(Role.hasLunchBenefit);
       }
     }
     this.roles.value = roles;

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
 import 'package:dio_http_cache/dio_http_cache.dart';
 import 'package:get_storage/get_storage.dart';
@@ -14,21 +16,18 @@ class LunchCouponsService {
 
     final user = UserController.to.user.value;
 
-    try {
-      Response response = await _dio.get(
-        uri,
-        options: buildCacheOptions(
-          Duration(days: 300),
-          maxStale: Duration(days: 300),
-          forceRefresh: forceRefresh,
-          subKey: user?.rut?.numero.toString(),
-        ),
-      );
+    log("LunchCouponsService getAll");
 
-      return LunchCoupon.fromJsonList(response.data);
-    } on DioError catch (e) {
-      print(e.message);
-      throw e;
-    }
+    Response response = await _dio.get(
+      uri,
+      options: buildCacheOptions(
+        Duration(days: 300),
+        maxStale: Duration(days: 300),
+        forceRefresh: forceRefresh,
+        subKey: user?.rut?.numero.toString(),
+      ),
+    );
+
+    return LunchCoupon.fromJsonList(response.data);
   }
 }

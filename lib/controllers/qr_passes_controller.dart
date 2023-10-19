@@ -31,10 +31,3 @@ class QrPassesController extends GetxController {
     }
   }
 }
-
-class QrPassesBinding extends Bindings {
-  @override
-  void dependencies() {
-    Get.put(QrPassesController());
-  }
-}

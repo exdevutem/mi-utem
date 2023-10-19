@@ -232,7 +232,7 @@ final _defaults = <String, dynamic>{
       },
       "show": true,
       "route": Routes.lunchBenefit,
-      //"requiredRoles": [Role.hasLunchBenefit.name],
+      "requiredRoles": [Role.hasLunchBenefit.name],
       "badge": "Nuevo"
     },
   ]),

@@ -117,11 +117,9 @@ class CustomDrawer extends StatelessWidget {
                     );
                   }),
                   for (var e in _filteredMenu)
-                    Obx(
-                      () => CustomDrawerItem(
-                        item: e,
-                        currentUserRoles: UserController.to.roles,
-                      ),
+                    CustomDrawerItem(
+                      item: e,
+                      currentUserRoles: UserController.to.roles,
                     ),
                   Expanded(
                     child: SafeArea(

@@ -12,6 +12,8 @@ import 'package:mi_utem/config/constants.dart';
 import 'package:mi_utem/config/router.dart';
 import 'package:mi_utem/config/routes.dart';
 import 'package:mi_utem/controllers/carreras_controller.dart';
+import 'package:mi_utem/controllers/lunch_coupons_controller.dart';
+import 'package:mi_utem/controllers/qr_passes_controller.dart';
 import 'package:mi_utem/controllers/user_controller.dart';
 import 'package:mi_utem/services/background_service.dart';
 import 'package:mi_utem/services/notification_service.dart';
@@ -62,6 +64,8 @@ class MiUtem extends StatelessWidget {
       initialBinding: BindingsBuilder(() {
         Get.put(UserController(), permanent: true);
         Get.put(CarrerasController(), permanent: true);
+        Get.put(LunchBenefitController(), permanent: true);
+        Get.put(QrPassesController(), permanent: true);
       }),
       theme: MainTheme.theme,
       navigatorObservers: [
