@@ -30,4 +30,31 @@ class LunchCouponsService {
 
     return LunchCoupon.fromJsonList(response.data);
   }
+
+  static Future<List<LunchCoupon>> generate(
+      {DateTime? from, DateTime? until}) async {
+    const uri = "/v1/beca-alimentacion";
+
+    if (from == null) {
+      from = DateTime.now();
+    }
+
+    if (until == null || until.isBefore(from)) {
+      until = from;
+    }
+
+    final data = {
+      'desde': from.toIso8601String(),
+      'hasta': until.toIso8601String(),
+    };
+
+    log("LunchCouponsService generate from $from until $until");
+
+    Response response = await _dio.post(
+      uri,
+      data: data,
+    );
+
+    return LunchCoupon.fromJsonList(response.data);
+  }
 }

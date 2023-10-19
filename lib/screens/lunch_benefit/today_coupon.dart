@@ -1,10 +1,13 @@
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:coupon_uikit/coupon_uikit.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:mi_utem/controllers/lunch_coupons_controller.dart';
 import 'package:mi_utem/helpers/image.dart';
 import 'package:mi_utem/models/lunch_coupon.dart';
 import 'package:mi_utem/themes/theme.dart';
+import 'package:mi_utem/widgets/loading_dialog.dart';
 
 class LunchBenefitTodayCoupon extends StatelessWidget {
   final LunchCoupon? todayCoupon;
@@ -20,7 +23,10 @@ class LunchBenefitTodayCoupon extends StatelessWidget {
 
     final now = DateTime.now();
     final formatter = DateFormat('dd/MM/yyyy');
-    final formatted = formatter.format(now);
+    final nowFormatted = formatter.format(now);
+    final todayValidForFormatted = todayCoupon?.validFor != null
+        ? formatter.format(todayCoupon!.validFor)
+        : null;
 
     return CouponCard(
       height: 250,
@@ -32,13 +38,26 @@ class LunchBenefitTodayCoupon extends StatelessWidget {
       ),
       firstChild: Container(
         decoration: BoxDecoration(
-          color: MainTheme.primaryColor,
+          color: todayCoupon != null ? MainTheme.primaryColor : MainTheme.grey,
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text(
-              'Tu cupón para hoy',
+            if (todayCoupon != null) ...[
+              Text(
+                todayCoupon!.status,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.white,
+                ),
+              ),
+              const SizedBox(height: 10),
+            ],
+            Text(
+              todayCoupon != null
+                  ? 'Tu cupón para hoy'
+                  : 'No tienes cupón para hoy',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 26,
@@ -48,7 +67,7 @@ class LunchBenefitTodayCoupon extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             Text(
-              formatted,
+              todayValidForFormatted ?? nowFormatted,
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 20,
@@ -67,7 +86,7 @@ class LunchBenefitTodayCoupon extends StatelessWidget {
             ),
           ),
         ),
-        padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 42),
+        padding: const EdgeInsets.all(20),
         child: code == null
             ? ElevatedButton(
                 style: ButtonStyle(
@@ -76,13 +95,16 @@ class LunchBenefitTodayCoupon extends StatelessWidget {
                       borderRadius: BorderRadius.circular(60),
                     ),
                   ),
+                  maximumSize: MaterialStateProperty.all<Size>(
+                    const Size(200, 36),
+                  ),
                   padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
                     const EdgeInsets.symmetric(horizontal: 80),
                   ),
                 ),
-                onPressed: () {},
+                onPressed: _generateCoupon,
                 child: const Text(
-                  'Generar',
+                  'Generar ahora',
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -91,14 +113,28 @@ class LunchBenefitTodayCoupon extends StatelessWidget {
               )
             : GestureDetector(
                 onTap: _openBarcode,
-                child: BarcodeWidget(
-                  data: code,
-                  barcode: Barcode.code128(),
-                  drawText: true,
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  child: BarcodeWidget(
+                    data: code,
+                    barcode: Barcode.code128(),
+                    drawText: true,
+                  ),
                 ),
               ),
       ),
     );
+  }
+
+  void _generateCoupon() async {
+    Get.dialog(
+      LoadingDialog(),
+      barrierDismissible: false,
+    );
+
+    await LunchBenefitController.to.generateTodayCoupon();
+
+    Get.back();
   }
 
   void _openBarcode() {

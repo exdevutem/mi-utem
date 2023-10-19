@@ -12,12 +12,8 @@ class LunchBenefit {
   final bool hasBenefit;
 
   LunchCoupon? get todayCoupon {
-    final now = DateTime.now();
     return coupons.firstWhereOrNull(
-      (element) =>
-          element.validFor.day == now.day &&
-          element.validFor.month == now.month &&
-          element.validFor.year == now.year,
+      (element) => element.isForToday,
     );
   }
 
@@ -87,6 +83,42 @@ class LunchBenefitController extends GetxController
       }
     } catch (e) {
       log("LunchBenefitController catch ${e.toString()}");
+      change(
+        null,
+        status: RxStatus.error(e.toString()),
+      );
+    } finally {
+      _setRoleToUser();
+    }
+  }
+
+  Future<void> generateTodayCoupon() async {
+    try {
+      final coupons = await LunchCouponsService.generate();
+
+      final lunchBenefit = LunchBenefit(
+        coupons: coupons,
+        hasBenefit: true,
+      );
+
+      change(
+        lunchBenefit,
+        status: RxStatus.success(),
+      );
+    } on DioError catch (e) {
+      final response = e.response;
+      if (response != null && response.statusCode == 404) {
+        final lunchBenefit = LunchBenefit(
+          coupons: [],
+          hasBenefit: false,
+        );
+
+        change(
+          lunchBenefit,
+          status: RxStatus.success(),
+        );
+      }
+    } catch (e) {
       change(
         null,
         status: RxStatus.error(e.toString()),
