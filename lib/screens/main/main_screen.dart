@@ -51,7 +51,6 @@ class _MainScreenState extends State<MainScreen> {
     return Scaffold(
       appBar: CustomAppBar(title: Text("Inicio")),
       drawer: CustomDrawer(),
-      backgroundColor: Colors.grey[200],
       floatingActionButton: kDebugMode
           ? FloatingActionButton(
               onPressed: () {
