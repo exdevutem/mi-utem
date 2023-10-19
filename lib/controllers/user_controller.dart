@@ -5,7 +5,6 @@ import 'dart:developer';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:mi_utem/controllers/carreras_controller.dart';
 import 'package:mi_utem/controllers/lunch_coupons_controller.dart';
 import 'package:mi_utem/models/carrera.dart';
 import 'package:mi_utem/models/usuario.dart';
@@ -45,14 +44,6 @@ class UserController extends GetxController {
       } else {
         AnalyticsService.removeUser();
       }
-    });
-
-    ever(this.selectedCarrera, (Carrera? carrera) {
-      _setRoles();
-    });
-
-    ever(LunchBenefitController.to.state.obs, (LunchBenefit? couponsView) {
-      _setRoles();
     });
   }
 
@@ -165,10 +156,12 @@ class UserController extends GetxController {
     _box.remove(_storageTokenKey);
   }
 
-  void _setRoles() {
+  void selectCarrera(Carrera carrera) {
+    selectedCarrera.value = carrera;
+  }
+
+  void updateCarrerasRoles(List<Carrera>? carreras) {
     final user = this.user.value;
-    final carreras = CarrerasController.to.state;
-    final lunchBenefit = LunchBenefitController.to.state;
 
     final roles = <Role>[];
 
@@ -181,15 +174,13 @@ class UserController extends GetxController {
           roles.add(Role.hasActiveCareer);
         }
       }
-
-      if (lunchBenefit?.hasBenefit == true) {
-        roles.add(Role.hasLunchBenefit);
-      }
     }
     this.roles.value = roles;
   }
 
-  void selectCarrera(Carrera carrera) {
-    selectedCarrera.value = carrera;
+  void updateLunchBenefitRole(LunchBenefit? lunchBenefit) {
+    if (lunchBenefit?.hasBenefit == true) {
+      roles.add(Role.hasLunchBenefit);
+    }
   }
 }

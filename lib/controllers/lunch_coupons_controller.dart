@@ -2,7 +2,9 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
+import 'package:mi_utem/controllers/user_controller.dart';
 import 'package:mi_utem/models/lunch_coupon.dart';
+import 'package:mi_utem/models/usuario.dart';
 import 'package:mi_utem/services/lunch_coupons_service.dart';
 
 class LunchBenefit {
@@ -40,7 +42,10 @@ class LunchBenefitController extends GetxController
 
   @override
   void onInit() {
-    change(null, status: RxStatus.loading());
+    ever<Usuario?>(
+      Get.find<UserController>().user,
+      (carrera) => getBenefit(),
+    );
 
     getBenefit();
     super.onInit();
@@ -56,22 +61,27 @@ class LunchBenefitController extends GetxController
     try {
       final coupons = await LunchCouponsService.getAll();
       log("LunchBenefitController coupons ${coupons.length}");
+
+      final lunchBenefit = LunchBenefit(
+        coupons: coupons,
+        hasBenefit: true,
+      );
+
       change(
-        LunchBenefit(
-          coupons: coupons,
-          hasBenefit: true,
-        ),
+        lunchBenefit,
         status: RxStatus.success(),
       );
     } on DioError catch (e) {
       log("LunchBenefitController catch DioError ${e.toString()}");
       final response = e.response;
       if (response != null && response.statusCode == 404) {
+        final lunchBenefit = LunchBenefit(
+          coupons: [],
+          hasBenefit: false,
+        );
+
         change(
-          LunchBenefit(
-            coupons: [],
-            hasBenefit: false,
-          ),
+          lunchBenefit,
           status: RxStatus.success(),
         );
       }
@@ -81,6 +91,12 @@ class LunchBenefitController extends GetxController
         null,
         status: RxStatus.error(e.toString()),
       );
+    } finally {
+      _setRoleToUser();
     }
+  }
+
+  void _setRoleToUser() {
+    UserController.to.updateLunchBenefitRole(state);
   }
 }

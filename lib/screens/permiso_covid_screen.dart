@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_uxcam/flutter_uxcam.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:mi_utem/config/routes.dart';
+import 'package:mi_utem/config/routes/routes.dart';
 import 'package:mi_utem/controllers/qr_pass_controller.dart';
 import 'package:mi_utem/helpers/image.dart';
 import 'package:mi_utem/models/permiso_covid.dart';
