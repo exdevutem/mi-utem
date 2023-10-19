@@ -26,6 +26,7 @@ class CarrerasController extends GetxController with StateMixin<List<Carrera>> {
     final carreras = await CarreraService.getCarreras(forceRefresh: true);
 
     change(carreras, status: RxStatus.success());
+    updateUserCarrerasRoles();
     _autoSelectCarreraActiva(carreras);
   }
 
@@ -45,10 +46,14 @@ class CarrerasController extends GetxController with StateMixin<List<Carrera>> {
 
     AnalyticsService.setCarreraToUser(activa);
 
-    changeSelectedCarrera(activa);
+    changeUserSelectedCarrera(activa);
   }
 
-  void changeSelectedCarrera(Carrera carrera) {
+  void updateUserCarrerasRoles() {
+    UserController.to.updateCarrerasRoles(state);
+  }
+
+  void changeUserSelectedCarrera(Carrera carrera) {
     UserController.to.selectCarrera(carrera);
   }
 }

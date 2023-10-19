@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:mi_utem/models/usuario.dart';
@@ -21,6 +23,8 @@ class AuthService {
   }
 
   static Future<String> refreshToken(String correo, String contrasenia) async {
+    log("AuthService refreshToken");
+
     final uri = "/v1/auth/refresh";
 
     try {

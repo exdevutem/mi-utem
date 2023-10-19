@@ -117,11 +117,8 @@ class CustomDrawer extends StatelessWidget {
                     );
                   }),
                   for (var e in _filteredMenu)
-                    Obx(
-                      () => CustomDrawerItem(
-                        item: e,
-                        currentUserRoles: UserController.to.roles,
-                      ),
+                    CustomDrawerItem(
+                      item: e,
                     ),
                   Expanded(
                     child: SafeArea(
@@ -164,46 +161,48 @@ class CustomDrawerItem extends StatelessWidget {
   const CustomDrawerItem({
     Key? key,
     required this.item,
-    required this.currentUserRoles,
   }) : super(key: key);
 
   final IDrawerItem item;
-  final List<Role> currentUserRoles;
 
   @override
   Widget build(BuildContext context) {
-    final currentUserRolesSet = currentUserRoles.toSet();
+    return Obx(() {
+      final currentUserRoles = UserController.to.roles;
 
-    log("CustomDrawerItem: ${item.title} requiredRoles ${item.requiredRoles} currentUserRoles $currentUserRoles");
+      final currentUserRolesSet = currentUserRoles.toSet();
 
-    if (item.requiredRoles.isNotEmpty &&
-        !currentUserRolesSet.containsAll(item.requiredRoles)) {
-      return Container();
-    }
+      log("CustomDrawerItem: ${item.title} requiredRoles ${item.requiredRoles} currentUserRoles $currentUserRoles");
 
-    return ListTile(
-      leading: Icon(item.icon),
-      title: Text(item.title),
-      trailing: item.badge != null
-          ? badge.Badge(
-              shape: badge.BadgeShape.square,
-              borderRadius: BorderRadius.circular(10),
-              padding: EdgeInsets.symmetric(horizontal: 6, vertical: 3),
-              elevation: 0,
-              badgeContent: Text(
-                item.badge!,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 10,
-                  fontWeight: FontWeight.bold,
+      if (item.requiredRoles.isNotEmpty &&
+          !currentUserRolesSet.containsAll(item.requiredRoles)) {
+        return Container();
+      }
+
+      return ListTile(
+        leading: Icon(item.icon),
+        title: Text(item.title),
+        trailing: item.badge != null
+            ? badge.Badge(
+                shape: badge.BadgeShape.square,
+                borderRadius: BorderRadius.circular(10),
+                padding: EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+                elevation: 0,
+                badgeContent: Text(
+                  item.badge!,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 10,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-            )
-          : null,
-      onTap: () async {
-        Get.toNamed(item.route);
-        ReviewService.checkAndRequestReview();
-      },
-    );
+              )
+            : null,
+        onTap: () async {
+          Get.toNamed(item.route);
+          ReviewService.checkAndRequestReview();
+        },
+      );
+    });
   }
 }

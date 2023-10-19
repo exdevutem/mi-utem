@@ -1,20 +1,16 @@
-import 'dart:typed_data';
-
-import 'package:barcode_image/barcode_image.dart';
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_uxcam/flutter_uxcam.dart';
 import 'package:get/get.dart';
-import 'package:image/image.dart' as dartImage;
 import 'package:intl/intl.dart';
 import 'package:mi_utem/config/routes/routes.dart';
 import 'package:mi_utem/controllers/qr_pass_controller.dart';
+import 'package:mi_utem/helpers/image.dart';
 import 'package:mi_utem/models/permiso_covid.dart';
 import 'package:mi_utem/models/usuario.dart';
 import 'package:mi_utem/widgets/custom_app_bar.dart';
 import 'package:mi_utem/widgets/custom_error_widget.dart';
 import 'package:mi_utem/widgets/field_list_tile.dart';
-import 'package:mi_utem/widgets/image_view_screen.dart';
 import 'package:mi_utem/widgets/loading_indicator.dart';
 import 'package:mi_utem/widgets/profile_photo.dart';
 
@@ -55,28 +51,10 @@ class LoadedScreen extends StatelessWidget {
   final PermisoCovid permiso;
 
   _openQr(String heroTag) {
-    final image = dartImage.Image(500, 500);
-
-    dartImage.fill(image, dartImage.getColor(255, 255, 255));
-    drawBarcode(
-      image,
-      Barcode.qrCode(),
+    openBarcodeView(
       permiso.codigoQr!,
-      x: 25,
-      y: 25,
-      width: 450,
-      height: 450,
-    );
-
-    Uint8List data = Uint8List.fromList(dartImage.encodePng(image));
-
-    Get.to(
-      () => ImageViewScreen(
-        imageProvider: MemoryImage(data),
-        heroTag: heroTag,
-        occlude: true,
-      ),
-      routeName: Routes.imageView,
+      size: Size(500, 500),
+      heroTag: heroTag,
     );
   }
 
