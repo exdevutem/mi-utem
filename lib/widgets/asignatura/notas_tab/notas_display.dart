@@ -1,6 +1,4 @@
   import 'package:flutter/material.dart';
-  import 'package:flutter_masked_text/flutter_masked_text.dart';
-  import 'package:mi_utem/themes/theme.dart';
   import 'package:mi_utem/widgets/asignatura/notas_tab/labeled_nota_display.dart';
   import 'package:mi_utem/widgets/asignatura/notas_tab/nota_final_display.dart';
 

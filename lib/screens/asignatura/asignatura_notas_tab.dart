@@ -1,9 +1,7 @@
   import 'package:flutter/material.dart';
-  import 'package:flutter_masked_text/flutter_masked_text.dart';
   import 'package:get/get_state_manager/get_state_manager.dart';
   import 'package:mi_utem/controllers/asignatura/asignatura_controller.dart';
   import 'package:mi_utem/models/evaluacion.dart';
-  import 'package:mi_utem/themes/theme.dart';
   import 'package:mi_utem/widgets/asignatura/notas_tab/notas_display.dart';
   import 'package:mi_utem/widgets/custom_error_widget.dart';
   import 'package:mi_utem/widgets/loading_indicator.dart';
