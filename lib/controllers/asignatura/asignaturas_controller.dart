@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:mi_utem/controllers/asignatura_controller.dart';
+import 'package:mi_utem/controllers/asignatura/asignatura_controller.dart';
 import 'package:mi_utem/controllers/carreras_controller.dart';
 import 'package:mi_utem/models/asignatura.dart';
 import 'package:mi_utem/models/carrera.dart';
