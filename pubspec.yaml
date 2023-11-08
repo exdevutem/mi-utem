@@ -10,8 +10,8 @@ environment:
 
 dependencies:
   awesome_notifications_core: ^0.8.1
-  awesome_notifications: any
-  awesome_notifications_fcm: any
+  awesome_notifications: ^0.8.2
+  awesome_notifications_fcm: ^0.8.0
   badges: ^2.0.2
   barcode_widget: ^2.0.3
   barcode_image: ^2.0.2
