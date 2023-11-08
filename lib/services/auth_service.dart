@@ -1,6 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:get/get.dart' as GetX;
 import 'package:get_storage/get_storage.dart';
+import 'package:mi_utem/config/routes.dart';
+import 'package:mi_utem/helpers/snackbars.dart';
 import 'package:mi_utem/models/usuario.dart';
 import 'package:mi_utem/services/perfil_service.dart';
 import 'package:mi_utem/utils/dio_miutem_client.dart';
@@ -116,17 +119,21 @@ class AuthService {
       String? correo = box.read("correoUtem");
       String? contrasenia = await secureStorage.read(key: "contrasenia");
 
-      if (correo != null && contrasenia != null) {
-        dynamic data = {'correo': correo, 'contrasenia': contrasenia};
-
-        Response response = await DioMiUtemClient.authDio.post(uri, data: data);
-
-        String token = response.data['token'];
-        _storeToken(token);
-
-        return token;
+      if(correo == null || contrasenia == null) {
+        await logOut();
+        GetX.Get.toNamed(Routes.login);
+        showDefaultSnackbar("Error", "Lo sentimos, pero parece que tus credenciales no son válidas. Por favor, vuelve a iniciar sesión.");
+        throw Exception("No se pudo refrescar el token (no hay credenciales)");
       }
-      throw Exception("No se pudo refrescar el token");
+
+      dynamic data = {'correo': correo, 'contrasenia': contrasenia};
+
+      Response response = await DioMiUtemClient.authDio.post(uri, data: data);
+
+      String token = response.data['token'];
+      _storeToken(token);
+
+      return token;
     } catch (e) {
       print(e.toString());
       rethrow;
