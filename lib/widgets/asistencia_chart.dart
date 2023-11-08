@@ -1,9 +1,7 @@
 import 'dart:math';
 
+import 'package:community_charts_flutter/community_charts_flutter.dart' as charts;
 import 'package:flutter/material.dart';
-
-import 'package:charts_flutter/flutter.dart' as charts;
-
 import 'package:mi_utem/models/asignatura.dart';
 import 'package:mi_utem/themes/theme.dart';
 
