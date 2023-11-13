@@ -14,7 +14,7 @@ import 'package:mi_utem/models/usuario.dart';
 import 'package:mi_utem/services/analytics_service.dart';
 import 'package:mi_utem/services/auth_service.dart';
 import 'package:mi_utem/services/remote_config/remote_config.dart';
-import 'package:mi_utem/widgets/acerca_dialog.dart';
+import 'package:mi_utem/widgets/acerca/acerca_dialog.dart';
 import 'package:mi_utem/widgets/dialogs/monkey_error_dialog.dart';
 import 'package:mi_utem/widgets/dialogs/not_ready_dialog.dart';
 import 'package:mi_utem/widgets/loading_dialog.dart';

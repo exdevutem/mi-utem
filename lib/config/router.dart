@@ -15,7 +15,7 @@ import 'package:mi_utem/screens/splash_screen.dart';
 import 'package:mi_utem/screens/usuario_screen.dart';
 import 'package:mi_utem/services/auth_service.dart';
 import 'package:mi_utem/services/perfil_service.dart';
-import 'package:mi_utem/widgets/acerca_screen.dart';
+import 'package:mi_utem/widgets/acerca/acerca_screen.dart';
 
 final _loginPage = GetPage(
   name: Routes.login,
