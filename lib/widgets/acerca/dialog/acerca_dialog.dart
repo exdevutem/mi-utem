@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mi_utem/config/routes.dart';
-import 'package:mi_utem/widgets/acerca/acerca_aplicacion_content.dart';
+import 'package:mi_utem/widgets/acerca/dialog/acerca_aplicacion_content.dart';
 
 class AcercaDialog extends StatefulWidget {
   AcercaDialog({
@@ -90,14 +90,12 @@ class _AcercaDialogState extends State<AcercaDialog> {
                                     : "Saber más",
                                 style: TextStyle(color: Colors.white),
                               ),
-                              onPressed: _isActive
-                                  ? null
-                                  : () {
-                                      Get.back();
-                                      Get.toNamed(
-                                        Routes.about,
-                                      );
-                                    },
+                              onPressed: () {
+                                if (!_isActive) {
+                                  Get.back();
+                                  Get.toNamed(Routes.about);
+                                }
+                              }
                             ),
                           ],
                         ),

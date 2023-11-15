@@ -1,6 +1,6 @@
 
 import 'package:flutter/material.dart';
-import 'package:mi_utem/widgets/acerca/acerca_aplicacion_content.dart';
+import 'package:mi_utem/widgets/acerca/dialog/acerca_aplicacion_content.dart';
 import 'package:mi_utem/widgets/acerca/club/acerca_club.dart';
 import 'package:mi_utem/widgets/acerca/club/acerca_club_desarrolladores.dart';
 import 'package:mi_utem/widgets/custom_app_bar.dart';

@@ -1,24 +1,21 @@
-import 'dart:convert';
-import 'dart:math';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:get/get.dart';
 import 'package:mi_utem/config/routes.dart';
 import 'package:mi_utem/helpers/snackbars.dart';
 import 'package:mi_utem/models/usuario.dart';
 import 'package:mi_utem/services/analytics_service.dart';
 import 'package:mi_utem/services/auth_service.dart';
-import 'package:mi_utem/services/remote_config/remote_config.dart';
-import 'package:mi_utem/widgets/acerca/acerca_dialog.dart';
+import 'package:mi_utem/widgets/acerca/dialog/acerca_dialog.dart';
 import 'package:mi_utem/widgets/dialogs/monkey_error_dialog.dart';
 import 'package:mi_utem/widgets/dialogs/not_ready_dialog.dart';
 import 'package:mi_utem/widgets/loading_dialog.dart';
-import 'package:mi_utem/widgets/login_text_form_field.dart';
+import 'package:mi_utem/widgets/login_screen/creditos_app.dart';
+import 'package:mi_utem/widgets/login_screen/formulario_credenciales.dart';
 import 'package:video_player/video_player.dart';
 
 part '_background.dart';
@@ -31,8 +28,8 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  TextEditingController _correoController = TextEditingController();
-  TextEditingController _contraseniaController = TextEditingController();
+  TextEditingController correoController = TextEditingController();
+  TextEditingController contraseniaController = TextEditingController();
 
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -50,8 +47,8 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
 
-    _correoController.text = "";
-    _contraseniaController.text = "";
+    correoController.text = "";
+    contraseniaController.text = "";
 
     SchedulerBinding.instance.addPostFrameCallback((_) {
       _checkAndPerformUpdate();
@@ -92,14 +89,6 @@ class _LoginScreenState extends State<LoginScreen> {
     } catch (error) {
       print("_checkAndPerformUpdate Error: ${error.toString()}");
     } */
-  }
-
-  String get _creditText {
-    List<dynamic> texts = jsonDecode(RemoteConfigService.creditos);
-
-    Random random = new Random();
-
-    return texts[random.nextInt(texts.length)];
   }
 
   @override
@@ -143,84 +132,14 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                             ),
                             Container(height: constraints.maxHeight * 0.1),
-                            AutofillGroup(
-                              child: Column(
-                                children: [
-                                  LoginTextFormField(
-                                    controller: _correoController,
-                                    hintText: 'nombre@utem.cl',
-                                    labelText: 'Correo UTEM',
-                                    textCapitalization: TextCapitalization.none,
-                                    keyboardType: TextInputType.emailAddress,
-                                    inputFormatters: [
-                                      FilteringTextInputFormatter.deny(
-                                          RegExp(" ")),
-                                    ],
-                                    icon: Icons.person,
-                                    autofillHints: [AutofillHints.username],
-                                    validator: (String value) {
-                                      if (value.isEmpty) {
-                                        return 'Debe ingresar un correo UTEM';
-                                      } else if (value.contains("@") &&
-                                          !value.endsWith("@utem.cl")) {
-                                        return 'Debe ingresar un correo UTEM';
-                                      }
-                                    },
-                                  ),
-                                  LoginTextFormField(
-                                    controller: _contraseniaController,
-                                    hintText: '• • • • • • • • •',
-                                    labelText: 'Contraseña',
-                                    textCapitalization: TextCapitalization.none,
-                                    icon: Icons.lock,
-                                    obscureText: true,
-                                    autofillHints: [AutofillHints.password],
-                                    validator: (String value) {
-                                      if (value.isEmpty) {
-                                        return 'Debe ingresar una contraseña';
-                                      }
-                                    },
-                                  )
-                                ],
-                              ),
-                            ),
+                            FormularioCredenciales(correoController: correoController, contraseniaController: contraseniaController),
                             TextButton(
                               onPressed: () => _login(),
                               child: Text("Iniciar"),
                             ),
                             Container(height: constraints.maxHeight * 0.1),
                             if (!isKeyboardVisible)
-                              Expanded(
-                                child: SafeArea(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                      Padding(
-                                        padding: EdgeInsets.all(10),
-                                        child: SafeArea(
-                                          child: GestureDetector(
-                                            child: MarkdownBody(
-                                              selectable: false,
-                                              styleSheet: MarkdownStyleSheet(
-                                                textAlign: WrapAlignment.center,
-                                                p: TextStyle(
-                                                  color: Colors.white,
-                                                ),
-                                              ),
-                                              data: _creditText,
-                                            ),
-                                            onTap: () {
-                                              Get.toNamed(
-                                                Routes.about,
-                                              );
-                                            },
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
+                              CreditosApp(),
                           ],
                         ),
                       ),
@@ -236,8 +155,8 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> _login() async {
-    final correo = _correoController.text;
-    final contrasenia = _contraseniaController.text;
+    final correo = correoController.text;
+    final contrasenia = contraseniaController.text;
 
     if (correo == "error@utem.cl") {
       Get.dialog(MonkeyErrorDialog());
@@ -260,14 +179,10 @@ class _LoginScreenState extends State<LoginScreen> {
           AnalyticsService.logEvent('login');
           AnalyticsService.setUser(usuario);
 
-          Get.toNamed(
-            Routes.home,
-          );
+          Get.toNamed(Routes.home);
 
-          if (esPrimeraVez) {
-            Get.dialog(
-              AcercaDialog(),
-            );
+          if (esPrimeraVez || true) {
+            Get.dialog(AcercaDialog());
           }
         } on DioError catch (e) {
           print(e.message);
@@ -276,21 +191,14 @@ class _LoginScreenState extends State<LoginScreen> {
             if (e.response?.data["codigoInterno"]?.toString() == "4") {
               Get.dialog(NotReadyDialog());
             } else {
-              showDefaultSnackbar(
-                "Error",
-                "Usuario o contraseña incorrecta",
-              );
+              showDefaultSnackbar("Error", "Usuario o contraseña incorrecta");
             }
-          } else if (e.response?.statusCode != null &&
-              e.response!.statusCode.toString().startsWith("5")) {
+          } else if (e.response?.statusCode != null && e.response!.statusCode.toString().startsWith("5")) {
             print(e.response?.data);
             Get.dialog(MonkeyErrorDialog());
           } else {
             print(e.response?.data);
-            showDefaultSnackbar(
-              "Error",
-              "Ocurrió un error inesperado 😢",
-            );
+            showDefaultSnackbar("Error", "Ocurrió un error inesperado 😢");
           }
         } catch (e) {
           print(e.toString());
