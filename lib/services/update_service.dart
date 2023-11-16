@@ -1,5 +1,14 @@
-import 'package:flutter/scheduler.dart';
+import 'dart:io';
 
+import 'package:flutter/scheduler.dart';
+import 'package:in_app_update/in_app_update.dart';
+
+/*
+ * Clase que se encarga de verificar si hay una nueva versión de la aplicación
+ * y de actualizarla si es necesario.
+ *
+ * Para iOS muestra una notificación de que hay una nueva versión disponible.
+ */
 class UpdateService {
 
   UpdateService(){
@@ -41,6 +50,11 @@ class UpdateService {
     } */
 
   Future<void> _checkAndPerformUpdate() async {
-
+    if (Platform.isAndroid) {
+      final AppUpdateInfo appUpdateInfo = await InAppUpdate.checkForUpdate();
+      if (appUpdateInfo.immediateUpdateAllowed) {
+        await InAppUpdate.performImmediateUpdate();
+      }
+    }
   }
 }
