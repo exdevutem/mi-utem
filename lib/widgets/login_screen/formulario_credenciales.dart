@@ -5,22 +5,17 @@ import '../login_text_form_field.dart';
 
 class FormularioCredenciales extends StatefulWidget {
 
-  final TextEditingController correoController;
-  final TextEditingController contraseniaController;
+  final TextEditingController _correoController;
+  final TextEditingController _contraseniaController;
 
 
-  FormularioCredenciales({ required this.correoController, required this.contraseniaController });
+  FormularioCredenciales({ required TextEditingController correoController, required TextEditingController contraseniaController }) : _contraseniaController = contraseniaController, _correoController = correoController;
 
   @override
-  State<StatefulWidget> createState() => _FormularioCredencialesState(correoController: correoController, contraseniaController: contraseniaController);
+  State<StatefulWidget> createState() => _FormularioCredencialesState();
 }
 
 class _FormularioCredencialesState extends State<FormularioCredenciales> {
-
-  final TextEditingController correoController;
-  final TextEditingController contraseniaController;
-
-  _FormularioCredencialesState({ required this.correoController, required this.contraseniaController });
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +23,7 @@ class _FormularioCredencialesState extends State<FormularioCredenciales> {
       child: Column(
         children: [
           LoginTextFormField(
-            controller: correoController,
+            controller: widget._correoController,
             hintText: 'nombre@utem.cl',
             labelText: 'Correo UTEM',
             textCapitalization: TextCapitalization.none,
@@ -48,7 +43,7 @@ class _FormularioCredencialesState extends State<FormularioCredenciales> {
             },
           ),
           LoginTextFormField(
-            controller: contraseniaController,
+            controller: widget._contraseniaController,
             hintText: '• • • • • • • • •',
             labelText: 'Contraseña',
             textCapitalization: TextCapitalization.none,

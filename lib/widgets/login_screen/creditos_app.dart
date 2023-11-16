@@ -4,8 +4,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:get/get.dart';
-import 'package:mi_utem/widgets/acerca/dialog/acerca_dialog.dart';
 
+import '../../config/routes.dart';
 import '../../services/remote_config/remote_config.dart';
 
 class CreditosApp extends StatelessWidget {
@@ -38,7 +38,7 @@ class CreditosApp extends StatelessWidget {
                     data: _creditText,
                   ),
                   onTap: () {
-                    Get.dialog(AcercaDialog());
+                    Get.toNamed(Routes.about);
                   },
                 ),
               ),

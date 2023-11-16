@@ -15,9 +15,7 @@ class AcercaScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.grey[200],
       appBar: CustomAppBar(
-        title: Text(
-          "Acerca de Mi UTEM",
-        ),
+        title: Text("Acerca de Mi UTEM"),
       ),
       body: SingleChildScrollView(
         child: Padding(

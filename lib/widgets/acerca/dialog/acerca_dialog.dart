@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mi_utem/config/routes.dart';
 import 'package:mi_utem/widgets/acerca/dialog/acerca_aplicacion_content.dart';
+import 'package:mi_utem/widgets/acerca/dialog/acerca_dialog_action_button.dart';
 
 class AcercaDialog extends StatefulWidget {
   AcercaDialog({
@@ -76,33 +76,10 @@ class _AcercaDialogState extends State<AcercaDialog> {
                           preTitulo: "Antes de empezar...",
                           titulo: "Bienvenido a Mi UTEM",
                         ),
-                        Wrap(
-                          spacing: 10,
-                          runSpacing: 10,
-                          crossAxisAlignment: WrapCrossAlignment.center,
-                          alignment: WrapAlignment.center,
-                          runAlignment: WrapAlignment.center,
-                          children: [
-                            TextButton(
-                              child: Text(
-                                _isActive
-                                    ? "Podrás cerrar en $_timeLeft"
-                                    : "Saber más",
-                                style: TextStyle(color: Colors.white),
-                              ),
-                              onPressed: () {
-                                if (!_isActive) {
-                                  Get.back();
-                                  Get.toNamed(Routes.about);
-                                }
-                              }
-                            ),
-                          ],
-                        ),
+                        AcercaDialogActionButton(isActive: _isActive, timeLeft: _timeLeft),
                         if (!_isActive)
                           OutlinedButton(
-                            child: Text(
-                              "Cerrar",
+                            child: Text("Cerrar",
                               style: TextStyle(color: Get.theme.primaryColor),
                             ),
                             onPressed: () {
