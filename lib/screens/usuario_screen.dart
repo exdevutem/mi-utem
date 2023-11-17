@@ -101,141 +101,30 @@ class _UsuarioScreenState extends State<UsuarioScreen> {
 
   List<Widget> get _datosPersonales {
     List<Widget> lista = [];
-    if (_usuario != null) {
-      if (_usuario!.nombre != null && _usuario!.nombre!.isNotEmpty) {
-        lista.add(ListTile(
-          title: Text(
-            "Nombre",
-            style: TextStyle(
-              color: Colors.grey,
-            ),
-          ),
-          subtitle: Text(
-            _usuario!.nombreCompleto!,
-            style: TextStyle(
-              color: Colors.grey[900],
-              fontSize: 18,
-            ),
-          ),
-        ));
-      } else {
-        if (_usuario!.nombres != null && _usuario!.nombres!.isNotEmpty) {
-          lista.add(
-            ListTile(
-              title: Text(
-                "Nombres",
-                style: TextStyle(
-                  color: Colors.grey,
-                ),
-              ),
-              subtitle: Text(
-                _usuario!.nombres!,
-                style: TextStyle(
-                  color: Colors.grey[900],
-                  fontSize: 18,
-                ),
-              ),
-            ),
-          );
-        }
+    if(_usuario == null) {
+      return lista;
+    }
 
-        if (_usuario!.apellidos != null && _usuario!.apellidos!.isNotEmpty) {
-          lista.add(Divider(height: 1));
-          lista.add(
-            ListTile(
-              title: Text(
-                "Apellidos",
-                style: TextStyle(
-                  color: Colors.grey,
-                ),
-              ),
-              subtitle: Text(
-                _usuario!.apellidos!,
-                style: TextStyle(
-                  color: Colors.grey[900],
-                  fontSize: 18,
-                ),
-              ),
-            ),
-          );
-        }
-      }
-
-      if (_usuario!.correoUtem != null && _usuario!.correoUtem!.isNotEmpty) {
-        lista.add(Divider(height: 1));
-        lista.add(ListTile(
-          title: Text(
-            "Correo",
-            style: TextStyle(
-              color: Colors.grey,
-            ),
+    if (_usuario?.nombre?.isEmpty == false) {
+      lista.add(ListTile(
+        title: Text("Nombre",
+          style: TextStyle(color: Colors.grey),
+        ),
+        subtitle: Text(_usuario!.nombreCompleto!,
+          style: TextStyle(
+            color: Colors.grey[900],
+            fontSize: 18,
           ),
-          onLongPress: widget.tipo != 0
-              ? () async {
-                  await FlutterClipboard.copy(_usuario!.correoUtem!);
-                  Get.snackbar(
-                    "¡Copiado!",
-                    "Correo copiado al portapapeles",
-                    colorText: Colors.white,
-                    backgroundColor: Get.theme.primaryColor,
-                    snackPosition: SnackPosition.BOTTOM,
-                    margin: EdgeInsets.all(20),
-                  );
-                }
-              : null,
-          onTap: widget.tipo != 0
-              ? () async {
-                  await launchUrl(
-                    Uri.parse(
-                      "mailto:${_usuario!.correoUtem}",
-                    ),
-                  );
-                }
-              : null,
-          subtitle: Text(
-            _usuario!.correoUtem ?? "",
-            style: TextStyle(
-              color: Colors.grey[900],
-              fontSize: 18,
-            ),
-          ),
-        ));
-      }
-      if (_usuario!.correoPersonal != null &&
-          _usuario!.correoPersonal!.isNotEmpty) {
-        lista.add(Divider(height: 1));
+        ),
+      ));
+    } else {
+      if (_usuario?.nombres?.isEmpty == false) {
         lista.add(
           ListTile(
-            title: Text(
-              "Correo",
-              style: TextStyle(
-                color: Colors.grey,
-              ),
+            title: Text("Nombres",
+              style: TextStyle(color: Colors.grey),
             ),
-            onLongPress: widget.tipo != 0
-                ? () async {
-                    await FlutterClipboard.copy(_usuario!.correoPersonal!);
-                    Get.snackbar(
-                      "¡Copiado!",
-                      "Correo copiado al portapapeles",
-                      colorText: Colors.white,
-                      backgroundColor: Get.theme.primaryColor,
-                      snackPosition: SnackPosition.BOTTOM,
-                      margin: EdgeInsets.all(20),
-                    );
-                  }
-                : null,
-            onTap: widget.tipo != 0
-                ? () async {
-                    await launchUrl(
-                      Uri.parse(
-                        "mailto:${_usuario!.correoPersonal}",
-                      ),
-                    );
-                  }
-                : null,
-            subtitle: Text(
-              _usuario!.correoPersonal ?? "",
+            subtitle: Text(_usuario!.nombres!,
               style: TextStyle(
                 color: Colors.grey[900],
                 fontSize: 18,
@@ -245,24 +134,96 @@ class _UsuarioScreenState extends State<UsuarioScreen> {
         );
       }
 
-      if (widget.tipo == 0 && _usuario!.rut != null) {
+      if (_usuario?.apellidos?.isEmpty == false) {
         lista.add(Divider(height: 1));
-        lista.add(ListTile(
-          title: Text(
-            "RUT",
-            style: TextStyle(
-              color: Colors.grey,
+        lista.add(
+          ListTile(
+            title: Text("Apellidos",
+              style: TextStyle(color: Colors.grey),
+            ),
+            subtitle: Text(_usuario!.apellidos!,
+              style: TextStyle(
+                color: Colors.grey[900],
+                fontSize: 18,
+              ),
             ),
           ),
-          subtitle: Text(
-            _usuario!.rut!.formateado(true),
+        );
+      }
+    }
+
+    if (_usuario?.correoUtem?.isEmpty == false) {
+      lista.add(Divider(height: 1));
+      lista.add(ListTile(
+        title: Text("Correo Institucional",
+          style: TextStyle(color: Colors.grey),
+        ),
+        onLongPress: widget.tipo != 0 ? () async {
+          await FlutterClipboard.copy(_usuario!.correoUtem!);
+          Get.snackbar(
+            "¡Copiado!",
+            "Correo copiado al portapapeles",
+            colorText: Colors.white,
+            backgroundColor: Get.theme.primaryColor,
+            snackPosition: SnackPosition.BOTTOM,
+            margin: EdgeInsets.all(20),
+          );
+        } : null,
+        onTap: widget.tipo != 0 ? () async {
+          await launchUrl(Uri.parse("mailto:${_usuario?.correoUtem ?? ""}"));
+        } : null,
+        subtitle: Text(_usuario!.correoUtem ?? "",
+          style: TextStyle(
+            color: Colors.grey[900],
+            fontSize: 18,
+          ),
+        ),
+      ));
+    }
+    if (_usuario?.correoPersonal?.isEmpty == false) {
+      lista.add(Divider(height: 1));
+      lista.add(
+        ListTile(
+          title: Text("Correo Personal",
+            style: TextStyle(color: Colors.grey),
+          ),
+          onLongPress: widget.tipo != 0 ? () async {
+            await FlutterClipboard.copy(_usuario!.correoPersonal!);
+            Get.snackbar(
+              "¡Copiado!",
+              "Correo copiado al portapapeles",
+              colorText: Colors.white,
+              backgroundColor: Get.theme.primaryColor,
+              snackPosition: SnackPosition.BOTTOM,
+              margin: EdgeInsets.all(20),
+            );
+          } : null,
+          onTap: widget.tipo != 0 ? () async {
+            await launchUrl(Uri.parse("mailto:${_usuario?.correoPersonal ?? ""}"));
+          } : null,
+          subtitle: Text(_usuario!.correoPersonal ?? "",
             style: TextStyle(
               color: Colors.grey[900],
               fontSize: 18,
             ),
           ),
-        ));
-      }
+        ),
+      );
+    }
+
+    if (widget.tipo == 0 && _usuario!.rut != null) {
+      lista.add(Divider(height: 1));
+      lista.add(ListTile(
+        title: Text("RUT",
+          style: TextStyle(color: Colors.grey),
+        ),
+        subtitle: Text(_usuario!.rut!.formateado(true),
+          style: TextStyle(
+            color: Colors.grey[900],
+            fontSize: 18,
+          ),
+        ),
+      ));
     }
 
     return lista;

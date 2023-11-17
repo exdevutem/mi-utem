@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-import '../../../config/routes.dart';
+import 'package:mi_utem/config/routes.dart';
 
 class AcercaDialogActionButton extends StatefulWidget {
 

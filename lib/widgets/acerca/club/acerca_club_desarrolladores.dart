@@ -3,14 +3,13 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:mi_utem/config/routes.dart';
+import 'package:mi_utem/models/usuario.dart';
+import 'package:mi_utem/services/analytics_service.dart';
+import 'package:mi_utem/services/remote_config/remote_config.dart';
+import 'package:mi_utem/widgets/image_view_screen.dart';
+import 'package:mi_utem/widgets/profile_photo.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-import '../../../config/routes.dart';
-import '../../../models/usuario.dart';
-import '../../../services/analytics_service.dart';
-import '../../../services/remote_config/remote_config.dart';
-import '../../image_view_screen.dart';
-import '../../profile_photo.dart';
 
 class AcercaClubDesarrolladores extends StatelessWidget {
 

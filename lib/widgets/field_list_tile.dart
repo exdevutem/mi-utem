@@ -17,31 +17,25 @@ class FieldListTile extends StatelessWidget {
   final EdgeInsetsGeometry padding;
 
   @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: padding,
-      child: Row(
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title.toUpperCase(),
-                  maxLines: 2,
-                  style: Get.textTheme.bodySmall!.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Text(
-                  value ?? "Sin información",
-                  style: Get.textTheme.bodyMedium,
-                ),
-              ],
-            ),
+  Widget build(BuildContext context) => Padding(
+    padding: padding,
+    child: Row(
+      children: [
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(title.toUpperCase(),
+                maxLines: 2,
+                style: Get.textTheme.bodySmall!.copyWith(fontWeight: FontWeight.bold),
+              ),
+              Text(value ?? "Sin información",
+                style: Get.textTheme.bodyMedium,
+              ),
+            ],
           ),
-        ],
-      ),
-    );
-  }
+        ),
+      ],
+    ),
+  );
 }

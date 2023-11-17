@@ -4,9 +4,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:get/get.dart';
-
-import '../../config/routes.dart';
-import '../../services/remote_config/remote_config.dart';
+import 'package:mi_utem/config/routes.dart';
+import 'package:mi_utem/services/remote_config/remote_config.dart';
 
 class CreditosApp extends StatelessWidget {
 

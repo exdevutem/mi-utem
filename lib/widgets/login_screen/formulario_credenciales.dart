@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
-import '../login_text_form_field.dart';
+import 'package:mi_utem/widgets/login_text_form_field.dart';
 
 class FormularioCredenciales extends StatefulWidget {
 

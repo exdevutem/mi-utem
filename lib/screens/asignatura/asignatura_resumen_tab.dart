@@ -57,39 +57,18 @@ class AsignaturaResumenTab extends StatelessWidget {
                           ),
                         ],
                         Divider(height: 5, indent: 20, endIndent: 20),
-                        FieldListTile(
-                          title: "Docente",
-                          value: asignatura?.docente ?? "Sin docente",
-                          // trailing: _asignatura.docente != null
-                          //     ? Badge(
-                          //         shape: BadgeShape.square,
-                          //         borderRadius: BorderRadius.circular(10),
-                          //         padding: EdgeInsets.symmetric(
-                          //             horizontal: 6, vertical: 3),
-                          //         elevation: 0,
-                          //         badgeContent: Text(
-                          //           'Nuevo',
-                          //           style: TextStyle(
-                          //             color: Colors.white,
-                          //             fontSize: 10,
-                          //             fontWeight: FontWeight.bold,
-                          //           ),
-                          //         ),
-                          //       )
-                          //     : null,
-                          // onTap: _asignatura.docente != null
-                          //     ? () async {
-                          //         await Get.to(() =>
-                          //           UsuarioScreen(
-                          //             tipo: 2,
-                          //             query: {
-                          //               "nombre": _asignatura.docente
-                          //             },
-                          //             asignatura: widget.asignatura,
-                          //           ),
-                          //         );
-                          //       }
-                          //     : null,
+                        GestureDetector(
+                          child: FieldListTile(
+                            title: "Docente",
+                            value: asignatura?.docente?.split(" ").where((element) => int.tryParse(element) == null).join(" ") ?? "Sin docente", // Se filtran enteros, al parecer hay algunos textos que incluyen un identificador.
+                          ),
+                          onTap: () async {
+                            /*await Get.to(() => UsuarioScreen(
+                              tipo: 2,
+                              query: { "nombre": asignatura?.docente },
+                              asignatura: asignatura,
+                            ));*/
+                          },
                         ),
                         Divider(height: 5, indent: 20, endIndent: 20),
                         if (asignatura?.tipoAsignatura != null) ...[

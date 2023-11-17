@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:mi_utem/services/remote_config/remote_config.dart';
+import 'package:mi_utem/widgets/default_network_image.dart';
 
-import '../../../services/remote_config/remote_config.dart';
-import '../../default_network_image.dart';
 import 'acerca_club_redes.dart';
 
 class AcercaClub extends StatelessWidget {
