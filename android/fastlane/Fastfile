@@ -13,7 +13,10 @@
       sh("flutter", "packages", "get")
     end
 
-    sh("flutter", "build", "appbundle", "--release",  "--flavor", "prod", "--no-tree-shake-icons", "--build-name=#{build_name}", "--build-number=#{build_number}")
+    Dir.chdir ".." do
+      sh("shorebird", "release", "android",  "--flavor", "prod", "--force", "--", "--no-tree-shake-icons")
+    end
+    
   end
 
   lane :android_build_and_upload do |options|
@@ -36,7 +39,7 @@
   end
 
   lane :android_upload do |options|
-    build_number = options[:build_number]
+    build_number = options[:build_number].to_i
     build_name = options[:build_name]
     type = options[:type]
     changelog = options[:changelog]

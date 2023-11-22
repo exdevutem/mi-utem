@@ -3,7 +3,7 @@ description: Plataforma académica para estudiantes de la Universidad Tecnológi
   Metropolitana (UTEM)
 publish_to: none
 
-version: 2.11.2
+version: 2.12.0+83
 
 environment:
   sdk: ">=2.14.4 <3.0.0"
@@ -101,3 +101,4 @@ flutter:
     - assets/animations/utem.flr
     - assets/images/sibutem.jpg
     - .env
+    - shorebird.yaml

@@ -54,28 +54,14 @@ platform :mobile do
     puts "Changelog: #{changelog}"
     puts "Emojified Changelog: #{emojified_changelog}"
 
+    puts "Build name: #{build_name}"
+    puts "Build number: #{build_number}"
+
     android_test
     ios_test
-
-    slack(
-      message: "Este es un mensaje de prueba desde Fastlane",
-      slack_url: ENV["SLACK_URL"],
-      channel: "#proy-mi-utem-bots",
-      default_payloads: [],
-      attachment_properties: {
-        fields: [
-          {
-            title: "Campo",
-            value: "Prueba"
-          },
-        ]
-      },
-    )
   end
 
   lane :upload do |options|
-    build_number = options[:build_number]
-    build_name = options[:build_name]
     changelog = read_changelog
     emojified_changelog = emojify_changelog
     changelog = translate_changelog(changelog: changelog)
@@ -89,6 +75,16 @@ platform :mobile do
     skip_git_push = false
     skip_slack = false
     is_ci = false
+
+    if options[:bump]
+      bump = options[:bump]
+
+      sh("cider", "bump", bump, "--bump-build")
+    end
+
+    full_version = sh("cider", "version")
+    build_name = full_version.split("+")[0]
+    build_number = full_version.split("+")[1]
 
     if options[:type] == "release" || options[:type] == "beta"
       type = options[:type]

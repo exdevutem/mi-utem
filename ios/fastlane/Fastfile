@@ -20,16 +20,9 @@ lane :ios_flutter do |options|
   skip_clean = options[:skip_clean]
   skip_cocoapods = options[:skip_cocoapods]
 
-  unless skip_clean
-    sh("flutter", "clean")
-    sh("flutter", "packages", "get")
+  Dir.chdir ".." do
+    sh("shorebird", "release", "ios-alpha",  "--flavor", "prod", "--export-options-plist ios/exportOptions.plist", "--force", "--", "--no-tree-shake-icons")
   end
-
-  unless skip_cocoapods
-    cocoapods(use_bundle_exec: false, podfile: "ios")
-  end
-
-  sh("flutter", "build", "ios", "--release", "--flavor", "prod", "--no-codesign", "--no-tree-shake-icons", "--build-name=#{build_name}", "--build-number=#{build_number}")
 end
 
 lane :ios_build_and_upload do |options|
@@ -42,38 +35,38 @@ lane :ios_build_and_upload do |options|
   is_ci = options[:is_ci]
   skip_match = false
 
-  if build_number || build_name
-    ios_flutter(build_number: build_number, build_name: build_name, skip_clean: skip_clean, skip_cocoapods: skip_cocoapods)
-  end
-
-  if options[:skip_match]
-    skip_match = options[:skip_match]
-  end
 
   unless skip_match
-    ensure_keychain()
-    unlock_keychain(
-      path: ENV["KEYCHAIN_NAME"],
-      password: ENV["KEYCHAIN_PASSWORD"],
-      set_default: is_ci
-    )
-    
-    match(
-      app_identifier: [ENV["APP_IDENTIFIER_IOS"], ENV["APP_IDENTIFIER_IOS"] + ".MiUtemNotificationServiceExtension"],
-      type: "appstore",
-      git_url: ENV["MATCH_REPO_GIT_URL"],
-      readonly: is_ci,
-      keychain_name: ENV["KEYCHAIN_NAME"],
-      keychain_password: ENV["KEYCHAIN_PASSWORD"],
-    )
-    
-  end
-  
-  build_app(
-    workspace: "./ios/Runner.xcworkspace",
-    scheme: "prod",
-  )
+    if is_ci
+      ensure_keychain()
+      unlock_keychain(
+        path: ENV["KEYCHAIN_NAME"],
+        password: ENV["KEYCHAIN_PASSWORD"],
+        set_default: is_ci
+      )
 
+      match(
+        app_identifier: [ENV["APP_IDENTIFIER_IOS"], ENV["APP_IDENTIFIER_IOS"] + ".MiUtemNotificationServiceExtension"],
+        type: "appstore",
+        git_url: ENV["MATCH_REPO_GIT_URL"],
+        readonly: is_ci,
+        keychain_name: ENV["KEYCHAIN_NAME"],
+        keychain_password: ENV["KEYCHAIN_PASSWORD"],
+      )
+    else
+      match(
+        app_identifier: [ENV["APP_IDENTIFIER_IOS"], ENV["APP_IDENTIFIER_IOS"] + ".MiUtemNotificationServiceExtension"],
+        type: "appstore",
+        git_url: ENV["MATCH_REPO_GIT_URL"],
+        readonly: is_ci,
+      )
+      
+      
+    end
+  end
+
+
+  
   if type == "beta"
     ios_beta_upload(options)
   elsif type == "release"
@@ -87,6 +80,7 @@ lane :ios_beta_upload do |options|
   is_ci = options[:is_ci]
 
   upload_to_testflight(
+    ipa: "build/ios/ipa/Mi UTEM.ipa",
     changelog: changelog,
     skip_waiting_for_build_processing: is_ci
   )
@@ -96,6 +90,7 @@ lane :ios_release_upload do |options|
   changelog = options[:changelog]
 
   upload_to_app_store(
+    ipa: "build/ios/ipa/Mi UTEM.ipa",
     release_notes: changelog
   )
 end

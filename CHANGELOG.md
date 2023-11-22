@@ -28,6 +28,8 @@ Tipos de cambios
 
 ## [Unreleased]
 
+## [2.12.0] - 2023-11-22Z
+
 ### Changed
 
 - Se actualizan dependecias de Flutter
@@ -134,6 +136,7 @@ Esta versión del changelog contiene cambios hechos en 2.10, debido a que no se 
 ### Removed
 
 - Lista de estudiantes en la pantalla de asignatura
+- Perfil de profesores
 - Perfil de profesores
 - Perfil de profesores
 - Perfil de profesores
