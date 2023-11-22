@@ -3,7 +3,7 @@ description: Plataforma académica para estudiantes de la Universidad Tecnológi
   Metropolitana (UTEM)
 publish_to: none
 
-version: 2.12.0+83
+version: 2.12.1+84
 
 environment:
   sdk: ">=2.14.4 <3.0.0"

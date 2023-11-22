@@ -21,7 +21,7 @@ lane :ios_flutter do |options|
   skip_cocoapods = options[:skip_cocoapods]
 
   Dir.chdir ".." do
-    sh("shorebird", "release", "ios-alpha",  "--flavor", "prod", "--export-options-plist ios/exportOptions.plist", "--force", "--", "--no-tree-shake-icons")
+    sh("shorebird", "release", "ios-alpha",  "--flavor", "prod", "--export-options-plist", "ios/exportOptions.plist", "--force", "--", "--no-tree-shake-icons")
   end
 end
 
@@ -65,7 +65,9 @@ lane :ios_build_and_upload do |options|
     end
   end
 
-
+  if build_number || build_name
+    ios_flutter(build_number: build_number, build_name: build_name, skip_clean: skip_clean, skip_cocoapods: skip_cocoapods)
+  end
   
   if type == "beta"
     ios_beta_upload(options)
