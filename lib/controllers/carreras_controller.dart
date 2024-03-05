@@ -17,10 +17,12 @@ class CarrerasController extends GetxController {
   }
 
   void getCarreras() async {
-    final carreras = await CarreraService.getCarreras(forceRefresh: true);
+    try {
+      final carreras = await CarreraService.getCarreras(forceRefresh: true);
 
-    this.carreras.value = carreras;
-    _autoSelectCarreraActiva(carreras);
+      this.carreras.value = carreras;
+      _autoSelectCarreraActiva(carreras);
+    } catch(_) {}
   }
 
   void _autoSelectCarreraActiva(List<Carrera> carreras) {
