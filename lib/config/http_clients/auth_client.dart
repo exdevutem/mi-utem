@@ -26,8 +26,9 @@ class AuthClient extends http.BaseClient {
       }
     }
 
-    var response = await _client.send(request);
-    final json = jsonDecode(await response.stream.bytesToString());
+    var responseStream = await _client.send(request);
+    var response = await http.Response.fromStream(responseStream);
+    final json = jsonDecode(response.body);
     if(response.statusCode == 401 && json is Map<String, dynamic> && json.containsKey("codigoInterno") && json["codigoInterno"] == 12) {
       // Refrescar el token
       final _authService = di.get<AuthService>();
@@ -36,11 +37,11 @@ class AuthClient extends http.BaseClient {
       final token = user?.token;
       if (token != null) {
         request.headers['authorization'] = 'Bearer $token';
-        response = await _client.send(request);
+        responseStream = await _client.send(request);
       }
     }
 
-    return response;
+    return responseStream;
   }
 
   @override

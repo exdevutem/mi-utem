@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:mi_utem/config/constants.dart';
-import 'package:mi_utem/config/http_client.dart';
+import 'package:mi_utem/config/http_clients/auth_client.dart';
 import 'package:mi_utem/config/logger.dart';
 import 'package:mi_utem/models/carrera.dart';
 import 'package:mi_utem/models/exceptions/custom_exception.dart';
