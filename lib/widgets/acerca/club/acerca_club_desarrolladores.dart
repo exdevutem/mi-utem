@@ -2,9 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:get/get.dart';
-import 'package:mi_utem/config/routes.dart';
-import 'package:mi_utem/models/usuario.dart';
+import 'package:mi_utem/models/user/user.dart';
 import 'package:mi_utem/services/analytics_service.dart';
 import 'package:mi_utem/services/remote_config/remote_config.dart';
 import 'package:mi_utem/widgets/image_view_screen.dart';
@@ -20,15 +18,14 @@ class AcercaClubDesarrolladores extends StatelessWidget {
         borderRadius: BorderRadius.circular(15.0),
       ),
       child: Container(
-        padding: EdgeInsets.all(20),
+        padding: const EdgeInsets.all(20),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 10),
-              child: Text(
-                "Desarrolladores",
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Text("Desarrolladores",
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 20,
@@ -37,93 +34,77 @@ class AcercaClubDesarrolladores extends StatelessWidget {
                 ),
               ),
             ),
-            Container(height: 10),
-            ...jsonDecode(RemoteConfigService.miutemDesarrolladores).map<Widget>((creador) => Container (
+            const SizedBox(height: 10),
+            ...jsonDecode(RemoteConfigService.miutemDesarrolladores).map((developer) => Container(
               padding: EdgeInsets.symmetric(vertical: 10),
               child: Row(
-                children: <Widget>[
+                children: [
                   ProfilePhoto(
-                      usuario: Usuario(nombres: creador['nombre'], fotoUrl: creador['fotoUrl']),
-                      onImageTap: (context, imageProvider) {
-                        AnalyticsService.logEvent("acerca_person_image_tap", parameters: {
-                          "persona": creador['nombre'],
-                        });
-                        Get.to(() => ImageViewScreen(imageProvider: imageProvider),
-                          routeName: Routes.imageView,
-                        );
-                      }),
-                  Container(width: 20),
+                    user: User(nombres: developer['nombre'], fotoUrl: developer['fotoUrl']),
+                    onImageTap: (context, imageProvider) {
+                      AnalyticsService.logEvent("acerca_person_image_tap", parameters: {
+                        "persona": developer['nombre'],
+                      });
+                      Navigator.push(context, MaterialPageRoute(builder: (ctx) => ImageViewScreen(imageProvider: imageProvider), fullscreenDialog: true));
+                    },
+                  ),
+                  const SizedBox(width: 20),
                   Expanded(
                     child: Column(
-                      crossAxisAlignment:
-                      CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                          creador["nombre"],
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(developer["nombre"],
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Colors.grey[800],
                             fontSize: 16,
                           ),
                         ),
-                        Text(
-                          creador["rol"],
+                        Text(developer["rol"],
                           style: TextStyle(
                             fontSize: 16,
                             color: Colors.grey[700],
                           ),
                         ),
-                        Container(height: 5),
+                        const SizedBox(height: 5),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
-                          children: creador['redes'].map<Widget>((red) => Container(
-                            margin: EdgeInsets.only(right: 8),
-                            decoration: new BoxDecoration(
+                          children: developer['redes'].map((socialNetwork) => Container(
+                            margin: const EdgeInsets.only(right: 8),
+                            decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              color: Color(red["color"]),
+                              color: Color(socialNetwork["color"]),
                             ),
                             child: InkWell(
                               customBorder:
-                              CircleBorder(),
+                              const CircleBorder(),
                               onTap: () async {
                                 AnalyticsService.logEvent("acerca_person_social_tap",
                                   parameters: {
-                                    "persona":
-                                    creador['nombre'],
-                                    "red": red['nombre'],
+                                  "persona": developer['nombre'],
+                                    "red": socialNetwork['nombre'],
                                   },
                                 );
-                                await launchUrl(
-                                  Uri.parse(red["url"]),
-                                );
+                                await launchUrl(Uri.parse(socialNetwork["url"]));
                               },
                               child: Container(
-                                padding:
-                                const EdgeInsets.all(
-                                    8),
-                                decoration:
-                                new BoxDecoration(
-                                  shape: BoxShape.circle,
-                                ),
+                                padding: const EdgeInsets.all(8),
+                                decoration: const BoxDecoration(shape: BoxShape.circle),
                                 child: Icon(
-                                  IconDataBrands(red["icono"]),
+                                  IconDataBrands(socialNetwork["icono"]),
                                   size: 15,
                                   color: Colors.white,
                                 ),
                               ),
                             ),
-                          ),
-                          )
-                              .toList(),
+                          )).toList(),
                         ),
                       ],
                     ),
                   ),
                 ],
               ),
-            ),
-            )
-                .toList()
+            )).toList()
           ],
         ),
       ),

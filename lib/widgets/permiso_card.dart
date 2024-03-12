@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mi_utem/config/routes.dart';
 import 'package:mi_utem/models/permiso_covid.dart';
+import 'package:mi_utem/screens/permiso_covid_screen.dart';
 import 'package:mi_utem/themes/theme.dart';
 
 class PermisoCard extends StatelessWidget {
@@ -19,9 +19,7 @@ class PermisoCard extends StatelessWidget {
         child: Material(
           color: Colors.transparent,
           child: InkWell(
-            onTap: () => Get.toNamed(
-              '${Routes.passBase}/${permiso.id}',
-            ),
+            onTap: () => Navigator.push(context, MaterialPageRoute(builder: (ctx) => PermisoCovidScreen(passId: "${permiso.id}"))),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -66,9 +64,7 @@ class PermisoCard extends StatelessWidget {
                 Container(
                   height: 40,
                   child: InkWell(
-                    onTap: () => Get.toNamed(
-                      '${Routes.passBase}/${permiso.id}',
-                    ),
+                    onTap: () => Navigator.push(context, MaterialPageRoute(builder: (ctx) => PermisoCovidScreen(passId: "${permiso.id}"))),
                     child: Center(
                       child: Text(
                         "Ver QR",

@@ -4,9 +4,9 @@ import 'dart:developer';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:awesome_notifications_fcm/awesome_notifications_fcm.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:mi_utem/config/routes.dart';
+import 'package:mi_utem/main.dart';
 import 'package:mi_utem/models/asignatura.dart';
+import 'package:mi_utem/screens/asignatura/asignatura_detalle_screen.dart';
 import 'package:mi_utem/services/analytics_service.dart';
 
 class NotificationController {
@@ -35,9 +35,7 @@ class NotificationController {
 
   /// Use this method to detect when the user taps on a notifications or action button
   @pragma("vm:entry-point")
-  static Future<void> onActionReceivedMethod(
-    ReceivedAction receivedAction,
-  ) async {
+  static Future<void> onActionReceivedMethod(ReceivedAction receivedAction) async {
     log("onActionReceivedMethod: ${receivedAction.id} ${receivedAction.payload}");
 
     AnalyticsService.logEvent(
@@ -50,12 +48,9 @@ class NotificationController {
     if (type == 'grade_change') {
       final asignaturaJsonString = payload?['asignatura'];
       if (asignaturaJsonString != null) {
-        AnalyticsService.logEvent(
-          'notification_tap_grade_change',
-        );
-        final asignatura =
-            Asignatura.fromJson(jsonDecode(asignaturaJsonString));
-        Get.toNamed('${Routes.asignatura}/${asignatura.id}');
+        AnalyticsService.logEvent('notification_tap_grade_change');
+        final asignatura = Asignatura.fromJson(jsonDecode(asignaturaJsonString));
+        navigatorKey.currentState?.push(MaterialPageRoute(builder: (ctx) => AsignaturaDetalleScreen(asignaturaId: asignatura.id)));
       }
     }
   }

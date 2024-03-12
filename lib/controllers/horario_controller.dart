@@ -3,14 +3,15 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:mi_utem/controllers/carreras_controller.dart';
 import 'package:mi_utem/models/asignatura.dart';
 import 'package:mi_utem/models/carrera.dart';
 import 'package:mi_utem/models/horario.dart';
 import 'package:mi_utem/screens/horario/widgets/horario_main_scroller.dart';
-import 'package:mi_utem/services/horarios_service.dart';
 import 'package:mi_utem/services/remote_config/remote_config.dart';
+import 'package:mi_utem/services_new/interfaces/carreras_service.dart';
+import 'package:mi_utem/services_new/interfaces/horario_service.dart';
 import 'package:vector_math/vector_math_64.dart' as vector;
+import 'package:watch_it/watch_it.dart';
 
 class HorarioController extends GetxController {
   static const daysCount = 6;
@@ -85,14 +86,11 @@ class HorarioController extends GetxController {
 
   @override
   onInit() {
-    if (Get.find<CarrerasController>().selectedCarrera.value != null) {
-      getHorarioData(Get.find<CarrerasController>().selectedCarrera.value);
+    final selectedCarrera = watchValue((CarrerasService service) => service.selectedCarrera);
+    if (selectedCarrera != null) {
+      getHorarioData(selectedCarrera);
     }
 
-    ever<Carrera?>(
-      Get.find<CarrerasController>().selectedCarrera,
-      (carrera) => getHorarioData(carrera),
-    );
     _init();
     super.onInit();
   }
@@ -112,7 +110,7 @@ class HorarioController extends GetxController {
       return;
     }
     loadingHorario.value = true;
-    horario.value = await HorarioService.getHorario(carreraId);
+    horario.value = await di.get<HorarioService>().getHorario(carreraId);
     _setRandomColorsByHorario();
     loadingHorario.value = false;
   }

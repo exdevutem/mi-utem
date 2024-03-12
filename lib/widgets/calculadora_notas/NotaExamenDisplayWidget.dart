@@ -1,38 +1,37 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:mi_utem/controllers/calculator_controller.dart';
+import 'package:mi_utem/services_new/interfaces/calculator_service.dart';
 import 'package:mi_utem/themes/theme.dart';
+import 'package:watch_it/watch_it.dart';
 
 class NotaExamenDisplayWidget extends StatelessWidget {
-  final CalculatorController _calculatorController;
 
   const NotaExamenDisplayWidget({
-    Key? key,
-    required CalculatorController calculatorController,
-  })  : _calculatorController = calculatorController,
-        super(key: key);
+    super.key,
+  });
 
   @override
-  Widget build(BuildContext context) => Row(
-    crossAxisAlignment: CrossAxisAlignment.center,
-    children: <Widget>[
-      Text(
-        "Examen",
-        style: TextStyle(fontSize: 16),
-      ),
-      Container(
-        width: 80,
-        margin: EdgeInsets.only(left: 15),
-        child: Obx(() => TextField(
-            controller: _calculatorController.examGradeTextFieldController,
+  Widget build(BuildContext context) {
+    final _calculatorService = di.get<CalculatorService>();
+
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        const Text("Examen",
+          style: TextStyle(fontSize: 16),
+        ),
+        Container(
+          width: 80,
+          margin: const EdgeInsets.only(left: 15),
+          child: TextField(
+            controller: _calculatorService.examGradeTextFieldController,
             textAlign: TextAlign.center,
             onChanged: (String value) {
-              _calculatorController.examGrade.value = double.tryParse(value.replaceAll(",", "."));
+              _calculatorService.examGrade.value = double.tryParse(value.replaceAll(",", "."));
             },
-            enabled: _calculatorController.canTakeExam,
+            enabled: _calculatorService.canTakeExam,
             decoration: InputDecoration(
-              hintText: _calculatorController.minimumRequiredExamGrade?.toStringAsFixed(1) ?? "",
-              filled: !_calculatorController.canTakeExam,
+              hintText: _calculatorService.getMinimumRequiredExamGrade?.toStringAsFixed(1) ?? "",
+              filled: !_calculatorService.canTakeExam,
               fillColor: Colors.grey.withOpacity(0.2),
               disabledBorder: MainTheme.theme.inputDecorationTheme.border!.copyWith(
                 borderSide: BorderSide(
@@ -40,13 +39,12 @@ class NotaExamenDisplayWidget extends StatelessWidget {
                 ),
               ),
             ),
-            keyboardType:
-            TextInputType.numberWithOptions(
+            keyboardType: const TextInputType.numberWithOptions(
               decimal: true,
             ),
           ),
         ),
-      ),
-    ],
-  );
+      ],
+    );
+  }
 }

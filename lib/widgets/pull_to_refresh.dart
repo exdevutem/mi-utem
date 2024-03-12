@@ -11,63 +11,56 @@ class PullToRefresh extends StatelessWidget {
   final Future Function() onRefresh;
   final bool opacityEffect;
 
-  const PullToRefresh(
-      {Key? key,
-      this.child,
-      required this.onRefresh,
-      this.opacityEffect = false})
-      : super(key: key);
+  const PullToRefresh({
+    super.key,
+    this.child,
+    required this.onRefresh,
+    this.opacityEffect = false
+  });
 
   static double _offsetToArmed = 60;
 
   @override
-  Widget build(BuildContext context) {
-    return CustomRefreshIndicator(
-      offsetToArmed: _offsetToArmed,
-      onRefresh: onRefresh,
-      builder: (context, child, controller) => Stack(
-        children: <Widget>[
-          AnimatedBuilder(
-            child: child,
-            animation: controller,
-            builder: (context, child) {
-              return Opacity(
-                opacity: 1.0 -
-                    (opacityEffect ? controller.value.clamp(0.0, 1.0) : 0),
-                child: Transform.translate(
-                  offset: Offset(0.0, (_offsetToArmed) * controller.value),
-                  child: child,
-                ),
-              );
-            },
+  Widget build(BuildContext context) => CustomRefreshIndicator(
+    offsetToArmed: _offsetToArmed,
+    onRefresh: onRefresh,
+    builder: (context, child, controller) => Stack(
+      children: [
+        AnimatedBuilder(
+          child: child,
+          animation: controller,
+          builder: (context, child) => Opacity(
+            opacity: 1.0 - (opacityEffect ? controller.value.clamp(0.0, 1.0) : 0),
+            child: Transform.translate(
+              offset: Offset(0.0, (_offsetToArmed) * controller.value),
+              child: child,
+            ),
           ),
-          AnimatedBuilder(
-            child: LoadingIndicator(padding: EdgeInsets.zero),
-            animation: controller,
-            builder: (context, child) {
-              return SafeArea(
-                child: Stack(
-                  children: <Widget>[
-                    Container(
-                      height: (_offsetToArmed) * controller.value,
-                      width: double.infinity,
-                      child: Container(
-                        height: 30,
-                        width: 30,
-                        child: SpinKitDoubleBounce(
-                          color: MainTheme.primaryColor,
-                          size: 20.0,
-                        ),
-                      ),
+        ),
+        AnimatedBuilder(
+          child: const LoadingIndicator(padding: EdgeInsets.zero),
+          animation: controller,
+          builder: (context, child) => SafeArea(
+            child: Stack(
+              children: [
+                Container(
+                  height: (_offsetToArmed) * controller.value,
+                  width: double.infinity,
+                  child: Container(
+                    height: 30,
+                    width: 30,
+                    child: SpinKitDoubleBounce(
+                      color: MainTheme.primaryColor,
+                      size: 20.0,
                     ),
-                  ],
+                  ),
                 ),
-              );
-            },
+              ],
+            ),
           ),
-        ],
-      ),
-      child: child!,
-    );
-  }
+        ),
+      ],
+    ),
+    child: child!,
+  );
 }

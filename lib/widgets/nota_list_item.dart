@@ -1,9 +1,10 @@
+import 'package:extended_masked_text/extended_masked_text.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_masked_text/flutter_masked_text.dart';
 import 'package:get/get.dart';
-import 'package:mi_utem/controllers/calculator_controller.dart';
 import 'package:mi_utem/models/evaluacion.dart';
+import 'package:mi_utem/services_new/interfaces/calculator_service.dart';
 import 'package:mi_utem/themes/theme.dart';
+import 'package:watch_it/watch_it.dart';
 
 class NotaListItem extends StatelessWidget {
   final IEvaluacion evaluacion;
@@ -23,15 +24,9 @@ class NotaListItem extends StatelessWidget {
     this.onDelete,
   }) : super(key: key);
 
-  final _controller = CalculatorController.to;
+  String get _suggestedGrade => di.get<CalculatorService>().getSuggestedGrade?.toStringAsFixed(1) ?? "0.0";
 
-  String get _suggestedGrade {
-    return _controller.suggestedGrade?.toStringAsFixed(1) ?? "0.0";
-  }
-
-  String? get _suggestedPercentage {
-    return _controller.suggestedPercentage?.toStringAsFixed(0);
-  }
+  String? get _suggestedPercentage => di.get<CalculatorService>().getSuggestedPercentage?.toStringAsFixed(0);
 
   @override
   Widget build(BuildContext context) {
@@ -51,11 +46,10 @@ class NotaListItem extends StatelessWidget {
     return Flex(
       direction: Axis.horizontal,
       mainAxisSize: MainAxisSize.max,
-      children: <Widget>[
+      children: [
         Container(
           width: 90,
-          child: Text(
-            evaluacion.descripcion ?? "Nota",
+          child: Text(evaluacion.descripcion ?? "Nota",
             overflow: TextOverflow.ellipsis,
           ),
         ),
@@ -101,14 +95,9 @@ class NotaListItem extends StatelessWidget {
               textAlign: TextAlign.center,
               onChanged: (String value) {
                 final percentage = int.tryParse(value);
-
-                final changedGrade =
-                    evaluacion.copyWith(porcentaje: percentage);
+                final changedGrade = evaluacion.copyWith(porcentaje: percentage);
                 changedGrade.porcentaje = percentage;
-
                 onChanged?.call(changedGrade);
-
-                //_controller.changeGradeAt(widget.index, changedGrade);
               },
               enabled: editable,
               decoration: InputDecoration(
@@ -130,7 +119,6 @@ class NotaListItem extends StatelessWidget {
           GestureDetector(
             onTap: () {
               onDelete?.call();
-              //_controller.removeGradeAt(widget.index);
             },
             child: Icon(
               Icons.delete,

@@ -13,21 +13,17 @@ class Grades {
     this.notaExamen,
   });
 
-  factory Grades.fromJson(Map<String, dynamic> json) {
-    return Grades(
-      notasParciales: REvaluacion.fromJsonList(json['notasParciales']),
-      notaFinal: json['notaFinal'] as num?,
-      notaPresentacion: json['notaPresentacion'] as num?,
-      notaExamen: json['notaExamen'] as num?,
-    );
-  }
+  factory Grades.fromJson(Map<String, dynamic> json) => Grades(
+    notasParciales: REvaluacion.fromJsonList(json['notasParciales']),
+    notaFinal: json['notaFinal'] as num?,
+    notaPresentacion: json['notaPresentacion'] as num?,
+    notaExamen: json['notaExamen'] as num?,
+  );
 
-  Map<String, dynamic> toJson() {
-    return {
-      'notasParciales': notasParciales.map((nota) => nota.toJson()).toList(),
-      'notaFinal': notaFinal,
-      'notaPresentacion': notaPresentacion,
-      'notaExamen': notaExamen,
-    };
-  }
+  Map<String, dynamic> toJson() => {
+    'notasParciales': notasParciales.map((nota) => nota.toJson()).toList(),
+    'notaFinal': notaFinal,
+    'notaPresentacion': notaPresentacion,
+    'notaExamen': notaExamen,
+  };
 }

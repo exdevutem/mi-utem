@@ -1,8 +1,8 @@
-import 'package:mi_utem/models/usuario.dart';
+import 'package:mi_utem/models/user/user.dart';
 
 class PermisoCovid {
   String? id;
-  Usuario? usuario;
+  User? user;
   String? codigoQr;
   String? perfil;
   String? motivo;
@@ -14,7 +14,7 @@ class PermisoCovid {
 
   PermisoCovid({
     this.id,
-    this.usuario,
+    this.user,
     this.codigoQr,
     this.perfil,
     this.motivo,
@@ -25,26 +25,24 @@ class PermisoCovid {
     this.fechaSolicitud,
   });
 
-  factory PermisoCovid.fromJson(Map<String, dynamic> json) {
-    return PermisoCovid(
-      id: json['id'],
-      usuario: Usuario.fromJson(json['usuario']),
-      codigoQr: json['codigoQr'],
-      perfil: json['perfil'],
-      motivo: json['motivo'],
-      campus: json['campus'],
-      dependencia: json['dependencia'],
-      jornada: json['jornada'],
-      vigencia: json['vigencia'],
-      fechaSolicitud: DateTime.tryParse(json['fechaSolicitud']),
-    );
-  }
+  factory PermisoCovid.fromJson(Map<String, dynamic> json) => PermisoCovid(
+    id: json['id'],
+    user: json.containsKey("usuario") ? User.fromJson(json['usuario']) : null,
+    codigoQr: json['codigoQr'],
+    perfil: json['perfil'],
+    motivo: json['motivo'],
+    campus: json['campus'],
+    dependencia: json['dependencia'],
+    jornada: json['jornada'],
+    vigencia: json['vigencia'],
+    fechaSolicitud: DateTime.tryParse(json['fechaSolicitud']),
+  );
 
-  static List<PermisoCovid> fromJsonList(List<dynamic> json) {
-    List<PermisoCovid> lista = [];
-    for (var elemento in json) {
-      lista.add(PermisoCovid.fromJson(elemento));
+  static List<PermisoCovid> fromJsonList(List<dynamic>? json) {
+    if(json == null) {
+      return [];
     }
-    return lista;
+
+    return json.map((it) => PermisoCovid.fromJson(it)).toList();
   }
 }

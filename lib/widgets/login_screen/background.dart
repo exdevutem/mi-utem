@@ -1,18 +1,19 @@
-part of 'login_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:video_player/video_player.dart';
 
-class _Background extends StatefulWidget {
+class LoginBackground extends StatefulWidget {
   final Widget child;
 
-  const _Background({
+  const LoginBackground({
     Key? key,
     required this.child,
   }) : super(key: key);
 
   @override
-  _BackgroundState createState() => _BackgroundState();
+  _LoginBackgroundState createState() => _LoginBackgroundState();
 }
 
-class _BackgroundState extends State<_Background> {
+class _LoginBackgroundState extends State<LoginBackground> {
   late final VideoPlayerController _controller;
 
   @override
@@ -22,8 +23,7 @@ class _BackgroundState extends State<_Background> {
       videoPlayerOptions: VideoPlayerOptions(
         mixWithOthers: true,
       ),
-    )
-      ..setVolume(0)
+    )..setVolume(0)
       ..play()
       ..setLooping(true)
       ..initialize();
@@ -70,7 +70,7 @@ class _BackgroundState extends State<_Background> {
           color: Color(0x80000000),
         ),
         Container(
-          height: Get.height,
+          height: double.infinity,
           child: widget.child,
         ),
       ],

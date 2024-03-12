@@ -13,35 +13,21 @@ class REvaluacion {
     this.nota,
   });
 
-  factory REvaluacion.fromJson(Map<String, dynamic>? json) {
-    if (json == null) {
-      return REvaluacion();
-    }
-    return REvaluacion(
-      porcentaje: json[porcentajeKey],
-      descripcion: json[descripcionKey],
-      nota: json[notaKey],
-    );
-  }
+  factory REvaluacion.fromJson(Map<String, dynamic>? json) =>
+      json != null ? REvaluacion(
+        porcentaje: json[porcentajeKey],
+        descripcion: json[descripcionKey],
+        nota: json[notaKey],
+      ) : REvaluacion();
 
-  static List<REvaluacion> fromJsonList(dynamic json) {
-    if (json == null) {
-      return [];
-    }
-    List<REvaluacion> list = [];
-    for (var item in json) {
-      list.add(REvaluacion.fromJson(item));
-    }
-    return list;
-  }
+  static List<REvaluacion> fromJsonList(List<dynamic>? json) =>
+      json?.map((it) => REvaluacion.fromJson(it)).toList() ?? [];
 
-  Map<String, dynamic> toJson() {
-    return {
-      porcentajeKey: porcentaje,
-      descripcionKey: descripcion,
-      notaKey: nota,
-    };
-  }
+  Map<String, dynamic> toJson() => {
+    porcentajeKey: porcentaje,
+    descripcionKey: descripcion,
+    notaKey: nota,
+  };
 }
 
 class IEvaluacion extends REvaluacion {
@@ -66,13 +52,11 @@ class IEvaluacion extends REvaluacion {
     );
   }
 
-  IEvaluacion copyWith(
-      {bool? editable, String? descripcion, num? porcentaje, num? nota}) {
-    return IEvaluacion(
-      editable: editable ?? this.editable,
-      descripcion: descripcion ?? this.descripcion,
-      porcentaje: porcentaje ?? this.porcentaje,
-      nota: nota ?? this.nota,
-    );
-  }
+  IEvaluacion copyWith({bool? editable, String? descripcion, num? porcentaje, num? nota}) =>
+      IEvaluacion(
+        editable: editable ?? this.editable,
+        descripcion: descripcion ?? this.descripcion,
+        porcentaje: porcentaje ?? this.porcentaje,
+        nota: nota ?? this.nota,
+      );
 }

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:mi_utem/config/routes.dart';
+import 'package:mi_utem/widgets/acerca/acerca_screen.dart';
 
 class AcercaDialogActionButton extends StatefulWidget {
 
@@ -8,10 +7,10 @@ class AcercaDialogActionButton extends StatefulWidget {
   final int timeLeft;
 
   const AcercaDialogActionButton({
-    Key? key,
+    super.key,
     required this.isActive,
     required this.timeLeft,
-  }) : super(key: key);
+  });
 
   @override
   State<StatefulWidget> createState() => _AcercaDialogActionButtonState();
@@ -28,15 +27,15 @@ class _AcercaDialogActionButtonState extends State<AcercaDialogActionButton> {
     runAlignment: WrapAlignment.center,
     children: [
       TextButton(
-          child: Text(widget.isActive ? "Podrás cerrar en ${widget.timeLeft}" : "Saber más",
-            style: TextStyle(color: Colors.white),
-          ),
-          onPressed: () {
-            if (!widget.isActive) {
-              Get.back();
-              Get.toNamed(Routes.about);
-            }
+        child: Text(widget.isActive ? "Podrás cerrar en ${widget.timeLeft}" : "Saber más",
+          style: const TextStyle(color: Colors.white),
+        ),
+        onPressed: () {
+          if (!widget.isActive) {
+            Navigator.pop(context);
+            Navigator.push(context, MaterialPageRoute(builder: (context) => AcercaScreen()));
           }
+        },
       ),
     ],
   );

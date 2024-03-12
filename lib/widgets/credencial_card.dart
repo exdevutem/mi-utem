@@ -5,7 +5,7 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_uxcam/flutter_uxcam.dart';
 import 'package:get/get.dart';
 import 'package:mi_utem/models/carrera.dart';
-import 'package:mi_utem/models/usuario.dart';
+import 'package:mi_utem/models/user/user.dart';
 import 'package:mi_utem/services/remote_config/remote_config.dart';
 import 'package:mi_utem/themes/theme.dart';
 import 'package:mi_utem/widgets/flip_widget.dart';
@@ -14,14 +14,14 @@ import 'package:simple_gesture_detector/simple_gesture_detector.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class CredencialCard extends StatelessWidget {
-  final Usuario? usuario;
+  final User? user;
   final Carrera? carrera;
   final FlipController? controller;
   final Function(SwipeDirection?)? onFlip;
 
   CredencialCard(
       {Key? key,
-      required this.usuario,
+      required this.user,
       required this.carrera,
       this.controller,
       this.onFlip})
@@ -40,7 +40,7 @@ class CredencialCard extends StatelessWidget {
             Container(
               margin: EdgeInsets.only(top: altoBanner - 40),
               child: ProfilePhoto(
-                usuario: usuario,
+                user: user,
                 radius: 50,
                 borderWidth: 5,
               ),
@@ -74,8 +74,7 @@ class CredencialCard extends StatelessWidget {
               color: Colors.white,
               child: Column(
                 children: [
-                  Text(
-                    usuario!.nombreCompleto!,
+                  Text(user?.nombreCompleto ?? "N/N",
                     maxLines: 2,
                     style: TextStyle(
                       fontSize: 18,
@@ -85,8 +84,7 @@ class CredencialCard extends StatelessWidget {
                     textAlign: TextAlign.center,
                   ),
                   OccludeWrapper(
-                    child: Text(
-                      usuario!.rut?.formateado(true) ?? "Sin RUT",
+                    child: Text(user?.rut?.toString() ?? "Sin RUT",
                       style: TextStyle(fontSize: 18),
                       textAlign: TextAlign.center,
                     ),
@@ -94,10 +92,7 @@ class CredencialCard extends StatelessWidget {
                   Spacer(),
                   Divider(height: 1),
                   Spacer(),
-                  Text(
-                    (carrera?.nombre == null || carrera!.nombre!.isEmpty
-                        ? "Sin carrera"
-                        : carrera?.nombre!)!,
+                  Text(("${carrera?.nombre}".isEmpty ? "Sin carrera" : "${carrera?.nombre}"),
                     maxLines: 3,
                     style: TextStyle(
                       color: MainTheme.primaryDarkColor,
@@ -105,47 +100,46 @@ class CredencialCard extends StatelessWidget {
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  if (usuario!.rut != null || true) Spacer(),
-                  if (usuario!.rut != null || true)
-                    Column(
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            border: Border(
-                              top: BorderSide(color: Colors.grey),
-                              left: BorderSide(color: Colors.grey),
-                              bottom: BorderSide(color: Colors.grey),
-                              right: BorderSide(color: Colors.grey),
-                            ),
-                          ),
-                          padding: EdgeInsets.symmetric(
-                            vertical: 5,
-                            horizontal: 10,
-                          ),
-                          child: OccludeWrapper(
-                            child: BarcodeWidget(
-                              barcode: Barcode.code39(),
-                              data: "${usuario!.rut!.numero}",
-                              width: 200,
-                              height: 50,
-                              drawText: false,
-                            ),
+                  const Spacer(),
+                  Column(
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          border: Border(
+                            top: BorderSide(color: Colors.grey),
+                            left: BorderSide(color: Colors.grey),
+                            bottom: BorderSide(color: Colors.grey),
+                            right: BorderSide(color: Colors.grey),
                           ),
                         ),
-                        Container(height: 10),
-                        MarkdownBody(
-                          selectable: false,
-                          styleSheet: MarkdownStyleSheet(
-                            textAlign: WrapAlignment.center,
-                            p: TextStyle(
-                              fontSize: 12,
-                            ),
-                          ),
-                          data: RemoteConfigService.credencialBarras,
+                        padding: EdgeInsets.symmetric(
+                          vertical: 5,
+                          horizontal: 10,
                         ),
-                      ],
-                    )
+                        child: OccludeWrapper(
+                          child: BarcodeWidget(
+                            barcode: Barcode.code39(),
+                            data: "${user?.rut}",
+                            width: 200,
+                            height: 50,
+                            drawText: false,
+                          ),
+                        ),
+                      ),
+                      Container(height: 10),
+                      MarkdownBody(
+                        selectable: false,
+                        styleSheet: MarkdownStyleSheet(
+                          textAlign: WrapAlignment.center,
+                          p: TextStyle(
+                            fontSize: 12,
+                          ),
+                        ),
+                        data: RemoteConfigService.credencialBarras,
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),

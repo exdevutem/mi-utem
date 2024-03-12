@@ -1,29 +1,31 @@
 import 'package:flutter/material.dart';
-import 'package:mi_utem/controllers/calculator_controller.dart';
+import 'package:mi_utem/services_new/interfaces/calculator_service.dart';
 import 'package:mi_utem/widgets/calculadora_notas/DisplayNotasWidget.dart';
 import 'package:mi_utem/widgets/calculadora_notas/EditarNotasWidget.dart';
 import 'package:mi_utem/widgets/custom_app_bar.dart';
+import 'package:watch_it/watch_it.dart';
 
 class CalculadoraNotasScreen extends StatelessWidget {
-  CalculadoraNotasScreen({
-    Key? key,
-  }) : super(key: key);
+
+  const CalculadoraNotasScreen({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final controller = CalculatorController.to;
+    final _calculatorService = di.get<CalculatorService>();
 
-    controller.makeEditable();
+    _calculatorService.makeEditable();
 
     return Scaffold(
       appBar: CustomAppBar(
-        title: Text("Calculadora de notas"),
+        title: const Text("Calculadora de notas"),
       ),
       body: ListView(
-        padding: EdgeInsets.all(10),
-        children: <Widget>[
-          DisplayNotasWidget(calculatorController: controller),
-          EditarNotasWidget(calculatorController: controller)
+        padding: const EdgeInsets.all(10),
+        children: const [
+          DisplayNotasWidget(),
+          EditarNotasWidget()
         ],
       ),
     );

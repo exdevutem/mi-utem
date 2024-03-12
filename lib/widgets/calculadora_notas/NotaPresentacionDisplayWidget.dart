@@ -1,45 +1,40 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:mi_utem/controllers/calculator_controller.dart';
+import 'package:mi_utem/services_new/interfaces/calculator_service.dart';
 import 'package:mi_utem/themes/theme.dart';
+import 'package:watch_it/watch_it.dart';
 
 class NotaPresentacionDisplayWidget extends StatelessWidget {
-  final CalculatorController _calculatorController;
-
   const NotaPresentacionDisplayWidget({
-    Key? key,
-    required CalculatorController calculatorController,
-  })  : _calculatorController = calculatorController,
-        super(key: key);
+    super.key,
+  });
 
   @override
-  Widget build(BuildContext context) => Obx(
-        () => Row(
+  Widget build(BuildContext context) {
+    final _calculatorService = di.get<CalculatorService>();
+    return Row(
       children: [
-        Text(
-          "Pres.",
+        const Text("Pres.",
           style: TextStyle(fontSize: 16),
         ),
         Container(
           width: 80,
-          margin: EdgeInsets.only(left: 15),
+          margin: const EdgeInsets.only(left: 15),
           child: TextField(
-            controller: TextEditingController(text: _calculatorController.calculatedPresentationGrade?.toStringAsFixed(1) ?? ""),
+            controller: TextEditingController(text: _calculatorService.getCalculatedPresentationGrade?.toStringAsFixed(1) ?? ""),
             textAlign: TextAlign.center,
             enabled: false,
             decoration: InputDecoration(
               hintText: "Nota",
               disabledBorder: MainTheme.theme.inputDecorationTheme.border!.copyWith(
-                borderSide: BorderSide(
+                borderSide: const BorderSide(
                   color: Colors.transparent,
                 ),
               ),
             ),
-            keyboardType:
-            TextInputType.numberWithOptions(decimal: true),
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
           ),
         ),
       ],
-    ),
-  );
+    );
+  }
 }

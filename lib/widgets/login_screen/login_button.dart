@@ -1,15 +1,17 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mi_utem/config/routes.dart';
+import 'package:mi_utem/config/logger.dart';
 import 'package:mi_utem/helpers/snackbars.dart';
-import 'package:mi_utem/models/usuario.dart';
+import 'package:mi_utem/models/exceptions/custom_exception.dart';
+import 'package:mi_utem/models/user/credential.dart';
+import 'package:mi_utem/screens/main_screen.dart';
 import 'package:mi_utem/services/analytics_service.dart';
-import 'package:mi_utem/services/auth_service.dart';
+import 'package:mi_utem/services_new/interfaces/credential_service.dart';
 import 'package:mi_utem/widgets/acerca/dialog/acerca_dialog.dart';
 import 'package:mi_utem/widgets/dialogs/monkey_error_dialog.dart';
-import 'package:mi_utem/widgets/dialogs/not_ready_dialog.dart';
 import 'package:mi_utem/widgets/loading_dialog.dart';
+import 'package:mi_utem/services_new/interfaces/auth_service.dart' as NewAuthService;
+import 'package:watch_it/watch_it.dart';
 
 
 class LoginButton extends StatefulWidget {
@@ -35,13 +37,14 @@ class LoginButton extends StatefulWidget {
 
 class _LoginButtonState extends State<LoginButton> {
 
+  final _authService = di.get<NewAuthService.AuthService>();
+  final _credentialsService = di.get<CredentialsService>();
+
   @override
-  Widget build(BuildContext context) {
-    return TextButton(
-      onPressed: () => _login(),
-      child: Text("Iniciar"),
-    );
-  }
+  Widget build(BuildContext context) => TextButton(
+    onPressed: () => _login(),
+    child: Text("Iniciar"),
+  );
 
   Future<void> _login() async {
     final correo = widget._correoController.text;
@@ -62,37 +65,49 @@ class _LoginButtonState extends State<LoginButton> {
     Get.dialog(LoadingDialog(), barrierDismissible: false);
 
     try {
-      bool esPrimeraVez = await AuthService.esPrimeraVez();
-      Usuario usuario = await AuthService.login(correo, contrasenia, true);
+      await _credentialsService.setCredentials(Credentials(
+        email: correo,
+        password: contrasenia,
+      ));
 
-      AnalyticsService.logEvent('login');
-      AnalyticsService.setUser(usuario);
-
-      Get.toNamed(Routes.home);
-
-      if (esPrimeraVez) {
-        Get.dialog(AcercaDialog());
+      if(!(await _credentialsService.hasCredentials())) {
+        showDefaultSnackbar("Error", "Ha ocurrido un error al guardar tus claves. Intenta más tarde.");
+        return;
       }
-    } on DioError catch (e) {
-      print(e.message);
-      Get.back();
-      if (e.response?.statusCode == 403) {
-        if (e.response?.data["codigoInterno"]?.toString() == "4") {
-          Get.dialog(NotReadyDialog());
-        } else {
-          showDefaultSnackbar("Error", "Usuario o contraseña incorrecta");
+
+      await _authService.login();
+
+      try {
+        final isFirstTime = await _authService.isFirstTime();
+        final user = await _authService.getUser();
+        if(user == null) {
+          Get.back();
+          showDefaultSnackbar("Error", "Ha ocurrido un error desconocido. Por favor intenta más tarde.");
+          return;
         }
-      } else if (e.response?.statusCode != null && e.response!.statusCode.toString().startsWith("5")) {
-        print(e.response?.data);
-        Get.dialog(MonkeyErrorDialog());
-      } else {
-        print(e.response?.data);
-        showDefaultSnackbar("Error", "Ocurrió un error inesperado 😢");
+
+        AnalyticsService.logEvent('login');
+        AnalyticsService.setUser(user);
+
+        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => MainScreen()));
+
+        if(isFirstTime) {
+          Get.dialog(AcercaDialog());
+        }
+      } catch (e) {
+        logger.e(e);
+        Get.back();
+        showDefaultSnackbar("Error", "Ha ocurrido un error desconocido. Por favor intenta más tarde.");
       }
-    } catch (e) {
-      print(e.toString());
+      return;
+    } on CustomException catch (e) {
+      logger.e(e);
       Get.back();
-      showDefaultSnackbar("Error", "Ocurrió un error inesperado 😢");
+      showDefaultSnackbar("Error", e.message);
+    } catch (e) {
+      logger.e(e);
+      Get.back();
+      showDefaultSnackbar("Error", "Ha ocurrido un error desconocido. Por favor intenta más tarde.");
     }
   }
 }

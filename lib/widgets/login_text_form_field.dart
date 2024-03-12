@@ -97,6 +97,9 @@ class _LoginTextFormFieldState extends State<LoginTextFormField> {
           }
           return errorMsg;
         },
+        onTapOutside: (event){
+          FocusScope.of(context).unfocus();
+        },
       ),
     );
   }

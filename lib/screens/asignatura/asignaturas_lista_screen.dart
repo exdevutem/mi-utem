@@ -1,61 +1,104 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:mdi/mdi.dart';
-import 'package:mi_utem/config/routes.dart';
-import 'package:mi_utem/controllers/asignatura/asignaturas_controller.dart';
+import 'package:mi_utem/config/logger.dart';
+import 'package:mi_utem/models/asignatura.dart';
+import 'package:mi_utem/models/carrera.dart';
+import 'package:mi_utem/models/exceptions/custom_exception.dart';
+import 'package:mi_utem/screens/calculadora_notas_screen.dart';
 import 'package:mi_utem/services/remote_config/remote_config.dart';
+import 'package:mi_utem/services_new/interfaces/asignaturas_service.dart';
+import 'package:mi_utem/services_new/interfaces/carreras_service.dart';
 import 'package:mi_utem/widgets/asignatura/lista/lista_asignaturas.dart';
 import 'package:mi_utem/widgets/asignatura/lista/sin_asignaturas_mensaje.dart';
 import 'package:mi_utem/widgets/custom_app_bar.dart';
 import 'package:mi_utem/widgets/loading_indicator.dart';
 import 'package:mi_utem/widgets/pull_to_refresh.dart';
+import 'package:watch_it/watch_it.dart';
 
-class AsignaturasListaScreen extends GetView<AsignaturasController> {
-  AsignaturasListaScreen({Key? key}) : super(key: key);
+class AsignaturasListaScreen extends StatefulWidget with WatchItStatefulWidgetMixin {
+  const AsignaturasListaScreen({super.key});
 
-  Future<void> _onRefresh() async {
-    controller.refreshAsignaturas();
-  }
+  @override
+  State<AsignaturasListaScreen> createState() => _AsignaturasListaScreenState();
+}
 
-  bool get _mostrarCalculadora {
-    return RemoteConfigService.calculadoraMostrar;
-  }
+class _AsignaturasListaScreenState extends State<AsignaturasListaScreen> {
+  final _asignaturasService = di.get<AsignaturasService>();
+
+  bool get _mostrarCalculadora => RemoteConfigService.calculadoraMostrar;
 
   @override
   Widget build(BuildContext context) {
+    final _carreraSeleccionada = watchValue((CarrerasService service) => service.selectedCarrera);
+    if(_carreraSeleccionada?.id == null) {
+      logger.d("Carrera seleccionada es nula! Refrescando...");
+      di.get<CarrerasService>().getCarreras(forceRefresh: true);
+    }
+
     return Scaffold(
       appBar: CustomAppBar(
         title: Text("Asignaturas"),
-        actions: _mostrarCalculadora
-            ? [
-                IconButton(
-                  icon: Icon(Mdi.calculator),
-                  tooltip: "Calculadora",
-                  onPressed: () => Get.toNamed(Routes.calculadoraNotas),
-                ),
-              ]
-            : [],
+        actions: _mostrarCalculadora ? [
+          IconButton(
+            icon: Icon(Mdi.calculator),
+            tooltip: "Calculadora",
+            onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (ctx) => CalculadoraNotasScreen())),
+          ),
+        ] : [],
       ),
       body: PullToRefresh(
-        onRefresh: () async => await _onRefresh(),
-        child: controller.obx(
-          (asignaturas) => asignaturas == null || asignaturas.isEmpty ? SinAsignaturasMensaje(mensaje: "Parece que no se encontraron asignaturas.", emoji: "🤔") : ListaAsignaturas(asignaturas: asignaturas),
-          onError: (error) => SinAsignaturasMensaje(mensaje:  "Ocurrió un error al obtener las asignaturas", emoji: "😢"),
-          onLoading: Container(
-            padding: EdgeInsets.all(20),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Expanded(
-                  child: Center(
-                    child: LoadingIndicator(),
-                  ),
-                ),
-              ],
-            ),
-          ),
+        onRefresh: () async {
+          setState(() => {});
+        },
+        child: FutureBuilder<List<Asignatura>?>(
+          future: _asignaturasService.getAsignaturas(_carreraSeleccionada?.id),
+          builder: (context, snapshot) {
+            if(snapshot.hasError) {
+              final error = snapshot.error is CustomException ? (snapshot.error as CustomException).message : "Ocurrió un error al obtener las asignaturas";
+              return _errorWidget(error);
+            }
+
+            if(snapshot.connectionState == ConnectionState.waiting) {
+              return _loadingWidget();
+            }
+
+            final asignaturas = snapshot.data ?? [];
+            if(asignaturas.isEmpty) {
+              return _errorWidget("No encontramos asignaturas. Por favor intenta más tarde.");
+            }
+
+            return ListaAsignaturas(asignaturas: asignaturas);
+          },
         ),
       ),
     );
   }
+
+  Widget _loadingWidget() => Padding(
+    padding: const EdgeInsets.all(20),
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Expanded(
+          child: Center(
+            child: LoadingIndicator(),
+          ),
+        ),
+      ],
+    ),
+  );
+
+  Widget _errorWidget(String mensaje) => Padding(
+    padding: const EdgeInsets.all(20),
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Expanded(
+          child: Center(
+            child: SinAsignaturasMensaje(mensaje: mensaje, emoji: "\u{1F622}"),
+          ),
+        ),
+      ],
+    ),
+  );
 }
