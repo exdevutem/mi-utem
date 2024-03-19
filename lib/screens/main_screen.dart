@@ -14,7 +14,7 @@ import "package:mi_utem/services_new/interfaces/grades_service.dart";
 import 'package:mi_utem/widgets/banners_section.dart';
 import "package:mi_utem/widgets/custom_app_bar.dart";
 import "package:mi_utem/widgets/custom_drawer.dart";
-import "package:mi_utem/widgets/noticias/NoticiasCarruselWidget.dart";
+import "package:mi_utem/widgets/noticias/noticias_carrusel_widget.dart";
 import "package:mi_utem/widgets/permisos_section.dart";
 import "package:mi_utem/widgets/quick_menu_section.dart";
 import "package:watch_it/watch_it.dart";

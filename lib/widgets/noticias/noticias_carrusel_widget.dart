@@ -6,7 +6,7 @@ import 'package:mi_utem/models/noticia.dart';
 import 'package:mi_utem/services_new/interfaces/noticias_service.dart';
 import 'package:mi_utem/widgets/custom_error_widget.dart';
 import 'package:mi_utem/widgets/loading_indicator.dart';
-import 'package:mi_utem/widgets/noticias/NoticiaCardWidget.dart';
+import 'package:mi_utem/widgets/noticias/noticia_card_widget.dart';
 import 'package:watch_it/watch_it.dart';
 
 class NoticiasCarruselWidget extends StatefulWidget {

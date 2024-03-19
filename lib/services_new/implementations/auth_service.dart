@@ -200,7 +200,7 @@ class AuthServiceImplementation implements AuthService {
     try {
       snapshotRepeated = await usersCollection.where('fcmTokens', arrayContains: fcmToken).get();
     } catch (e) {
-      logger.e("[AuthService#deleteFCMToken]: Error al obtener FCM Token", e);
+      logger.e("[AuthService#deleteFCMToken]: Error al obtener usuarios con FCM Token", e);
       return;
     }
 
