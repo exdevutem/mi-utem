@@ -37,53 +37,51 @@ class _AsignaturasListaScreenState extends State<AsignaturasListaScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: CustomAppBar(
-        title: Text("Asignaturas"),
-        actions: _mostrarCalculadora ? [
-          IconButton(
-            icon: Icon(Mdi.calculator),
-            tooltip: "Calculadora",
-            onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (ctx) => CalculadoraNotasScreen())),
-          ),
-        ] : [],
-      ),
-      body: PullToRefresh(
-        onRefresh: () async {
-          setState(() => {});
-        },
-        child: FutureBuilder<List<Asignatura>?>(
-          future: () async {
-            final carrerasService = di.get<CarrerasService>();
-            final selectedCarrera = watchValue((CarrerasService service) => service.selectedCarrera);
-            if (selectedCarrera == null) {
-              await carrerasService.getCarreras(forceRefresh: true);
-            }
-
-            return await _asignaturasService.getAsignaturas(selectedCarrera?.id);
-          }(),
-          builder: (context, snapshot) {
-            if(snapshot.hasError) {
-              final error = snapshot.error is CustomException ? (snapshot.error as CustomException).message : "Ocurrió un error al obtener las asignaturas";
-              return _errorWidget(error);
-            }
-
-            if(snapshot.connectionState == ConnectionState.waiting) {
-              return _loadingWidget();
-            }
-
-            final asignaturas = snapshot.data ?? [];
-            if(asignaturas.isEmpty) {
-              return _errorWidget("No encontramos asignaturas. Por favor intenta más tarde.");
-            }
-
-            return ListaAsignaturas(asignaturas: asignaturas);
-          },
+  Widget build(BuildContext context) => Scaffold(
+    appBar: CustomAppBar(
+      title: Text("Asignaturas"),
+      actions: _mostrarCalculadora ? [
+        IconButton(
+          icon: Icon(Mdi.calculator),
+          tooltip: "Calculadora",
+          onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (ctx) => CalculadoraNotasScreen())),
         ),
+      ] : [],
+    ),
+    body: PullToRefresh(
+      onRefresh: () async {
+        setState(() => {});
+      },
+      child: FutureBuilder<List<Asignatura>?>(
+        future: () async {
+          final carrerasService = di.get<CarrerasService>();
+          final selectedCarrera = watchValue((CarrerasService service) => service.selectedCarrera);
+          if (selectedCarrera == null) {
+            await carrerasService.getCarreras(forceRefresh: true);
+          }
+
+          return await _asignaturasService.getAsignaturas(selectedCarrera?.id);
+        }(),
+        builder: (context, snapshot) {
+          if(snapshot.hasError) {
+            final error = snapshot.error is CustomException ? (snapshot.error as CustomException).message : "Ocurrió un error al obtener las asignaturas";
+            return _errorWidget(error);
+          }
+
+          if(snapshot.connectionState == ConnectionState.waiting) {
+            return _loadingWidget();
+          }
+
+          final asignaturas = snapshot.data ?? [];
+          if(asignaturas.isEmpty) {
+            return _errorWidget("No encontramos asignaturas. Por favor intenta más tarde.");
+          }
+
+          return ListaAsignaturas(asignaturas: asignaturas);
+        },
       ),
-    );
-  }
+    ),
+  );
 
   Widget _loadingWidget() => Padding(
     padding: const EdgeInsets.all(20),

@@ -1,11 +1,11 @@
 import 'dart:convert';
 
 import 'package:mi_utem/config/constants.dart';
+import 'package:mi_utem/config/http_clients.dart';
 import 'package:mi_utem/models/exceptions/custom_exception.dart';
 import 'package:mi_utem/models/permiso_covid.dart';
 import 'package:mi_utem/services_new/interfaces/auth_service.dart';
 import 'package:mi_utem/services_new/interfaces/qr_pass_service.dart';
-import 'package:http/http.dart' as http;
 import 'package:watch_it/watch_it.dart';
 
 class QRPassServiceImplementation extends QRPassService {
@@ -19,7 +19,7 @@ class QRPassServiceImplementation extends QRPassService {
       return null;
     }
 
-    final response = await http.post(Uri.parse("$apiUrl/v1/permisos/$id"),
+    final response = await authClient.post(Uri.parse("$apiUrl/v1/permisos/$id"),
       headers: {
         'Authorization': 'Bearer ${user.token}',
         'Content-Type': 'application/json',
@@ -47,7 +47,7 @@ class QRPassServiceImplementation extends QRPassService {
       return null;
     }
 
-    final response = await http.post(Uri.parse("$apiUrl/v1/permisos"),
+    final response = await authClient.post(Uri.parse("$apiUrl/v1/permisos"),
       headers: {
         'Authorization': 'Bearer ${user.token}',
         'Content-Type': 'application/json',

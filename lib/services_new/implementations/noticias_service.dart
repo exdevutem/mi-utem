@@ -1,16 +1,18 @@
 import 'dart:convert';
 
 import 'package:mi_utem/config/constants.dart';
+import 'package:mi_utem/config/http_clients.dart';
 import 'package:mi_utem/models/exceptions/custom_exception.dart';
 import 'package:mi_utem/models/noticia.dart';
 import 'package:mi_utem/services_new/interfaces/noticias_service.dart';
-import 'package:http/http.dart' as http;
 
 class NoticiasServiceImplementation implements NoticiasService {
 
   @override
   Future<List<Noticia>?> getNoticias() async {
-    final response = await http.get(Uri.parse("$apiUrl/v1/noticias"));
+    final response = await httpClient.get(Uri.parse("$apiUrl/v1/noticias"), headers: {
+      'X-MiUTEM-Use-Cache': 'true',
+    });
 
     final json = jsonDecode(response.body);
 

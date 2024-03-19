@@ -1,11 +1,11 @@
 import 'dart:convert';
 
 import 'package:mi_utem/config/constants.dart';
+import 'package:mi_utem/config/http_clients.dart';
 import 'package:mi_utem/models/exceptions/custom_exception.dart';
 import 'package:mi_utem/models/horario.dart';
 import 'package:mi_utem/services_new/interfaces/auth_service.dart';
 import 'package:mi_utem/services_new/interfaces/horario_service.dart';
-import 'package:http/http.dart' as http;
 import 'package:watch_it/watch_it.dart';
 
 class HorarioServiceImplementation implements HorarioService {
@@ -16,7 +16,7 @@ class HorarioServiceImplementation implements HorarioService {
       return null;
     }
 
-    final response = await http.get(Uri.parse("$apiUrl/v1/carreras/$carreraId/horarios"),
+    final response = await authClient.get(Uri.parse("$apiUrl/v1/carreras/$carreraId/horarios"),
       headers: {
         'Authorization': 'Bearer ${user.token}',
         'Content-Type': 'application/json',

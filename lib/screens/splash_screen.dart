@@ -1,13 +1,17 @@
+import 'dart:convert';
+
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:mi_utem/config/logger.dart';
+import 'package:mi_utem/config/constants.dart';
+import 'package:mi_utem/config/http_clients.dart';
 import 'package:mi_utem/screens/login_screen/login_screen.dart';
 import 'package:mi_utem/screens/main_screen.dart';
 import 'package:mi_utem/services/analytics_service.dart';
 import 'package:mi_utem/services/notification_service.dart';
 import 'package:mi_utem/services_new/interfaces/auth_service.dart';
+import 'package:mi_utem/widgets/loading_dialog.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:watch_it/watch_it.dart';
 
@@ -63,6 +67,27 @@ class _SplashScreenState extends State<SplashScreen> {
                     fit: BoxFit.contain,
                     animation: "default",
                     callback: (String val) async {
+                      Get.dialog(LoadingDialog(), barrierDismissible: false);
+                      // Revisar si tenemos conexión a internet
+                      try {
+                        final response = await httpClient.get(Uri.parse(apiUrl));
+                        final json = jsonDecode(response.body);
+                        if(!(json is Map && json["funcionando"] == true)) {
+                          Get.back();
+                          Get.snackbar("Error", "No se pudo conectar al servidor. Revisa tu conexión a internet.",
+                            backgroundColor: Colors.red,
+                            colorText: Colors.white,
+                          );
+                          return;
+                        }
+                      } catch (e) {
+                        Get.back();
+                        Get.snackbar("Error", "No se pudo conectar al servidor. Revisa tu conexión a internet.",
+                          backgroundColor: Colors.red,
+                          colorText: Colors.white,
+                        );
+                        return;
+                      }
                       await NotificationService.requestUserPermissionIfNecessary();
                       final isLoggedIn = await _authService.isLoggedIn();
                       if(!isLoggedIn) {
@@ -73,6 +98,7 @@ class _SplashScreenState extends State<SplashScreen> {
                           AnalyticsService.setUser(user);
                         }
                       }
+                      Get.back();
                       Navigator.pushReplacement(context, MaterialPageRoute(builder: (ctx) => isLoggedIn ? MainScreen() : LoginScreen()));
                     },
                   ),

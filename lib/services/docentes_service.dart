@@ -1,8 +1,6 @@
 import 'package:dio/dio.dart';
-import 'package:http/http.dart' as http;
+import 'package:mi_utem/config/http_clients.dart';
 import 'package:mi_utem/models/user/user.dart';
-
-import 'package:mi_utem/models/usuario.dart';
 import 'package:mi_utem/utils/dio_docente_client.dart';
 
 class DocentesService {
@@ -16,7 +14,7 @@ class DocentesService {
 
     for (final formato in formatos) {
       String actualImageUrl = "$baseUrl${user.rut?.rut}$formato";
-      final imageResponse = await http.head(Uri.parse(actualImageUrl));
+      final imageResponse = await authClient.head(Uri.parse(actualImageUrl));
 
       if (imageResponse.statusCode == 200) {
         imageUrl = actualImageUrl;

@@ -2,8 +2,8 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:mi_utem/config/constants.dart';
+import 'package:mi_utem/config/http_clients.dart';
 import 'package:mi_utem/config/logger.dart';
 import 'package:mi_utem/config/secure_storage.dart';
 import 'package:mi_utem/models/exceptions/custom_exception.dart';
@@ -29,14 +29,13 @@ class AuthServiceImplementation implements AuthService {
       return false;
     }
 
-    // Get stored user
     final user = await getUser();
     if(user == null) {
       return false;
     }
 
     try {
-      final response = await http.post(Uri.parse("$apiUrl/v1/auth/refresh"),
+      final response = await httpClient.post(Uri.parse("$apiUrl/v1/auth/refresh"),
         body: credential.toString(),
         headers: {
           'Content-Type': 'application/json',
@@ -52,7 +51,7 @@ class AuthServiceImplementation implements AuthService {
       await secureStorage.write(key: "last_login", value: "${DateTime.now().millisecondsSinceEpoch}");
       return true;
     } catch (e) {
-      logger.e("[AuthService#isLoggedIn]: $e");
+      logger.e("[AuthService#isLoggedIn]: Error al refrescar token", e);
     }
 
     return false;
@@ -65,7 +64,7 @@ class AuthServiceImplementation implements AuthService {
       return;
     }
 
-    final response = await http.post(Uri.parse("$apiUrl/v1/auth"),
+    final response = await httpClient.post(Uri.parse("$apiUrl/v1/auth"),
       body: credential.toString(),
       headers: {
         'Content-Type': 'application/json',
@@ -73,17 +72,16 @@ class AuthServiceImplementation implements AuthService {
       },
     );
 
-    final json = jsonDecode(response.body) as Map<String, dynamic>;
-
+    final json = jsonDecode(response.body);
     if(response.statusCode != 200) {
-      if(json.containsKey("error")) {
+      if(json is Map<String, dynamic> && json.containsKey("error")) {
         throw CustomException.fromJson(json);
       }
 
       throw CustomException.custom(response.reasonPhrase);
     }
 
-    final user = User.fromJson(json);
+    final user = User.fromJson(json as Map<String, dynamic>);
     await setUser(user);
   }
 
@@ -100,7 +98,7 @@ class AuthServiceImplementation implements AuthService {
   @override
   Future<User?> getUser() async {
     final data = await secureStorage.read(key: "user");
-    if(data == null) {
+    if(data == null || data == "null") {
       return null;
     }
 
@@ -127,7 +125,7 @@ class AuthServiceImplementation implements AuthService {
       return null;
     }
 
-    final response = await http.put(Uri.parse("$apiUrl/v1/usuarios/foto"),
+    final response = await httpClient.put(Uri.parse("$apiUrl/v1/usuarios/foto"),
       body: jsonEncode({"imagen": image}),
       headers: {
         'Content-Type': 'application/json',

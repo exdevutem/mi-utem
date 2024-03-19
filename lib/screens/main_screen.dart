@@ -6,16 +6,19 @@ import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:flutter_markdown/flutter_markdown.dart";
 import "package:get/get.dart";
+import "package:mi_utem/config/logger.dart";
 import "package:mi_utem/models/user/user.dart";
 import "package:mi_utem/services/remote_config/remote_config.dart";
 import "package:mi_utem/services/review_service.dart";
 import "package:mi_utem/services_new/interfaces/auth_service.dart";
 import "package:mi_utem/services_new/interfaces/grades_service.dart";
+import "package:mi_utem/widgets/banner.dart";
 import 'package:mi_utem/widgets/banners_section.dart';
 import "package:mi_utem/widgets/custom_app_bar.dart";
 import "package:mi_utem/widgets/custom_drawer.dart";
 import "package:mi_utem/widgets/noticias/noticias_carrusel_widget.dart";
 import "package:mi_utem/widgets/permisos_section.dart";
+import "package:mi_utem/widgets/pull_to_refresh.dart";
 import "package:mi_utem/widgets/quick_menu_section.dart";
 import "package:watch_it/watch_it.dart";
 
@@ -30,6 +33,7 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
 
+  List<IBanner> _banners = const [];
   User? _user;
   final _authService = di.get<AuthService>();
 
@@ -50,7 +54,16 @@ class _MainScreenState extends State<MainScreen> {
     ReviewService.addScreen("MainScreen");
     ReviewService.checkAndRequestReview();
 
+    loadData();
+
     _authService.getUser().then((user) => setState(() => _user = user));
+  }
+
+  Future<void> loadData() async {
+    setState(() {
+      _banners = RemoteConfigService.banners;
+      logger.d("Banners: $_banners");
+    });
   }
 
   String get _greetingText {
@@ -59,20 +72,19 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    final banners = RemoteConfigService.banners;
-
-    return Scaffold(
-      appBar: CustomAppBar(title: Text("Inicio")),
-      drawer: CustomDrawer(),
-      floatingActionButton: kDebugMode ? FloatingActionButton(
-        onPressed: () => di.get<GradesService>().lookForGradeUpdates(),
-        tooltip: "Probar notificaciones de notas",
-        child: Icon(Icons.notifications,
-          color: Colors.white,
-        ),
-      ) : null,
-      body: SingleChildScrollView(
+  Widget build(BuildContext context) => Scaffold(
+    appBar: CustomAppBar(title: Text("Inicio")),
+    drawer: CustomDrawer(),
+    floatingActionButton: kDebugMode ? FloatingActionButton(
+      onPressed: () => di.get<GradesService>().lookForGradeUpdates(),
+      tooltip: "Probar notificaciones de notas",
+      child: Icon(Icons.notifications,
+        color: Colors.white,
+      ),
+    ) : null,
+    body: PullToRefresh(
+      onRefresh: loadData,
+      child: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -93,14 +105,14 @@ class _MainScreenState extends State<MainScreen> {
             const SizedBox(height: 20),
             QuickMenuSection(),
             const SizedBox(height: 20),
-            if (banners.isNotEmpty) ...[
-              BannersSection(banners: banners),
+            if (_banners.isNotEmpty) ...[
+              BannersSection(banners: _banners),
               const SizedBox(height: 20),
             ],
             NoticiasCarruselWidget(),
           ],
         ),
       ),
-    );
-  }
+    ),
+  );
 }

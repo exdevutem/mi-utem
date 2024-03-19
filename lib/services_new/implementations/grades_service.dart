@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:http/http.dart' as http;
 import 'package:mi_utem/config/constants.dart';
+import 'package:mi_utem/config/http_clients.dart';
 import 'package:mi_utem/config/secure_storage.dart';
 import 'package:mi_utem/models/asignatura.dart';
 import 'package:mi_utem/models/exceptions/custom_exception.dart';
@@ -24,7 +24,7 @@ class GradesServiceImplementation implements GradesService {
       return null;
     }
 
-    final response = await http.get(Uri.parse("$apiUrl/v1/carreras/$carreraId/asignaturas/$asignaturaId/notas"),
+    final response = await authClient.get(Uri.parse("$apiUrl/v1/carreras/$carreraId/asignaturas/$asignaturaId/notas"),
       headers: {
         'Authorization': 'Bearer ${user.token}',
         'Content-Type': 'application/json',
