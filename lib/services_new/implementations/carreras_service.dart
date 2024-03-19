@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:mi_utem/config/constants.dart';
 import 'package:mi_utem/config/http_clients/auth_client.dart';
 import 'package:mi_utem/config/logger.dart';
@@ -11,12 +11,13 @@ import 'package:mi_utem/services_new/interfaces/auth_service.dart';
 import 'package:mi_utem/services_new/interfaces/carreras_service.dart';
 import 'package:watch_it/watch_it.dart';
 
-class CarrerasServiceImplementation with ChangeNotifier implements CarrerasService {
+class CarrerasServiceImplementation extends ChangeNotifier implements CarrerasService {
 
   @override
-  ValueNotifier<List<Carrera>> get carreras => ValueNotifier([]);
+  ValueNotifier<List<Carrera>> carreras = ValueNotifier([]);
 
-  ValueNotifier<Carrera?> get selectedCarrera => ValueNotifier(null);
+  @override
+  ValueNotifier<Carrera?> selectedCarrera = ValueNotifier(null);
 
   @override
   Future<void> getCarreras({bool forceRefresh = false}) async {
@@ -27,10 +28,9 @@ class CarrerasServiceImplementation with ChangeNotifier implements CarrerasServi
       return;
     }
 
-    final response = await AuthClient().get(Uri.parse("$apiUrl/v1/carreras"));
+    final response = await authClient.get(Uri.parse("$apiUrl/v1/carreras"));
 
     final json = jsonDecode(response.body);
-    logger.d("[CarrerasService#getCarreras]: Response: $json");
     if(response.statusCode != 200) {
       logger.e("Error al obtener carreras: $json}");
       if(json is Map && json.containsKey("error")) {
@@ -41,23 +41,25 @@ class CarrerasServiceImplementation with ChangeNotifier implements CarrerasServi
     }
 
     carreras.value = Carrera.fromJsonList(json);
-    autoSelectCarreraActiva(carreras.value);
+    autoSelectCarreraActiva();
     notifyListeners();
-    logger.d("[CarrerasService#getCarreras]: Carreras obtenidas: $json");
   }
 
   @override
   void changeSelectedCarrera(Carrera carrera) => selectedCarrera.value = carrera;
 
   @override
-  void autoSelectCarreraActiva(List<Carrera> carreras) {
+  void autoSelectCarreraActiva() {
+    logger.d("[CarrerasService#autoSelectCarreraActiva]: Seleccionando carrera activa... ${carreras.value.map((e) => e.toJson()).toList()}");
     final estados = ["Regular", "Causal de Eliminacion"]
         .reversed
         .map((e) => e.toLowerCase())
         .toList();
 
-    carreras.sort((a,b) => estados.indexOf(b.estado!.toLowerCase()).compareTo(estados.indexOf(a.estado!.toLowerCase())));
-    final carreraActiva = carreras.first;
+    logger.d("[CarrerasService#autoSelectCarreraActiva]: Estados: $estados");
+    carreras.value.sort((a,b) => estados.indexOf(b.estado!.toLowerCase()).compareTo(estados.indexOf(a.estado!.toLowerCase())));
+    logger.d("[CarrerasService#autoSelectCarreraActiva]: Carreras ordenadas: ${carreras.value.map((e) => e.toJson()).toList()}");
+    final carreraActiva = carreras.value.first;
 
     AnalyticsService.setCarreraToUser(carreraActiva);
     changeSelectedCarrera(carreraActiva);

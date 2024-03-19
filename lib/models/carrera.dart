@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:recase/recase.dart';
 
 class Carrera {
@@ -32,4 +34,15 @@ class Carrera {
     }
     return list;
   }
+
+  toJson() => {
+    'id': id,
+    'nombre': nombre,
+    'estado': estado,
+    'codigo': codigo,
+    'plan': plan,
+  };
+
+  @override
+  String toString() => jsonEncode(toJson());
 }

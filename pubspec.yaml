@@ -79,6 +79,7 @@ dependencies:
   get_it: ^7.6.0
   watch_it: ^1.0.2
   extended_masked_text: ^2.3.1
+  crypto: ^3.0.3
 
 dependency_overrides:
   qr: ^3.0.0

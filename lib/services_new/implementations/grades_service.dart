@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:mi_utem/config/constants.dart';
-import 'package:mi_utem/config/logger.dart';
 import 'package:mi_utem/config/secure_storage.dart';
 import 'package:mi_utem/models/asignatura.dart';
 import 'package:mi_utem/models/exceptions/custom_exception.dart';
@@ -67,7 +66,7 @@ class GradesServiceImplementation implements GradesService {
       return {};
     }
 
-    final carrera = di.get<CarrerasService>().selectedCarrera.value;
+    final carrera = watchValue((CarrerasService service) => service.selectedCarrera);
     final carreraId = carrera?.id;
 
     if(carreraId == null) {

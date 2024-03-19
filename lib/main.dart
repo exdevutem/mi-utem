@@ -10,15 +10,12 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:mi_utem/config/constants.dart';
 import 'package:mi_utem/screens/splash_screen.dart';
-import 'package:mi_utem/services/analytics_service.dart';
 import 'package:mi_utem/services/background_service.dart';
 import 'package:mi_utem/services/notification_service.dart';
 import 'package:mi_utem/services_new/service_manager.dart';
-import 'package:mi_utem/services_new/interfaces/auth_service.dart' as AuthServiceNew;
 import 'package:mi_utem/themes/theme.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
-import 'package:watch_it/watch_it.dart';
 
 import 'services/remote_config/remote_config.dart';
 

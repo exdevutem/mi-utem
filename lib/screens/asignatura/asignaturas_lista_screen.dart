@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mdi/mdi.dart';
-import 'package:mi_utem/config/logger.dart';
 import 'package:mi_utem/models/asignatura.dart';
-import 'package:mi_utem/models/carrera.dart';
 import 'package:mi_utem/models/exceptions/custom_exception.dart';
 import 'package:mi_utem/screens/calculadora_notas_screen.dart';
 import 'package:mi_utem/services/remote_config/remote_config.dart';
@@ -27,14 +25,19 @@ class _AsignaturasListaScreenState extends State<AsignaturasListaScreen> {
 
   bool get _mostrarCalculadora => RemoteConfigService.calculadoraMostrar;
 
+
   @override
-  Widget build(BuildContext context) {
-    final _carreraSeleccionada = watchValue((CarrerasService service) => service.selectedCarrera);
-    if(_carreraSeleccionada?.id == null) {
-      logger.d("Carrera seleccionada es nula! Refrescando...");
-      di.get<CarrerasService>().getCarreras(forceRefresh: true);
+  void initState() {
+    final _carrerasService = di.get<CarrerasService>();
+    if (_carrerasService.selectedCarrera.value == null) {
+      _carrerasService.getCarreras(forceRefresh: true).then((_) => setState(() => {}));
     }
 
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
         title: Text("Asignaturas"),
@@ -51,7 +54,15 @@ class _AsignaturasListaScreenState extends State<AsignaturasListaScreen> {
           setState(() => {});
         },
         child: FutureBuilder<List<Asignatura>?>(
-          future: _asignaturasService.getAsignaturas(_carreraSeleccionada?.id),
+          future: () async {
+            final carrerasService = di.get<CarrerasService>();
+            final selectedCarrera = watchValue((CarrerasService service) => service.selectedCarrera);
+            if (selectedCarrera == null) {
+              await carrerasService.getCarreras(forceRefresh: true);
+            }
+
+            return await _asignaturasService.getAsignaturas(selectedCarrera?.id);
+          }(),
           builder: (context, snapshot) {
             if(snapshot.hasError) {
               final error = snapshot.error is CustomException ? (snapshot.error as CustomException).message : "Ocurrió un error al obtener las asignaturas";

@@ -154,35 +154,64 @@ class AuthServiceImplementation implements AuthService {
 
   @override
   Future<void> saveFCMToken() async {
+    final user = await this.getUser();
+    if(user == null) {
+      return;
+    }
+
+    String? fcmToken;
     try {
-      String? fcmToken = await NotificationService.fcm.requestFirebaseAppToken();
-      final user = await this.getUser();
-      if(user == null) {
-        return;
-      }
+      fcmToken = await NotificationService.fcm.requestFirebaseAppToken();
+    } catch (e) {
+      logger.e("[AuthService#saveFCMToken]: Error al obtener FCM Token", e);
+      return;
+    }
 
-      final usersCollection = FirebaseFirestore.instance.collection('usuarios');
+    final usersCollection = FirebaseFirestore.instance.collection('usuarios');
+
+    try {
       await this.deleteFCMToken();
+    } catch (e) {
+      logger.e("[AuthService#saveFCMToken]: Error al eliminar FCM Token", e);
+    }
 
+    try {
       usersCollection.doc(user.rut?.rut.toString()).set({
         'fcmTokens': FieldValue.arrayUnion([fcmToken]),
       }, SetOptions(merge: true));
     } catch (e) {
-      logger.e(e);
+      logger.e("[AuthService#saveFCMToken]: Error al guardar FCM Token", e);
     }
   }
 
   @override
   Future<void> deleteFCMToken() async {
-    String? token = await NotificationService.fcm.requestFirebaseAppToken();
+    String? fcmToken;
+    try {
+      fcmToken = await NotificationService.fcm.requestFirebaseAppToken();
+    } catch (e) {
+      logger.e("[AuthService#deleteFCMToken]: Error al obtener FCM Token", e);
+      return;
+    }
+
     final usersCollection = FirebaseFirestore.instance.collection('usuarios');
 
-    final snapshotRepeated = await usersCollection.where("fcmTokens", arrayContains: token).get();
+    QuerySnapshot<Map<String, dynamic>> snapshotRepeated;
+    try {
+      snapshotRepeated = await usersCollection.where('fcmTokens', arrayContains: fcmToken).get();
+    } catch (e) {
+      logger.e("[AuthService#deleteFCMToken]: Error al obtener FCM Token", e);
+      return;
+    }
 
-    for(final doc in snapshotRepeated.docs) {
-      doc.reference.set({
-        "fcmTokens": FieldValue.arrayRemove([token]),
-      }, SetOptions(merge: true));
+    try {
+      for(final doc in snapshotRepeated.docs) {
+        doc.reference.set({
+          "fcmTokens": FieldValue.arrayRemove([fcmToken]),
+        }, SetOptions(merge: true));
+      }
+    } catch (e) {
+      logger.e("[AuthService#deleteFCMToken]: Error al eliminar FCM Token", e);
     }
   }
 

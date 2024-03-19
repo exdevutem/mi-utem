@@ -69,7 +69,7 @@ class AcercaClubDesarrolladores extends StatelessWidget {
                         const SizedBox(height: 5),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
-                          children: developer['redes'].map((socialNetwork) => Container(
+                          children: (developer['redes'] as List<dynamic>).map((socialNetwork) => Container(
                             margin: const EdgeInsets.only(right: 8),
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
@@ -81,7 +81,7 @@ class AcercaClubDesarrolladores extends StatelessWidget {
                               onTap: () async {
                                 AnalyticsService.logEvent("acerca_person_social_tap",
                                   parameters: {
-                                  "persona": developer['nombre'],
+                                    "persona": developer['nombre'],
                                     "red": socialNetwork['nombre'],
                                   },
                                 );
