@@ -6,9 +6,9 @@ import 'package:mi_utem/widgets/acerca/dialog/acerca_aplicacion_content.dart';
 import 'package:mi_utem/widgets/acerca/dialog/acerca_dialog_action_button.dart';
 
 class AcercaDialog extends StatefulWidget {
-  AcercaDialog({
-    Key? key,
-  }) : super(key: key);
+  const AcercaDialog({
+    super.key,
+  });
 
   @override
   State<StatefulWidget> createState() => _AcercaDialogState();

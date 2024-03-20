@@ -12,6 +12,7 @@ import 'package:mi_utem/services/analytics_service.dart';
 import 'package:mi_utem/services/notification_service.dart';
 import 'package:mi_utem/services_new/interfaces/auth_service.dart';
 import 'package:mi_utem/widgets/loading_dialog.dart';
+import 'package:mi_utem/widgets/snackbar.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:watch_it/watch_it.dart';
 
@@ -67,24 +68,26 @@ class _SplashScreenState extends State<SplashScreen> {
                     fit: BoxFit.contain,
                     animation: "default",
                     callback: (String val) async {
-                      Get.dialog(LoadingDialog(), barrierDismissible: false);
+                      showLoadingDialog(context);
                       // Revisar si tenemos conexión a internet
                       try {
                         final response = await httpClient.get(Uri.parse(apiUrl));
                         final json = jsonDecode(response.body);
                         if(!(json is Map && json["funcionando"] == true)) {
-                          Get.back();
-                          Get.snackbar("Error", "No se pudo conectar al servidor. Revisa tu conexión a internet.",
+                          Navigator.pop(context);
+                          showTextSnackbar(context,
+                            title: "Error",
+                            message: "No se pudo conectar al servidor. Revisa tu conexión a internet.",
                             backgroundColor: Colors.red,
-                            colorText: Colors.white,
                           );
                           return;
                         }
                       } catch (e) {
-                        Get.back();
-                        Get.snackbar("Error", "No se pudo conectar al servidor. Revisa tu conexión a internet.",
+                        Navigator.pop(context);
+                        showTextSnackbar(context,
+                          title: "Error",
+                          message: "No se pudo conectar al servidor. Revisa tu conexión a internet.",
                           backgroundColor: Colors.red,
-                          colorText: Colors.white,
                         );
                         return;
                       }
@@ -98,7 +101,7 @@ class _SplashScreenState extends State<SplashScreen> {
                           AnalyticsService.setUser(user);
                         }
                       }
-                      Get.back();
+                      Navigator.pop(context);
                       Navigator.pushReplacement(context, MaterialPageRoute(builder: (ctx) => isLoggedIn ? MainScreen() : LoginScreen()));
                     },
                   ),

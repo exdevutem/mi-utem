@@ -34,17 +34,31 @@ class AuthServiceImplementation implements AuthService {
       return false;
     }
 
+    final lastLogin = await secureStorage.read(key: "last_login");
+    if(lastLogin == null) {
+      return false;
+    }
+
+    final lastLoginDate = DateTime.fromMillisecondsSinceEpoch(int.parse(lastLogin));
+    final now = DateTime.now();
+    final difference = now.difference(lastLoginDate);
+    if(difference.inMinutes < 5) {
+      return true;
+    }
+
     try {
-      final response = await httpClient.post(Uri.parse("$apiUrl/v1/auth/refresh"),
+      final response = await httpClient.post(Uri.parse("$apiUrl/v1/auth"),
         body: credential.toString(),
         headers: {
           'Content-Type': 'application/json',
           'User-Agent': 'App/MiUTEM',
-          'Authorization': 'Bearer ${user.token}',
         },
       );
 
       final token = jsonDecode(response.body)["token"] as String;
+      if(token == user.token) {
+        return true;
+      }
       final userJson = user.toJson();
       userJson["token"] = token;
       await setUser(User.fromJson(userJson));

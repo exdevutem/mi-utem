@@ -8,9 +8,14 @@ import 'package:mi_utem/models/pair.dart';
 import 'package:mi_utem/services_new/interfaces/auth_service.dart';
 import 'package:watch_it/watch_it.dart';
 
-final httpClient = http.Client();
+final httpClient = InterceptedClient.build(
+  interceptors: [
+    LoggerInterceptor(),
+  ],
+);
 final authClient = InterceptedClient.build(
   interceptors: [
+    LoggerInterceptor(),
     AuthInterceptor(),
   ],
   retryPolicy: ExpiredTokenRetryPolicy(),
@@ -20,7 +25,6 @@ class AuthInterceptor implements InterceptorContract {
 
   @override
   Future<RequestData> interceptRequest({required RequestData data}) async {
-    logger.d("[AuthInterceptor]: ${data.method.name.toUpperCase()} ${data.url}");
     if(!data.headers.containsKey('user-agent'))  {
       data.headers['user-agent'] = "App/MiUTEM";
     }
@@ -48,20 +52,49 @@ class AuthInterceptor implements InterceptorContract {
 class ExpiredTokenRetryPolicy extends RetryPolicy {
 
   @override
+  int get maxRetryAttempts => 3;
+
+  @override
   Future<bool> shouldAttemptRetryOnResponse(ResponseData response) async {
-    if(response.statusCode == 401) {
-      logger.d("[ExpiredTokenRetryPolicy]: Se recibió un 401, refrescando token...");
-      final _authService = di.get<AuthService>();
-      final currentUser = await _authService.getUser();
-      await _authService.isLoggedIn();
-      final user = await _authService.getUser();
-      final token = user?.token;
-      if (token != null && currentUser?.token != token) {
-        return true;
-      }
+    if(response.statusCode != 401) {
+      return false;
     }
 
-    return false;
+    logger.d("[ExpiredTokenRetryPolicy]: ${response.request?.method.name.toUpperCase()} ${response.request?.url} Recibió un 401, refrescando token...");
+    final _authService = di.get<AuthService>();
+    final currentUser = await _authService.getUser();
+    await _authService.isLoggedIn();
+    final user = await _authService.getUser();
+    final token = user?.token;
+    if(token == null) {
+      logger.d("[ExpiredTokenRetryPolicy]: No se pudo refrescar el token, redirigiendo a login");
+      return false;
+    }
+
+    return currentUser?.token == token;
+  }
+}
+
+class LoggerInterceptor implements InterceptorContract {
+
+  final _times = <String, DateTime>{};
+
+  @override
+  Future<RequestData> interceptRequest({required RequestData data}) async {
+    logger.d("[LoggerInterceptor#request]: ${data.method.name.toUpperCase()} ${data.url}");
+    _times["${data.method}:${data.url}"] = DateTime.now();
+    return data;
+  }
+
+  @override
+  Future<ResponseData> interceptResponse({required ResponseData data}) async {
+    String? diff;
+    final time = _times["${data.method}:${data.url}"];
+    if(time != null) {
+      diff = " (${DateTime.now().difference(time).inMilliseconds}ms)";
+    }
+    logger.d("[LoggerInterceptor#response]: ${data.statusCode} ${data.url}$diff");
+    return data;
   }
 }
 

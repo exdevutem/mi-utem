@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mi_utem/services_new/interfaces/calculator_service.dart';
+import 'package:mi_utem/services_new/interfaces/controllers/calculator_controller.dart';
 import 'package:mi_utem/themes/theme.dart';
 import 'package:watch_it/watch_it.dart';
 
@@ -10,7 +10,7 @@ class NotaPresentacionDisplayWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _calculatorService = di.get<CalculatorService>();
+    final _calculatorService = di.get<CalculatorController>();
     return Row(
       children: [
         const Text("Pres.",

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:mi_utem/services_new/interfaces/calculator_service.dart';
+import 'package:mi_utem/services_new/interfaces/controllers/calculator_controller.dart';
 import 'package:mi_utem/themes/theme.dart';
 import 'package:watch_it/watch_it.dart';
 
-class NotaExamenDisplayWidget extends StatelessWidget {
+class NotaExamenDisplayWidget extends StatelessWidget with WatchItMixin{
 
   const NotaExamenDisplayWidget({
     super.key,
@@ -11,7 +11,8 @@ class NotaExamenDisplayWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _calculatorService = di.get<CalculatorService>();
+    final _calculatorController = di.get<CalculatorController>();
+    final examGradeTextFieldController = watchValue((CalculatorController controller) => controller.examGradeTextFieldController);
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -23,15 +24,13 @@ class NotaExamenDisplayWidget extends StatelessWidget {
           width: 80,
           margin: const EdgeInsets.only(left: 15),
           child: TextField(
-            controller: _calculatorService.examGradeTextFieldController,
+            controller: examGradeTextFieldController,
             textAlign: TextAlign.center,
-            onChanged: (String value) {
-              _calculatorService.examGrade.value = double.tryParse(value.replaceAll(",", "."));
-            },
-            enabled: _calculatorService.canTakeExam,
+            onChanged: (String value) => _calculatorController.setExamGrade(double.tryParse(value.replaceAll(",", "."))),
+            enabled: _calculatorController.canTakeExam,
             decoration: InputDecoration(
-              hintText: _calculatorService.getMinimumRequiredExamGrade?.toStringAsFixed(1) ?? "",
-              filled: !_calculatorService.canTakeExam,
+              hintText: _calculatorController.getMinimumRequiredExamGrade?.toStringAsFixed(1) ?? "",
+              filled: !_calculatorController.canTakeExam,
               fillColor: Colors.grey.withOpacity(0.2),
               disabledBorder: MainTheme.theme.inputDecorationTheme.border!.copyWith(
                 borderSide: BorderSide(

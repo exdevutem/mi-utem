@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class REvaluacion {
   String? descripcion;
   num? porcentaje;
@@ -28,6 +30,9 @@ class REvaluacion {
     descripcionKey: descripcion,
     notaKey: nota,
   };
+
+  @override
+  String toString() => jsonEncode(toJson());
 }
 
 class IEvaluacion extends REvaluacion {
@@ -39,24 +44,30 @@ class IEvaluacion extends REvaluacion {
     num? porcentaje,
     num? nota,
   }) : super(
-          descripcion: descripcion,
-          porcentaje: porcentaje,
-          nota: nota,
-        );
+    descripcion: descripcion,
+    porcentaje: porcentaje,
+    nota: nota,
+  );
 
-  factory IEvaluacion.fromRemote(REvaluacion evaluacion) {
-    return IEvaluacion(
-      descripcion: evaluacion.descripcion,
-      porcentaje: evaluacion.porcentaje,
-      nota: evaluacion.nota,
-    );
-  }
+  factory IEvaluacion.fromRemote(REvaluacion evaluacion) => IEvaluacion(
+    descripcion: evaluacion.descripcion,
+    porcentaje: evaluacion.porcentaje,
+    nota: evaluacion.nota,
+  );
 
-  IEvaluacion copyWith({bool? editable, String? descripcion, num? porcentaje, num? nota}) =>
-      IEvaluacion(
-        editable: editable ?? this.editable,
-        descripcion: descripcion ?? this.descripcion,
-        porcentaje: porcentaje ?? this.porcentaje,
-        nota: nota ?? this.nota,
-      );
+  IEvaluacion copyWith({bool? editable, String? descripcion, num? porcentaje, num? nota}) => IEvaluacion(
+    editable: editable ?? this.editable,
+    descripcion: descripcion ?? this.descripcion,
+    porcentaje: porcentaje ?? this.porcentaje,
+    nota: nota ?? this.nota,
+  );
+
+  @override
+  Map<String, dynamic> toJson() => {
+    ...super.toJson(),
+    "editable": editable,
+  };
+
+  @override
+  String toString() => jsonEncode(toJson());
 }

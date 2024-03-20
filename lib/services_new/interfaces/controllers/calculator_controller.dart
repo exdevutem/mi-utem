@@ -3,24 +3,24 @@ import 'package:flutter/material.dart';
 import 'package:mi_utem/models/evaluacion.dart';
 import 'package:mi_utem/models/grades.dart';
 
-abstract class CalculatorService {
+abstract class CalculatorController {
 
   /* Notas parciales */
-  ValueNotifier<List<IEvaluacion>> get partialGrades;
+  abstract ValueNotifier<List<IEvaluacion>> partialGrades;
 
   /* Controlador de texto para los porcentajes con máscara (para autocompletar formato) */
-  ValueNotifier<List<MaskedTextController>> get percentageTextFieldControllers;
+  abstract ValueNotifier<List<MaskedTextController>> percentageTextFieldControllers;
 
   /* Controlador de texto para las notas con máscara (para autocompletar formato) */
-  ValueNotifier<List<MaskedTextController>> get gradeTextFieldControllers;
+  abstract ValueNotifier<List<MaskedTextController>> gradeTextFieldControllers;
 
   /* Nota del examen */
-  ValueNotifier<double?> get examGrade;
+  abstract ValueNotifier<double?> examGrade;
 
   /* Controlador de texto para la nota del examen con máscara (para autocompletar formato) */
-  MaskedTextController get examGradeTextFieldController;
+  abstract ValueNotifier<MaskedTextController> examGradeTextFieldController;
 
-  ValueNotifier<bool> get freeEditable;
+  abstract ValueNotifier<bool> freeEditable;
 
   /* Nota final calculada */
   double? get getCalculatedFinalGrade;

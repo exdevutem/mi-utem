@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:mi_utem/config/constants.dart';
 import 'package:mi_utem/config/http_clients.dart';
+import 'package:mi_utem/config/logger.dart';
 import 'package:mi_utem/models/exceptions/custom_exception.dart';
 import 'package:mi_utem/models/horario.dart';
 import 'package:mi_utem/services_new/interfaces/auth_service.dart';
@@ -27,6 +28,7 @@ class HorarioServiceImplementation implements HorarioService {
     final json = jsonDecode(response.body);
 
     if(response.statusCode != 200) {
+      logger.e("[HorarioService] Error al obtener horario: ${response.reasonPhrase}", json);
       if(json is Map && json.containsKey("error")) {
         throw CustomException.fromJson(json as Map<String, dynamic>);
       }

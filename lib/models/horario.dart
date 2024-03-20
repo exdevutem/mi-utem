@@ -137,9 +137,13 @@ class Horario {
   }
 
   List<List<BloqueHorario>> get horarioEnlazado {
+    final _horario = horario;
     List<List<BloqueHorario>> horarioNuevo = [];
+    if(_horario == null) {
+      return [];
+    }
 
-    for (List<BloqueHorario> fila in horario!) {
+    for (List<BloqueHorario> fila in _horario) {
       List<BloqueHorario> filaNueva = [];
       for (BloqueHorario bloque in fila) {
         filaNueva.add(bloque);
@@ -215,7 +219,6 @@ class BloqueHorario {
     for (var bloque in json) {
       List<BloqueHorario> list = [];
       for (var dia in bloque) {
-        log('dia: $dia');
         list.add(BloqueHorario.fromJson(dia));
       }
       matrix.add(list);

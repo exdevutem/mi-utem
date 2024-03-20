@@ -2,50 +2,31 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:get/get.dart';
-import 'package:mi_utem/controllers/horario_controller.dart';
 import 'package:mi_utem/models/horario.dart';
 import 'package:mi_utem/screens/horario/widgets/horario_main_scroller.dart';
 import 'package:mi_utem/services/analytics_service.dart';
 import 'package:mi_utem/services/review_service.dart';
+import 'package:mi_utem/services_new/interfaces/controllers/horario_controller.dart';
 import 'package:mi_utem/widgets/custom_app_bar.dart';
+import 'package:mi_utem/widgets/loading_dialog.dart';
 import 'package:mi_utem/widgets/loading_indicator.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:watch_it/watch_it.dart';
 
-class HorarioScreen extends StatelessWidget {
-  HorarioScreen({
-    Key? key,
-  }) : super(key: key);
+class HorarioScreen extends StatefulWidget with WatchItStatefulWidgetMixin {
+  const HorarioScreen({super.key});
+
+  @override
+  State<HorarioScreen> createState() => _HorarioScreenState();
+}
+
+class _HorarioScreenState extends State<HorarioScreen> {
 
   final ScreenshotController _screenshotController = ScreenshotController();
 
-  final HorarioController controller = Get.put(HorarioController());
-
-  CustomAppBar get _appBar => CustomAppBar(
-        title: Text("Horario"),
-        actions: [
-          Obx(
-            () => controller.horario.value != null &&
-                    !controller.isCenteredInCurrentPeriodAndDay.value
-                ? IconButton(
-                    onPressed: () => _moveViewportToCurrentTime(),
-                    icon: Icon(Icons.center_focus_strong),
-                  )
-                : Container(),
-          ),
-          Obx(
-            () => controller.horario.value != null
-                ? IconButton(
-                    onPressed: () =>
-                        _captureAndShareScreenshot(controller.horario.value!),
-                    icon: Icon(Icons.share),
-                  )
-                : Container(),
-          )
-        ],
-      );
+  final controller = di.get<HorarioController>();
 
   void _moveViewportToCurrentTime() {
     AnalyticsService.logEvent("horario_move_viewport_to_current_time");
@@ -53,24 +34,31 @@ class HorarioScreen extends StatelessWidget {
   }
 
   void _captureAndShareScreenshot(Horario horario) async {
+    showLoadingDialog(context);
     AnalyticsService.logEvent("horario_capture_and_share_screenshot");
     final horarioScroller = HorarioMainScroller(
-      controller: controller,
       horario: horario,
       showActive: false,
     );
     final image = await _screenshotController.captureFromWidget(
       horarioScroller.basicHorario,
       targetSize:
-          Size(HorarioMainScroller.totalWidth, HorarioMainScroller.totalHeight),
+      Size(HorarioMainScroller.totalWidth, HorarioMainScroller.totalHeight),
     );
 
     final directory = await getApplicationDocumentsDirectory();
     final imagePath = await File('${directory.path}/horario.png').create();
     await imagePath.writeAsBytes(image);
 
+    Navigator.pop(context);
     /// Share Plugin
     await Share.shareXFiles([XFile(imagePath.path)]);
+  }
+
+  @override
+  void initState() {
+    controller.getHorarioData();
+    super.initState();
   }
 
   @override
@@ -82,45 +70,56 @@ class HorarioScreen extends StatelessWidget {
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
+    controller.init();
+
+    final horario = watchValue((HorarioController controller) => controller.horario);
+    final isLoadingHorario = watchValue((HorarioController controller) => controller.loadingHorario);
+    final isCenteredInCurrentPeriodAndDay = watchValue((HorarioController controller) => controller.isCenteredInCurrentPeriodAndDay);
+
 
     return Scaffold(
-      appBar: _appBar,
-      body: Obx(
-        () {
-          if ((controller.loadingHorario.value &&
-                  controller.horario.value == null) ||
-              controller.horario.value == null) {
-            return Container(
-              padding: EdgeInsets.all(20),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Expanded(
-                    child: Center(
-                      child: LoadingIndicator(),
-                    ),
-                  ),
-                ],
+      appBar: CustomAppBar(
+        title: Text("Horario"),
+        actions: [
+          horario != null ? IconButton(
+            onPressed: () {
+              controller.getHorarioData(forceRefresh: true).then((value) {
+                setState(() {});
+              });
+            },
+            icon: Icon(Icons.refresh_sharp),
+            tooltip: "Forzar actualización del horario",
+          ) : Container(),
+          horario != null && !isCenteredInCurrentPeriodAndDay ? IconButton(
+            onPressed: () => _moveViewportToCurrentTime(),
+            icon: Icon(Icons.center_focus_strong),
+            tooltip: "Centrar Horario En Hora Actual",
+          ) : Container(),
+          horario != null ? IconButton(
+            onPressed: () => _captureAndShareScreenshot(horario),
+            icon: Icon(Icons.share),
+            tooltip: "Compartir Horario",
+          ) : Container()
+        ],
+      ),
+      body: ((isLoadingHorario && horario == null) || horario == null) ? Container(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Expanded(
+              child: Center(
+                child: LoadingIndicator(),
               ),
-            );
-          }
-
-          return Screenshot(
-            controller: _screenshotController,
-            child: HorarioMainScroller(
-              controller: controller,
-              horario: controller.horario.value!,
             ),
-          );
-        },
+          ],
+        ),
+      ) : Screenshot(
+        controller: _screenshotController,
+        child: HorarioMainScroller(
+          horario: horario,
+        ),
       ),
     );
-  }
-}
-
-class HorarioBinding extends Bindings {
-  @override
-  void dependencies() {
-    Get.put<HorarioController>(HorarioController(), permanent: true);
   }
 }

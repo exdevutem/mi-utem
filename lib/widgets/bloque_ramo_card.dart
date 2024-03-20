@@ -1,9 +1,10 @@
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
-import 'package:mi_utem/controllers/horario_controller.dart';
 import 'package:mi_utem/models/horario.dart';
 import 'package:mi_utem/services/analytics_service.dart';
+import 'package:mi_utem/services_new/interfaces/controllers/horario_controller.dart';
 import 'package:mi_utem/themes/theme.dart';
+import 'package:watch_it/watch_it.dart';
 
 class ClassBlockCard extends StatelessWidget {
   final BloqueHorario? block;
@@ -28,16 +29,14 @@ class ClassBlockCard extends StatelessWidget {
       width: width,
       child: Padding(
         padding: EdgeInsets.all(internalMargin),
-        child: block?.asignatura == null
-            ? _EmptyBlock()
-            : _ClassBlock(
-                block: block!,
-                width: width,
-                height: height,
-                textColor: textColor,
-                onTap: _onTap,
-                onLongPress: _onLongPress,
-              ),
+        child: block?.asignatura == null ? _EmptyBlock() : _ClassBlock(
+          block: block!,
+          width: width,
+          height: height,
+          textColor: textColor,
+          onTap: _onTap,
+          onLongPress: _onLongPress,
+        ),
       ),
     );
   }
@@ -50,6 +49,8 @@ class ClassBlockCard extends StatelessWidget {
         "codigo": block.asignatura?.codigo,
       },
     );
+
+    // TODO: Navegar a la asignatura
   }
 
   _onLongPress(BloqueHorario block) {
@@ -60,6 +61,8 @@ class ClassBlockCard extends StatelessWidget {
         "codigo": block.asignatura?.codigo,
       },
     );
+
+    // TODO: Acá podríamos agregar una vista "rápida" como: Hora, Sala y Profesor.
   }
 }
 
@@ -94,7 +97,7 @@ class _ClassBlock extends StatelessWidget {
   final void Function(BloqueHorario)? onLongPress;
 
   const _ClassBlock({
-    Key? key,
+    super.key,
     required this.block,
     required this.width,
     required this.height,
@@ -102,13 +105,15 @@ class _ClassBlock extends StatelessWidget {
     this.color = Colors.teal,
     this.onTap,
     this.onLongPress,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
+    final _controller = di.get<HorarioController>();
+
     return Container(
       decoration: BoxDecoration(
-        color: HorarioController.to.getColor(block.asignatura!) ?? color,
+        color: _controller.getColor(block.asignatura!) ?? this.color,
         borderRadius: BorderRadius.circular(15),
       ),
       child: Material(

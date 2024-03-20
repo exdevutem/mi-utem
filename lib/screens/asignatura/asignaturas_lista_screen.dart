@@ -25,17 +25,6 @@ class _AsignaturasListaScreenState extends State<AsignaturasListaScreen> {
 
   bool get _mostrarCalculadora => RemoteConfigService.calculadoraMostrar;
 
-
-  @override
-  void initState() {
-    final _carrerasService = di.get<CarrerasService>();
-    if (_carrerasService.selectedCarrera.value == null) {
-      _carrerasService.getCarreras(forceRefresh: true).then((_) => setState(() => {}));
-    }
-
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) => Scaffold(
     appBar: CustomAppBar(

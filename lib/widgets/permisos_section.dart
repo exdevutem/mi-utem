@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mi_utem/controllers/qr_passes_controller.dart';
 import 'package:mi_utem/models/exceptions/custom_exception.dart';
 import 'package:mi_utem/models/permiso_covid.dart';
 import 'package:mi_utem/services_new/interfaces/qr_pass_service.dart';
@@ -22,8 +21,7 @@ class PermisosCovidSection extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: 20),
           child: Row(
             children: [
-              Text(
-                "Permisos activos".toUpperCase(),
+              Text("Permisos activos".toUpperCase(),
                 style: Get.textTheme.titleMedium!.copyWith(
                   fontWeight: FontWeight.bold,
                 ),

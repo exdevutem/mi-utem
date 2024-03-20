@@ -2,7 +2,7 @@ import 'package:extended_masked_text/extended_masked_text.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mi_utem/models/evaluacion.dart';
-import 'package:mi_utem/services_new/interfaces/calculator_service.dart';
+import 'package:mi_utem/services_new/interfaces/controllers/calculator_controller.dart';
 import 'package:mi_utem/themes/theme.dart';
 import 'package:watch_it/watch_it.dart';
 
@@ -24,9 +24,9 @@ class NotaListItem extends StatelessWidget {
     this.onDelete,
   }) : super(key: key);
 
-  String get _suggestedGrade => di.get<CalculatorService>().getSuggestedGrade?.toStringAsFixed(1) ?? "0.0";
+  String get _suggestedGrade => di.get<CalculatorController>().getSuggestedGrade?.toStringAsFixed(1) ?? "0.0";
 
-  String? get _suggestedPercentage => di.get<CalculatorService>().getSuggestedPercentage?.toStringAsFixed(0);
+  String? get _suggestedPercentage => di.get<CalculatorController>().getSuggestedPercentage?.toStringAsFixed(0);
 
   @override
   Widget build(BuildContext context) {

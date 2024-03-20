@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:mi_utem/config/logger.dart';
-import 'package:mi_utem/helpers/snackbars.dart';
 import 'package:mi_utem/models/exceptions/custom_exception.dart';
 import 'package:mi_utem/models/user/credential.dart';
 import 'package:mi_utem/screens/main_screen.dart';
 import 'package:mi_utem/services/analytics_service.dart';
+import 'package:mi_utem/services_new/interfaces/auth_service.dart' as NewAuthService;
 import 'package:mi_utem/services_new/interfaces/credential_service.dart';
 import 'package:mi_utem/widgets/acerca/dialog/acerca_dialog.dart';
 import 'package:mi_utem/widgets/dialogs/monkey_error_dialog.dart';
 import 'package:mi_utem/widgets/loading_dialog.dart';
-import 'package:mi_utem/services_new/interfaces/auth_service.dart' as NewAuthService;
+import 'package:mi_utem/widgets/snackbar.dart';
 import 'package:watch_it/watch_it.dart';
 
 
@@ -42,19 +41,22 @@ class _LoginButtonState extends State<LoginButton> {
 
   @override
   Widget build(BuildContext context) => TextButton(
-    onPressed: () => _login(),
+    onPressed: () => _login(context),
     child: Text("Iniciar"),
   );
 
-  Future<void> _login() async {
+  Future<void> _login(BuildContext context) async {
     final correo = widget._correoController.text;
     final contrasenia = widget._contraseniaController.text;
 
     if (correo == "error@utem.cl") {
-      Get.dialog(MonkeyErrorDialog());
+      showDialog(context: context, builder: (ctx) => MonkeyErrorDialog());
       return;
     } else if (correo == "test@utem.cl" && contrasenia == "test") {
-      showDefaultSnackbar("Error", "Usuario o contraseña incorrecta");
+      showTextSnackbar(context,
+        title: "Error",
+        message: "Usuario o contraseña incorrecta",
+      );
       return;
     }
 
@@ -62,7 +64,7 @@ class _LoginButtonState extends State<LoginButton> {
       return;
     }
 
-    Get.dialog(LoadingDialog(), barrierDismissible: false);
+    showLoadingDialog(context);
 
     try {
       await _credentialsService.setCredentials(Credentials(
@@ -71,7 +73,10 @@ class _LoginButtonState extends State<LoginButton> {
       ));
 
       if(!(await _credentialsService.hasCredentials())) {
-        showDefaultSnackbar("Error", "Ha ocurrido un error al guardar tus claves. Intenta más tarde.");
+        showTextSnackbar(context,
+          title: "Error",
+          message: "Ha ocurrido un error al guardar tus claves. Intenta más tarde.",
+        );
         return;
       }
 
@@ -81,33 +86,46 @@ class _LoginButtonState extends State<LoginButton> {
         final isFirstTime = await _authService.isFirstTime();
         final user = await _authService.getUser();
         if(user == null) {
-          Get.back();
-          showDefaultSnackbar("Error", "Ha ocurrido un error desconocido. Por favor intenta más tarde.");
+          Navigator.pop(context);
+          showTextSnackbar(context,
+            title: "Error",
+            message: "Ha ocurrido un error desconocido. Por favor intenta más tarde.",
+          );
           return;
         }
 
         AnalyticsService.logEvent('login');
         AnalyticsService.setUser(user);
 
-        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => MainScreen()));
+        Navigator.of(context).popUntil((route) => route.isFirst); // Esto elimina todas las pantallas anteriores
+        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => MainScreen())); // Y esto reemplaza la pantalla actual por la nueva, cosa de que no pueda "volver" al login a menos que cierre la sesión.
 
         if(isFirstTime) {
-          Get.dialog(AcercaDialog());
+          showDialog(context: context, builder: (ctx) => AcercaDialog());
         }
       } catch (e) {
         logger.e(e);
-        Get.back();
-        showDefaultSnackbar("Error", "Ha ocurrido un error desconocido. Por favor intenta más tarde.");
+        Navigator.pop(context);
+        showTextSnackbar(context,
+          title: "Error",
+          message: "Ha ocurrido un error desconocido. Por favor intenta más tarde.",
+        );
       }
       return;
     } on CustomException catch (e) {
       logger.e(e);
-      Get.back();
-      showDefaultSnackbar("Error", e.message);
+      Navigator.pop(context);
+      showTextSnackbar(context,
+        title: "Error",
+        message: e.message,
+      );
     } catch (e) {
       logger.e(e);
-      Get.back();
-      showDefaultSnackbar("Error", "Ha ocurrido un error desconocido. Por favor intenta más tarde.");
+      Navigator.pop(context);
+      showTextSnackbar(context,
+        title: "Error",
+        message: "Ha ocurrido un error desconocido. Por favor intenta más tarde.",
+      );
     }
   }
 }

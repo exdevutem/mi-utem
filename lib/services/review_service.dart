@@ -1,7 +1,6 @@
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:in_app_review/in_app_review.dart';
-
 import 'package:mi_utem/widgets/custom_alert_dialog.dart';
 
 class ReviewService {
@@ -47,8 +46,7 @@ class ReviewService {
           DateTime maxDate = DateTime.now().subtract(maxScreen);
           DateTime minDate = DateTime.now().subtract(minScreen);
           if (date.isBefore(maxDate) || date.isAfter(minDate)) {
-            print(
-                "ReviewService mustRequest: $screen no cumple con una fecha $isoDate");
+            print("ReviewService mustRequest: $screen no cumple con una fecha $isoDate");
             return false;
           }
         } else {

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:mi_utem/widgets/calculadora_notas/ModoSimulacionWidget.dart';
-import 'package:mi_utem/widgets/calculadora_notas/NotaExamenDisplayWidget.dart';
-import 'package:mi_utem/widgets/calculadora_notas/NotaFinalDisplayWidget.dart';
-import 'package:mi_utem/widgets/calculadora_notas/NotaPresentacionDisplayWidget.dart';
+import 'package:mi_utem/widgets/calculadora_notas/modo_simulacion_widget.dart';
+import 'package:mi_utem/widgets/calculadora_notas/nota_examen_display_widget.dart';
+import 'package:mi_utem/widgets/calculadora_notas/nota_final_display_widget.dart';
+import 'package:mi_utem/widgets/calculadora_notas/nota_presentacion_display_widget.dart';
 
 class DisplayNotasWidget extends StatelessWidget {
 
