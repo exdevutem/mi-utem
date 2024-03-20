@@ -50,7 +50,7 @@ class NotificationController {
       if (asignaturaJsonString != null) {
         AnalyticsService.logEvent('notification_tap_grade_change');
         final asignatura = Asignatura.fromJson(jsonDecode(asignaturaJsonString));
-        navigatorKey.currentState?.push(MaterialPageRoute(builder: (ctx) => AsignaturaDetalleScreen(asignaturaId: asignatura.id)));
+        navigatorKey.currentState?.push(MaterialPageRoute(builder: (ctx) => AsignaturaDetalleScreen(asignatura: asignatura)));
       }
     }
   }

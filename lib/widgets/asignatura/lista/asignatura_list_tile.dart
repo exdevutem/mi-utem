@@ -17,7 +17,7 @@ class AsignaturaListTile extends StatelessWidget {
     padding: const EdgeInsets.symmetric(horizontal: 10.0),
     child: Card(
       child: InkWell(
-        onTap: () => Navigator.push(context, MaterialPageRoute(builder: (ctx) => AsignaturaDetalleScreen(asignaturaId: asignatura.id))),
+        onTap: () => Navigator.push(context, MaterialPageRoute(builder: (ctx) => AsignaturaDetalleScreen(asignatura: asignatura))),
         child: Container(
           padding: const EdgeInsets.all(20),
           width: double.infinity,

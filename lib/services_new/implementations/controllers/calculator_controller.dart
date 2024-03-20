@@ -224,6 +224,7 @@ class CalculatorControllerImplementation implements CalculatorController {
         text: grade.nota?.toStringAsFixed(1) ?? "",
       ),
     ];
+    logger.d("A grade has been added");
   }
 
   @override
