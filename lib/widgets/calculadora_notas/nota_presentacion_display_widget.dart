@@ -3,14 +3,14 @@ import 'package:mi_utem/services_new/interfaces/controllers/calculator_controlle
 import 'package:mi_utem/themes/theme.dart';
 import 'package:watch_it/watch_it.dart';
 
-class NotaPresentacionDisplayWidget extends StatelessWidget {
+class NotaPresentacionDisplayWidget extends StatelessWidget with WatchItMixin {
   const NotaPresentacionDisplayWidget({
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
-    final _calculatorService = di.get<CalculatorController>();
+    final calculatedPresentationGrade = watchValue((CalculatorController controller) => controller.calculatedPresentationGrade);
     return Row(
       children: [
         const Text("Pres.",
@@ -20,7 +20,7 @@ class NotaPresentacionDisplayWidget extends StatelessWidget {
           width: 80,
           margin: const EdgeInsets.only(left: 15),
           child: TextField(
-            controller: TextEditingController(text: _calculatorService.getCalculatedPresentationGrade?.toStringAsFixed(1) ?? ""),
+            controller: TextEditingController(text: calculatedPresentationGrade?.toStringAsFixed(1) ?? ""),
             textAlign: TextAlign.center,
             enabled: false,
             decoration: InputDecoration(

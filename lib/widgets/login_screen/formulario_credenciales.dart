@@ -21,8 +21,8 @@ class _FormularioCredencialesState extends State<FormularioCredenciales> {
       children: [
         LoginTextFormField(
           controller: widget._correoController,
-          hintText: 'nombre@utem.cl',
-          labelText: 'Correo UTEM',
+          hintText: 'usuario@utem.cl',
+          labelText: 'Usuario/Correo UTEM',
           textCapitalization: TextCapitalization.none,
           keyboardType: TextInputType.emailAddress,
           inputFormatters: [

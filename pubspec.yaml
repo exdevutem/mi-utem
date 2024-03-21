@@ -80,6 +80,7 @@ dependencies:
   watch_it: ^1.0.2
   extended_masked_text: ^2.3.1
   crypto: ^3.0.3
+  listenable_collections: ^1.0.0
 
 dependency_overrides:
   qr: ^3.0.0

@@ -102,8 +102,7 @@ class _HorarioMainScrollerState extends State<HorarioMainScroller> {
             left: HorarioMainScroller.periodWidth * widget.controller.zoom.value,
           ),
           child: InteractiveViewer(
-            transformationController:
-            widget.controller.blockContentController,
+            transformationController: widget.controller.blockContentController,
             maxScale: HorarioMainScroller.defaultMaxScale,
             minScale: HorarioMainScroller.defaultMinScale,
             panAxis: PanAxis.free,
@@ -118,13 +117,9 @@ class _HorarioMainScrollerState extends State<HorarioMainScroller> {
         Container(
           width: HorarioMainScroller.daysWidth,
           height: HorarioMainScroller.dayHeight,
-          margin: EdgeInsets.only(
-            left: HorarioMainScroller.periodWidth *
-                widget.controller.zoom.value,
-          ),
+          margin: EdgeInsets.only(left: HorarioMainScroller.periodWidth * widget.controller.zoom.value),
           child: InteractiveViewer(
-            transformationController:
-            widget.controller.daysHeaderController,
+            transformationController: widget.controller.daysHeaderController,
             maxScale: HorarioMainScroller.defaultMaxScale,
             minScale: HorarioMainScroller.defaultMinScale,
             panAxis: PanAxis.free,
@@ -158,13 +153,9 @@ class _HorarioMainScrollerState extends State<HorarioMainScroller> {
         Container(
           width: HorarioMainScroller.periodWidth,
           height: HorarioMainScroller.periodsHeight,
-          margin: EdgeInsets.only(
-            top: HorarioMainScroller.dayHeight *
-                widget.controller.zoom.value,
-          ),
+          margin: EdgeInsets.only(top: HorarioMainScroller.dayHeight * widget.controller.zoom.value),
           child: InteractiveViewer(
-            transformationController:
-            widget.controller.periodHeaderController,
+            transformationController: widget.controller.periodHeaderController,
             maxScale: HorarioMainScroller.defaultMaxScale,
             minScale: HorarioMainScroller.defaultMinScale,
             panAxis: PanAxis.free,

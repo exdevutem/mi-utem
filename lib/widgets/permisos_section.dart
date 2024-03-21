@@ -14,56 +14,54 @@ class PermisosCovidSection extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          padding: EdgeInsets.symmetric(horizontal: 20),
-          child: Row(
-            children: [
-              Text("Permisos activos".toUpperCase(),
-                style: Get.textTheme.titleMedium!.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+  Widget build(BuildContext context) => Column(
+    children: [
+      Container(
+        padding: EdgeInsets.symmetric(horizontal: 20),
+        child: Row(
+          children: [
+            Text("Permisos activos".toUpperCase(),
+              style: Get.textTheme.titleMedium!.copyWith(
+                fontWeight: FontWeight.bold,
               ),
-            ],
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          ),
+            ),
+          ],
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
         ),
-        SizedBox(height: 10),
-        SizedBox(
-          height: 155,
-          child: FutureBuilder<List<PermisoCovid>?>(
-            future: di.get<QRPassService>().getPermisos(),
-            builder: (context, snapshot) {
-              if(snapshot.connectionState == ConnectionState.waiting) {
-                return LoadingIndicator(
-                  message: "Esto tardará un poco, paciencia...",
-                );
-              }
-
-              if(snapshot.hasError) {
-                final error = snapshot.error is CustomException ? (snapshot.error as CustomException).message : "Ocurrió un error al cargar los permisos";
-                return Text(error);
-              }
-
-              if(snapshot.data == null || snapshot.data?.isNotEmpty != true) {
-                return Text('No hay permisos de ingresos');
-              }
-
-              return ListView.separated(
-                itemCount: snapshot.data!.length,
-                padding: EdgeInsets.symmetric(horizontal: 20),
-                scrollDirection: Axis.horizontal,
-                separatorBuilder: (context, index) => Container(width: 10),
-                itemBuilder: (context, index) => PermisoCard(
-                  permiso: snapshot.data![index],
-                ),
+      ),
+      SizedBox(height: 10),
+      SizedBox(
+        height: 155,
+        child: FutureBuilder<List<PermisoCovid>?>(
+          future: di.get<QRPassService>().getPermisos(),
+          builder: (context, snapshot) {
+            if(snapshot.connectionState == ConnectionState.waiting) {
+              return LoadingIndicator(
+                message: "Esto tardará un poco, paciencia...",
               );
-            },
-          ),
+            }
+
+            if(snapshot.hasError) {
+              final error = snapshot.error is CustomException ? (snapshot.error as CustomException).message : "Ocurrió un error al cargar los permisos";
+              return Text(error);
+            }
+
+            if(snapshot.data == null || snapshot.data?.isNotEmpty != true) {
+              return Text('No hay permisos de ingresos');
+            }
+
+            return ListView.separated(
+              itemCount: snapshot.data!.length,
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              scrollDirection: Axis.horizontal,
+              separatorBuilder: (context, index) => Container(width: 10),
+              itemBuilder: (context, index) => PermisoCard(
+                permiso: snapshot.data![index],
+              ),
+            );
+          },
         ),
-      ],
-    );
-  }
+      ),
+    ],
+  );
 }

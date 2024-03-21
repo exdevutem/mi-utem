@@ -4,28 +4,13 @@ import 'package:mi_utem/config/constants.dart';
 import 'package:mi_utem/config/http_clients.dart';
 import 'package:mi_utem/models/exceptions/custom_exception.dart';
 import 'package:mi_utem/models/permiso_covid.dart';
-import 'package:mi_utem/services_new/interfaces/auth_service.dart';
 import 'package:mi_utem/services_new/interfaces/qr_pass_service.dart';
-import 'package:watch_it/watch_it.dart';
 
 class QRPassServiceImplementation extends QRPassService {
 
-  final _authService = di.get<AuthService>();
-
   @override
   Future<PermisoCovid?> getDetallesPermiso(String id, {bool forceRefresh = false}) async {
-    final user = await _authService.getUser();
-    if(user == null) {
-      return null;
-    }
-
-    final response = await authClient.post(Uri.parse("$apiUrl/v1/permisos/$id"),
-      headers: {
-        'Authorization': 'Bearer ${user.token}',
-        'Content-Type': 'application/json',
-        'User-Agent': 'App/MiUTEM'
-      },
-    );
+    final response = await authClient.post(Uri.parse("$apiUrl/v1/permisos/$id"));
 
     final json = jsonDecode(response.body) as Map<String, dynamic>;
 
@@ -42,18 +27,7 @@ class QRPassServiceImplementation extends QRPassService {
 
   @override
   Future<List<PermisoCovid>?> getPermisos({bool forceRefresh = false}) async {
-    final user = await _authService.getUser();
-    if(user == null) {
-      return null;
-    }
-
-    final response = await authClient.post(Uri.parse("$apiUrl/v1/permisos"),
-      headers: {
-        'Authorization': 'Bearer ${user.token}',
-        'Content-Type': 'application/json',
-        'User-Agent': 'App/MiUTEM'
-      },
-    );
+    final response = await authClient.post(Uri.parse("$apiUrl/v1/permisos"));
 
     final json = jsonDecode(response.body);
 

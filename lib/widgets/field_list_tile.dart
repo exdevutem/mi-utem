@@ -2,19 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class FieldListTile extends StatelessWidget {
+  final String title;
+  final String? value;
+  final EdgeInsetsGeometry padding;
+
   const FieldListTile({
-    Key? key,
+    super.key,
     required this.title,
     this.value,
     this.padding = const EdgeInsets.symmetric(
       vertical: 12,
       horizontal: 16,
     ),
-  }) : super(key: key);
-
-  final String title;
-  final String? value;
-  final EdgeInsetsGeometry padding;
+  });
 
   @override
   Widget build(BuildContext context) => Padding(

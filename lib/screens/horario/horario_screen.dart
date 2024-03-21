@@ -10,6 +10,7 @@ import 'package:mi_utem/services_new/interfaces/controllers/horario_controller.d
 import 'package:mi_utem/widgets/custom_app_bar.dart';
 import 'package:mi_utem/widgets/loading_dialog.dart';
 import 'package:mi_utem/widgets/loading_indicator.dart';
+import 'package:mi_utem/widgets/snackbar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:share_plus/share_plus.dart';
@@ -57,7 +58,9 @@ class _HorarioScreenState extends State<HorarioScreen> {
 
   @override
   void initState() {
-    controller.getHorarioData();
+    controller.getHorarioData().catchError((err) => {
+      showErrorSnackbar(context, "Ocurrió un error al cargar el horario! Por favor intenta más tarde.")
+    });
     super.initState();
   }
 

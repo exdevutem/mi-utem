@@ -1,18 +1,19 @@
 import 'package:extended_masked_text/extended_masked_text.dart';
 import 'package:flutter/material.dart';
+import 'package:listenable_collections/listenable_collections.dart';
 import 'package:mi_utem/models/evaluacion.dart';
 import 'package:mi_utem/models/grades.dart';
 
 abstract class CalculatorController {
 
   /* Notas parciales */
-  abstract ValueNotifier<List<IEvaluacion>> partialGrades;
+  abstract ListNotifier<IEvaluacion> partialGrades;
 
   /* Controlador de texto para los porcentajes con máscara (para autocompletar formato) */
-  abstract ValueNotifier<List<MaskedTextController>> percentageTextFieldControllers;
+  abstract ListNotifier<MaskedTextController> percentageTextFieldControllers;
 
   /* Controlador de texto para las notas con máscara (para autocompletar formato) */
-  abstract ValueNotifier<List<MaskedTextController>> gradeTextFieldControllers;
+  abstract ListNotifier<MaskedTextController> gradeTextFieldControllers;
 
   /* Nota del examen */
   abstract ValueNotifier<double?> examGrade;
@@ -23,48 +24,49 @@ abstract class CalculatorController {
   abstract ValueNotifier<bool> freeEditable;
 
   /* Nota final calculada */
-  double? get getCalculatedFinalGrade;
+  abstract ValueNotifier<double?> calculatedFinalGrade;
 
   /* Nota de presentación calculada */
-  double? get getCalculatedPresentationGrade;
+  abstract ValueNotifier<double?> calculatedPresentationGrade;
 
   /* Cantidad de notas parciales sin nota */
-  int get getAmountOfPartialGradesWithoutGrade;
+  abstract ValueNotifier<int> amountOfPartialGradesWithoutGrade;
 
   /* Cantidad de notas parciales sin porcentaje */
-  int get getAmountOfPartialGradesWithoutPercentage;
+  abstract ValueNotifier<int> amountOfPartialGradesWithoutPercentage;
 
   /* Si hay notas parciales sin nota */
-  bool get hasMissingPartialGrade;
+  abstract ValueNotifier<bool> hasMissingPartialGrade;
 
   /* Si puede tomar examen */
-  bool get canTakeExam;
+  abstract ValueNotifier<bool> canTakeExam;
 
   /* Nota mínima requerida para el examen */
-  double? get getMinimumRequiredExamGrade;
+  abstract ValueNotifier<double?> minimumRequiredExamGrade;
 
   /* Porcentaje de las notas parciales */
-  double get getPercentageOfPartialGrades;
+  abstract ValueNotifier<double> percentageOfPartialGrades;
 
   /* Porcentaje faltante */
-  double get getMissingPercentage;
+  abstract ValueNotifier<double> missingPercentage;
 
   /* Si hay porcentaje faltante */
-  bool get hasMissingPercentage;
+  abstract ValueNotifier<bool> hasMissingPercentage;
 
   /* Porcentaje sugerido */
-  double? get getSuggestedPercentage;
+  abstract ValueNotifier<double?> suggestedPercentage;
 
   /* Nota de presentación sugerida */
-  double? get getSuggestedPresentationGrade;
+  abstract ValueNotifier<double?> suggestedPresentationGrade;
 
   /* Porcentaje sin nota */
-  double get getPercentageWithoutGrade;
+  abstract ValueNotifier<double> percentageWithoutGrade;
 
   /* Si hay porcentaje sin nota */
-  bool get hasCorrectPercentage;
+  abstract ValueNotifier<bool> hasCorrectPercentage;
 
-  double? get getSuggestedGrade;
+  /* Nota sugerida */
+  abstract ValueNotifier<double?> suggestedGrade;
 
   void updateWithGrades(Grades grades);
 

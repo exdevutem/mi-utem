@@ -23,7 +23,7 @@ class AuthServiceImplementation implements AuthService {
   Future<bool> isFirstTime() async => !(await secureStorage.containsKey(key: "last_login"));
 
   @override
-  Future<bool> isLoggedIn() async {
+  Future<bool> isLoggedIn({ bool forceRefresh = false }) async {
     final credential = await _getCredential();
     if(credential == null) {
       return false;
@@ -42,23 +42,37 @@ class AuthServiceImplementation implements AuthService {
     final lastLoginDate = DateTime.fromMillisecondsSinceEpoch(int.parse(lastLogin));
     final now = DateTime.now();
     final difference = now.difference(lastLoginDate);
-    if(difference.inMinutes < 5) {
+    if(difference.inMinutes < 5 && !forceRefresh) {
       return true;
     }
 
     try {
-      final response = await httpClient.post(Uri.parse("$apiUrl/v1/auth"),
+      final response = await httpClient.post(Uri.parse("$apiUrl/v1/auth/refresh"),
         body: credential.toString(),
         headers: {
           'Content-Type': 'application/json',
           'User-Agent': 'App/MiUTEM',
+          'Authorization': 'Bearer ${user.token}',
         },
       );
 
-      final token = jsonDecode(response.body)["token"] as String;
+
+      final json = jsonDecode(response.body);
+
+      if(response.statusCode != 200) {
+        if(json is Map<String, dynamic> && json.containsKey("error")) {
+          throw CustomException.fromJson(json);
+        }
+
+        throw CustomException.custom(response.reasonPhrase);
+      }
+
+
+      final token = json["token"] as String;
       if(token == user.token) {
         return true;
       }
+
       final userJson = user.toJson();
       userJson["token"] = token;
       await setUser(User.fromJson(userJson));
@@ -95,8 +109,7 @@ class AuthServiceImplementation implements AuthService {
       throw CustomException.custom(response.reasonPhrase);
     }
 
-    final user = User.fromJson(json as Map<String, dynamic>);
-    await setUser(user);
+    await setUser(User.fromJson(json as Map<String, dynamic>));
   }
 
   @override

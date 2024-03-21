@@ -99,20 +99,17 @@ class HorarioControllerImplementation extends ChangeNotifier implements HorarioC
   @override
   Future<void> getHorarioData({ bool forceRefresh = false }) async {
     loadingHorario.value = true;
-    notifyListeners();
     final lastUpdate = _storage.read("last_horario_update") ?? "${DateTime.now().toIso8601String()}";
     final lastUpdateDate = DateTime.parse(lastUpdate);
     final now = DateTime.now();
     final difference = now.difference(lastUpdateDate).inMinutes;
     if(difference < 15 && forceRefresh == false && horario.value != null) {
       loadingHorario.value = false;
-      notifyListeners();
       return;
     }
 
 
     horario.value = null;
-    notifyListeners();
 
     final carrerasService = di.get<CarrerasService>();
     Carrera? carrera = carrerasService.selectedCarrera.value;
@@ -124,14 +121,12 @@ class HorarioControllerImplementation extends ChangeNotifier implements HorarioC
     final carreraId = carrera?.id;
     if(carreraId == null) {
       loadingHorario.value = false;
-      notifyListeners();
       return;
     }
     horario.value = await di.get<HorarioService>().getHorario(carreraId);
     _setRandomColorsByHorario();
 
     loadingHorario.value = false;
-    notifyListeners();
     _storage.write("last_horario_update", DateTime.now().toIso8601String());
   }
 
@@ -152,9 +147,9 @@ class HorarioControllerImplementation extends ChangeNotifier implements HorarioC
     x = x > maxXPosition ? maxXPosition : x;
     y = y > maxYPosition ? maxYPosition : y;
 
-    blockContentController.value.setTranslationRaw(-x, -y, 0);
-    periodHeaderController.value.setTranslationRaw(0, -y, 0);
-    daysHeaderController.value.setTranslationRaw(-x, 0, 0);
+    blockContentController.value = blockContentController.value..setTranslationRaw(-x, -y, 0);
+    periodHeaderController.value = periodHeaderController.value..setTranslationRaw(0, -y, 0);
+    daysHeaderController.value = daysHeaderController.value..setTranslationRaw(-x, 0, 0);
 
     _onChangeAnyController();
   }
@@ -178,15 +173,14 @@ class HorarioControllerImplementation extends ChangeNotifier implements HorarioC
     moveViewportToPeriodIndexAndDayIndex(periodIndex, dayIndex);
 
     isCenteredInCurrentPeriodAndDay.value = true;
-    notifyListeners();
   }
 
   @override
   void setZoom(double zoom) {
-    blockContentController.value.setDiagonal(vector.Vector4(zoom, zoom, zoom, 1));
-    periodHeaderController.value.setDiagonal(vector.Vector4(zoom, zoom, zoom, 1));
-    daysHeaderController.value.setDiagonal(vector.Vector4(zoom, zoom, zoom, 1));
-    cornerController.value.setDiagonal(vector.Vector4(zoom, zoom, zoom, 1));
+    blockContentController.value = blockContentController.value..setDiagonal(vector.Vector4(zoom, zoom, zoom, 1));
+    periodHeaderController.value = periodHeaderController.value..setDiagonal(vector.Vector4(zoom, zoom, zoom, 1));
+    daysHeaderController.value = daysHeaderController.value..setDiagonal(vector.Vector4(zoom, zoom, zoom, 1));
+    cornerController.value = cornerController.value..setDiagonal(vector.Vector4(zoom, zoom, zoom, 1));
 
     _onChangeAnyController();
   }
@@ -214,7 +208,6 @@ class HorarioControllerImplementation extends ChangeNotifier implements HorarioC
   @override
   void setIndicatorIsOpen(bool isOpen) {
     indicatorIsOpen.value = isOpen;
-    notifyListeners();
   }
 
   void _setRandomColorsByHorario() {
@@ -236,7 +229,6 @@ class HorarioControllerImplementation extends ChangeNotifier implements HorarioC
   void _onChangeAnyController() {
     setIndicatorIsOpen(true);
     isCenteredInCurrentPeriodAndDay.value = false;
-    notifyListeners();
   }
 
   void _setScrollControllerListeners() {
@@ -245,12 +237,12 @@ class HorarioControllerImplementation extends ChangeNotifier implements HorarioC
       final yPosition = blockContentController.value.getTranslation().y;
       final currentZoom = blockContentController.value.getMaxScaleOnAxis();
 
-      daysHeaderController.value.setTranslationRaw(xPosition, 0, 0);
-      periodHeaderController.value.setTranslationRaw(0, yPosition, 0);
+      daysHeaderController.value = daysHeaderController.value..setTranslationRaw(xPosition, 0, 0);
+      periodHeaderController.value = periodHeaderController.value..setTranslationRaw(0, yPosition, 0);
 
-      daysHeaderController.value.setDiagonal(vector.Vector4(currentZoom, currentZoom, currentZoom, 1),);
-      periodHeaderController.value.setDiagonal(vector.Vector4(currentZoom, currentZoom, currentZoom, 1));
-      cornerController.value.setDiagonal(vector.Vector4(currentZoom, currentZoom, currentZoom, 1));
+      daysHeaderController.value = daysHeaderController.value..setDiagonal(vector.Vector4(currentZoom, currentZoom, currentZoom, 1),);
+      periodHeaderController.value = periodHeaderController.value..setDiagonal(vector.Vector4(currentZoom, currentZoom, currentZoom, 1));
+      cornerController.value = cornerController.value..setDiagonal(vector.Vector4(currentZoom, currentZoom, currentZoom, 1));
 
       zoom.value = currentZoom;
       _onChangeAnyController();
@@ -261,11 +253,11 @@ class HorarioControllerImplementation extends ChangeNotifier implements HorarioC
       final xPosition = daysHeaderController.value.getTranslation().x;
       final contentYPosition = blockContentController.value.getTranslation().y;
 
-      blockContentController.value.setTranslationRaw(xPosition, contentYPosition, 0);
+      blockContentController.value = blockContentController.value..setTranslationRaw(xPosition, contentYPosition, 0);
 
-      blockContentController.value.setDiagonal(vector.Vector4(currentZoom, currentZoom, currentZoom, 1));
-      periodHeaderController.value.setDiagonal(vector.Vector4(currentZoom, currentZoom, currentZoom, 1));
-      cornerController.value.setDiagonal(vector.Vector4(currentZoom, currentZoom, currentZoom, 1));
+      blockContentController.value = blockContentController.value..setDiagonal(vector.Vector4(currentZoom, currentZoom, currentZoom, 1));
+      periodHeaderController.value = periodHeaderController.value..setDiagonal(vector.Vector4(currentZoom, currentZoom, currentZoom, 1));
+      cornerController.value = cornerController.value..setDiagonal(vector.Vector4(currentZoom, currentZoom, currentZoom, 1));
 
       zoom.value = currentZoom;
       _onChangeAnyController();
@@ -277,13 +269,13 @@ class HorarioControllerImplementation extends ChangeNotifier implements HorarioC
 
       final contentXPosition = blockContentController.value.getTranslation().x;
 
-      periodHeaderController.value.setTranslationRaw(0, yPosition, 0);
+      periodHeaderController.value = periodHeaderController.value..setTranslationRaw(0, yPosition, 0);
 
-      blockContentController.value.setTranslationRaw(contentXPosition, yPosition, 0);
+      blockContentController.value = blockContentController.value..setTranslationRaw(contentXPosition, yPosition, 0);
 
-      blockContentController.value.setDiagonal(vector.Vector4(currentZoom, currentZoom, currentZoom, 1));
-      daysHeaderController.value.setDiagonal(vector.Vector4(currentZoom, currentZoom, currentZoom, 1));
-      cornerController.value.setDiagonal(vector.Vector4(currentZoom, currentZoom, currentZoom, 1));
+      blockContentController.value = blockContentController.value..setDiagonal(vector.Vector4(currentZoom, currentZoom, currentZoom, 1));
+      daysHeaderController.value = daysHeaderController.value..setDiagonal(vector.Vector4(currentZoom, currentZoom, currentZoom, 1));
+      cornerController.value = cornerController.value..setDiagonal(vector.Vector4(currentZoom, currentZoom, currentZoom, 1));
 
       zoom.value = currentZoom;
       _onChangeAnyController();

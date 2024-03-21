@@ -4,20 +4,21 @@ import 'package:mi_utem/screens/asignatura/asignatura_detalle_screen.dart';
 import 'package:mi_utem/themes/theme.dart';
 
 class AsignaturaListTile extends StatelessWidget {
+  final Asignatura asignatura;
 
   const AsignaturaListTile({
-    Key? key,
+    super.key,
     required this.asignatura,
-  }) : super(key: key);
-
-  final Asignatura asignatura;
+  });
 
   @override
   Widget build(BuildContext context) => Padding(
     padding: const EdgeInsets.symmetric(horizontal: 10.0),
     child: Card(
       child: InkWell(
-        onTap: () => Navigator.push(context, MaterialPageRoute(builder: (ctx) => AsignaturaDetalleScreen(asignatura: asignatura))),
+        onTap: () => Navigator.push(context, MaterialPageRoute(builder: (ctx) => AsignaturaDetalleScreen(
+          asignatura: asignatura,
+        ))),
         child: Container(
           padding: const EdgeInsets.all(20),
           width: double.infinity,
@@ -46,4 +47,5 @@ class AsignaturaListTile extends StatelessWidget {
       ),
     ),
   );
+
 }

@@ -1017,6 +1017,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.20"
+  listenable_collections:
+    dependency: "direct main"
+    description:
+      name: listenable_collections
+      sha256: "49dd3be0955d8c109580184b5f43ee88a269df64baba20a35c16fd9ddd9fb62e"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   logger:
     dependency: "direct main"
     description:

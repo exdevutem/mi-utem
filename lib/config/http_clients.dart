@@ -1,10 +1,6 @@
-import 'dart:convert';
 
-import 'package:crypto/crypto.dart';
-import 'package:http/http.dart' as http;
 import 'package:http_interceptor/http_interceptor.dart';
 import 'package:mi_utem/config/logger.dart';
-import 'package:mi_utem/models/pair.dart';
 import 'package:mi_utem/services_new/interfaces/auth_service.dart';
 import 'package:watch_it/watch_it.dart';
 
@@ -52,7 +48,7 @@ class AuthInterceptor implements InterceptorContract {
 class ExpiredTokenRetryPolicy extends RetryPolicy {
 
   @override
-  int get maxRetryAttempts => 3;
+  int get maxRetryAttempts => 6;
 
   @override
   Future<bool> shouldAttemptRetryOnResponse(ResponseData response) async {
@@ -62,16 +58,20 @@ class ExpiredTokenRetryPolicy extends RetryPolicy {
 
     logger.d("[ExpiredTokenRetryPolicy]: ${response.request?.method.name.toUpperCase()} ${response.request?.url} Recibió un 401, refrescando token...");
     final _authService = di.get<AuthService>();
-    final currentUser = await _authService.getUser();
-    await _authService.isLoggedIn();
-    final user = await _authService.getUser();
-    final token = user?.token;
+    final currentToken = (await _authService.getUser())?.token;
+    if(currentToken == null) {
+      await _authService.login();
+    } else {
+      await _authService.isLoggedIn(forceRefresh: true);
+    }
+
+    final token = (await _authService.getUser())?.token;
     if(token == null) {
-      logger.d("[ExpiredTokenRetryPolicy]: No se pudo refrescar el token, redirigiendo a login");
+      logger.d("[ExpiredTokenRetryPolicy]: No se pudo refrescar el token!");
       return false;
     }
 
-    return currentUser?.token == token;
+    return true;
   }
 }
 
@@ -96,45 +96,4 @@ class LoggerInterceptor implements InterceptorContract {
     logger.d("[LoggerInterceptor#response]: ${data.statusCode} ${data.url}$diff");
     return data;
   }
-}
-
-class CachedClient extends http.BaseClient {
-
-  final _client = http.Client();
-  final _cache = <String, Pair<num, http.StreamedResponse>>{};
-
-  @override
-  Future<http.StreamedResponse> send(http.BaseRequest request) async {
-    logger.d("[HttpClient]: ${request.method.toUpperCase()} ${request.url}");
-    final useCache = request.headers.containsKey('X-MiUTEM-Use-Cache');
-    final cacheKey = sha1.convert(utf8.encode("${request.method}:${request.url}:${request.headers}:${request.contentLength}:${request.followRedirects}:${request.maxRedirects}:${request.persistentConnection}")).toString();
-    if (useCache) {
-      logger.d("[HttpClient]: Usando cache para ${request.method.toUpperCase()} ${request.url}");
-      request.headers.remove('X-MiUTEM-Use-Cache');
-      final ttl = request.headers.containsKey('X-MiUTEM-Cache-TTL') ? int.parse(request.headers['X-MiUTEM-Cache-TTL']!) : 300; // 5 minutos por defecto (en segundos)
-      request.headers.remove('X-MiUTEM-Cache-TTL');
-      if (_cache.containsKey(cacheKey)) {
-        final pair = _cache[cacheKey]!;
-        if ((DateTime.now().millisecondsSinceEpoch - pair.a) < (ttl * 1000)) { // Si no ha expirado
-          return pair.b;
-        }
-
-        _cache.remove(cacheKey); // Borrar cache si ya expiró
-      }
-    }
-
-    final responseStream = await _client.send(request);
-    if (useCache && responseStream.statusCode == 200) {
-      _cache[cacheKey] = Pair(DateTime.now().millisecondsSinceEpoch, responseStream);
-    }
-
-    return responseStream;
-  }
-
-  @override
-  void close() {
-    _client.close();
-    super.close();
-  }
-
 }

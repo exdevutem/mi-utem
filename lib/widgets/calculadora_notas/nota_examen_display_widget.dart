@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:mi_utem/services_new/interfaces/controllers/calculator_controller.dart';
 import 'package:mi_utem/themes/theme.dart';
 import 'package:watch_it/watch_it.dart';
@@ -11,8 +12,9 @@ class NotaExamenDisplayWidget extends StatelessWidget with WatchItMixin{
 
   @override
   Widget build(BuildContext context) {
-    final _calculatorController = di.get<CalculatorController>();
     final examGradeTextFieldController = watchValue((CalculatorController controller) => controller.examGradeTextFieldController);
+    final canTakeExam = watchValue((CalculatorController controller) => controller.canTakeExam);
+    final minimumRequiredExamGrade = watchValue((CalculatorController controller) => controller.minimumRequiredExamGrade);
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -26,11 +28,11 @@ class NotaExamenDisplayWidget extends StatelessWidget with WatchItMixin{
           child: TextField(
             controller: examGradeTextFieldController,
             textAlign: TextAlign.center,
-            onChanged: (String value) => _calculatorController.setExamGrade(double.tryParse(value.replaceAll(",", "."))),
-            enabled: _calculatorController.canTakeExam,
+            onChanged: (String value) => di.get<CalculatorController>().setExamGrade(double.tryParse(value.replaceAll(",", "."))),
+            enabled: canTakeExam,
             decoration: InputDecoration(
-              hintText: _calculatorController.getMinimumRequiredExamGrade?.toStringAsFixed(1) ?? "",
-              filled: !_calculatorController.canTakeExam,
+              hintText: minimumRequiredExamGrade?.toStringAsFixed(1) ?? "--",
+              filled: canTakeExam,
               fillColor: Colors.grey.withOpacity(0.2),
               disabledBorder: MainTheme.theme.inputDecorationTheme.border!.copyWith(
                 borderSide: BorderSide(
@@ -38,9 +40,31 @@ class NotaExamenDisplayWidget extends StatelessWidget with WatchItMixin{
                 ),
               ),
             ),
-            keyboardType: const TextInputType.numberWithOptions(
-              decimal: true,
-            ),
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+            inputFormatters: [
+              TextInputFormatter.withFunction((prev, input) {
+                final val = input.text;
+                if(val.isEmpty) { // Si está vacío, no hacer nada
+                  return input;
+                }
+
+                final firstDigit = int.tryParse(val[0]);
+                if(firstDigit != null && (firstDigit < 1 || firstDigit > 7)) { // Si el primer dígito es menor a 1 o mayor a 7, no hacer nada
+                  return prev;
+                }
+
+                if(val.length == 1) {
+                  return input;
+                }
+
+                final secondDigit = int.tryParse(val[1]);
+                if(secondDigit != null && ((secondDigit < 0 || secondDigit > 9) || (firstDigit == 7 && secondDigit > 0)) || val.length > 3) { // Si el segundo dígito es menor a 0 o mayor a 9, o si el primer dígito es 7 y el segundo dígito es mayor a 0, no hacer nada
+                  return prev;
+                }
+
+                return input;
+              }),
+            ],
           ),
         ),
       ],

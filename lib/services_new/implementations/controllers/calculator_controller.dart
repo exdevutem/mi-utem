@@ -1,6 +1,6 @@
 import 'package:extended_masked_text/extended_masked_text.dart';
 import 'package:flutter/material.dart';
-import 'package:mi_utem/config/logger.dart';
+import 'package:listenable_collections/listenable_collections.dart';
 import 'package:mi_utem/models/evaluacion.dart';
 import 'package:mi_utem/models/grades.dart';
 import 'package:mi_utem/services_new/interfaces/controllers/calculator_controller.dart';
@@ -27,15 +27,15 @@ class CalculatorControllerImplementation implements CalculatorController {
 
   /* Notas parciales */
   @override
-  ValueNotifier<List<IEvaluacion>> partialGrades = ValueNotifier([]);
+  ListNotifier<IEvaluacion> partialGrades = ListNotifier();
 
   /* Controlador de texto para los porcentajes con máscara (para autocompletar formato) */
   @override
-  ValueNotifier<List<MaskedTextController>> percentageTextFieldControllers = ValueNotifier([]);
+  ListNotifier<MaskedTextController> percentageTextFieldControllers = ListNotifier();
 
   /* Controlador de texto para las notas con máscara (para autocompletar formato) */
   @override
-  ValueNotifier<List<MaskedTextController>> gradeTextFieldControllers = ValueNotifier([]);
+  ListNotifier<MaskedTextController> gradeTextFieldControllers = ListNotifier();
 
   /* Nota del examen */
   @override
@@ -49,138 +49,53 @@ class CalculatorControllerImplementation implements CalculatorController {
   ValueNotifier<bool> freeEditable = ValueNotifier(false);
 
   @override
-  double? get getCalculatedFinalGrade {
-    final calculatedPresentationGrade = getCalculatedPresentationGrade;
-    if (calculatedPresentationGrade == null) {
-      return null;
-    }
-
-    final examGradeValue = examGrade.value;
-    if(examGradeValue == null) {
-      return calculatedPresentationGrade;
-    }
-
-    final weightedFinalGrade = calculatedPresentationGrade * presentationFinalWeight;
-    final weightedExamGrade = examGradeValue * examFinalWeight;
-
-    return weightedFinalGrade + weightedExamGrade;
-  }
+  ValueNotifier<double?> calculatedFinalGrade = ValueNotifier(null);
 
   @override
-  double? get getCalculatedPresentationGrade {
-    double presentationGrade = 0;
-    for (final partialGrade in partialGrades.value) {
-      final weight = (partialGrade.porcentaje ?? 0) / maxPercentage;
-      presentationGrade += (partialGrade.nota ?? 0) * weight;
-    }
-
-    return presentationGrade != 0 ? presentationGrade : null;
-  }
+  ValueNotifier<double?> calculatedPresentationGrade = ValueNotifier(null);
 
   @override
-  int get getAmountOfPartialGradesWithoutGrade => partialGrades.value
-      .where((partialGrade) => partialGrade.nota == null)
-      .length;
+  ValueNotifier<int> amountOfPartialGradesWithoutGrade = ValueNotifier(0);
 
   @override
-  int get getAmountOfPartialGradesWithoutPercentage => partialGrades.value
-      .where((partialGrade) => partialGrade.porcentaje == null)
-      .length;
+  ValueNotifier<int> amountOfPartialGradesWithoutPercentage = ValueNotifier(0);
 
   @override
-  bool get hasMissingPartialGrade => getAmountOfPartialGradesWithoutGrade > 0;
+  ValueNotifier<bool> hasMissingPartialGrade = ValueNotifier(false);
 
   @override
-  bool get canTakeExam {
-    if(hasMissingPartialGrade) {
-      return false;
-    }
-
-    final calculatedPresentationGrade = getCalculatedPresentationGrade;
-    if(calculatedPresentationGrade == null) {
-      return false;
-    }
-
-    return calculatedPresentationGrade >= minimumGradeForExam && calculatedPresentationGrade < passingGrade;
-  }
+  ValueNotifier<bool> canTakeExam = ValueNotifier(false);
 
   @override
-  double? get getMinimumRequiredExamGrade {
-    if(!canTakeExam) {
-      return null;
-    }
-
-    final calculatedPresentationGrade = getCalculatedPresentationGrade;
-    if(calculatedPresentationGrade == null) {
-      return null;
-    }
-
-    final weightedPresentationGrade = calculatedPresentationGrade * presentationFinalWeight;
-    return (passingGrade - weightedPresentationGrade) / examFinalWeight;
-  }
+  ValueNotifier<double?> minimumRequiredExamGrade = ValueNotifier(null);
 
   @override
-  double get getPercentageOfPartialGrades {
-    double percentage = 0;
-    for (final partialGrade in partialGrades.value) {
-      percentage += (partialGrade.porcentaje ?? 0);
-    }
-    return percentage;
-  }
+  ValueNotifier<double> percentageOfPartialGrades = ValueNotifier(0);
 
   @override
-  double get getMissingPercentage => maxPercentage - getPercentageOfPartialGrades;
+  ValueNotifier<double> missingPercentage = ValueNotifier(0);
 
   @override
-  bool get hasMissingPercentage => getAmountOfPartialGradesWithoutPercentage > 0;
+  ValueNotifier<bool> hasMissingPercentage = ValueNotifier(false);
 
   @override
-  double? get getSuggestedPercentage {
-    final percentage = getMissingPercentage / getAmountOfPartialGradesWithoutPercentage;
-    return 0 <= percentage && percentage <= maxPercentage ? percentage : null;
-  }
+  ValueNotifier<double?> suggestedPercentage = ValueNotifier(null);
 
   @override
-  double? get getSuggestedPresentationGrade {
-    double presentationGrade = 0;
-    for(final partialGrade in partialGrades.value) {
-      final weight = (partialGrade.porcentaje ?? (getSuggestedPercentage ?? 0)) / maxPercentage;
-      presentationGrade += (partialGrade.nota ?? 0) * weight;
-    }
-
-    return 0 <= presentationGrade && presentationGrade <= maxGrade ? presentationGrade : null;
-  }
+  ValueNotifier<double?> suggestedPresentationGrade = ValueNotifier(null);
 
   @override
-  double get getPercentageWithoutGrade {
-    double percentage = 0;
-    for(final partialGrade in partialGrades.value) {
-      if(partialGrade.nota == null) {
-        percentage += (partialGrade.porcentaje ?? (getSuggestedPercentage ?? 0));
-      }
-    }
-
-    return percentage;
-  }
+  ValueNotifier<double> percentageWithoutGrade = ValueNotifier(0);
 
   @override
-  bool get hasCorrectPercentage => getPercentageOfPartialGrades == maxPercentage;
+  ValueNotifier<bool> hasCorrectPercentage = ValueNotifier(false);
 
   @override
-  double? get getSuggestedGrade {
-    final percentageWithoutGrade = getPercentageWithoutGrade;
-    if(!(hasMissingPartialGrade && percentageWithoutGrade > 0)) {
-      return null;
-    }
-
-    final weightOfMissingGrades = percentageWithoutGrade / maxPercentage;
-    final requiredGradeValue = passingGrade - (getSuggestedPresentationGrade ?? 0);
-    return requiredGradeValue / weightOfMissingGrades;
-  }
+  ValueNotifier<double?> suggestedGrade = ValueNotifier(null);
 
   @override
   void updateWithGrades(Grades grades) {
-    partialGrades.value.clear();
+    partialGrades.clear();
     percentageTextFieldControllers.value.clear();
     gradeTextFieldControllers.value.clear();
 
@@ -189,76 +104,239 @@ class CalculatorControllerImplementation implements CalculatorController {
     }
 
     setExamGrade(grades.notaExamen);
+    _updateCalculations();
   }
 
   @override
   void updateGradeAt(int index, IEvaluacion updatedGrade) {
-    final grade = partialGrades.value[index];
+    final grade = partialGrades[index];
     if(!(grade.editable || freeEditable.value)) {
       return;
     }
 
-    final copy = partialGrades.value;
-    copy[index] = updatedGrade;
-    partialGrades.value = copy;
+    partialGrades[index] = updatedGrade;
 
-    if(hasMissingPartialGrade) {
+    _updateCalculations();
+    if(hasMissingPartialGrade.value) {
       clearExamGrade();
     }
   }
 
   @override
   void addGrade(IEvaluacion grade) {
-    partialGrades.value = [...partialGrades.value, grade];
-    percentageTextFieldControllers.value = [
-      ...percentageTextFieldControllers.value,
-      MaskedTextController(
-        mask: "000",
-        text: grade.porcentaje?.toStringAsFixed(0) ?? "",
-      ),
-    ];
-    gradeTextFieldControllers.value = [
-      ...gradeTextFieldControllers.value,
-      MaskedTextController(
-        mask: "0.0",
-        text: grade.nota?.toStringAsFixed(1) ?? "",
-      ),
-    ];
-    logger.d("A grade has been added");
+    partialGrades.add(grade);
+    percentageTextFieldControllers.add(MaskedTextController(
+      mask: "000",
+      text: grade.porcentaje?.toStringAsFixed(0) ?? "",
+    ));
+    gradeTextFieldControllers.add(MaskedTextController(
+      mask: "0.0",
+      text: grade.nota?.toStringAsFixed(1) ?? "",
+    ));
+    _updateCalculations();
   }
 
   @override
   void removeGradeAt(int index) {
-    final grade = partialGrades.value[index];
+    final grade = partialGrades[index];
     if(!(grade.editable || freeEditable.value)) {
       return;
     }
 
-    partialGrades.value = partialGrades.value..removeAt(index);
-    percentageTextFieldControllers.value = percentageTextFieldControllers.value..removeAt(index);
-    gradeTextFieldControllers.value = gradeTextFieldControllers.value..removeAt(index);
-    logger.d("Removed grade at index $index");
+    partialGrades.removeAt(index);
+    percentageTextFieldControllers.removeAt(index);
+    gradeTextFieldControllers.removeAt(index);
+    _updateCalculations();
   }
 
   @override
   void makeEditable() {
     freeEditable.value = true;
+    _updateCalculations();
   }
 
   @override
   void makeNonEditable() {
     freeEditable.value = false;
+    _updateCalculations();
   }
 
   @override
   void clearExamGrade() {
     examGrade.value = null;
-    examGradeTextFieldController.value = examGradeTextFieldController.value..updateText("");
+    final examGradeTextFieldController = this.examGradeTextFieldController.value;
+    examGradeTextFieldController.updateText("");
+    this.examGradeTextFieldController.value = examGradeTextFieldController;
+    _updateCalculations();
   }
 
   @override
   void setExamGrade(num? grade) {
     examGrade.value = grade?.toDouble();
-    examGradeTextFieldController.value = examGradeTextFieldController.value..updateText(grade?.toDouble().toStringAsFixed(1) ?? "");
+    examGradeTextFieldController.value.updateText(grade?.toDouble().toStringAsFixed(1) ?? "");
+    _updateCalculations();
+  }
+
+  void _updateCalculations() {
+    _calculateFinalGrade();
+    _calculatePresentationGrade();
+    _calculateAmountOfPartialGradesWithoutGrade();
+    _calculateAmountOfPartialGradesWithoutPercentage();
+    _checkHasMissingPartialGrade();
+    _checkCanTakeExam();
+    _calculateMinimumRequiredExamGrade();
+    _calculatePercentageOfPartialGrades();
+    _calculateMissingPercentage();
+    _checkMissingPercentage();
+    _calculateSuggestedPercentage();
+    _calculateSuggestedPresentationGrade();
+    _calculatePercentageWithoutGrade();
+    _checkCorrectPercentage();
+    _calculateSuggestedGrade();
+  }
+
+  void _calculateFinalGrade() {
+    _calculatePresentationGrade();
+    final calculatedPresentationGrade = this.calculatedPresentationGrade.value;
+    if (calculatedPresentationGrade == null) {
+      calculatedFinalGrade.value = null;
+      return;
+    }
+
+    final examGradeValue = examGrade.value;
+    if(examGradeValue == null) {
+      calculatedFinalGrade.value = calculatedPresentationGrade;
+      return;
+    }
+
+    final weightedFinalGrade = calculatedPresentationGrade * presentationFinalWeight;
+    final weightedExamGrade = examGradeValue * examFinalWeight;
+
+    calculatedFinalGrade.value = weightedFinalGrade + weightedExamGrade;
+  }
+
+  void _calculatePresentationGrade() {
+    double presentationGrade = 0;
+    for (final partialGrade in partialGrades) {
+      final weight = (partialGrade.porcentaje ?? 0) / maxPercentage;
+      presentationGrade += (partialGrade.nota ?? 0) * weight;
+    }
+
+    calculatedPresentationGrade.value = presentationGrade != 0 ? presentationGrade : null;
+  }
+
+  void _calculateAmountOfPartialGradesWithoutGrade() => amountOfPartialGradesWithoutGrade.value = partialGrades
+      .where((partialGrade) => partialGrade.nota == null)
+      .length;
+
+  void _calculateAmountOfPartialGradesWithoutPercentage() => amountOfPartialGradesWithoutPercentage.value = partialGrades
+      .where((partialGrade) => partialGrade.porcentaje == null)
+      .length;
+
+  void _checkHasMissingPartialGrade() {
+    _calculateAmountOfPartialGradesWithoutGrade();
+    hasMissingPartialGrade.value = amountOfPartialGradesWithoutGrade.value > 0;
+  }
+
+  void _checkCanTakeExam() {
+    _checkHasMissingPartialGrade();
+    if(hasMissingPartialGrade.value) {
+      canTakeExam.value = false;
+      return;
+    }
+
+    _calculatePresentationGrade();
+    final calculatedPresentationGrade = this.calculatedPresentationGrade.value;
+    if(calculatedPresentationGrade == null) {
+      canTakeExam.value = false;
+      return;
+    }
+
+    canTakeExam.value = calculatedPresentationGrade >= minimumGradeForExam && calculatedPresentationGrade < passingGrade;
+  }
+
+  void _calculateMinimumRequiredExamGrade() {
+    _checkCanTakeExam();
+    if(!canTakeExam.value) {
+      minimumRequiredExamGrade.value = null;
+      return;
+    }
+
+    _calculatePresentationGrade();
+    final calculatedPresentationGrade = this.calculatedPresentationGrade.value;
+    if(calculatedPresentationGrade == null) {
+      minimumRequiredExamGrade.value = null;
+      return;
+    }
+
+    final weightedPresentationGrade = calculatedPresentationGrade * presentationFinalWeight;
+    minimumRequiredExamGrade.value = (passingGrade - weightedPresentationGrade) / examFinalWeight;
+  }
+
+  void _calculatePercentageOfPartialGrades() {
+    double percentage = 0;
+    for (final partialGrade in partialGrades) {
+      percentage += (partialGrade.porcentaje ?? 0);
+    }
+    percentageOfPartialGrades.value = percentage;
+  }
+
+  void _calculateMissingPercentage()  {
+    _calculatePercentageOfPartialGrades();
+    missingPercentage.value = maxPercentage - percentageOfPartialGrades.value;
+  }
+
+  void _checkMissingPercentage() {
+    _calculateAmountOfPartialGradesWithoutPercentage();
+    hasMissingPercentage.value = amountOfPartialGradesWithoutPercentage.value > 0;
+  }
+
+  void _calculateSuggestedPercentage() {
+    _calculateAmountOfPartialGradesWithoutPercentage();
+    _calculateMissingPercentage();
+    final percentage = missingPercentage.value / amountOfPartialGradesWithoutPercentage.value;
+    suggestedPercentage.value = 0 <= percentage && percentage <= maxPercentage ? percentage : null;
+  }
+
+  void _calculateSuggestedPresentationGrade() {
+    _calculateSuggestedPercentage();
+    double presentationGrade = 0;
+    for(final partialGrade in partialGrades) {
+      final weight = (partialGrade.porcentaje ?? (suggestedPercentage.value ?? 0)) / maxPercentage;
+      presentationGrade += (partialGrade.nota ?? 0) * weight;
+    }
+
+    suggestedPresentationGrade.value =  0 <= presentationGrade && presentationGrade <= maxGrade ? presentationGrade : null;
+  }
+
+  void _calculatePercentageWithoutGrade() {
+    _calculateSuggestedPercentage();
+    double percentage = 0;
+    for(final partialGrade in partialGrades) {
+      if(partialGrade.nota == null) {
+        percentage += (partialGrade.porcentaje ?? (suggestedPercentage.value ?? 0));
+      }
+    }
+
+    percentageWithoutGrade.value = percentage;
+  }
+
+  void _checkCorrectPercentage() {
+    _calculatePercentageOfPartialGrades();
+    hasCorrectPercentage.value = percentageOfPartialGrades.value == maxPercentage;
+  }
+
+  void _calculateSuggestedGrade() {
+    _calculatePercentageWithoutGrade();
+    final percentageWithoutGrade = this.percentageWithoutGrade.value;
+    if(!(hasMissingPartialGrade.value && percentageWithoutGrade > 0)) {
+      suggestedGrade.value = null;
+      return;
+    }
+
+    _calculateSuggestedPresentationGrade();
+    final weightOfMissingGrades = percentageWithoutGrade / maxPercentage;
+    final requiredGradeValue = passingGrade - (suggestedPresentationGrade.value ?? 0);
+    suggestedGrade.value = requiredGradeValue / weightOfMissingGrades;
   }
 }

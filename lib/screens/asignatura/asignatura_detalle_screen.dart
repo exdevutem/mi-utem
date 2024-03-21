@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mdi/mdi.dart';
 import 'package:mi_utem/models/asignatura.dart';
+import 'package:mi_utem/models/asignaturas/detalles/navigation_tab.dart';
 import 'package:mi_utem/screens/asignatura/asignatura_estudiantes_tab.dart';
 import 'package:mi_utem/screens/asignatura/asignatura_notas_tab.dart';
 import 'package:mi_utem/screens/asignatura/asignatura_resumen_tab.dart';
@@ -11,20 +12,8 @@ import 'package:mi_utem/services_new/interfaces/controllers/calculator_controlle
 import 'package:mi_utem/widgets/custom_app_bar.dart';
 import 'package:watch_it/watch_it.dart';
 
-class _ITabs {
-  final String label;
-  final Widget child;
-  final bool initial;
-
-  _ITabs({
-    required this.label,
-    required this.child,
-    this.initial = false,
-  });
-}
-
 class AsignaturaDetalleScreen extends StatelessWidget {
-  final Asignatura? asignatura;
+  final Asignatura asignatura;
 
   AsignaturaDetalleScreen({
     super.key,
@@ -38,16 +27,16 @@ class AsignaturaDetalleScreen extends StatelessWidget {
     ReviewService.addScreen("AsignaturaScreen");
 
     final tabs = [
-      _ITabs(
+      NavigationTab(
         label: "Resumen",
         child: AsignaturaResumenTab(asignatura: asignatura),
       ),
-      _ITabs(
+      NavigationTab(
         label: "Notas",
         child: AsignaturaNotasTab(asignatura: asignatura),
         initial: true,
       ),
-      if (asignatura?.estudiantes != null && (asignatura?.estudiantes?.length ?? 0) > 0) _ITabs(
+      if ((asignatura.estudiantes?.length ?? 0) > 0) NavigationTab(
         label: "Estudiantes",
         child: AsignaturaEstudiantesTab(asignatura: asignatura),
       ),
@@ -55,31 +44,32 @@ class AsignaturaDetalleScreen extends StatelessWidget {
     final index = tabs.indexWhere((tab) => tab.initial);
 
     return DefaultTabController(
-      initialIndex: asignatura != null ? (index == -1 ? 0 : index) : 0,
-      length: asignatura != null ? tabs.length : 1,
+      initialIndex: index == -1 ? 0 : index,
+      length: tabs.length,
       child: Scaffold(
         appBar: CustomAppBar(
-          title: Text(asignatura?.nombre ?? "Asignatura sin nombre"),
+          title: Text(asignatura.nombre ?? "Asignatura sin nombre"),
           actions: _mostrarCalculadora ? [
             IconButton(
               icon: Icon(Mdi.calculator),
               tooltip: "Calculadora",
               onPressed: () {
                 Navigator.push(context, MaterialPageRoute(builder: (ctx) => CalculadoraNotasScreen()));
-                if (asignatura?.grades != null) {
-                  di.get<CalculatorController>().updateWithGrades(asignatura!.grades!);
+                final grades = asignatura.grades;
+                if (grades != null) {
+                  di.get<CalculatorController>().updateWithGrades(grades);
                 }
               },
             ),
           ] : [],
-          bottom: asignatura != null ? TabBar(
+          bottom: TabBar(
             indicatorColor: Colors.white.withOpacity(0.8),
             tabs: tabs.map((tab) => Tab(text: tab.label)).toList(),
-          ) : null,
+          ),
         ),
-        body: asignatura != null ? TabBarView(
+        body: TabBarView(
           children: tabs.map((tab) => tab.child).toList(),
-        ) : Container(),
+        ),
       ),
     );
   }

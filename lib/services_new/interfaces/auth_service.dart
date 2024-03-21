@@ -5,7 +5,7 @@ abstract class AuthService {
 
   Future<bool> isFirstTime();
 
-  Future<bool> isLoggedIn();
+  Future<bool> isLoggedIn({ bool forceRefresh = false });
 
   Future<void> login();
 
