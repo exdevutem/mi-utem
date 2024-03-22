@@ -1,8 +1,8 @@
 import 'package:extended_masked_text/extended_masked_text.dart';
 import 'package:flutter/material.dart';
 import 'package:listenable_collections/listenable_collections.dart';
-import 'package:mi_utem/models/evaluacion.dart';
-import 'package:mi_utem/models/grades.dart';
+import 'package:mi_utem/models/evaluacion/evaluacion.dart';
+import 'package:mi_utem/models/evaluacion/grades.dart';
 
 abstract class CalculatorController {
 

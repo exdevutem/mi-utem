@@ -1,4 +1,4 @@
-import 'package:mi_utem/models/asignatura.dart';
+import 'package:mi_utem/models/asignaturas/asignatura.dart';
 
 abstract class AsignaturasService {
 

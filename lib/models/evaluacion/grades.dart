@@ -1,4 +1,4 @@
-import 'package:mi_utem/models/evaluacion.dart';
+import 'package:mi_utem/models/evaluacion/evaluacion.dart';
 
 class Grades {
   List<REvaluacion> notasParciales;

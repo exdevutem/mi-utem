@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mi_utem/models/asignatura.dart';
+import 'package:mi_utem/models/asignaturas/asignatura.dart';
 import 'package:mi_utem/utils/string_utils.dart';
 import 'package:mi_utem/widgets/field_list_tile.dart';
 

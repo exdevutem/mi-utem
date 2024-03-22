@@ -1,8 +1,8 @@
 import 'package:extended_masked_text/extended_masked_text.dart';
 import 'package:flutter/material.dart';
 import 'package:listenable_collections/listenable_collections.dart';
-import 'package:mi_utem/models/evaluacion.dart';
-import 'package:mi_utem/models/grades.dart';
+import 'package:mi_utem/models/evaluacion/evaluacion.dart';
+import 'package:mi_utem/models/evaluacion/grades.dart';
 import 'package:mi_utem/services_new/interfaces/controllers/calculator_controller.dart';
 
 class CalculatorControllerImplementation implements CalculatorController {
@@ -96,8 +96,8 @@ class CalculatorControllerImplementation implements CalculatorController {
   @override
   void updateWithGrades(Grades grades) {
     partialGrades.clear();
-    percentageTextFieldControllers.value.clear();
-    gradeTextFieldControllers.value.clear();
+    percentageTextFieldControllers.clear();
+    gradeTextFieldControllers.clear();
 
     for(final grade in grades.notasParciales) {
       addGrade(IEvaluacion.fromRemote(grade));

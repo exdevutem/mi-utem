@@ -5,7 +5,7 @@ import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:awesome_notifications_fcm/awesome_notifications_fcm.dart';
 import 'package:flutter/material.dart';
 import 'package:mi_utem/main.dart';
-import 'package:mi_utem/models/asignatura.dart';
+import 'package:mi_utem/models/asignaturas/asignatura.dart';
 import 'package:mi_utem/screens/asignatura/asignatura_detalle_screen.dart';
 import 'package:mi_utem/services/analytics_service.dart';
 

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mi_utem/models/evaluacion.dart';
+import 'package:mi_utem/models/evaluacion/evaluacion.dart';
 import 'package:mi_utem/services_new/interfaces/controllers/calculator_controller.dart';
 import 'package:mi_utem/widgets/calculadora_notas/display_notas_widget.dart';
 import 'package:mi_utem/widgets/calculadora_notas/editar_notas_widget.dart';

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mi_utem/models/asignatura.dart';
+import 'package:mi_utem/models/asignaturas/asignatura.dart';
 import 'package:mi_utem/models/horario.dart';
 
 abstract class HorarioController {

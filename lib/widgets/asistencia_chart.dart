@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:community_charts_flutter/community_charts_flutter.dart' as charts;
 import 'package:flutter/material.dart';
-import 'package:mi_utem/models/asignatura.dart';
+import 'package:mi_utem/models/asignaturas/asignatura.dart';
 import 'package:mi_utem/themes/theme.dart';
 
 extension StringExtension on Color {

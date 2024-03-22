@@ -1,6 +1,6 @@
 import 'package:extended_masked_text/extended_masked_text.dart';
 import 'package:flutter/material.dart';
-import 'package:mi_utem/models/evaluacion.dart';
+import 'package:mi_utem/models/evaluacion/evaluacion.dart';
 import 'package:mi_utem/services/analytics_service.dart';
 import 'package:mi_utem/services_new/interfaces/controllers/calculator_controller.dart';
 import 'package:mi_utem/widgets/nota_list_item.dart';

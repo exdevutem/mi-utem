@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mdi/mdi.dart';
-import 'package:mi_utem/models/asignatura.dart';
+import 'package:mi_utem/models/asignaturas/asignatura.dart';
 import 'package:mi_utem/models/asignaturas/detalles/navigation_tab.dart';
 import 'package:mi_utem/screens/asignatura/asignatura_estudiantes_tab.dart';
 import 'package:mi_utem/screens/asignatura/asignatura_notas_tab.dart';

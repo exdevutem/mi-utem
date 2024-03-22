@@ -6,10 +6,11 @@ import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:mi_utem/config/logger.dart';
 import 'package:mi_utem/models/user/user.dart';
-import 'package:mi_utem/models/usuario.dart';
 import 'package:mi_utem/themes/theme.dart';
 import 'package:mi_utem/widgets/imagen_editor_modal.dart';
+import 'package:mi_utem/widgets/snackbar.dart';
 
 class ProfilePhoto extends StatefulWidget {
   final double radius;
@@ -45,12 +46,9 @@ class _ProfilePhotoState extends State<ProfilePhoto> {
     width: widget.radius * 2,
     height: widget.radius * 2,
     child: Stack(
-      children: <Widget>[
-        CircularProfileAvatar(
-          widget.user!.fotoUrl ?? "",
-          onTap: () => widget.onTap != null && widget.onImageTap == null
-              ? widget.onTap
-              : null,
+      children: [
+        CircularProfileAvatar(widget.user!.fotoUrl ?? "",
+          onTap: () => widget.onTap != null && widget.onImageTap == null ? widget.onTap : null,
           borderColor: widget.borderColor,
           borderWidth: widget.borderWidth,
           radius: widget.radius,
@@ -85,44 +83,24 @@ class _ProfilePhotoState extends State<ProfilePhoto> {
           InkWell(
             onTap: () async {
               try {
-                final imagen = await _picker.pickImage(
-                  source: ImageSource.gallery,
-                );
-                if (imagen != null) {
-                  Uint8List imagenOriginalBytes =
-                  File(imagen.path).readAsBytesSync();
-
-                  Uint8List imagenEditadaBytes = await Get.to(
-                        () => ImagenEditorModal(
-                      imagenInicial: imagenOriginalBytes,
-                      aspectRatio: 1,
-                    ),
-                  );
-
-                  String imagenEditadaBase64 =
-                  base64Encode(imagenEditadaBytes);
-
-                  widget.onImage!(imagenEditadaBase64);
-                } else {
-                  Get.snackbar(
-                    "Error",
-                    "No se pudo obtener la foto",
-                    colorText: Colors.white,
-                    backgroundColor: Get.theme.primaryColor,
-                    snackPosition: SnackPosition.BOTTOM,
-                    margin: EdgeInsets.all(20),
-                  );
+                final imagen = await _picker.pickImage(source: ImageSource.gallery);
+                if (imagen == null) {
+                  showErrorSnackbar(context, "No se pudo obtener la foto");
+                  return;
                 }
+
+                Uint8List imagenOriginalBytes =
+                File(imagen.path).readAsBytesSync();
+
+                Uint8List imagenEditadaBytes = await Navigator.push(context, MaterialPageRoute(builder: (ctx) => ImagenEditorModal(imagenInicial: imagenOriginalBytes, aspectRatio: 1)));
+
+                String imagenEditadaBase64 =
+                base64Encode(imagenEditadaBytes);
+
+                widget.onImage!(imagenEditadaBase64);
               } catch (e) {
-                print(e);
-                Get.snackbar(
-                  "Error",
-                  "No se pudo cambiar la foto",
-                  colorText: Colors.white,
-                  backgroundColor: Get.theme.primaryColor,
-                  snackPosition: SnackPosition.BOTTOM,
-                  margin: EdgeInsets.all(20),
-                );
+                logger.e("Error al cambiar la foto", e);
+                showErrorSnackbar(context, "No se pudo cambiar la foto");
               }
             },
             borderRadius: BorderRadius.circular(25),

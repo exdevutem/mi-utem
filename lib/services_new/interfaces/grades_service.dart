@@ -1,4 +1,4 @@
-import 'package:mi_utem/models/grades.dart';
+import 'package:mi_utem/models/evaluacion/grades.dart';
 
 abstract class GradesService {
 

@@ -2,8 +2,7 @@ import 'dart:core';
 
 import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:mi_utem/models/asignatura.dart';
+import 'package:mi_utem/models/asignaturas/asignatura.dart';
 import 'package:mi_utem/models/user/user.dart';
 import 'package:mi_utem/services/docentes_service.dart';
 import 'package:mi_utem/services/review_service.dart';
@@ -14,6 +13,7 @@ import 'package:mi_utem/widgets/image_view_screen.dart';
 import 'package:mi_utem/widgets/loading_dialog.dart';
 import 'package:mi_utem/widgets/loading_indicator.dart';
 import 'package:mi_utem/widgets/profile_photo.dart';
+import 'package:mi_utem/widgets/snackbar.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:watch_it/watch_it.dart';
 
@@ -81,31 +81,16 @@ class _UsuarioScreenState extends State<UsuarioScreen> {
   }
 
   Future<void> _changeFoto(String imagen) async {
-    Get.dialog(
-      LoadingDialog(),
-      barrierDismissible: false,
-    );
+    showLoadingDialog(context);
 
     try {
-      User? user = await _authService.updateProfilePicture(imagen);
-      Get.back();
-
-      setState(() {
-        _user = user;
-      });
-
-      return;
+      final user = await _authService.updateProfilePicture(imagen);
+      Navigator.pop(context);
+      setState(() => _user = user);
     } catch (e) {
-      Get.back();
+      Navigator.pop(context);
       print("Error cambiando la imagen ${e.toString()}");
-      Get.snackbar(
-        "Error",
-        "No se pudo cambiar la foto",
-        colorText: Colors.white,
-        backgroundColor: Get.theme.primaryColor,
-        snackPosition: SnackPosition.BOTTOM,
-        margin: EdgeInsets.all(20),
-      );
+      showErrorSnackbar(context, "No se pudo cambiar la foto.");
     }
   }
 
@@ -120,7 +105,7 @@ class _UsuarioScreenState extends State<UsuarioScreen> {
         title: Text("Nombre",
           style: TextStyle(color: Colors.grey),
         ),
-        subtitle: Text(_user!.nombreCompleto!,
+        subtitle: Text(_user!.nombreCompleto,
           style: TextStyle(
             color: Colors.grey[900],
             fontSize: 18,
@@ -170,14 +155,7 @@ class _UsuarioScreenState extends State<UsuarioScreen> {
         ),
         onLongPress: widget.tipo != 0 ? () async {
           await FlutterClipboard.copy(_user!.correoUtem!);
-          Get.snackbar(
-            "¡Copiado!",
-            "Correo copiado al portapapeles",
-            colorText: Colors.white,
-            backgroundColor: Get.theme.primaryColor,
-            snackPosition: SnackPosition.BOTTOM,
-            margin: EdgeInsets.all(20),
-          );
+          showTextSnackbar(context, title: "¡Copiado!", message: "Correo copiado al portapapeles");
         } : null,
         onTap: widget.tipo != 0 ? () async {
           await launchUrl(Uri.parse("mailto:${_user?.correoUtem ?? ""}"));
@@ -190,7 +168,7 @@ class _UsuarioScreenState extends State<UsuarioScreen> {
         ),
       ));
     }
-    if (_user?.correoPersonal?.isEmpty == false) {
+    if (_user?.correoPersonal.isEmpty == false) {
       lista.add(Divider(height: 1));
       lista.add(
         ListTile(
@@ -198,20 +176,13 @@ class _UsuarioScreenState extends State<UsuarioScreen> {
             style: TextStyle(color: Colors.grey),
           ),
           onLongPress: widget.tipo != 0 ? () async {
-            await FlutterClipboard.copy(_user!.correoPersonal!);
-            Get.snackbar(
-              "¡Copiado!",
-              "Correo copiado al portapapeles",
-              colorText: Colors.white,
-              backgroundColor: Get.theme.primaryColor,
-              snackPosition: SnackPosition.BOTTOM,
-              margin: EdgeInsets.all(20),
-            );
+            await FlutterClipboard.copy(_user!.correoPersonal);
+            showTextSnackbar(context, title: "¡Copiado!", message: "Correo copiado al portapapeles");
           } : null,
           onTap: widget.tipo != 0 ? () async {
             await launchUrl(Uri.parse("mailto:${_user?.correoPersonal ?? ""}"));
           } : null,
-          subtitle: Text(_user!.correoPersonal ?? "",
+          subtitle: Text(_user!.correoPersonal,
             style: TextStyle(
               color: Colors.grey[900],
               fontSize: 18,
