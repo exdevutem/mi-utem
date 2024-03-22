@@ -1,6 +1,5 @@
 name: mi_utem
-description: Plataforma académica para estudiantes de la Universidad Tecnológica
-  Metropolitana (UTEM)
+description: 'Plataforma académica para estudiantes de la Universidad Tecnológica Metropolitana (UTEM)'
 publish_to: none
 
 version: 3.0.0
