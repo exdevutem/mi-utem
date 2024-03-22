@@ -7,7 +7,7 @@ class User {
   String? token;
   Rut? rut;
 
-  String correoPersonal;
+  String? correoPersonal;
   String? correoUtem;
 
   String? fotoBase64;
@@ -49,11 +49,11 @@ class User {
 
   factory User.fromJson(Map<String, dynamic> json) => User(
       token: json['token'],
-      rut: json['rut'] is int ? Rut(json['rut'] as int) : Rut.fromString("${json['rut']}"),
+      rut: Rut.fromString("${json['rut']}"),
       correoPersonal: json['correoPersonal'],
       correoUtem: json['correoUtem'],
       fotoBase64: json['fotoBase64'],
-      perfiles: ((json['perfiles'] as List<dynamic>)).map((it) => it.toString()).toList(),
+      perfiles: ((json['perfiles'] as List<dynamic>?) ?? []).map((it) => it.toString()).toList(),
       nombreCompleto: json['nombreCompleto'],
       nombres: json['nombres'],
       apellidos: json['apellidos'],

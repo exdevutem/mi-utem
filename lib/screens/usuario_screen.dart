@@ -168,7 +168,7 @@ class _UsuarioScreenState extends State<UsuarioScreen> {
         ),
       ));
     }
-    if (_user?.correoPersonal.isEmpty == false) {
+    if (_user?.correoPersonal?.isEmpty == false) {
       lista.add(Divider(height: 1));
       lista.add(
         ListTile(
@@ -176,13 +176,13 @@ class _UsuarioScreenState extends State<UsuarioScreen> {
             style: TextStyle(color: Colors.grey),
           ),
           onLongPress: widget.tipo != 0 ? () async {
-            await FlutterClipboard.copy(_user!.correoPersonal);
+            await FlutterClipboard.copy(_user!.correoPersonal!);
             showTextSnackbar(context, title: "¡Copiado!", message: "Correo copiado al portapapeles");
           } : null,
           onTap: widget.tipo != 0 ? () async {
             await launchUrl(Uri.parse("mailto:${_user?.correoPersonal ?? ""}"));
           } : null,
-          subtitle: Text(_user!.correoPersonal,
+          subtitle: Text(_user!.correoPersonal!,
             style: TextStyle(
               color: Colors.grey[900],
               fontSize: 18,

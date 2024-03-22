@@ -7,6 +7,8 @@ import 'package:flutter_uxcam/flutter_uxcam.dart';
 import 'package:get/get.dart';
 import 'package:image/image.dart' as dartImage;
 import 'package:intl/intl.dart';
+import 'package:mi_utem/config/logger.dart';
+import 'package:mi_utem/models/exceptions/custom_exception.dart';
 import 'package:mi_utem/models/permiso_covid.dart';
 import 'package:mi_utem/models/user/user.dart';
 import 'package:mi_utem/services_new/interfaces/qr_pass_service.dart';
@@ -16,26 +18,34 @@ import 'package:mi_utem/widgets/field_list_tile.dart';
 import 'package:mi_utem/widgets/image_view_screen.dart';
 import 'package:mi_utem/widgets/loading_indicator.dart';
 import 'package:mi_utem/widgets/profile_photo.dart';
+import 'package:mi_utem/widgets/pull_to_refresh.dart';
 import 'package:watch_it/watch_it.dart';
 
-class PermisoCovidScreen extends StatelessWidget {
-
+class PermisoCovidScreen extends StatefulWidget {
   final String passId;
 
-  const PermisoCovidScreen({
-    super.key,
-    required this.passId,
-  });
+  const PermisoCovidScreen({super.key, required this.passId});
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: CustomAppBar(title: Text("Permiso de ingreso")),
-      body: FutureBuilder(
-        future: di.get<QRPassService>().getDetallesPermiso(passId),
-        builder: (context, AsyncSnapshot<PermisoCovid?> snapshot) {
+  State<PermisoCovidScreen> createState() => _PermisoCovidScreenState();
+}
+
+class _PermisoCovidScreenState extends State<PermisoCovidScreen> {
+
+  @override
+  Widget build(BuildContext context) => Scaffold(
+    appBar: CustomAppBar(title: Text("Permiso de ingreso")),
+    body: PullToRefresh(
+      onRefresh: () async => setState(() {}),
+      child: FutureBuilder<PermisoCovid?>(
+        future: di.get<QRPassService>().getDetallesPermiso(widget.passId),
+        builder: (context, snapshot) {
           if (snapshot.hasError) {
-            return const CustomErrorWidget();
+            final error = snapshot.error is CustomException ? (snapshot.error as CustomException).message : "No sabemos lo que ocurrió. Por favor intenta más tarde.";
+            logger.e("Error al cargar permiso", snapshot.error);
+            return Center(
+              child: CustomErrorWidget(error: error),
+            );
           }
 
           final permiso = snapshot.data;
@@ -48,23 +58,24 @@ class PermisoCovidScreen extends StatelessWidget {
           }
 
           if(permiso == null) {
-            return const CustomErrorWidget(
-              title: "Permiso no encontrado",
-              emoji: "\u{1F914}",
+            return const Center(
+              child: CustomErrorWidget(
+                title: "Permiso no encontrado",
+                emoji: "\u{1F914}",
+              ),
             );
           }
 
-          return SingleChildScrollView(
-            child: LoadedScreen(permiso: permiso),
-          );
+          return SingleChildScrollView(child: QRCard(permiso: permiso));
         },
       ),
-    );
-  }
+    ),
+  );
 }
 
-class LoadedScreen extends StatelessWidget {
-  const LoadedScreen({
+
+class QRCard extends StatelessWidget {
+  const QRCard({
     Key? key,
     required this.permiso,
   }) : super(key: key);
@@ -165,13 +176,13 @@ class UsuarioDetalle extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(user.nombreDisplayCapitalizado,
+                Text(user.nombreCompletoCapitalizado,
                   maxLines: 2,
-                  style: Get.textTheme.bodyLarge,
+                  style: Theme.of(context).textTheme.bodyLarge,
                 ),
                 Container(height: 4),
-                Text(user.rut.toString(),
-                  style: Get.textTheme.bodyMedium,
+                Text("${user.rut}",
+                  style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ],
             ),

@@ -3,7 +3,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:mi_utem/models/boletin_notas.dart';
-import 'package:mi_utem/models/usuario.dart';
 import 'package:mi_utem/services/boletin_service.dart';
 import 'package:mi_utem/services/horario_service.dart';
 import 'package:mi_utem/widgets/custom_expansion_tile.dart' as custom;

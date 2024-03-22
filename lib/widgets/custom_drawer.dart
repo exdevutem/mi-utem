@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:badges/badges.dart' as badge;
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:mdi/mdi.dart';
 import 'package:mi_utem/models/user/user.dart';
 import 'package:mi_utem/screens/asignatura/asignaturas_lista_screen.dart';
@@ -75,7 +74,7 @@ class CustomDrawer extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       UserAccountsDrawerHeader(
-                        accountEmail: Text(user.correoUtem ?? user.correoPersonal),
+                        accountEmail: Text(user.correoUtem ?? user.correoPersonal ?? ""),
                         accountName: Text(user.nombreCompleto,
                           style: const TextStyle(
                             fontSize: 16,

@@ -2,7 +2,6 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter_uxcam/flutter_uxcam.dart';
 import 'package:mi_utem/models/carrera.dart';
 import 'package:mi_utem/models/user/user.dart';
-import 'package:mi_utem/models/usuario.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 class AnalyticsService {

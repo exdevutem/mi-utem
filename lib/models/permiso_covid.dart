@@ -38,11 +38,5 @@ class PermisoCovid {
     fechaSolicitud: DateTime.tryParse(json['fechaSolicitud']),
   );
 
-  static List<PermisoCovid> fromJsonList(List<dynamic>? json) {
-    if(json == null) {
-      return [];
-    }
-
-    return json.map((it) => PermisoCovid.fromJson(it)).toList();
-  }
+  static List<PermisoCovid> fromJsonList(List<dynamic>? json) => json != null ? json.map((it) => PermisoCovid.fromJson(it)).toList() : [];
 }
