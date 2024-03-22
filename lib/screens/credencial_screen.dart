@@ -83,7 +83,7 @@ class _CredencialScreenState extends State<CredencialScreen> {
 
           final user = snapshot.data;
 
-          if (!snapshot.hasData || user == null) {
+          if (!snapshot.hasData) {
             return Container(
               padding: const EdgeInsets.all(20),
               child: Column(
@@ -96,6 +96,13 @@ class _CredencialScreenState extends State<CredencialScreen> {
                   ),
                 ],
               ),
+            );
+          }
+
+          if (user == null) {
+            return CustomErrorWidget(
+              title: "Ocurrió un error al generar tu crendencial. Por favor, intenta nuevamente.",
+              error: snapshot.error,
             );
           }
 
