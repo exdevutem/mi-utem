@@ -14,7 +14,7 @@ import 'package:mi_utem/widgets/flip_widget.dart';
 import 'package:mi_utem/widgets/loading_indicator.dart';
 import 'package:watch_it/watch_it.dart';
 
-class CredencialScreen extends StatefulWidget {
+class CredencialScreen extends StatefulWidget with WatchItStatefulWidgetMixin {
   CredencialScreen({
     Key? key,
   }) : super(key: key);
@@ -24,7 +24,6 @@ class CredencialScreen extends StatefulWidget {
 }
 
 class _CredencialScreenState extends State<CredencialScreen> {
-  User? _usuario;
   FlipController _flipController = FlipController();
 
   @override
@@ -65,8 +64,15 @@ class _CredencialScreenState extends State<CredencialScreen> {
         ],
       ),
       backgroundColor: Colors.grey[200],
-      body: FutureBuilder(
-        future: di.get<AuthService>().getUser(),
+      body: FutureBuilder<User?>(
+        future: () async {
+          final user = await di.get<AuthService>().getUser();
+          if(carreraActiva == null) {
+            await di.get<CarrerasService>().getCarreras(forceRefresh: true);
+          }
+
+          return user;
+        }(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return CustomErrorWidget(
@@ -75,44 +81,33 @@ class _CredencialScreenState extends State<CredencialScreen> {
             );
           }
 
-          if (snapshot.hasData) {
-            if (_usuario!.rut != null && carreraActiva!.nombre != null && carreraActiva.nombre!.isNotEmpty) {
-              return Center(
-                child: SafeArea(
-                  child: CredencialCard(
-                    user: _usuario,
-                    carrera: carreraActiva,
-                    controller: _flipController,
-                    onFlip: (direction) => _onFlip(),
-                  ),
-                ),
-              );
-            }
+          final user = snapshot.data;
 
+          if (!snapshot.hasData || user == null) {
             return Container(
               padding: const EdgeInsets.all(20),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text("😕",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 50,
+                  const Expanded(
+                    child: Center(
+                      child: LoadingIndicator(),
                     ),
-                  ),
-                  const SizedBox(height: 15),
-                  const Text("Ocurrió un error al generar tu credencial",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18,
-                    ),
-                  ),
-                  const SizedBox(height: 15),
-                  Text(snapshot.error.toString(),
-                    textAlign: TextAlign.center,
                   ),
                 ],
+              ),
+            );
+          }
+
+          if (user.rut != null && carreraActiva!.nombre != null && carreraActiva.nombre!.isNotEmpty) {
+            return Center(
+              child: SafeArea(
+                child: CredencialCard(
+                  user: user,
+                  carrera: carreraActiva,
+                  controller: _flipController,
+                  onFlip: (direction) => _onFlip(),
+                ),
               ),
             );
           }
@@ -122,10 +117,23 @@ class _CredencialScreenState extends State<CredencialScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Expanded(
-                  child: Center(
-                    child: LoadingIndicator(),
+                const Text("😕",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 50,
                   ),
+                ),
+                const SizedBox(height: 15),
+                const Text("Ocurrió un error al generar tu credencial",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                  ),
+                ),
+                const SizedBox(height: 15),
+                Text(snapshot.error.toString(),
+                  textAlign: TextAlign.center,
                 ),
               ],
             ),
