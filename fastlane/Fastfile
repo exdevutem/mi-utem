@@ -59,8 +59,7 @@ platform :mobile do
 
     slack(
       message: "Este es un mensaje de prueba desde Fastlane",
-      slack_url: ENV["SLACK_URL"],
-      channel: "#proy-mi-utem-bots",
+      channel: "proy-mi-utem-bots",
       default_payloads: [],
       attachment_properties: {
         fields: [
@@ -179,8 +178,7 @@ platform :mobile do
     unless skip_slack
       slack(
       message: "🚀 Se ha publicado la nueva versión #{build_name} (#{build_number})",
-      slack_url: ENV["SLACK_URL"],
-      channel: "#proy-mi-utem",
+      channel: "proy-mi-utem",
       default_payloads: [],
       attachment_properties: {
         fields: [
