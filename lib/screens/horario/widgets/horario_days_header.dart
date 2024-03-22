@@ -33,7 +33,7 @@ class HorarioDaysHeader extends StatelessWidget {
             .entries
             .map(
               (entry) => BloqueDiasCard(
-                day: entry.value!,
+                day: entry.value,
                 height: height,
                 width: dayWidth,
                 active: showActiveDay && entry.key == di.get<HorarioController>().indexOfCurrentDayStartingAtMonday,

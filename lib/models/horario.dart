@@ -146,7 +146,7 @@ class Periodo {
     horaTermino: json["horaTermino"],
   ) : Periodo();
 
-  static List<Periodo> fromJsonList(dynamic json) => json != null ? (json as List<dynamic> ?? []).map((item) => Periodo.fromJson(item)).toList() : [];
+  static List<Periodo> fromJsonList(dynamic json) => json != null ? (json as List<dynamic>).map((item) => Periodo.fromJson(item)).toList() : [];
 }
 
 class BloqueHorario {
