@@ -39,7 +39,7 @@ class AsignaturaResumenTab extends StatelessWidget {
                 GestureDetector(
                     child: FieldListTile(
                       title: "Docente",
-                      value: asignatura.docente?.split(" ").where((element) => int.tryParse(element) == null).join(" ") ?? "Sin docente", // Se filtran enteros, al parecer hay algunos textos que incluyen un identificador.
+                      value: asignatura.docente?.split(" ").where((element) => int.tryParse(element) == null).join(" ").replaceAll("- ", "") ?? "Sin docente", // Se filtran enteros, al parecer hay algunos textos que incluyen un identificador.
                     ),
                     onTap: () async {
                       // TODO: Mostrar perfil del docente.
