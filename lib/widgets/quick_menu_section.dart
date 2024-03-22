@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:mi_utem/services/remote_config/remote_config.dart';
 import 'package:mi_utem/widgets/quick_menu_card.dart';
 
@@ -22,7 +21,7 @@ class QuickMenuSection extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: 20),
           child: Text(
             "Acceso rápido".toUpperCase(),
-            style: Get.textTheme.titleMedium!.copyWith(
+            style: Theme.of(context).textTheme.titleMedium!.copyWith(
               fontWeight: FontWeight.bold,
             ),
           ),

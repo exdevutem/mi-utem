@@ -1,6 +1,7 @@
-import 'package:get/get.dart';
+import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:in_app_review/in_app_review.dart';
+import 'package:mi_utem/config/logger.dart';
 import 'package:mi_utem/widgets/custom_alert_dialog.dart';
 
 class ReviewService {
@@ -27,12 +28,11 @@ class ReviewService {
         box.write("review$screenName", DateTime.now().toIso8601String());
         return true;
       } else {
-        print(
-            "ERROR ReviewService addScreen: no estaba contemplada esta pantalla");
+        logger.e("ERROR ReviewService addScreen: no estaba contemplada esta pantalla");
         return false;
       }
     } catch (e) {
-      print(e);
+      logger.e(e);
       throw e;
     }
   }
@@ -46,11 +46,11 @@ class ReviewService {
           DateTime maxDate = DateTime.now().subtract(maxScreen);
           DateTime minDate = DateTime.now().subtract(minScreen);
           if (date.isBefore(maxDate) || date.isAfter(minDate)) {
-            print("ReviewService mustRequest: $screen no cumple con una fecha $isoDate");
+            logger.i("ReviewService mustRequest: $screen no cumple con una fecha $isoDate");
             return false;
           }
         } else {
-          print("ReviewService mustRequest: $screen no se ha visitado");
+          logger.i("ReviewService mustRequest: $screen no se ha visitado");
           return false;
         }
       }
@@ -59,8 +59,7 @@ class ReviewService {
         DateTime lastRequestDate = DateTime.parse(lastRequestIsoDate);
         DateTime minDate = DateTime.now().subtract(minRequest);
         if (lastRequestDate.isAfter(minDate)) {
-          print(
-              "ReviewService mustRequest: no ha pasado el minimo desde la ultima request $lastRequestIsoDate");
+          logger.i("ReviewService mustRequest: no ha pasado el minimo desde la ultima request $lastRequestIsoDate");
           return false;
         } else {
           return true;
@@ -74,40 +73,35 @@ class ReviewService {
     }
   }
 
-  static Future<void> checkAndRequestReview() async {
+  static Future<void> checkAndRequestReview(BuildContext context) async {
     try {
-      print("ReviewService checkAndRequestReview");
+      logger.i("ReviewService checkAndRequestReview");
       bool mustRequest = await ReviewService.mustRequest();
       if (mustRequest) {
         if (await inAppReview.isAvailable()) {
-          await Get.dialog(
-            CustomAlertDialog(
-              titulo: "¿Te gustaría calificar a Mi UTEM?",
-              emoji: "⭐",
-              descripcion:
-                  "Te invitamos a dejarnos tus comentarios y estrellitas",
-              onCancelar: () async {
-                Get.back();
-              },
-              onConfirmar: () async {
-                await inAppReview.requestReview();
-                box.write(
-                    "reviewLastRequest", DateTime.now().toIso8601String());
-                Get.back();
-              },
-              cancelarTextoBoton: "No, gracias 😡",
-              confirmarTextoBoton: "Dejar estrellitas 😊",
-            ),
-          );
+          await showDialog(context: context, builder: (ctx) => CustomAlertDialog(
+            titulo: "¿Te gustaría calificar a Mi UTEM?",
+            emoji: "⭐",
+            descripcion: "Te invitamos a dejarnos tus comentarios y estrellitas",
+            onCancelar: () async {
+              Navigator.pop(ctx);
+            },
+            onConfirmar: () async {
+              await inAppReview.requestReview();
+              box.write("reviewLastRequest", DateTime.now().toIso8601String());
+              Navigator.pop(ctx);
+            },
+            cancelarTextoBoton: "No, gracias 😡",
+            confirmarTextoBoton: "Dejar estrellitas 😊",
+          ));
         } else {
-          print(
-              "ReviewService checkAndRequestReview: inAppReview no está disponible");
+          logger.i("ReviewService checkAndRequestReview: inAppReview no está disponible");
         }
       } else {
-        print("ReviewService checkAndRequestReview: mustRequest es false");
+        logger.i("ReviewService checkAndRequestReview: mustRequest es false");
       }
     } catch (e) {
-      print(e);
+      logger.e(e);
       throw e;
     }
   }

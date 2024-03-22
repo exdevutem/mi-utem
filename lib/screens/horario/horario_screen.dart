@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:mi_utem/config/logger.dart';
 import 'package:mi_utem/models/horario.dart';
 import 'package:mi_utem/screens/horario/widgets/horario_main_scroller.dart';
 import 'package:mi_utem/services/analytics_service.dart';
@@ -31,7 +32,7 @@ class _HorarioScreenState extends State<HorarioScreen> {
 
   void _moveViewportToCurrentTime() {
     AnalyticsService.logEvent("horario_move_viewport_to_current_time");
-    controller.moveViewportToCurrentPeriodAndDay();
+    controller.moveViewportToCurrentPeriodAndDay(context);
   }
 
   void _captureAndShareScreenshot(Horario horario) async {
@@ -59,6 +60,7 @@ class _HorarioScreenState extends State<HorarioScreen> {
   @override
   void initState() {
     controller.getHorarioData().catchError((err) => {
+      logger.e("Error al cargar el horario", err),
       showErrorSnackbar(context, "Ocurrió un error al cargar el horario! Por favor intenta más tarde.")
     });
     super.initState();
@@ -73,7 +75,7 @@ class _HorarioScreenState extends State<HorarioScreen> {
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
-    controller.init();
+    controller.init(context);
 
     final horario = watchValue((HorarioController controller) => controller.horario);
     final isLoadingHorario = watchValue((HorarioController controller) => controller.loadingHorario);

@@ -1,6 +1,5 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:mi_utem/models/exceptions/custom_exception.dart';
 import 'package:mi_utem/models/noticia.dart';
 import 'package:mi_utem/services_new/interfaces/noticias_service.dart';
@@ -23,7 +22,7 @@ class NoticiasCarruselWidget extends StatelessWidget {
       Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Text("Noticias".toUpperCase(),
-          style: Get.textTheme.titleMedium!.copyWith(
+          style: Theme.of(context).textTheme.titleMedium!.copyWith(
             fontWeight: FontWeight.bold,
           ),
         ),

@@ -62,7 +62,7 @@ class Asignatura {
     grades: json.containsKey('notas') ? Grades.fromJson(json['notas']) : null,
     estudiantes: User.fromJsonList(json["estudiantes"]),
     asistencia: Asistencia(asistidos: json['asistenciaAlDia']),
-    tipoAsignatura: capitalize(json['tipoAsignatura'] as String),
+    tipoAsignatura: capitalize(json['tipoAsignatura'] as String? ?? ''),
     sala: capitalize(json['sala'] ?? ''),
     horario: json['horario'],
     intentos: int.tryParse(json['intentos'] ?? '0') ?? 0,

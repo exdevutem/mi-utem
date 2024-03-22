@@ -27,9 +27,8 @@ class BloqueDiasCard extends StatelessWidget {
       height: height,
       width: width,
       child: Column(
-        children: <Widget>[
-          Text(
-            day.trim(),
+        children: [
+          Text(day.trim(),
             textAlign: TextAlign.center,
             style: TextStyle(
               color: Color(0xFF363636),

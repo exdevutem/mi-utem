@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:mi_utem/models/asignaturas/asignatura.dart';
 import 'package:mi_utem/utils/string_utils.dart';
 import 'package:mi_utem/widgets/field_list_tile.dart';
@@ -33,7 +32,7 @@ class AsignaturaResumenTab extends StatelessWidget {
                   padding: EdgeInsets.symmetric(horizontal: 15),
                   width: double.infinity,
                   child: Text("Asignatura".toUpperCase(),
-                    style: Get.textTheme.bodyLarge,
+                    style: Theme.of(context).textTheme.bodyLarge,
                     textAlign: TextAlign.left,
                   ),
                 ),
@@ -79,7 +78,7 @@ class AsignaturaResumenTab extends StatelessWidget {
                   margin: EdgeInsets.only(top: 20),
                   width: double.infinity,
                   child: Text("Sala".toUpperCase(),
-                    style: Get.textTheme.bodyLarge,
+                    style: Theme.of(context).textTheme.bodyLarge,
                     textAlign: TextAlign.left,
                   ),
                 ),
@@ -99,7 +98,7 @@ class AsignaturaResumenTab extends StatelessWidget {
                   margin: EdgeInsets.only(top: 20),
                   width: double.infinity,
                   child: Text("Horario".toUpperCase(),
-                    style: Get.textTheme.bodyLarge,
+                    style: Theme.of(context).textTheme.bodyLarge,
                     textAlign: TextAlign.left,
                   ),
                 ),

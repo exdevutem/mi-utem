@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class FieldListTile extends StatelessWidget {
   final String title;
@@ -27,10 +26,10 @@ class FieldListTile extends StatelessWidget {
             children: [
               Text(title.toUpperCase(),
                 maxLines: 2,
-                style: Get.textTheme.bodySmall!.copyWith(fontWeight: FontWeight.bold),
+                style: Theme.of(context).textTheme.bodySmall!.copyWith(fontWeight: FontWeight.bold),
               ),
               Text(value ?? "Sin información",
-                style: Get.textTheme.bodyMedium,
+                style: Theme.of(context).textTheme.bodyMedium,
               ),
             ],
           ),

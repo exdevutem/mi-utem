@@ -3,7 +3,7 @@ import 'dart:math';
 
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:awesome_notifications_fcm/awesome_notifications_fcm.dart';
-import 'package:get/get.dart';
+import 'package:flutter/material.dart';
 import 'package:mi_utem/controllers/notification_controller.dart';
 import 'package:mi_utem/models/asignaturas/asignatura.dart';
 import 'package:mi_utem/widgets/custom_alert_dialog.dart';
@@ -67,30 +67,25 @@ class NotificationService {
     );
   }
 
-  static Future<bool> requestUserPermissionIfNecessary() async {
+  static Future<bool> requestUserPermissionIfNecessary(BuildContext context) async {
     bool isAllowed = await notifications.isNotificationAllowed();
     if (!isAllowed) {
-      isAllowed = await Get.dialog(
-        CustomAlertDialog(
-          titulo: "Activa las notificaciones",
-          emoji: "🔔",
-          descripcion:
-              "Necesitamos tu permiso para poder enviarte notificaciones. Nada de spam, lo prometemos.",
-          onCancelar: () async {
-            bool isAllowed = await notifications.isNotificationAllowed();
-            Get.back(result: isAllowed);
-            Get.back(result: isAllowed);
-          },
-          onConfirmar: () async {
-            await notifications.requestPermissionToSendNotifications();
-            bool isAllowed = await notifications.isNotificationAllowed();
-            Get.back(result: isAllowed);
-            Get.back(result: isAllowed);
-          },
-          cancelarTextoBoton: "No permitir",
-          confirmarTextoBoton: "Permitir",
-        ),
-      );
+      isAllowed = await showDialog(context: context, builder: (ctx) => CustomAlertDialog(
+        titulo: "Activa las notificaciones",
+        emoji: "🔔",
+        descripcion: "Necesitamos tu permiso para poder enviarte notificaciones. Nada de spam, lo prometemos.",
+        onCancelar: () async {
+          bool isAllowed = await notifications.isNotificationAllowed();
+          Navigator.pop(ctx, isAllowed);
+        },
+        onConfirmar: () async {
+          await notifications.requestPermissionToSendNotifications();
+          bool isAllowed = await notifications.isNotificationAllowed();
+          Navigator.pop(ctx, isAllowed);
+        },
+        cancelarTextoBoton: "No permitir",
+        confirmarTextoBoton: "Permitir",
+      ));
     }
     return isAllowed;
   }

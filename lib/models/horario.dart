@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:mi_utem/models/asignaturas/asignatura.dart';
 
 class Horario {
@@ -63,78 +61,52 @@ class Horario {
 
   Horario({this.asignaturas, this.horario, this.dias, this.periodos});
 
-  factory Horario.fromJson(Map<String, dynamic>? json) {
-    if (json == null) {
-      return Horario();
-    }
-    return Horario(
-      // asignaturas: Asignatura.fromJsonList(json['asignaturas']),
-      horario: BloqueHorario.fromJsonMatrix(json['horario']),
-      // dias: json["dias"],
-      // periodos: Periodo.fromJsonList(json["periodos"]),
-    );
-  }
+  factory Horario.fromJson(Map<String, dynamic>? json) => json != null ? Horario(
+    // asignaturas: Asignatura.fromJsonList(json['asignaturas']),
+    horario: BloqueHorario.fromJsonMatrix(json['horario']),
+    // dias: json["dias"],
+    // periodos: Periodo.fromJsonList(json["periodos"]),
+  ) : Horario();
 
-  static List<Horario> fromJsonList(dynamic json) {
-    if (json == null) {
-      return [];
-    }
-    List<Horario> list = [];
-    for (var bloque in json) {
-      log('bloque: $bloque');
-      for (var dia in bloque) {
-        log('dia: $dia');
-        list.add(Horario.fromJson(dia));
-      }
-    }
-    return list;
-  }
+  static List<Horario> fromJsonList(dynamic json) => (json as List<dynamic>? ?? []).expand((bloque) => (bloque as List<dynamic>? ?? []).map((dia) => Horario.fromJson(dia))).toList();
 
-  List<String?> get horasInicio {
-    return [
-      "08:00",
-      "09:40",
-      "11:20",
-      "13:00",
-      "14:40",
-      "16:20",
-      "18:00",
-      "19:40",
-      "21:20"
-    ];
-  }
+  List<String> get horasInicio => [
+    "08:00",
+    "09:40",
+    "11:20",
+    "13:00",
+    "14:40",
+    "16:20",
+    "18:00",
+    "19:40",
+    "21:20"
+  ];
 
-  List<String?> get horasIntermedio {
-    return [
-      "08:45",
-      "10:25",
-      "12:05",
-      "13:45",
-      "15:25",
-      "17:05",
-      "18:45",
-      "20:25",
-      "22:05"
-    ];
-  }
+  List<String> get horasIntermedio => [
+    "08:45",
+    "10:25",
+    "12:05",
+    "13:45",
+    "15:25",
+    "17:05",
+    "18:45",
+    "20:25",
+    "22:05"
+  ];
 
-  List<String?> get horasTermino {
-    return [
-      "09:30",
-      "11:10",
-      "12:50",
-      "14:30",
-      "16:10",
-      "17:50",
-      "19:30",
-      "21:10",
-      "22:50"
-    ];
-  }
+  List<String> get horasTermino => [
+    "09:30",
+    "11:10",
+    "12:50",
+    "14:30",
+    "16:10",
+    "17:50",
+    "19:30",
+    "21:10",
+    "22:50"
+  ];
 
-  List<String?> get diasHorario {
-    return ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
-  }
+  List<String> get diasHorario => ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
 
   List<List<BloqueHorario>> get horarioEnlazado {
     final _horario = horario;
@@ -160,30 +132,21 @@ class Periodo {
   String? horaIntermedio;
   String? horaTermino;
 
-  Periodo(
-      {this.numero, this.horaInicio, this.horaIntermedio, this.horaTermino});
+  Periodo({
+    this.numero,
+    this.horaInicio,
+    this.horaIntermedio,
+    this.horaTermino,
+  });
 
-  factory Periodo.fromJson(Map<String, dynamic>? json) {
-    if (json == null) {
-      return Periodo();
-    }
-    return Periodo(
-        numero: json["numero"],
-        horaInicio: json["horaInicio"],
-        horaIntermedio: json["horaIntermedio"],
-        horaTermino: json["horaTermino"]);
-  }
+  factory Periodo.fromJson(Map<String, dynamic>? json) => json != null ? Periodo(
+    numero: json["numero"],
+    horaInicio: json["horaInicio"],
+    horaIntermedio: json["horaIntermedio"],
+    horaTermino: json["horaTermino"],
+  ) : Periodo();
 
-  static List<Periodo> fromJsonList(dynamic json) {
-    if (json == null) {
-      return [];
-    }
-    List<Periodo> list = [];
-    for (var item in json) {
-      list.add(Periodo.fromJson(item));
-    }
-    return list;
-  }
+  static List<Periodo> fromJsonList(dynamic json) => json != null ? (json as List<dynamic> ?? []).map((item) => Periodo.fromJson(item)).toList() : [];
 }
 
 class BloqueHorario {
@@ -197,32 +160,11 @@ class BloqueHorario {
     this.codigo,
   });
 
-  factory BloqueHorario.fromJson(Map<String, dynamic>? json) {
-    if (json == null) {
-      return BloqueHorario();
-    }
+  factory BloqueHorario.fromJson(Map<String, dynamic>? json) => json != null ? BloqueHorario(
+    asignatura: Asignatura.fromJson(json['asignatura']),
+    sala: json['asignatura']['sala'],
+    codigo: "${json['asignatura']['codigo']}/${json['asignatura']['seccion']}",
+  ) : BloqueHorario();
 
-    BloqueHorario bloque = BloqueHorario(
-        asignatura: Asignatura.fromJson(json['asignatura']),
-        sala: json['asignatura']['sala'],
-        codigo:
-            "${json['asignatura']['codigo']}/${json['asignatura']['seccion']}");
-
-    return bloque;
-  }
-
-  static List<List<BloqueHorario>>? fromJsonMatrix(dynamic json) {
-    if (json == null) {
-      return null;
-    }
-    List<List<BloqueHorario>> matrix = [];
-    for (var bloque in json) {
-      List<BloqueHorario> list = [];
-      for (var dia in bloque) {
-        list.add(BloqueHorario.fromJson(dia));
-      }
-      matrix.add(list);
-    }
-    return matrix;
-  }
+  static List<List<BloqueHorario>>? fromJsonMatrix(dynamic json) => json == null ? null : (json as List<dynamic>? ?? []).map((bloque) => (bloque as List<dynamic>? ?? []).map((dia) => BloqueHorario.fromJson(dia)).toList()).toList();
 }

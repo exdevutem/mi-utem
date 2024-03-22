@@ -4,7 +4,6 @@ import 'dart:typed_data';
 
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mi_utem/config/logger.dart';
 import 'package:mi_utem/models/user/user.dart';
@@ -112,7 +111,7 @@ class _ProfilePhotoState extends State<ProfilePhoto> {
               ),
               child: Icon(
                 Icons.camera_alt,
-                color: Get.theme.primaryColor,
+                color: Theme.of(context).primaryColor,
               ),
             ),
           ),

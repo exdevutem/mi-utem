@@ -1,10 +1,8 @@
 import 'dart:async';
 import 'dart:typed_data';
 
-import 'package:flutter/material.dart';
-
 import 'package:extended_image/extended_image.dart';
-import 'package:get/get.dart';
+import 'package:flutter/material.dart';
 import 'package:image_editor/image_editor.dart';
 
 class ImagenEditorModal extends StatefulWidget {
@@ -51,7 +49,7 @@ class _ImagenEditorModalState extends State<ImagenEditorModal> {
       extendBody: true,
       extendBodyBehindAppBar: true,
       bottomNavigationBar: new Theme(
-        data: Get.theme.copyWith(
+        data: Theme.of(context).copyWith(
           canvasColor: Colors.black.withOpacity(0.5),
         ),
         child: Container(
@@ -108,7 +106,7 @@ class _ImagenEditorModalState extends State<ImagenEditorModal> {
                   break;
                 default:
                   Uint8List? imagen = await _cropImage();
-                  Get.back(result: imagen);
+                  Navigator.pop(context, imagen);
               }
             },
           ),

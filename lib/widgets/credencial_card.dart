@@ -3,7 +3,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_uxcam/flutter_uxcam.dart';
-import 'package:get/get.dart';
 import 'package:mi_utem/models/carrera.dart';
 import 'package:mi_utem/models/user/user.dart';
 import 'package:mi_utem/services/remote_config/remote_config.dart';
@@ -19,16 +18,16 @@ class CredencialCard extends StatelessWidget {
   final FlipController? controller;
   final Function(SwipeDirection?)? onFlip;
 
-  CredencialCard(
-      {Key? key,
-      required this.user,
-      required this.carrera,
-      this.controller,
-      this.onFlip})
-      : super(key: key);
+  CredencialCard({
+    super.key,
+    required this.user,
+    required this.carrera,
+    this.controller,
+    this.onFlip
+  });
 
-  Widget _buildFront() {
-    double altoBanner = Get.mediaQuery.size.height * 0.2;
+  Widget _buildFront(BuildContext context) {
+    double altoBanner = MediaQuery.of(context).size.height * 0.2;
     return Card(
       elevation: 1,
       clipBehavior: Clip.antiAlias,
@@ -63,7 +62,7 @@ class CredencialCard extends StatelessWidget {
                   padding: EdgeInsets.only(bottom: 20),
                   child: Image.asset(
                     'assets/images/utem_logo_negativo.png',
-                    width: Get.mediaQuery.size.width * 0.4,
+                    width: MediaQuery.of(context).size.width * 0.4,
                   ),
                 ),
               ),
@@ -274,7 +273,7 @@ class CredencialCard extends StatelessWidget {
     return AspectRatio(
       aspectRatio: 53.98 / 85.60,
       child: FlipWidget(
-        front: _buildFront(),
+        front: _buildFront(context),
         back: _buildRear(),
         controller: controller,
         onFlip: onFlip,

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:mi_utem/widgets/custom_app_bar.dart';
 
 final dynamic carreras = [
@@ -56,7 +55,7 @@ class _CarrerasScreenState extends State<CarrerasScreen> {
               subtitle: Text('${carreras[i]["codigo"]}/${carreras[i]["plan"]}'),
               /* leading: CircleAvatar(
               radius: 25,
-              backgroundColor: Get.theme.primaryColor,
+              backgroundColor: Theme.of(context).primaryColor,
               child: Icon(
                 IconData(carreras[i]["icono"], fontFamily: 'MaterialIcons'),
                 size: 25,

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:mi_utem/models/asignaturas/asignatura.dart';
 import 'package:mi_utem/models/carrera.dart';
@@ -88,9 +87,9 @@ class HorarioControllerImplementation extends ChangeNotifier implements HorarioC
   }
 
   @override
-  void init() {
+  void init(BuildContext context) {
     zoom.value = RemoteConfigService.horarioZoom;
-    moveViewportToCurrentPeriodAndDay();
+    moveViewportToCurrentPeriodAndDay(context);
     setZoom(zoom.value);
 
     _setScrollControllerListeners();
@@ -131,9 +130,9 @@ class HorarioControllerImplementation extends ChangeNotifier implements HorarioC
   }
 
   @override
-  void moveViewportTo(double x, double y) {
-    final viewportWidth = Get.width - Get.mediaQuery.padding.horizontal;
-    final viewportHeight = Get.height - Get.mediaQuery.padding.vertical;
+  void moveViewportTo(BuildContext context, double x, double y) {
+    final viewportWidth = MediaQuery.of(context).size.width - MediaQuery.of(context).padding.horizontal;
+    final viewportHeight = MediaQuery.of(context).size.height - MediaQuery.of(context).padding.vertical;
 
     x = (x + (HorarioMainScroller.periodWidth / 2)) * zoom.value - (viewportWidth / 2);
     y = (y + (HorarioMainScroller.dayHeight / 2)) * zoom.value - (viewportHeight / 2);
@@ -155,22 +154,22 @@ class HorarioControllerImplementation extends ChangeNotifier implements HorarioC
   }
 
   @override
-  void moveViewportToPeriodIndexAndDayIndex(int periodIndex, int dayIndex) {
+  void moveViewportToPeriodIndexAndDayIndex(BuildContext context, int periodIndex, int dayIndex) {
     final blockWidth = HorarioMainScroller.blockWidth;
     final x = (dayIndex * blockWidth) + (blockWidth / 2);
 
     final blockHeight = HorarioMainScroller.blockHeight;
     final y = (periodIndex * blockHeight) + (blockHeight / 2);
 
-    moveViewportTo(x, y);
+    moveViewportTo(context, x, y);
   }
 
   @override
-  void moveViewportToCurrentPeriodAndDay() {
+  void moveViewportToCurrentPeriodAndDay(BuildContext context) {
     final periodIndex = indexOfCurrentPeriod ?? 0;
     final dayIndex = indexOfCurrentDayStartingAtMonday ?? 0;
 
-    moveViewportToPeriodIndexAndDayIndex(periodIndex, dayIndex);
+    moveViewportToPeriodIndexAndDayIndex(context, periodIndex, dayIndex);
 
     isCenteredInCurrentPeriodAndDay.value = true;
   }

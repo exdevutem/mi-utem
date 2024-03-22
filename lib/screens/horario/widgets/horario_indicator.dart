@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:mi_utem/services/analytics_service.dart';
 import 'package:mi_utem/services_new/interfaces/controllers/horario_controller.dart';
 import 'package:watch_it/watch_it.dart';
@@ -154,19 +153,19 @@ class __TickerTimeTextState extends State<_TickerTimeText> {
         children: [
           TextSpan(
             text: _timeHour,
-            style: Get.textTheme.bodySmall?.copyWith(
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
               color: Colors.white,
             ),
           ),
           TextSpan(
             text: ":",
-            style: Get.textTheme.bodySmall?.copyWith(
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
               color: _showColon ? Colors.white : Colors.transparent,
             ),
           ),
           TextSpan(
             text: _timeMinutes,
-            style: Get.textTheme.bodySmall?.copyWith(
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
               color: Colors.white,
             ),
           ),

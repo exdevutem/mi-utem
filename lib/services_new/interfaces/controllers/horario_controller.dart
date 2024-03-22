@@ -31,15 +31,15 @@ abstract class HorarioController {
 
   int? get indexOfCurrentPeriod;
 
-  void init();
+  void init(BuildContext context);
 
   Future<void> getHorarioData({ bool forceRefresh = false });
 
-  void moveViewportToCurrentPeriodAndDay();
+  void moveViewportToCurrentPeriodAndDay(BuildContext context);
 
-  void moveViewportToPeriodIndexAndDayIndex(int periodIndex, int dayIndex);
+  void moveViewportToPeriodIndexAndDayIndex(BuildContext context, int periodIndex, int dayIndex);
 
-  void moveViewportTo(double x, double y);
+  void moveViewportTo(BuildContext context, double x, double y);
 
   void setZoom(double zoom);
 

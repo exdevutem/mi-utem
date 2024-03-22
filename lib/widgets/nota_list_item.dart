@@ -1,7 +1,6 @@
 import 'package:extended_masked_text/extended_masked_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:get/get.dart';
 import 'package:mi_utem/models/evaluacion/evaluacion.dart';
 import 'package:mi_utem/services_new/interfaces/controllers/calculator_controller.dart';
 import 'package:mi_utem/themes/theme.dart';
@@ -160,7 +159,7 @@ class NotaListItem extends StatelessWidget with WatchItMixin {
             },
             child: Icon(
               Icons.delete,
-              color: Get.theme.primaryColor,
+              color: Theme.of(context).primaryColor,
             ),
           )
       ],

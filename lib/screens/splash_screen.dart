@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:get/get.dart';
 import 'package:mi_utem/config/constants.dart';
 import 'package:mi_utem/config/http_clients.dart';
 import 'package:mi_utem/screens/login_screen/login_screen.dart';
@@ -44,7 +43,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    backgroundColor: Get.theme.primaryColor,
+    backgroundColor: Theme.of(context).primaryColor,
     body: Stack(
       children: [
         Container(
@@ -91,7 +90,7 @@ class _SplashScreenState extends State<SplashScreen> {
                         );
                         return;
                       }
-                      await NotificationService.requestUserPermissionIfNecessary();
+                      await NotificationService.requestUserPermissionIfNecessary(context);
                       final isLoggedIn = await _authService.isLoggedIn();
                       if(!isLoggedIn) {
                         AnalyticsService.removeUser();

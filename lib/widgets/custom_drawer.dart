@@ -118,7 +118,7 @@ class CustomDrawer extends StatelessWidget {
                             Widget? route = _getRoute(e["nombre"]);
                             if (route != null) {
                               Navigator.push(context, MaterialPageRoute(builder: (ctx) => route));
-                              ReviewService.checkAndRequestReview();
+                              ReviewService.checkAndRequestReview(context);
                             }
                           },
                         ),
@@ -133,7 +133,7 @@ class CustomDrawer extends StatelessWidget {
                                 title: const Text("Acerca de Mi UTEM"),
                                 onTap: () {
                                   Navigator.push(context, MaterialPageRoute(builder: (ctx) => AcercaScreen()));
-                                  ReviewService.checkAndRequestReview();
+                                  ReviewService.checkAndRequestReview(context);
                                 },
                               ),
                               ListTile(

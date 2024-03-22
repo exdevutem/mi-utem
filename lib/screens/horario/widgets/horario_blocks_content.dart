@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mi_utem/models/horario.dart';
 import 'package:mi_utem/themes/theme.dart';
-import 'package:mi_utem/widgets/bloque_ramo_card.dart';
+import 'package:mi_utem/widgets/horario/bloque_ramo_card.dart';
 
 class HorarioBlocksContent extends StatelessWidget {
   final Horario horario;

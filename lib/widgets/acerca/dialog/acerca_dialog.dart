@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:mi_utem/widgets/acerca/dialog/acerca_aplicacion_content.dart';
 import 'package:mi_utem/widgets/acerca/dialog/acerca_dialog_action_button.dart';
 
@@ -80,10 +79,10 @@ class _AcercaDialogState extends State<AcercaDialog> {
                         if (!_isActive)
                           OutlinedButton(
                             child: Text("Cerrar",
-                              style: TextStyle(color: Get.theme.primaryColor),
+                              style: TextStyle(color: Theme.of(context).primaryColor),
                             ),
                             onPressed: () {
-                              Get.back();
+                              Navigator.pop(context);
                             },
                           ),
                         Container(height: 20),

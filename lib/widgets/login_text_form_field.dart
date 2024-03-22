@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:get/get.dart';
 
 class LoginTextFormField extends StatefulWidget {
   LoginTextFormField({
@@ -64,24 +63,24 @@ class _LoginTextFormFieldState extends State<LoginTextFormField> {
               borderSide: BorderSide(color: Colors.white, width: 2)),
           focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(25),
-              borderSide: BorderSide(color: Get.theme.primaryColor, width: 2)),
+              borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 2)),
           focusedErrorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(25),
-              borderSide: BorderSide(color: Get.theme.primaryColor, width: 2)),
+              borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 2)),
           errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(25),
               borderSide: BorderSide(color: Colors.red, width: 2)),
           contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 20),
           labelStyle: TextStyle(
               color: _focusNode!.hasFocus
-                  ? Get.theme.primaryColor
-                  : (_error ? Get.theme.colorScheme.error : Color(0x80FFFFFF))),
+                  ? Theme.of(context).primaryColor
+                  : (_error ? Theme.of(context).colorScheme.error : Color(0x80FFFFFF))),
           errorStyle: TextStyle(color: Colors.red),
           hintStyle: TextStyle(color: Color(0x80FFFFFF)),
           prefixIcon: Icon(widget.icon,
               color: _focusNode!.hasFocus
-                  ? Get.theme.primaryColor
-                  : (_error ? Get.theme.colorScheme.error : Colors.white)),
+                  ? Theme.of(context).primaryColor
+                  : (_error ? Theme.of(context).colorScheme.error : Colors.white)),
           hintText: widget.hintText,
           labelText: widget.labelText,
         ),

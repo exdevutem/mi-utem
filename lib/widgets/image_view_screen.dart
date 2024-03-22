@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_uxcam/flutter_uxcam.dart';
-import 'package:get/get.dart';
 import 'package:photo_view/photo_view.dart';
 
 class ImageViewScreen extends StatefulWidget {
@@ -24,20 +23,14 @@ class _ImageViewScreenState extends State<ImageViewScreen> {
   Widget build(BuildContext context) {
     final photoView = PhotoView(
       imageProvider: widget.imageProvider,
-      heroAttributes: widget.heroTag != null
-          ? PhotoViewHeroAttributes(tag: widget.heroTag!)
-          : null,
+      heroAttributes: widget.heroTag != null ? PhotoViewHeroAttributes(tag: widget.heroTag!) : null,
     );
 
     return Scaffold(
       body: Stack(
-        children: <Widget>[
+        children: [
           Container(
-            child: widget.occlude
-                ? OccludeWrapper(
-                    child: photoView,
-                  )
-                : photoView,
+            child: widget.occlude ? OccludeWrapper(child: photoView) : photoView,
           ),
           SafeArea(
             child: Padding(
@@ -52,9 +45,7 @@ class _ImageViewScreenState extends State<ImageViewScreen> {
                     Icons.arrow_back,
                     size: 20,
                   ),
-                  onPressed: () {
-                    Get.back();
-                  },
+                  onPressed: () => Navigator.pop(context),
                   color: Colors.white,
                 ),
               ),

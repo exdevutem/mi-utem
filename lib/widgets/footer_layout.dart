@@ -2,8 +2,6 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
-import 'package:get/get.dart';
-
 class FooterLayout extends StatelessWidget {
   const FooterLayout({
     Key? key,
@@ -17,8 +15,8 @@ class FooterLayout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomMultiChildLayout(
-      delegate: _FooterLayoutDelegate(Get.mediaQuery.viewInsets),
-      children: <Widget>[
+      delegate: _FooterLayoutDelegate(MediaQuery.of(context).viewInsets),
+      children: [
         LayoutId(
           id: _FooterLayout.body,
           child: body,
@@ -45,8 +43,7 @@ class _FooterLayoutDelegate extends MultiChildLayoutDelegate {
   @override
   void performLayout(Size size) {
     size = Size(size.width, size.height + viewInsets.bottom);
-    final footer =
-        layoutChild(_FooterLayout.footer, BoxConstraints.loose(size));
+    final footer = layoutChild(_FooterLayout.footer, BoxConstraints.loose(size));
 
     final bodyConstraints = BoxConstraints.tightFor(
       height: size.height - max(footer.height, viewInsets.bottom),

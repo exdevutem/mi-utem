@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:mdi/mdi.dart';
 import 'package:mi_utem/models/noticia.dart';
 import 'package:mi_utem/services/analytics_service.dart';
@@ -54,7 +53,7 @@ class _NoticiaCardWidgetState extends State<NoticiaCardWidget> {
                       widget._noticia.titulo!,
                       maxLines: 3,
                       overflow: TextOverflow.ellipsis,
-                      style: Get.theme.textTheme.bodyLarge,
+                      style: Theme.of(context).textTheme.bodyLarge,
                     ),
                     Spacer(),
                   ],

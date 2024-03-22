@@ -5,7 +5,6 @@ import 'package:flutter/foundation.dart';
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:flutter_markdown/flutter_markdown.dart";
-import "package:get/get.dart";
 import "package:mi_utem/config/logger.dart";
 import "package:mi_utem/models/user/user.dart";
 import "package:mi_utem/services/remote_config/remote_config.dart";
@@ -52,7 +51,7 @@ class _MainScreenState extends State<MainScreen> {
     );
 
     ReviewService.addScreen("MainScreen");
-    ReviewService.checkAndRequestReview();
+    ReviewService.checkAndRequestReview(context);
 
     loadData();
 
@@ -95,8 +94,7 @@ class _MainScreenState extends State<MainScreen> {
               child: MarkdownBody(
                 data: _greetingText,
                 styleSheet: MarkdownStyleSheet(
-                  p: Get.textTheme.displayMedium!
-                      .copyWith(fontWeight: FontWeight.normal),
+                  p: Theme.of(context).textTheme.displayMedium!.copyWith(fontWeight: FontWeight.normal),
                 ),
               ),
             ),

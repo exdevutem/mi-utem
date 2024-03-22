@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:mi_utem/widgets/banner.dart';
 
 class BannersSection extends StatelessWidget {
@@ -25,7 +24,7 @@ class BannersSection extends StatelessWidget {
           Text(
             "Novedades".toUpperCase(),
             textAlign: TextAlign.left,
-            style: Get.textTheme.titleMedium!.copyWith(
+            style: Theme.of(context).textTheme.titleMedium!.copyWith(
               fontWeight: FontWeight.bold,
             ),
           ),

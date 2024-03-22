@@ -4,7 +4,6 @@ import 'package:barcode_image/barcode_image.dart';
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_uxcam/flutter_uxcam.dart';
-import 'package:get/get.dart';
 import 'package:image/image.dart' as dartImage;
 import 'package:intl/intl.dart';
 import 'package:mi_utem/config/logger.dart';
@@ -147,7 +146,7 @@ class QRCard extends StatelessWidget {
           ),
           Container(height: 20),
           Text("Permiso generado el ${DateFormat('dd/MM/yyyy').format(permiso.fechaSolicitud!)}",
-            style: Get.textTheme.bodySmall,
+            style: Theme.of(context).textTheme.bodySmall,
           ),
           Container(height: 20),
         ],

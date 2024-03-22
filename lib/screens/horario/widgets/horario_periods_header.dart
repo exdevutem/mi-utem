@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mi_utem/models/horario.dart';
 import 'package:mi_utem/services_new/interfaces/controllers/horario_controller.dart';
 import 'package:mi_utem/themes/theme.dart';
-import 'package:mi_utem/widgets/bloque_periodo_card.dart';
+import 'package:mi_utem/widgets/horario/bloque_periodo_card.dart';
 import 'package:watch_it/watch_it.dart';
 
 class HorarioPeriodsHeader extends StatelessWidget {
