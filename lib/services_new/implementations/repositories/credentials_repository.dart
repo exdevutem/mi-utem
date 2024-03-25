@@ -2,9 +2,9 @@ import 'dart:convert';
 
 import 'package:mi_utem/config/secure_storage.dart';
 import 'package:mi_utem/models/user/credential.dart';
-import 'package:mi_utem/services_new/interfaces/credential_service.dart';
+import 'package:mi_utem/services_new/interfaces/repositories/credentials_repository.dart';
 
-class CredentialsServiceImplementation implements CredentialsService {
+class CredentialsRepositoryImplementation implements CredentialsRepository {
 
   @override
   Future<Credentials?> getCredentials() async  {

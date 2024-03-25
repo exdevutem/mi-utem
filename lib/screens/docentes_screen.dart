@@ -121,7 +121,7 @@ class _DocentesScreenState extends State<DocentesScreen> {
                         radius: 20,
                         editable: false,
                       ),
-                      title: Text(docente.nombreCompleto ?? "N/N",
+                      title: Text(docente.nombreCompleto,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),

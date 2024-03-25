@@ -1,48 +1,24 @@
 import 'dart:convert';
 
-import 'package:mi_utem/config/constants.dart';
-import 'package:mi_utem/config/http_clients.dart';
 import 'package:mi_utem/config/secure_storage.dart';
 import 'package:mi_utem/models/asignaturas/asignatura.dart';
 import 'package:mi_utem/models/evaluacion/grades.dart';
-import 'package:mi_utem/models/exceptions/custom_exception.dart';
-import 'package:mi_utem/services_new/interfaces/asignaturas_service.dart';
+import 'package:mi_utem/services_new/interfaces/repositories/asignaturas_repository.dart';
 import 'package:mi_utem/services_new/interfaces/auth_service.dart';
 import 'package:mi_utem/services_new/interfaces/carreras_service.dart';
 import 'package:mi_utem/services_new/interfaces/grades_service.dart';
+import 'package:mi_utem/services_new/interfaces/repositories/grades_repository.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:watch_it/watch_it.dart';
 
 class GradesServiceImplementation implements GradesService {
   static const savedGradesPrefix = 'savedGrades_';
   static const subscribedAsignaturasPrefix = 'subscribedAsignaturas_';
+  final _gradesRepository = di.get<GradesRepository>();
 
   @override
   Future<Grades?> getGrades(String carreraId, String asignaturaId, {bool forceRefresh = false, bool saveGrades = true}) async {
-    final user = await di.get<AuthService>().getUser();
-    if(user == null) {
-      return null;
-    }
-
-    final response = await authClient.get(Uri.parse("$apiUrl/v1/carreras/$carreraId/asignaturas/$asignaturaId/notas"),
-      headers: {
-        'Authorization': 'Bearer ${user.token}',
-        'Content-Type': 'application/json',
-        'User-Agent': 'App/MiUTEM',
-      },
-    );
-
-    final json = jsonDecode(response.body);
-
-    if(response.statusCode != 200) {
-      if(json is Map && json.containsKey("error")) {
-        throw CustomException.fromJson(json as Map<String, dynamic>);
-      }
-
-      throw CustomException.custom(response.reasonPhrase);
-    }
-
-    final grades = Grades.fromJson(json as Map<String, dynamic>);
+    final grades = await _gradesRepository.getGrades(carreraId: carreraId, asignaturaId: asignaturaId);
 
     if(saveGrades) {
       await this.saveGrades(asignaturaId, grades);
@@ -76,7 +52,7 @@ class GradesServiceImplementation implements GradesService {
     final subscribedAsignaturasJson = await secureStorage.read(key: '$subscribedAsignaturasPrefix$carreraId');
     List<Asignatura> subscribedAsignaturas;
     if(subscribedAsignaturasJson == null) {
-      subscribedAsignaturas = (await di.get<AsignaturasService>().getAsignaturas(carreraId)) ?? [];
+      subscribedAsignaturas = (await di.get<AsignaturasRepository>().getAsignaturas(carreraId)) ?? [];
       await secureStorage.write(key: '$subscribedAsignaturasPrefix$carreraId', value: jsonEncode(subscribedAsignaturas.map((it) => it.toJson()).toList()));
     } else {
       subscribedAsignaturas = Asignatura.fromJsonList(jsonDecode(subscribedAsignaturasJson) as List<dynamic>);

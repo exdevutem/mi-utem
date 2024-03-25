@@ -1,40 +1,31 @@
-import 'dart:convert';
 
 import 'package:flutter/widgets.dart';
-import 'package:mi_utem/config/constants.dart';
-import 'package:mi_utem/config/http_clients.dart';
+import 'package:listenable_collections/listenable_collections.dart';
 import 'package:mi_utem/config/logger.dart';
 import 'package:mi_utem/models/carrera.dart';
-import 'package:mi_utem/models/exceptions/custom_exception.dart';
 import 'package:mi_utem/services/analytics_service.dart';
 import 'package:mi_utem/services_new/interfaces/carreras_service.dart';
+import 'package:mi_utem/services_new/interfaces/repositories/carreras_repository.dart';
+import 'package:watch_it/watch_it.dart';
 
-class CarrerasServiceImplementation extends ChangeNotifier implements CarrerasService {
+class CarrerasServiceImplementation implements CarrerasService {
+
+  final _carrerasRepository = di.get<CarrerasRepository>();
 
   @override
-  ValueNotifier<List<Carrera>> carreras = ValueNotifier([]);
+  ListNotifier<Carrera> carreras = ListNotifier();
 
   @override
   ValueNotifier<Carrera?> selectedCarrera = ValueNotifier(null);
 
   @override
-  Future<void> getCarreras({bool forceRefresh = false}) async {
+  Future<void> getCarreras() async {
     logger.d("[CarrerasService#getCarreras]: Obteniendo carreras...");
-    final response = await authClient.get(Uri.parse("$apiUrl/v1/carreras"));
+    final _carreras = await _carrerasRepository.getCarreras();
 
-    final json = jsonDecode(response.body);
-    if(response.statusCode != 200) {
-      logger.e("Error al obtener carreras: $json}");
-      if(json is Map && json.containsKey("error")) {
-        throw CustomException.fromJson(json as Map<String, dynamic>);
-      }
-
-      throw CustomException.custom(response.reasonPhrase);
-    }
-
-    carreras.value = Carrera.fromJsonList(json);
+    carreras.clear();
+    carreras.addAll(_carreras);
     autoSelectCarreraActiva();
-    notifyListeners();
   }
 
   @override
@@ -42,16 +33,16 @@ class CarrerasServiceImplementation extends ChangeNotifier implements CarrerasSe
 
   @override
   void autoSelectCarreraActiva() {
-    logger.d("[CarrerasService#autoSelectCarreraActiva]: Seleccionando carrera activa... ${carreras.value.map((e) => e.toJson()).toList()}");
+    logger.d("[CarrerasService#autoSelectCarreraActiva]: Seleccionando carrera activa... ${carreras.map((e) => e.toJson()).toList()}");
     final estados = ["Regular", "Causal de Eliminacion"]
         .reversed
         .map((e) => e.toLowerCase())
         .toList();
 
     logger.d("[CarrerasService#autoSelectCarreraActiva]: Estados: $estados");
-    carreras.value.sort((a,b) => estados.indexOf(b.estado!.toLowerCase()).compareTo(estados.indexOf(a.estado!.toLowerCase())));
-    logger.d("[CarrerasService#autoSelectCarreraActiva]: Carreras ordenadas: ${carreras.value.map((e) => e.toJson()).toList()}");
-    final carreraActiva = carreras.value.first;
+    carreras.sort((a,b) => estados.indexOf(b.estado!.toLowerCase()).compareTo(estados.indexOf(a.estado!.toLowerCase())));
+    logger.d("[CarrerasService#autoSelectCarreraActiva]: Carreras ordenadas: ${carreras.map((e) => e.toJson()).toList()}");
+    final carreraActiva = carreras.first;
 
     AnalyticsService.setCarreraToUser(carreraActiva);
     changeSelectedCarrera(carreraActiva);

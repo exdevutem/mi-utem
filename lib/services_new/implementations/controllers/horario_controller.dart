@@ -7,7 +7,7 @@ import 'package:mi_utem/screens/horario/widgets/horario_main_scroller.dart';
 import 'package:mi_utem/services/remote_config/remote_config.dart';
 import 'package:mi_utem/services_new/interfaces/carreras_service.dart';
 import 'package:mi_utem/services_new/interfaces/controllers/horario_controller.dart';
-import 'package:mi_utem/services_new/interfaces/horario_service.dart';
+import 'package:mi_utem/services_new/interfaces/repositories/horario_repository.dart';
 import 'package:vector_math/vector_math_64.dart' as vector;
 import 'package:watch_it/watch_it.dart';
 
@@ -98,11 +98,11 @@ class HorarioControllerImplementation extends ChangeNotifier implements HorarioC
   @override
   Future<void> getHorarioData({ bool forceRefresh = false }) async {
     loadingHorario.value = true;
-    final lastUpdate = _storage.read("last_horario_update") ?? "${DateTime.now().toIso8601String()}";
-    final lastUpdateDate = DateTime.parse(lastUpdate);
     final now = DateTime.now();
+    final lastUpdate = _storage.read("last_update_horario") ?? "${now.toIso8601String()}";
+    final lastUpdateDate = DateTime.parse(lastUpdate);
     final difference = now.difference(lastUpdateDate).inMinutes;
-    if(difference < 15 && forceRefresh == false && horario.value != null) {
+    if(difference < 15 && forceRefresh == false && horario.value != null && lastUpdate != now.toIso8601String()) {
       loadingHorario.value = false;
       return;
     }
@@ -113,7 +113,7 @@ class HorarioControllerImplementation extends ChangeNotifier implements HorarioC
     final carrerasService = di.get<CarrerasService>();
     Carrera? carrera = carrerasService.selectedCarrera.value;
     if (carrera == null) {
-      await carrerasService.getCarreras(forceRefresh: true);
+      await carrerasService.getCarreras();
     }
     carrera = carrerasService.selectedCarrera.value;
 
@@ -122,7 +122,7 @@ class HorarioControllerImplementation extends ChangeNotifier implements HorarioC
       loadingHorario.value = false;
       return;
     }
-    horario.value = await di.get<HorarioService>().getHorario(carreraId);
+    horario.value = await di.get<HorarioRepository>().getHorario(carreraId);
     _setRandomColorsByHorario();
 
     loadingHorario.value = false;

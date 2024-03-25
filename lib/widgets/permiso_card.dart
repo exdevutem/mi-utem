@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:mi_utem/models/permiso_covid.dart';
+import 'package:mi_utem/models/permiso_ingreso.dart';
 import 'package:mi_utem/screens/permiso_covid_screen.dart';
 import 'package:mi_utem/themes/theme.dart';
 
 class PermisoCard extends StatelessWidget {
   const PermisoCard({Key? key, required this.permiso}) : super(key: key);
 
-  final PermisoCovid permiso;
+  final PermisoIngreso permiso;
 
   @override
   Widget build(BuildContext context) {

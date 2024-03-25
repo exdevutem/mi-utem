@@ -2,40 +2,43 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:mi_utem/config/constants.dart';
-import 'package:mi_utem/config/http_clients.dart';
 import 'package:mi_utem/config/logger.dart';
 import 'package:mi_utem/config/secure_storage.dart';
-import 'package:mi_utem/models/exceptions/custom_exception.dart';
 import 'package:mi_utem/models/user/credential.dart';
 import 'package:mi_utem/models/user/user.dart';
 import 'package:mi_utem/screens/login_screen/login_screen.dart';
 import 'package:mi_utem/services/notification_service.dart';
 import 'package:mi_utem/services_new/interfaces/auth_service.dart';
-import 'package:mi_utem/services_new/interfaces/credential_service.dart';
+import 'package:mi_utem/services_new/interfaces/repositories/credentials_repository.dart';
+import 'package:mi_utem/services_new/interfaces/repositories/auth_repository.dart';
 import 'package:watch_it/watch_it.dart';
 
 class AuthServiceImplementation implements AuthService {
 
-  final _credentialsService = di.get<CredentialsService>();
+  final _authRepository = di.get<AuthRepository>();
+  final _credentialsService = di.get<CredentialsRepository>();
 
   @override
   Future<bool> isFirstTime() async => !(await secureStorage.containsKey(key: "last_login"));
 
   @override
   Future<bool> isLoggedIn({ bool forceRefresh = false }) async {
-    final credential = await _getCredential();
-    if(credential == null) {
+    final credentials = await _getCredential();
+    if(credentials == null) {
+      logger.d("[AuthService#isLoggedIn]: no credential");
       return false;
     }
 
     final user = await getUser();
-    if(user == null) {
+    final userToken = user?.token;
+    if(user == null || userToken == null) {
+      logger.d("[AuthService#isLoggedIn]: user || token => false => ${user == null} || ${userToken == null}");
       return false;
     }
 
     final lastLogin = await secureStorage.read(key: "last_login");
     if(lastLogin == null) {
+      logger.d("[AuthService#isLoggedIn]: no last login");
       return false;
     }
 
@@ -47,31 +50,7 @@ class AuthServiceImplementation implements AuthService {
     }
 
     try {
-      final response = await httpClient.post(Uri.parse("$apiUrl/v1/auth/refresh"),
-        body: credential.toString(),
-        headers: {
-          'Content-Type': 'application/json',
-          'User-Agent': 'App/MiUTEM',
-          'Authorization': 'Bearer ${user.token}',
-        },
-      );
-
-
-      final json = jsonDecode(response.body);
-
-      if(response.statusCode != 200) {
-        if(json is Map<String, dynamic> && json.containsKey("error")) {
-          throw CustomException.fromJson(json);
-        }
-
-        throw CustomException.custom(response.reasonPhrase);
-      }
-
-
-      final token = json["token"] as String;
-      if(token == user.token) {
-        return true;
-      }
+      final token = _authRepository.refresh(token: userToken, credentials: credentials);
 
       final userJson = user.toJson();
       userJson["token"] = token;
@@ -87,29 +66,15 @@ class AuthServiceImplementation implements AuthService {
 
   @override
   Future<void> login() async {
-    final credential = await _getCredential();
-    if(credential == null) {
+    final credentials = await _getCredential();
+    if(credentials == null) {
       return;
     }
 
-    final response = await httpClient.post(Uri.parse("$apiUrl/v1/auth"),
-      body: credential.toString(),
-      headers: {
-        'Content-Type': 'application/json',
-        'User-Agent': 'App/MiUTEM',
-      },
-    );
+    final user = await _authRepository.auth(credentials: credentials);
 
-    final json = jsonDecode(response.body);
-    if(response.statusCode != 200) {
-      if(json is Map<String, dynamic> && json.containsKey("error")) {
-        throw CustomException.fromJson(json);
-      }
-
-      throw CustomException.custom(response.reasonPhrase);
-    }
-
-    await setUser(User.fromJson(json as Map<String, dynamic>));
+    await setUser(user);
+    await secureStorage.write(key: "last_login", value: "${DateTime.now().millisecondsSinceEpoch}");
   }
 
   @override
@@ -152,28 +117,10 @@ class AuthServiceImplementation implements AuthService {
       return null;
     }
 
-    final response = await httpClient.put(Uri.parse("$apiUrl/v1/usuarios/foto"),
-      body: jsonEncode({"imagen": image}),
-      headers: {
-        'Content-Type': 'application/json',
-        'User-Agent': 'App/MiUTEM',
-        'Authorization': 'Bearer ${user.token}',
-      },
-    );
-
-    final json = jsonDecode(response.body) as Map<String, dynamic>;
-
-    if(response.statusCode != 200) {
-      if(json.containsKey("error")) {
-        throw CustomException.fromJson(json);
-      }
-
-      throw CustomException.custom(response.reasonPhrase);
-    }
-
-    user.fotoUrl = json["fotoUrl"] as String;
-    await setUser(user);
-
+    final _fotoUrl = _authRepository.updateProfilePicture(image: image);
+    final jsonUser = user.toJson();
+    jsonUser["fotoUrl"] = _fotoUrl;
+    await setUser(User.fromJson(jsonUser));
     return user;
   }
 

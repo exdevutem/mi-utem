@@ -5,9 +5,9 @@ import 'package:mi_utem/config/http_clients.dart';
 import 'package:mi_utem/config/logger.dart';
 import 'package:mi_utem/models/asignaturas/asignatura.dart';
 import 'package:mi_utem/models/exceptions/custom_exception.dart';
-import 'package:mi_utem/services_new/interfaces/asignaturas_service.dart';
+import 'package:mi_utem/services_new/interfaces/repositories/asignaturas_repository.dart';
 
-class AsignaturasServiceImplementation implements AsignaturasService {
+class AsignaturasRepositoryImplementation implements AsignaturasRepository {
 
   @override
   Future<List<Asignatura>?> getAsignaturas(String? carreraId, {bool forceRefresh = false}) async {

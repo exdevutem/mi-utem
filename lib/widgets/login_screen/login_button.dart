@@ -5,7 +5,7 @@ import 'package:mi_utem/models/user/credential.dart';
 import 'package:mi_utem/screens/main_screen.dart';
 import 'package:mi_utem/services/analytics_service.dart';
 import 'package:mi_utem/services_new/interfaces/auth_service.dart' as NewAuthService;
-import 'package:mi_utem/services_new/interfaces/credential_service.dart';
+import 'package:mi_utem/services_new/interfaces/repositories/credentials_repository.dart';
 import 'package:mi_utem/widgets/acerca/dialog/acerca_dialog.dart';
 import 'package:mi_utem/widgets/dialogs/monkey_error_dialog.dart';
 import 'package:mi_utem/widgets/loading_dialog.dart';
@@ -37,7 +37,7 @@ class LoginButton extends StatefulWidget {
 class _LoginButtonState extends State<LoginButton> {
 
   final _authService = di.get<NewAuthService.AuthService>();
-  final _credentialsService = di.get<CredentialsService>();
+  final _credentialsService = di.get<CredentialsRepository>();
 
   @override
   Widget build(BuildContext context) => TextButton(

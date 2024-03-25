@@ -8,9 +8,9 @@ import 'package:image/image.dart' as dartImage;
 import 'package:intl/intl.dart';
 import 'package:mi_utem/config/logger.dart';
 import 'package:mi_utem/models/exceptions/custom_exception.dart';
-import 'package:mi_utem/models/permiso_covid.dart';
+import 'package:mi_utem/models/permiso_ingreso.dart';
 import 'package:mi_utem/models/user/user.dart';
-import 'package:mi_utem/services_new/interfaces/qr_pass_service.dart';
+import 'package:mi_utem/services_new/interfaces/repositories/permiso_ingreso_repository.dart';
 import 'package:mi_utem/widgets/custom_app_bar.dart';
 import 'package:mi_utem/widgets/custom_error_widget.dart';
 import 'package:mi_utem/widgets/field_list_tile.dart';
@@ -36,8 +36,8 @@ class _PermisoCovidScreenState extends State<PermisoCovidScreen> {
     appBar: CustomAppBar(title: Text("Permiso de ingreso")),
     body: PullToRefresh(
       onRefresh: () async => setState(() {}),
-      child: FutureBuilder<PermisoCovid?>(
-        future: di.get<QRPassService>().getDetallesPermiso(widget.passId),
+      child: FutureBuilder<PermisoIngreso?>(
+        future: di.get<PermisoIngresoRepository>().getDetallesPermiso(widget.passId),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             final error = snapshot.error is CustomException ? (snapshot.error as CustomException).message : "No sabemos lo que ocurrió. Por favor intenta más tarde.";
@@ -79,7 +79,7 @@ class QRCard extends StatelessWidget {
     required this.permiso,
   }) : super(key: key);
 
-  final PermisoCovid permiso;
+  final PermisoIngreso permiso;
 
   _openQr(BuildContext context, String heroTag) {
     final image = dartImage.Image(500, 500);

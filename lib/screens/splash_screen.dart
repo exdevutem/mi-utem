@@ -100,7 +100,7 @@ class _SplashScreenState extends State<SplashScreen> {
                           AnalyticsService.setUser(user);
                         }
                       }
-                      Navigator.pop(context);
+                      Navigator.popUntil(context, (route) => route.isFirst);
                       Navigator.pushReplacement(context, MaterialPageRoute(builder: (ctx) => isLoggedIn ? MainScreen() : LoginScreen()));
                     },
                   ),

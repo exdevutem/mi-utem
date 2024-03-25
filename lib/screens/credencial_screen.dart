@@ -68,7 +68,7 @@ class _CredencialScreenState extends State<CredencialScreen> {
         future: () async {
           final user = await di.get<AuthService>().getUser();
           if(carreraActiva == null) {
-            await di.get<CarrerasService>().getCarreras(forceRefresh: true);
+            await di.get<CarrerasService>().getCarreras();
           }
 
           return user;

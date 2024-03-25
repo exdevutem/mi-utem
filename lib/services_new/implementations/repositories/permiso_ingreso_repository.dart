@@ -3,13 +3,13 @@ import 'dart:convert';
 import 'package:mi_utem/config/constants.dart';
 import 'package:mi_utem/config/http_clients.dart';
 import 'package:mi_utem/models/exceptions/custom_exception.dart';
-import 'package:mi_utem/models/permiso_covid.dart';
-import 'package:mi_utem/services_new/interfaces/qr_pass_service.dart';
+import 'package:mi_utem/models/permiso_ingreso.dart';
+import 'package:mi_utem/services_new/interfaces/repositories/permiso_ingreso_repository.dart';
 
-class QRPassServiceImplementation extends QRPassService {
+class PermisoIngresoRepositoryImplementation extends PermisoIngresoRepository {
 
   @override
-  Future<PermisoCovid?> getDetallesPermiso(String id, {bool forceRefresh = false}) async {
+  Future<PermisoIngreso> getDetallesPermiso(String id) async {
     final response = await authClient.post(Uri.parse("$apiUrl/v1/permisos/$id"));
 
     final json = jsonDecode(response.body) as Map<String, dynamic>;
@@ -22,11 +22,11 @@ class QRPassServiceImplementation extends QRPassService {
       throw CustomException.custom(response.reasonPhrase);
     }
 
-    return PermisoCovid.fromJson(json);
+    return PermisoIngreso.fromJson(json);
   }
 
   @override
-  Future<List<PermisoCovid>?> getPermisos({bool forceRefresh = false}) async {
+  Future<List<PermisoIngreso>> getPermisos() async {
     final response = await authClient.post(Uri.parse("$apiUrl/v1/permisos"));
 
     final json = jsonDecode(response.body);
@@ -39,8 +39,7 @@ class QRPassServiceImplementation extends QRPassService {
       throw CustomException.custom(response.reasonPhrase);
     }
 
-    return PermisoCovid.fromJsonList(json as List<dynamic>);
+    return PermisoIngreso.fromJsonList(json as List<dynamic>);
   }
-
 
 }

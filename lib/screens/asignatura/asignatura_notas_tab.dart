@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mi_utem/models/asignaturas/asignatura.dart';
 import 'package:mi_utem/models/evaluacion/evaluacion.dart';
-import 'package:mi_utem/services_new/interfaces/asignaturas_service.dart';
+import 'package:mi_utem/services_new/interfaces/repositories/asignaturas_repository.dart';
 import 'package:mi_utem/widgets/asignatura/notas_tab/notas_display.dart';
 import 'package:mi_utem/widgets/custom_error_widget.dart';
 import 'package:mi_utem/widgets/nota_list_item.dart';
@@ -34,7 +34,7 @@ class _AsignaturaNotasTabState extends State<AsignaturaNotasTab> {
   @override
   Widget build(BuildContext context) => PullToRefresh(
     onRefresh: () async {
-      final asignatura = await di.get<AsignaturasService>().getDetalleAsignatura(this.asignatura.codigo);
+      final asignatura = await di.get<AsignaturasRepository>().getDetalleAsignatura(this.asignatura.codigo);
       if(asignatura == null) {
         showErrorSnackbar(context, "Ocurrió un error actualizar la asignatura. Por favor intenta más tarde.");
         return;

@@ -1,6 +1,6 @@
 import 'package:mi_utem/models/user/user.dart';
 
-class PermisoCovid {
+class PermisoIngreso {
   String? id;
   User? user;
   String? codigoQr;
@@ -12,7 +12,7 @@ class PermisoCovid {
   String? vigencia;
   DateTime? fechaSolicitud;
 
-  PermisoCovid({
+  PermisoIngreso({
     this.id,
     this.user,
     this.codigoQr,
@@ -25,7 +25,7 @@ class PermisoCovid {
     this.fechaSolicitud,
   });
 
-  factory PermisoCovid.fromJson(Map<String, dynamic> json) => PermisoCovid(
+  factory PermisoIngreso.fromJson(Map<String, dynamic> json) => PermisoIngreso(
     id: json['id'],
     user: json.containsKey("usuario") ? User.fromJson(json['usuario']) : null,
     codigoQr: json['codigoQr'],
@@ -38,5 +38,5 @@ class PermisoCovid {
     fechaSolicitud: DateTime.tryParse(json['fechaSolicitud']),
   );
 
-  static List<PermisoCovid> fromJsonList(List<dynamic>? json) => json != null ? json.map((it) => PermisoCovid.fromJson(it)).toList() : [];
+  static List<PermisoIngreso> fromJsonList(List<dynamic>? json) => json != null ? json.map((it) => PermisoIngreso.fromJson(it)).toList() : [];
 }

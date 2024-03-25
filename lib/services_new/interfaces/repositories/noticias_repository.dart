@@ -1,6 +1,6 @@
 import 'package:mi_utem/models/noticia.dart';
 
-abstract class NoticiasService {
+abstract class NoticiasRepository {
 
   Future<List<Noticia>?> getNoticias();
 }

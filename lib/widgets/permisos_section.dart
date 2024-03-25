@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mi_utem/models/exceptions/custom_exception.dart';
-import 'package:mi_utem/models/permiso_covid.dart';
-import 'package:mi_utem/services_new/interfaces/qr_pass_service.dart';
+import 'package:mi_utem/models/permiso_ingreso.dart';
+import 'package:mi_utem/services_new/interfaces/repositories/permiso_ingreso_repository.dart';
 import 'package:mi_utem/widgets/loading_indicator.dart';
 import 'package:mi_utem/widgets/permiso_card.dart';
 import 'package:watch_it/watch_it.dart';
@@ -31,8 +31,8 @@ class PermisosCovidSection extends StatelessWidget {
       SizedBox(height: 10),
       SizedBox(
         height: 155,
-        child: FutureBuilder<List<PermisoCovid>?>(
-          future: di.get<QRPassService>().getPermisos(),
+        child: FutureBuilder<List<PermisoIngreso>?>(
+          future: di.get<PermisoIngresoRepository>().getPermisos(),
           builder: (context, snapshot) {
             if(snapshot.connectionState == ConnectionState.waiting) {
               return LoadingIndicator(

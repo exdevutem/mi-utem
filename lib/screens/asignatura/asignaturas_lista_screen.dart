@@ -4,7 +4,7 @@ import 'package:mi_utem/models/asignaturas/asignatura.dart';
 import 'package:mi_utem/models/exceptions/custom_exception.dart';
 import 'package:mi_utem/screens/calculadora_notas_screen.dart';
 import 'package:mi_utem/services/remote_config/remote_config.dart';
-import 'package:mi_utem/services_new/interfaces/asignaturas_service.dart';
+import 'package:mi_utem/services_new/interfaces/repositories/asignaturas_repository.dart';
 import 'package:mi_utem/services_new/interfaces/carreras_service.dart';
 import 'package:mi_utem/widgets/asignatura/lista/lista_asignaturas.dart';
 import 'package:mi_utem/widgets/asignatura/lista/sin_asignaturas_mensaje.dart';
@@ -21,7 +21,7 @@ class AsignaturasListaScreen extends StatefulWidget with WatchItStatefulWidgetMi
 }
 
 class _AsignaturasListaScreenState extends State<AsignaturasListaScreen> {
-  final _asignaturasService = di.get<AsignaturasService>();
+  final _asignaturasService = di.get<AsignaturasRepository>();
 
   bool get _mostrarCalculadora => RemoteConfigService.calculadoraMostrar;
 
@@ -46,7 +46,7 @@ class _AsignaturasListaScreenState extends State<AsignaturasListaScreen> {
           final carrerasService = di.get<CarrerasService>();
           final selectedCarrera = watchValue((CarrerasService service) => service.selectedCarrera);
           if (selectedCarrera == null) {
-            await carrerasService.getCarreras(forceRefresh: true);
+            await carrerasService.getCarreras();
           }
 
           return await _asignaturasService.getAsignaturas(selectedCarrera?.id);
