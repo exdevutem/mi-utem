@@ -9,8 +9,8 @@ import 'package:mi_utem/models/user/user.dart';
 import 'package:mi_utem/screens/login_screen/login_screen.dart';
 import 'package:mi_utem/services/notification_service.dart';
 import 'package:mi_utem/services_new/interfaces/auth_service.dart';
-import 'package:mi_utem/services_new/interfaces/repositories/credentials_repository.dart';
 import 'package:mi_utem/services_new/interfaces/repositories/auth_repository.dart';
+import 'package:mi_utem/services_new/interfaces/repositories/credentials_repository.dart';
 import 'package:watch_it/watch_it.dart';
 
 class AuthServiceImplementation implements AuthService {
@@ -50,7 +50,7 @@ class AuthServiceImplementation implements AuthService {
     }
 
     try {
-      final token = _authRepository.refresh(token: userToken, credentials: credentials);
+      final token = await _authRepository.refresh(token: userToken, credentials: credentials);
 
       final userJson = user.toJson();
       userJson["token"] = token;
