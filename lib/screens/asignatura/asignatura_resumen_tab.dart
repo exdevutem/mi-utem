@@ -89,7 +89,7 @@ class AsignaturaResumenTab extends StatelessWidget {
                 Divider(height: 5, indent: 20, endIndent: 20),
                 FieldListTile(
                   title: "Sala",
-                  value: asignatura.sala,
+                  value: asignatura.sala?.split(",").map((it) => "- ${it.trim().replaceAll("-", " - ")}").join("\n"),
                 ),
 
                 Divider(height: 5),
