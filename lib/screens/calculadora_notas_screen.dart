@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mi_utem/models/evaluacion/evaluacion.dart';
 import 'package:mi_utem/controllers/interfaces/calculator_controller.dart';
 import 'package:mi_utem/widgets/calculadora_notas/display_notas_widget.dart';
 import 'package:mi_utem/widgets/calculadora_notas/editar_notas_widget.dart';
@@ -15,11 +14,9 @@ class CalculadoraNotasScreen extends StatefulWidget {
 
 class _CalculadoraNotasScreenState extends State<CalculadoraNotasScreen> {
 
-  CalculatorController _controller = Get.find<CalculatorController>();
-
   @override
   void initState() {
-    _controller.makeEditable();
+    Get.find<CalculatorController>().makeEditable();
     super.initState();
   }
 
@@ -32,18 +29,8 @@ class _CalculadoraNotasScreenState extends State<CalculadoraNotasScreen> {
       body: ListView(
         padding: const EdgeInsets.all(10),
         children: [
-          DisplayNotasWidget(),
-          Obx(() => EditarNotasWidget(
-            partialGrades: _controller.partialGrades,
-            gradeTextFieldControllers: _controller.gradeTextFieldControllers,
-            percentageTextFieldControllers: _controller.percentageTextFieldControllers,
-            onAddGrade: () => _controller.addGrade(IEvaluacion(
-              nota: null,
-              porcentaje: null,
-            )),
-            onRemoveGrade: (idx) => _controller.removeGradeAt(idx),
-            onChanged: (idx, evaluacion) => _controller.updateGradeAt(idx, evaluacion),
-          )),
+          const DisplayNotasWidget(),
+          const EditarNotasWidget(),
         ],
       ),
     );

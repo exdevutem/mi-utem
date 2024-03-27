@@ -1,8 +1,8 @@
 import 'package:extended_masked_text/extended_masked_text.dart';
 import 'package:get/get.dart';
+import 'package:mi_utem/controllers/interfaces/calculator_controller.dart';
 import 'package:mi_utem/models/evaluacion/evaluacion.dart';
 import 'package:mi_utem/models/evaluacion/grades.dart';
-import 'package:mi_utem/controllers/interfaces/calculator_controller.dart';
 
 class CalculatorControllerImplementation implements CalculatorController {
 
@@ -38,7 +38,7 @@ class CalculatorControllerImplementation implements CalculatorController {
 
   /* Nota del examen */
   @override
-  Rx<double?> examGrade = null.obs;
+  Rx<double?> examGrade = Rx(null);
 
   /* Controlador de texto para la nota del examen con máscara (para autocompletar formato) */
   @override
@@ -48,10 +48,10 @@ class CalculatorControllerImplementation implements CalculatorController {
   RxBool freeEditable = false.obs;
 
   @override
-  Rx<double?> calculatedFinalGrade = null.obs;
+  Rx<double?> calculatedFinalGrade = Rx(null);
 
   @override
-  Rx<double?> calculatedPresentationGrade = null.obs;
+  Rx<double?> calculatedPresentationGrade = Rx(null);
 
   @override
   Rx<int> amountOfPartialGradesWithoutGrade = 0.obs;
@@ -66,7 +66,7 @@ class CalculatorControllerImplementation implements CalculatorController {
   RxBool canTakeExam = false.obs;
 
   @override
-  Rx<double?> minimumRequiredExamGrade = null.obs;
+  Rx<double?> minimumRequiredExamGrade = Rx(null);
 
   @override
   RxDouble percentageOfPartialGrades = 0.0.obs;
@@ -78,10 +78,10 @@ class CalculatorControllerImplementation implements CalculatorController {
   RxBool hasMissingPercentage = false.obs;
 
   @override
-  Rx<double?> suggestedPercentage = null.obs;
+  Rx<double?> suggestedPercentage = Rx(null);
 
   @override
-  Rx<double?> suggestedPresentationGrade = null.obs;
+  Rx<double?> suggestedPresentationGrade = Rx(null);
 
   @override
   RxDouble percentageWithoutGrade = 0.0.obs;
@@ -90,7 +90,7 @@ class CalculatorControllerImplementation implements CalculatorController {
   RxBool hasCorrectPercentage = false.obs;
 
   @override
-  Rx<double?> suggestedGrade = null.obs;
+  Rx<double?> suggestedGrade = Rx(null);
 
   @override
   void updateWithGrades(Grades grades) {
