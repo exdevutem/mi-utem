@@ -14,13 +14,13 @@ class ClassBlockCard extends StatelessWidget {
   final Color textColor;
 
   ClassBlockCard({
-    Key? key,
+    super.key,
     required this.block,
     required this.width,
     required this.height,
     this.internalMargin = 0,
     this.textColor = Colors.white,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
