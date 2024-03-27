@@ -62,6 +62,7 @@ lane :ios_build_and_upload do |options|
       app_identifier: [ENV["APP_IDENTIFIER_IOS"], ENV["APP_IDENTIFIER_IOS"] + ".MiUtemNotificationServiceExtension"],
       type: "appstore",
       git_url: ENV["MATCH_REPO_GIT_URL"],
+      git_basic_authorization: ENV["MATCH_GIT_BASIC_AUTHORIZATION"],
       readonly: is_ci,
       keychain_name: ENV["KEYCHAIN_NAME"],
       keychain_password: ENV["KEYCHAIN_PASSWORD"],

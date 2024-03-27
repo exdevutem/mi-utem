@@ -126,7 +126,7 @@ class HorarioControllerImplementation implements HorarioController {
     _setRandomColorsByHorario();
 
     loadingHorario.value = false;
-    _storage.write("last_horario_update", DateTime.now().toIso8601String());
+    _storage.write("last_update_horario", DateTime.now().toIso8601String());
   }
 
   @override
