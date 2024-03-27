@@ -4,7 +4,7 @@ import 'package:mi_utem/config/constants.dart';
 import 'package:mi_utem/config/http_clients.dart';
 import 'package:mi_utem/models/carrera.dart';
 import 'package:mi_utem/models/exceptions/custom_exception.dart';
-import 'package:mi_utem/services_new/interfaces/repositories/carreras_repository.dart';
+import 'package:mi_utem/repositories/interfaces/carreras_repository.dart';
 
 class CarrerasRepositoryImplementation extends CarrerasRepository {
 

@@ -4,13 +4,14 @@ import 'package:barcode_image/barcode_image.dart';
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_uxcam/flutter_uxcam.dart';
+import 'package:get/get.dart';
 import 'package:image/image.dart' as dartImage;
 import 'package:intl/intl.dart';
 import 'package:mi_utem/config/logger.dart';
 import 'package:mi_utem/models/exceptions/custom_exception.dart';
 import 'package:mi_utem/models/permiso_ingreso.dart';
 import 'package:mi_utem/models/user/user.dart';
-import 'package:mi_utem/services_new/interfaces/repositories/permiso_ingreso_repository.dart';
+import 'package:mi_utem/repositories/interfaces/permiso_ingreso_repository.dart';
 import 'package:mi_utem/widgets/custom_app_bar.dart';
 import 'package:mi_utem/widgets/custom_error_widget.dart';
 import 'package:mi_utem/widgets/field_list_tile.dart';
@@ -18,7 +19,6 @@ import 'package:mi_utem/widgets/image_view_screen.dart';
 import 'package:mi_utem/widgets/loading_indicator.dart';
 import 'package:mi_utem/widgets/profile_photo.dart';
 import 'package:mi_utem/widgets/pull_to_refresh.dart';
-import 'package:watch_it/watch_it.dart';
 
 class PermisoCovidScreen extends StatefulWidget {
   final String passId;
@@ -37,7 +37,7 @@ class _PermisoCovidScreenState extends State<PermisoCovidScreen> {
     body: PullToRefresh(
       onRefresh: () async => setState(() {}),
       child: FutureBuilder<PermisoIngreso?>(
-        future: di.get<PermisoIngresoRepository>().getDetallesPermiso(widget.passId),
+        future: Get.find<PermisoIngresoRepository>().getDetallesPermiso(widget.passId),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             final error = snapshot.error is CustomException ? (snapshot.error as CustomException).message : "No sabemos lo que ocurrió. Por favor intenta más tarde.";

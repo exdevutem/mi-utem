@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:mdi/mdi.dart';
 import 'package:mi_utem/models/asignaturas/asignatura.dart';
 import 'package:mi_utem/models/asignaturas/detalles/navigation_tab.dart';
@@ -8,9 +9,8 @@ import 'package:mi_utem/screens/asignatura/asignatura_resumen_tab.dart';
 import 'package:mi_utem/screens/calculadora_notas_screen.dart';
 import 'package:mi_utem/services/remote_config/remote_config.dart';
 import 'package:mi_utem/services/review_service.dart';
-import 'package:mi_utem/services_new/interfaces/controllers/calculator_controller.dart';
+import 'package:mi_utem/controllers/interfaces/calculator_controller.dart';
 import 'package:mi_utem/widgets/custom_app_bar.dart';
-import 'package:watch_it/watch_it.dart';
 
 class AsignaturaDetalleScreen extends StatelessWidget {
   final Asignatura asignatura;
@@ -57,7 +57,7 @@ class AsignaturaDetalleScreen extends StatelessWidget {
                 Navigator.push(context, MaterialPageRoute(builder: (ctx) => CalculadoraNotasScreen()));
                 final grades = asignatura.grades;
                 if (grades != null) {
-                  di.get<CalculatorController>().updateWithGrades(grades);
+                  Get.find<CalculatorController>().updateWithGrades(grades);
                 }
               },
             ),

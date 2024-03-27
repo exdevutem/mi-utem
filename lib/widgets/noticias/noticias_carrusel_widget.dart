@@ -1,12 +1,12 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:mi_utem/models/exceptions/custom_exception.dart';
 import 'package:mi_utem/models/noticia.dart';
-import 'package:mi_utem/services_new/interfaces/repositories/noticias_repository.dart';
+import 'package:mi_utem/repositories/interfaces/noticias_repository.dart';
 import 'package:mi_utem/widgets/custom_error_widget.dart';
 import 'package:mi_utem/widgets/loading_indicator.dart';
 import 'package:mi_utem/widgets/noticias/noticia_card_widget.dart';
-import 'package:watch_it/watch_it.dart';
 
 class NoticiasCarruselWidget extends StatelessWidget {
 
@@ -29,7 +29,7 @@ class NoticiasCarruselWidget extends StatelessWidget {
       ),
       const SizedBox(height: 10),
       FutureBuilder(
-        future: di.get<NoticiasRepository>().getNoticias(),
+        future: Get.find<NoticiasRepository>().getNoticias(),
         builder: (context, AsyncSnapshot<List<Noticia>?> snapshot) {
           if (snapshot.hasError) {
             final error = snapshot.error is CustomException ? (snapshot.error as CustomException) : CustomException.custom("No pudimos obtener las noticias.");

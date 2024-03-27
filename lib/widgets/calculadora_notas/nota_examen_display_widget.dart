@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:mi_utem/services_new/interfaces/controllers/calculator_controller.dart';
+import 'package:get/get.dart';
+import 'package:mi_utem/controllers/interfaces/calculator_controller.dart';
 import 'package:mi_utem/themes/theme.dart';
-import 'package:watch_it/watch_it.dart';
 
-class NotaExamenDisplayWidget extends StatelessWidget with WatchItMixin{
+class NotaExamenDisplayWidget extends StatelessWidget {
 
   const NotaExamenDisplayWidget({
     super.key,
@@ -12,9 +12,7 @@ class NotaExamenDisplayWidget extends StatelessWidget with WatchItMixin{
 
   @override
   Widget build(BuildContext context) {
-    final examGradeTextFieldController = watchValue((CalculatorController controller) => controller.examGradeTextFieldController);
-    final canTakeExam = watchValue((CalculatorController controller) => controller.canTakeExam);
-    final minimumRequiredExamGrade = watchValue((CalculatorController controller) => controller.minimumRequiredExamGrade);
+    CalculatorController _calculatorController = Get.find<CalculatorController>();
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -25,14 +23,14 @@ class NotaExamenDisplayWidget extends StatelessWidget with WatchItMixin{
         Container(
           width: 80,
           margin: const EdgeInsets.only(left: 15),
-          child: TextField(
-            controller: examGradeTextFieldController,
+          child: Obx(() => TextField(
+            controller: _calculatorController.examGradeTextFieldController.value,
             textAlign: TextAlign.center,
-            onChanged: (String value) => di.get<CalculatorController>().setExamGrade(double.tryParse(value.replaceAll(",", "."))),
-            enabled: canTakeExam,
+            onChanged: (String value) => _calculatorController.setExamGrade(double.tryParse(value.replaceAll(",", "."))),
+            enabled: _calculatorController.canTakeExam.value,
             decoration: InputDecoration(
-              hintText: minimumRequiredExamGrade?.toStringAsFixed(1) ?? "--",
-              filled: canTakeExam,
+              hintText: _calculatorController.minimumRequiredExamGrade.value?.toStringAsFixed(1) ?? "--",
+              filled: _calculatorController.canTakeExam.value,
               fillColor: Colors.grey.withOpacity(0.2),
               disabledBorder: MainTheme.theme.inputDecorationTheme.border!.copyWith(
                 borderSide: BorderSide(
@@ -65,7 +63,7 @@ class NotaExamenDisplayWidget extends StatelessWidget with WatchItMixin{
                 return input;
               }),
             ],
-          ),
+          )),
         ),
       ],
     );

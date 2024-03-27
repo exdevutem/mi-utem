@@ -1,22 +1,20 @@
 
-import 'package:flutter/widgets.dart';
-import 'package:listenable_collections/listenable_collections.dart';
+import 'package:get/get.dart';
 import 'package:mi_utem/config/logger.dart';
 import 'package:mi_utem/models/carrera.dart';
+import 'package:mi_utem/repositories/interfaces/carreras_repository.dart';
 import 'package:mi_utem/services/analytics_service.dart';
-import 'package:mi_utem/services_new/interfaces/carreras_service.dart';
-import 'package:mi_utem/services_new/interfaces/repositories/carreras_repository.dart';
-import 'package:watch_it/watch_it.dart';
+import 'package:mi_utem/services/interfaces/carreras_service.dart';
 
 class CarrerasServiceImplementation implements CarrerasService {
 
-  final _carrerasRepository = di.get<CarrerasRepository>();
+  final _carrerasRepository = Get.find<CarrerasRepository>();
 
   @override
-  ListNotifier<Carrera> carreras = ListNotifier();
+  List<Carrera> carreras = [];
 
   @override
-  ValueNotifier<Carrera?> selectedCarrera = ValueNotifier(null);
+  Carrera? selectedCarrera;
 
   @override
   Future<void> getCarreras() async {
@@ -29,7 +27,7 @@ class CarrerasServiceImplementation implements CarrerasService {
   }
 
   @override
-  void changeSelectedCarrera(Carrera carrera) => selectedCarrera.value = carrera;
+  void changeSelectedCarrera(Carrera carrera) => selectedCarrera = carrera;
 
   @override
   void autoSelectCarreraActiva() {

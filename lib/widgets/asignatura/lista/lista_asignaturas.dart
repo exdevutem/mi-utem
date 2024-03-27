@@ -6,9 +6,9 @@ class ListaAsignaturas extends StatelessWidget {
   final List<Asignatura> asignaturas;
 
   const ListaAsignaturas({
-    Key? key,
+    super.key,
     required this.asignaturas,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) => ListView.builder(

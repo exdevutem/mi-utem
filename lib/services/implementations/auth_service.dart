@@ -2,21 +2,21 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:mi_utem/config/logger.dart';
 import 'package:mi_utem/config/secure_storage.dart';
 import 'package:mi_utem/models/user/credential.dart';
 import 'package:mi_utem/models/user/user.dart';
+import 'package:mi_utem/repositories/interfaces/auth_repository.dart';
+import 'package:mi_utem/repositories/interfaces/credentials_repository.dart';
 import 'package:mi_utem/screens/login_screen/login_screen.dart';
+import 'package:mi_utem/services/interfaces/auth_service.dart';
 import 'package:mi_utem/services/notification_service.dart';
-import 'package:mi_utem/services_new/interfaces/auth_service.dart';
-import 'package:mi_utem/services_new/interfaces/repositories/credentials_repository.dart';
-import 'package:mi_utem/services_new/interfaces/repositories/auth_repository.dart';
-import 'package:watch_it/watch_it.dart';
 
 class AuthServiceImplementation implements AuthService {
 
-  final _authRepository = di.get<AuthRepository>();
-  final _credentialsService = di.get<CredentialsRepository>();
+  AuthRepository _authRepository = Get.find<AuthRepository>();
+  CredentialsRepository _credentialsService = Get.find<CredentialsRepository>();
 
   @override
   Future<bool> isFirstTime() async => !(await secureStorage.containsKey(key: "last_login"));

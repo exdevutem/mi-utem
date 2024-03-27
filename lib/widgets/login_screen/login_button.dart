@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:mi_utem/config/logger.dart';
 import 'package:mi_utem/models/exceptions/custom_exception.dart';
 import 'package:mi_utem/models/user/credential.dart';
+import 'package:mi_utem/repositories/interfaces/credentials_repository.dart';
 import 'package:mi_utem/screens/main_screen.dart';
 import 'package:mi_utem/services/analytics_service.dart';
-import 'package:mi_utem/services_new/interfaces/auth_service.dart' as NewAuthService;
-import 'package:mi_utem/services_new/interfaces/repositories/credentials_repository.dart';
+import 'package:mi_utem/services/interfaces/auth_service.dart';
 import 'package:mi_utem/widgets/acerca/dialog/acerca_dialog.dart';
 import 'package:mi_utem/widgets/dialogs/monkey_error_dialog.dart';
 import 'package:mi_utem/widgets/loading_dialog.dart';
 import 'package:mi_utem/widgets/snackbar.dart';
-import 'package:watch_it/watch_it.dart';
 
 
 class LoginButton extends StatefulWidget {
@@ -36,8 +36,8 @@ class LoginButton extends StatefulWidget {
 
 class _LoginButtonState extends State<LoginButton> {
 
-  final _authService = di.get<NewAuthService.AuthService>();
-  final _credentialsService = di.get<CredentialsRepository>();
+  final _authService = Get.find<AuthService>();
+  final _credentialsService = Get.find<CredentialsRepository>();
 
   @override
   Widget build(BuildContext context) => TextButton(

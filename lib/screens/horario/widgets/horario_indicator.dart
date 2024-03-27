@@ -1,11 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:mi_utem/controllers/interfaces/horario_controller.dart';
 import 'package:mi_utem/services/analytics_service.dart';
-import 'package:mi_utem/services_new/interfaces/controllers/horario_controller.dart';
-import 'package:watch_it/watch_it.dart';
 
-class HorarioIndicator extends StatefulWidget with WatchItStatefulWidgetMixin {
+class HorarioIndicator extends StatefulWidget {
   static const _height = 2.0;
   static const _circleRadius = 10.0;
   static const _tapAreaRadius = 15.0;
@@ -45,7 +45,9 @@ class _HorarioIndicatorState extends State<HorarioIndicator> {
     super.dispose();
   }
 
-  double get _centerLineYPosition => (di.get<HorarioController>().minutesFromStart * widget.heightByMinute);
+  HorarioController _horarioController = Get.find<HorarioController>();
+
+  double get _centerLineYPosition => (_horarioController.minutesFromStart * widget.heightByMinute);
 
   double get _startLineXPosition => widget.initialMargin.left;
 
@@ -56,8 +58,6 @@ class _HorarioIndicatorState extends State<HorarioIndicator> {
 
     final lineTop = _centerLineYPosition - HorarioIndicator._height / 2;
     final lineLeft = _startLineXPosition;
-
-    final indicatorIsOpen = watchValue((HorarioController controller) => controller.indicatorIsOpen);
 
     return Stack(
       children: [
@@ -80,26 +80,26 @@ class _HorarioIndicatorState extends State<HorarioIndicator> {
             child: GestureDetector(
               onTap: () {
                 AnalyticsService.logEvent('horario_indicator_dot_tap');
-                di.get<HorarioController>().setIndicatorIsOpen(!indicatorIsOpen);
+                _horarioController.setIndicatorIsOpen(!_horarioController.indicatorIsOpen.value);
               },
               child: Container(
                 padding: EdgeInsets.all(HorarioIndicator._tapAreaRadius),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(HorarioIndicator._tapAreaRadius * 2),
                 ),
-                child: AnimatedContainer(
+                child: Obx(() => AnimatedContainer(
                   duration: const Duration(milliseconds: 300),
                   height: HorarioIndicator._circleRadius * 2,
-                  width: indicatorIsOpen ? 50 : HorarioIndicator._circleRadius * 2,
+                  width: _horarioController.indicatorIsOpen.value ? 50 : HorarioIndicator._circleRadius * 2,
                   decoration: BoxDecoration(
                     color: widget.color,
                     borderRadius:
                     BorderRadius.circular(HorarioIndicator._circleRadius),
                   ),
-                  child: indicatorIsOpen ? Center(
+                  child: _horarioController.indicatorIsOpen.value ? Center(
                     child: _TickerTimeText(time: DateTime.now()),
                   ) : Container(),
-                ),
+                )),
               ),
             ),
           ),

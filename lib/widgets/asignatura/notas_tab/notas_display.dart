@@ -9,7 +9,8 @@ class NotasDisplayWidget extends StatelessWidget {
   final String? estado;
   final Color? colorPorEstado;
 
-  NotasDisplayWidget({
+  const NotasDisplayWidget({
+    super.key,
     this.notaFinal,
     this.notaExamen,
     this.notaPresentacion,

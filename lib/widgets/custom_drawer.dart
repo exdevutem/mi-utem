@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:badges/badges.dart' as badge;
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:mdi/mdi.dart';
 import 'package:mi_utem/models/user/user.dart';
 import 'package:mi_utem/screens/asignatura/asignaturas_lista_screen.dart';
@@ -9,13 +10,12 @@ import 'package:mi_utem/screens/credencial_screen.dart';
 import 'package:mi_utem/screens/horario/horario_screen.dart';
 import 'package:mi_utem/screens/main_screen.dart';
 import 'package:mi_utem/screens/usuario_screen.dart';
+import 'package:mi_utem/services/interfaces/auth_service.dart';
 import 'package:mi_utem/services/remote_config/remote_config.dart';
 import 'package:mi_utem/services/review_service.dart';
-import 'package:mi_utem/services_new/interfaces/auth_service.dart';
 import 'package:mi_utem/themes/theme.dart';
 import 'package:mi_utem/widgets/acerca/acerca_screen.dart';
 import 'package:mi_utem/widgets/profile_photo.dart';
-import 'package:watch_it/watch_it.dart';
 
 class CustomDrawer extends StatelessWidget {
 
@@ -49,7 +49,7 @@ class CustomDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _authService = di.get<AuthService>();
+    final _authService = Get.find<AuthService>();
 
     return Drawer(
       semanticLabel: "Abrir menú",
@@ -139,9 +139,7 @@ class CustomDrawer extends StatelessWidget {
                               ListTile(
                                 leading: const Icon(Mdi.closeCircle),
                                 title: const Text('Cerrar sesión'),
-                                onTap: () async {
-                                  await _authService.logout(context);
-                                },
+                                onTap: () async => await _authService.logout(context),
                               ),
                             ],
                           ),

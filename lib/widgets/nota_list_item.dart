@@ -1,12 +1,12 @@
 import 'package:extended_masked_text/extended_masked_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:mi_utem/models/evaluacion/evaluacion.dart';
-import 'package:mi_utem/services_new/interfaces/controllers/calculator_controller.dart';
+import 'package:mi_utem/controllers/interfaces/calculator_controller.dart';
 import 'package:mi_utem/themes/theme.dart';
-import 'package:watch_it/watch_it.dart';
 
-class NotaListItem extends StatelessWidget with WatchItMixin {
+class NotaListItem extends StatelessWidget {
   final IEvaluacion evaluacion;
   final bool editable;
   final TextEditingController? gradeController;
@@ -36,12 +36,8 @@ class NotaListItem extends StatelessWidget with WatchItMixin {
     );
 
     final showSuggestedGrade = editable;
+    CalculatorController calculatorController = Get.find<CalculatorController>();
 
-    final suggestedGrade = watchValue((CalculatorController controller) => controller.suggestedGrade);
-    final suggestedPercentage = watchValue((CalculatorController controller) => controller.suggestedPercentage);
-
-
-    final hintText = showSuggestedGrade ? (suggestedGrade?.toStringAsFixed(0) ?? "--") : "--";
 
     return Flex(
       direction: Axis.horizontal,
@@ -57,7 +53,7 @@ class NotaListItem extends StatelessWidget with WatchItMixin {
         Flexible(
           flex: 3,
           child: Center(
-            child: TextField(
+            child: Obx(() => TextField(
               controller: gradeController ?? defaultGradeController,
               enabled: editable,
               onChanged: (String value) {
@@ -70,7 +66,7 @@ class NotaListItem extends StatelessWidget with WatchItMixin {
               },
               textAlign: TextAlign.center,
               decoration: InputDecoration(
-                hintText: hintText,
+                hintText: showSuggestedGrade ? (calculatorController.suggestedGrade.value?.toStringAsFixed(0) ?? "--") : "--",
                 disabledBorder: MainTheme.theme.inputDecorationTheme.border!.copyWith(
                   borderSide: BorderSide(
                     color: Colors.transparent,
@@ -102,14 +98,14 @@ class NotaListItem extends StatelessWidget with WatchItMixin {
                   return input;
                 }),
               ],
-            ),
+            )),
           ),
         ),
         SizedBox(width: 16),
         Flexible(
           flex: 4,
           child: Center(
-            child: TextField(
+            child: Obx(() => TextField(
               controller: percentageController ?? defaultPercentageController,
               textAlign: TextAlign.center,
               onChanged: (String value) {
@@ -120,7 +116,7 @@ class NotaListItem extends StatelessWidget with WatchItMixin {
               },
               enabled: editable,
               decoration: InputDecoration(
-                hintText: suggestedPercentage?.toStringAsFixed(0) ?? "Peso",
+                hintText: calculatorController.suggestedPercentage.value?.toStringAsFixed(0) ?? "Peso",
                 suffixText: "%",
                 disabledBorder: MainTheme.theme.inputDecorationTheme.border!.copyWith(
                   borderSide: BorderSide(
@@ -148,20 +144,17 @@ class NotaListItem extends StatelessWidget with WatchItMixin {
                 }),
 
               ],
-            ),
+            )),
           ),
         ),
         SizedBox(width: 20),
-        if (onDelete != null)
-          GestureDetector(
-            onTap: () {
-              onDelete?.call();
-            },
-            child: Icon(
-              Icons.delete,
-              color: Theme.of(context).primaryColor,
-            ),
-          )
+        if (onDelete != null)GestureDetector(
+          onTap: () => onDelete?.call(),
+          child: Icon(
+            Icons.delete,
+            color: Theme.of(context).primaryColor,
+          ),
+        ),
       ],
     );
   }

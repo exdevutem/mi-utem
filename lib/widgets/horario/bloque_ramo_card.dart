@@ -1,10 +1,10 @@
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:mi_utem/controllers/interfaces/horario_controller.dart';
 import 'package:mi_utem/models/horario.dart';
 import 'package:mi_utem/services/analytics_service.dart';
-import 'package:mi_utem/services_new/interfaces/controllers/horario_controller.dart';
 import 'package:mi_utem/themes/theme.dart';
-import 'package:watch_it/watch_it.dart';
 
 class ClassBlockCard extends StatelessWidget {
   final BloqueHorario? block;
@@ -109,7 +109,7 @@ class _ClassBlock extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _controller = di.get<HorarioController>();
+    HorarioController _controller = Get.find<HorarioController>();
 
     return Container(
       decoration: BoxDecoration(
@@ -121,8 +121,7 @@ class _ClassBlock extends StatelessWidget {
         child: InkWell(
           borderRadius: BorderRadius.circular(15),
           onTap: onTap != null ? () => onTap?.call(block) : null,
-          onLongPress:
-              onLongPress != null ? () => onLongPress?.call(block) : null,
+          onLongPress: onLongPress != null ? () => onLongPress?.call(block) : null,
           child: Column(
             children: <Widget>[
               HorarioText.classCode(

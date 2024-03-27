@@ -3,17 +3,17 @@ import 'dart:convert';
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:mi_utem/config/constants.dart';
 import 'package:mi_utem/config/http_clients.dart';
 import 'package:mi_utem/screens/login_screen/login_screen.dart';
 import 'package:mi_utem/screens/main_screen.dart';
 import 'package:mi_utem/services/analytics_service.dart';
+import 'package:mi_utem/services/interfaces/auth_service.dart';
 import 'package:mi_utem/services/notification_service.dart';
-import 'package:mi_utem/services_new/interfaces/auth_service.dart';
 import 'package:mi_utem/widgets/loading_dialog.dart';
 import 'package:mi_utem/widgets/snackbar.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:watch_it/watch_it.dart';
 
 class SplashScreen extends StatefulWidget {
   SplashScreen({Key? key}) : super(key: key);
@@ -24,7 +24,7 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   
-  final _authService = di.get<AuthService>();
+  final _authService = Get.find<AuthService>();
 
   @override
   void initState() {

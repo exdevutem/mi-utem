@@ -3,13 +3,16 @@ import 'dart:convert';
 import 'package:mi_utem/config/constants.dart';
 import 'package:mi_utem/config/http_clients.dart';
 import 'package:mi_utem/models/exceptions/custom_exception.dart';
-import 'package:mi_utem/models/horario.dart';
-import 'package:mi_utem/services_new/interfaces/repositories/horario_repository.dart';
+import 'package:mi_utem/models/noticia.dart';
+import 'package:mi_utem/repositories/interfaces/noticias_repository.dart';
 
-class HorarioRepositoryImplementation implements HorarioRepository {
+class NoticiasRepositoryImplementation implements NoticiasRepository {
+
   @override
-  Future<Horario?> getHorario(String carreraId, {bool forceRefresh = false}) async {
-    final response = await authClient.get(Uri.parse("$apiUrl/v1/carreras/$carreraId/horarios"));
+  Future<List<Noticia>?> getNoticias() async {
+    final response = await httpClient.get(Uri.parse("$apiUrl/v1/noticias"), headers: {
+      'X-MiUTEM-Use-Cache': 'true',
+    });
 
     final json = jsonDecode(response.body);
 
@@ -21,6 +24,7 @@ class HorarioRepositoryImplementation implements HorarioRepository {
       throw CustomException.custom(response.reasonPhrase);
     }
 
-    return Horario.fromJson(json);
+    return Noticia.fromJsonList(json as List<dynamic>);
   }
+
 }

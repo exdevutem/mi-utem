@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:get/get.dart';
 import 'package:mi_utem/models/asignaturas/asignatura.dart';
 import 'package:mi_utem/models/horario.dart';
 
@@ -10,13 +11,13 @@ abstract class HorarioController {
   abstract Duration periodDuration;
   abstract Duration periodGap;
 
-  abstract ValueNotifier<Horario?> horario;
-  abstract ValueNotifier<bool> loadingHorario;
+  abstract Rx<Horario?> horario;
+  abstract RxBool loadingHorario;
 
   abstract List<Color> usedColors;
-  abstract ValueNotifier<double> zoom;
-  abstract ValueNotifier<bool> indicatorIsOpen;
-  abstract ValueNotifier<bool> isCenteredInCurrentPeriodAndDay;
+  abstract RxDouble zoom;
+  abstract RxBool indicatorIsOpen;
+  abstract RxBool isCenteredInCurrentPeriodAndDay;
 
   abstract TransformationController blockContentController;
   abstract TransformationController daysHeaderController;

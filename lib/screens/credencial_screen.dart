@@ -1,23 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_windowmanager/flutter_windowmanager.dart';
+import 'package:get/get.dart';
 import 'package:mdi/mdi.dart';
 import 'package:mi_utem/models/carrera.dart';
+import 'package:mi_utem/models/pair.dart';
 import 'package:mi_utem/models/user/user.dart';
 import 'package:mi_utem/services/analytics_service.dart';
+import 'package:mi_utem/services/interfaces/auth_service.dart';
+import 'package:mi_utem/services/interfaces/carreras_service.dart';
 import 'package:mi_utem/services/review_service.dart';
-import 'package:mi_utem/services_new/interfaces/auth_service.dart';
-import 'package:mi_utem/services_new/interfaces/carreras_service.dart';
 import 'package:mi_utem/widgets/credencial_card.dart';
 import 'package:mi_utem/widgets/custom_app_bar.dart';
 import 'package:mi_utem/widgets/custom_error_widget.dart';
 import 'package:mi_utem/widgets/flip_widget.dart';
 import 'package:mi_utem/widgets/loading_indicator.dart';
-import 'package:watch_it/watch_it.dart';
 
-class CredencialScreen extends StatefulWidget with WatchItStatefulWidgetMixin {
-  CredencialScreen({
-    Key? key,
-  }) : super(key: key);
+class CredencialScreen extends StatefulWidget {
+  const CredencialScreen({
+    super.key,
+  });
 
   @override
   State<StatefulWidget> createState() => _CredencialScreenState();
@@ -29,27 +30,18 @@ class _CredencialScreenState extends State<CredencialScreen> {
   @override
   void initState() {
     ReviewService.addScreen("CredencialScreen");
-    _secureScreen();
+    FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
     super.initState();
-  }
-
-  Future<void> _secureScreen() async {
-    await FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
-  }
-
-  Future<void> _desecureScreen() async {
-    await FlutterWindowManager.clearFlags(FlutterWindowManager.FLAG_SECURE);
   }
 
   @override
   void dispose() {
-    _desecureScreen();
+    FlutterWindowManager.clearFlags(FlutterWindowManager.FLAG_SECURE);
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    Carrera? carreraActiva = watchValue((CarrerasService service) => service.selectedCarrera);
 
     return Scaffold(
       appBar: CustomAppBar(
@@ -64,14 +56,19 @@ class _CredencialScreenState extends State<CredencialScreen> {
         ],
       ),
       backgroundColor: Colors.grey[200],
-      body: FutureBuilder<User?>(
+      body: FutureBuilder<Pair<User?, Carrera?>>(
         future: () async {
-          final user = await di.get<AuthService>().getUser();
-          if(carreraActiva == null) {
-            await di.get<CarrerasService>().getCarreras();
+          final authService = Get.find<AuthService>();
+          final carrerasService = Get.find<CarrerasService>();
+
+          if(carrerasService.selectedCarrera == null) {
+            await carrerasService.getCarreras();
           }
 
-          return user;
+          final user = await authService.getUser();
+          final carrera = carrerasService.selectedCarrera;
+
+          return Pair(user, carrera);
         }(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
@@ -81,7 +78,9 @@ class _CredencialScreenState extends State<CredencialScreen> {
             );
           }
 
-          final user = snapshot.data;
+          final pair = snapshot.data;
+          final user = pair?.a;
+          final carreraActiva = pair?.b;
 
           if (!snapshot.hasData) {
             return Container(
@@ -99,21 +98,24 @@ class _CredencialScreenState extends State<CredencialScreen> {
             );
           }
 
-          if (user == null) {
+          if (user == null || user.rut == null || carreraActiva == null || carreraActiva.nombre == null) {
             return CustomErrorWidget(
               title: "Ocurrió un error al generar tu crendencial. Por favor, intenta nuevamente.",
               error: snapshot.error,
             );
           }
 
-          if (user.rut != null && carreraActiva!.nombre != null && carreraActiva.nombre!.isNotEmpty) {
+          if (carreraActiva.nombre?.isNotEmpty == true) {
             return Center(
               child: SafeArea(
                 child: CredencialCard(
                   user: user,
                   carrera: carreraActiva,
                   controller: _flipController,
-                  onFlip: (direction) => _onFlip(),
+                  onFlip: (_) {
+                    AnalyticsService.logEvent("credencial_flip");
+                    setState(() {});
+                  },
                 ),
               ),
             );
@@ -148,10 +150,5 @@ class _CredencialScreenState extends State<CredencialScreen> {
         },
       ),
     );
-  }
-
-  void _onFlip() {
-    AnalyticsService.logEvent("credencial_flip");
-    setState(() {});
   }
 }

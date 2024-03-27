@@ -6,10 +6,10 @@ class SinAsignaturasMensaje extends StatelessWidget {
   final String mensaje, emoji;
 
   const SinAsignaturasMensaje({
-    Key? key,
+    super.key,
     required this.mensaje,
     required this.emoji,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) => Center(

@@ -745,30 +745,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "10.4.0"
-  functional_listener:
-    dependency: transitive
-    description:
-      name: functional_listener
-      sha256: "026d1bd4f66367f11d9ec9f1f1ddb42b89e4484b356972c76d983266cf82f33f"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.3.1"
   get:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: get
       sha256: "2ba20a47c8f1f233bed775ba2dd0d3ac97b4cf32fc17731b3dfc672b06b0e92a"
       url: "https://pub.dev"
     source: hosted
     version: "4.6.5"
-  get_it:
-    dependency: "direct main"
-    description:
-      name: get_it
-      sha256: "529de303c739fca98cd7ece5fca500d8ff89649f1bb4b4e94fb20954abcd7468"
-      url: "https://pub.dev"
-    source: hosted
-    version: "7.6.0"
   get_storage:
     dependency: "direct main"
     description:
@@ -1017,14 +1001,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.20"
-  listenable_collections:
-    dependency: "direct main"
-    description:
-      name: listenable_collections
-      sha256: "49dd3be0955d8c109580184b5f43ee88a269df64baba20a35c16fd9ddd9fb62e"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.0"
   logger:
     dependency: "direct main"
     description:
@@ -1678,14 +1654,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.4.0+2"
-  watch_it:
-    dependency: "direct main"
-    description:
-      name: watch_it
-      sha256: d2f69c17c927d947d7faa90d6fa064fe63b73f7c49eac2d3dd6de3255eb18081
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.2"
   watcher:
     dependency: transitive
     description:
@@ -1727,5 +1695,5 @@ packages:
     source: hosted
     version: "3.1.2"
 sdks:
-  dart: ">=2.19.6 <3.0.0"
+  dart: ">=2.19.0 <3.0.0"
   flutter: ">=3.7.0"

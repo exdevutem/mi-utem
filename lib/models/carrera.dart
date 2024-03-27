@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:recase/recase.dart';
+import 'package:mi_utem/utils/string_utils.dart';
 
 class Carrera {
   String? id;
@@ -11,29 +11,15 @@ class Carrera {
 
   Carrera({this.id, this.nombre, this.estado, this.codigo, this.plan});
 
-  factory Carrera.fromJson(Map<String, dynamic>? json) {
-    if (json == null) {
-      return Carrera();
-    }
-    return Carrera(
-      id: json['id'],
-      nombre: json['nombre'] != null ? ReCase(json['nombre']).titleCase : null,
-      estado: json['estado'] != null ? ReCase(json['estado']).titleCase : null,
-      plan: json['plan'] != null ? ReCase(json['plan']).titleCase : null,
-      codigo: json['codigo'],
-    );
-  }
+  factory Carrera.fromJson(Map<String, dynamic>? json) => json != null ?  Carrera(
+    id: json['id'],
+    nombre: json['nombre'] != null ? capitalize(json['nombre']) : null,
+    estado: json['estado'] != null ? capitalize(json['estado']) : null,
+    plan: json['plan'] != null ? capitalize(json['plan']) : null,
+    codigo: json['codigo'],
+  ) : Carrera();
 
-  static List<Carrera> fromJsonList(dynamic json) {
-    if (json == null) {
-      return [];
-    }
-    List<Carrera> list = [];
-    for (var item in json) {
-      list.add(Carrera.fromJson(item));
-    }
-    return list;
-  }
+  static List<Carrera> fromJsonList(dynamic json) => json != null ? (json as List).map((it) => Carrera.fromJson(it)).toList() : [];
 
   toJson() => {
     'id': id,

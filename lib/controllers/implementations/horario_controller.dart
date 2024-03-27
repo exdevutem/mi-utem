@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:mi_utem/controllers/interfaces/horario_controller.dart';
 import 'package:mi_utem/models/asignaturas/asignatura.dart';
 import 'package:mi_utem/models/carrera.dart';
 import 'package:mi_utem/models/horario.dart';
+import 'package:mi_utem/repositories/interfaces/horario_repository.dart';
 import 'package:mi_utem/screens/horario/widgets/horario_main_scroller.dart';
+import 'package:mi_utem/services/interfaces/carreras_service.dart';
 import 'package:mi_utem/services/remote_config/remote_config.dart';
-import 'package:mi_utem/services_new/interfaces/carreras_service.dart';
-import 'package:mi_utem/services_new/interfaces/controllers/horario_controller.dart';
-import 'package:mi_utem/services_new/interfaces/repositories/horario_repository.dart';
 import 'package:vector_math/vector_math_64.dart' as vector;
-import 'package:watch_it/watch_it.dart';
 
-class HorarioControllerImplementation extends ChangeNotifier implements HorarioController {
+class HorarioControllerImplementation implements HorarioController {
   final _storage = GetStorage();
   final _randomColors = Colors.primaries.toList()..shuffle();
   final _now = DateTime.now();
@@ -32,22 +32,22 @@ class HorarioControllerImplementation extends ChangeNotifier implements HorarioC
   Duration periodGap = Duration(minutes: 5);
 
   @override
-  ValueNotifier<Horario?> horario = ValueNotifier(Horario());
+  Rx<Horario?> horario = Rx(Horario());
 
   @override
-  ValueNotifier<bool> loadingHorario = ValueNotifier(false);
+  RxBool loadingHorario = false.obs;
 
   @override
   List<Color> usedColors = [];
 
   @override
-  ValueNotifier<double> zoom = ValueNotifier(0.5);
+  RxDouble zoom = 0.5.obs;
 
   @override
-  ValueNotifier<bool> indicatorIsOpen = ValueNotifier(false);
+  RxBool indicatorIsOpen = false.obs;
 
   @override
-  ValueNotifier<bool> isCenteredInCurrentPeriodAndDay = ValueNotifier(false);
+  RxBool isCenteredInCurrentPeriodAndDay = false.obs;
 
   @override
   TransformationController blockContentController = TransformationController();
@@ -110,19 +110,19 @@ class HorarioControllerImplementation extends ChangeNotifier implements HorarioC
 
     horario.value = null;
 
-    final carrerasService = di.get<CarrerasService>();
-    Carrera? carrera = carrerasService.selectedCarrera.value;
+    final carrerasService = Get.find<CarrerasService>();
+    Carrera? carrera = carrerasService.selectedCarrera;
     if (carrera == null) {
       await carrerasService.getCarreras();
     }
-    carrera = carrerasService.selectedCarrera.value;
+    carrera = carrerasService.selectedCarrera;
 
     final carreraId = carrera?.id;
     if(carreraId == null) {
       loadingHorario.value = false;
       return;
     }
-    horario.value = await di.get<HorarioRepository>().getHorario(carreraId);
+    horario.value = await Get.find<HorarioRepository>().getHorario(carreraId);
     _setRandomColorsByHorario();
 
     loadingHorario.value = false;

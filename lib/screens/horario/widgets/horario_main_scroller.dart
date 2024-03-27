@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:mi_utem/controllers/interfaces/horario_controller.dart';
 import 'package:mi_utem/models/horario.dart';
 import 'package:mi_utem/screens/horario/widgets/horario_blocks_content.dart';
 import 'package:mi_utem/screens/horario/widgets/horario_corner.dart';
 import 'package:mi_utem/screens/horario/widgets/horario_days_header.dart';
 import 'package:mi_utem/screens/horario/widgets/horario_indicator.dart';
 import 'package:mi_utem/screens/horario/widgets/horario_periods_header.dart';
-import 'package:mi_utem/services_new/interfaces/controllers/horario_controller.dart';
-import 'package:watch_it/watch_it.dart';
 
 class HorarioMainScroller extends StatefulWidget {
   static const double blockWidth = 320.0;
@@ -23,7 +23,7 @@ class HorarioMainScroller extends StatefulWidget {
 
   final Horario horario;
   final bool showActive;
-  final controller = di.get<HorarioController>();
+  final controller = Get.find<HorarioController>();
 
   HorarioMainScroller({
     super.key,
@@ -34,8 +34,8 @@ class HorarioMainScroller extends StatefulWidget {
   @override
   _HorarioMainScrollerState createState() => _HorarioMainScrollerState();
 
-  static double get daysWidth => dayWidth * di.get<HorarioController>().daysCount;
-  static double get periodsHeight => periodHeight * di.get<HorarioController>().periodsCount;
+  static double get daysWidth => dayWidth * Get.find<HorarioController>().daysCount;
+  static double get periodsHeight => periodHeight * Get.find<HorarioController>().periodsCount;
 
   static double get totalWidth => daysWidth + periodWidth;
   static double get totalHeight => periodsHeight + dayHeight;

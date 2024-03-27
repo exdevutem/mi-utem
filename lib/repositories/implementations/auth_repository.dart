@@ -5,7 +5,7 @@ import 'package:mi_utem/config/http_clients.dart';
 import 'package:mi_utem/models/exceptions/custom_exception.dart';
 import 'package:mi_utem/models/user/credential.dart';
 import 'package:mi_utem/models/user/user.dart';
-import 'package:mi_utem/services_new/interfaces/repositories/auth_repository.dart';
+import 'package:mi_utem/repositories/interfaces/auth_repository.dart';
 
 class AuthRepositoryImplementation extends AuthRepository {
 

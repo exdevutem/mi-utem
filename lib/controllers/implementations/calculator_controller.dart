@@ -1,9 +1,8 @@
 import 'package:extended_masked_text/extended_masked_text.dart';
-import 'package:flutter/material.dart';
-import 'package:listenable_collections/listenable_collections.dart';
+import 'package:get/get.dart';
 import 'package:mi_utem/models/evaluacion/evaluacion.dart';
 import 'package:mi_utem/models/evaluacion/grades.dart';
-import 'package:mi_utem/services_new/interfaces/controllers/calculator_controller.dart';
+import 'package:mi_utem/controllers/interfaces/calculator_controller.dart';
 
 class CalculatorControllerImplementation implements CalculatorController {
 
@@ -27,71 +26,71 @@ class CalculatorControllerImplementation implements CalculatorController {
 
   /* Notas parciales */
   @override
-  ListNotifier<IEvaluacion> partialGrades = ListNotifier();
+  RxList<IEvaluacion> partialGrades = <IEvaluacion>[].obs;
 
   /* Controlador de texto para los porcentajes con máscara (para autocompletar formato) */
   @override
-  ListNotifier<MaskedTextController> percentageTextFieldControllers = ListNotifier();
+  RxList<MaskedTextController> percentageTextFieldControllers = <MaskedTextController>[].obs;
 
   /* Controlador de texto para las notas con máscara (para autocompletar formato) */
   @override
-  ListNotifier<MaskedTextController> gradeTextFieldControllers = ListNotifier();
+  RxList<MaskedTextController> gradeTextFieldControllers = <MaskedTextController>[].obs;
 
   /* Nota del examen */
   @override
-  ValueNotifier<double?> examGrade = ValueNotifier(null);
+  Rx<double?> examGrade = null.obs;
 
   /* Controlador de texto para la nota del examen con máscara (para autocompletar formato) */
   @override
-  ValueNotifier<MaskedTextController> examGradeTextFieldController = ValueNotifier(MaskedTextController(mask: "0.0"));
+  Rx<MaskedTextController> examGradeTextFieldController = MaskedTextController(mask: "0.0").obs;
 
   @override
-  ValueNotifier<bool> freeEditable = ValueNotifier(false);
+  RxBool freeEditable = false.obs;
 
   @override
-  ValueNotifier<double?> calculatedFinalGrade = ValueNotifier(null);
+  Rx<double?> calculatedFinalGrade = null.obs;
 
   @override
-  ValueNotifier<double?> calculatedPresentationGrade = ValueNotifier(null);
+  Rx<double?> calculatedPresentationGrade = null.obs;
 
   @override
-  ValueNotifier<int> amountOfPartialGradesWithoutGrade = ValueNotifier(0);
+  Rx<int> amountOfPartialGradesWithoutGrade = 0.obs;
 
   @override
-  ValueNotifier<int> amountOfPartialGradesWithoutPercentage = ValueNotifier(0);
+  Rx<int> amountOfPartialGradesWithoutPercentage = 0.obs;
 
   @override
-  ValueNotifier<bool> hasMissingPartialGrade = ValueNotifier(false);
+  RxBool hasMissingPartialGrade = false.obs;
 
   @override
-  ValueNotifier<bool> canTakeExam = ValueNotifier(false);
+  RxBool canTakeExam = false.obs;
 
   @override
-  ValueNotifier<double?> minimumRequiredExamGrade = ValueNotifier(null);
+  Rx<double?> minimumRequiredExamGrade = null.obs;
 
   @override
-  ValueNotifier<double> percentageOfPartialGrades = ValueNotifier(0);
+  RxDouble percentageOfPartialGrades = 0.0.obs;
 
   @override
-  ValueNotifier<double> missingPercentage = ValueNotifier(0);
+  RxDouble missingPercentage = 0.0.obs;
 
   @override
-  ValueNotifier<bool> hasMissingPercentage = ValueNotifier(false);
+  RxBool hasMissingPercentage = false.obs;
 
   @override
-  ValueNotifier<double?> suggestedPercentage = ValueNotifier(null);
+  Rx<double?> suggestedPercentage = null.obs;
 
   @override
-  ValueNotifier<double?> suggestedPresentationGrade = ValueNotifier(null);
+  Rx<double?> suggestedPresentationGrade = null.obs;
 
   @override
-  ValueNotifier<double> percentageWithoutGrade = ValueNotifier(0);
+  RxDouble percentageWithoutGrade = 0.0.obs;
 
   @override
-  ValueNotifier<bool> hasCorrectPercentage = ValueNotifier(false);
+  RxBool hasCorrectPercentage = false.obs;
 
   @override
-  ValueNotifier<double?> suggestedGrade = ValueNotifier(null);
+  Rx<double?> suggestedGrade = null.obs;
 
   @override
   void updateWithGrades(Grades grades) {

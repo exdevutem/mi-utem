@@ -4,14 +4,14 @@ import 'package:mi_utem/models/evaluacion/evaluacion.dart';
 import 'package:mi_utem/services/analytics_service.dart';
 import 'package:mi_utem/widgets/calculadora_notas/modo_simulacion_widget.dart';
 import 'package:mi_utem/widgets/calculadora_notas/notas_calculadora_widget.dart';
-import 'package:watch_it/watch_it.dart';
 
-class EditarNotasWidget extends StatelessWidget with WatchItMixin {
+class EditarNotasWidget extends StatelessWidget {
   final List<IEvaluacion> partialGrades;
   final List<MaskedTextController> gradeTextFieldControllers;
   final List<MaskedTextController> percentageTextFieldControllers;
   final Function() onAddGrade;
   final Function(int) onRemoveGrade;
+  final Function(int, IEvaluacion) onChanged;
 
   const EditarNotasWidget({
     super.key,
@@ -20,6 +20,7 @@ class EditarNotasWidget extends StatelessWidget with WatchItMixin {
     required this.percentageTextFieldControllers,
     required this.onAddGrade,
     required this.onRemoveGrade,
+    required this.onChanged,
   });
 
   @override
@@ -37,6 +38,7 @@ class EditarNotasWidget extends StatelessWidget with WatchItMixin {
                 gradeTextFieldControllers: gradeTextFieldControllers,
                 percentageTextFieldControllers: percentageTextFieldControllers,
                 onRemoveGrade: onRemoveGrade,
+                onChanged: onChanged,
               ),
               const SizedBox(height: 16),
               TextButton(

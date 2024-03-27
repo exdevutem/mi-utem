@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
+import 'package:mi_utem/repositories/interfaces/credentials_repository.dart';
 import 'package:mi_utem/services/update_service.dart';
-import 'package:mi_utem/services_new/interfaces/repositories/credentials_repository.dart';
 import 'package:mi_utem/widgets/login_screen/creditos_app.dart';
 import 'package:mi_utem/widgets/login_screen/formulario_credenciales.dart';
 import 'package:mi_utem/widgets/login_screen/login_button.dart';
-import 'package:watch_it/watch_it.dart';
 
 class LoginForm extends StatefulWidget {
   final BoxConstraints constraints;
@@ -25,7 +25,7 @@ class _LoginFormState extends State<LoginForm> {
   final TextEditingController _correoController = TextEditingController();
   final TextEditingController _contraseniaController = TextEditingController();
 
-  final _credentialService = di.get<CredentialsRepository>();
+  final _credentialService = Get.find<CredentialsRepository>();
 
   @override
   void initState() {

@@ -10,7 +10,7 @@ import 'package:mi_utem/config/constants.dart';
 import 'package:mi_utem/screens/splash_screen.dart';
 import 'package:mi_utem/services/background_service.dart';
 import 'package:mi_utem/services/notification_service.dart';
-import 'package:mi_utem/services_new/service_manager.dart';
+import 'package:mi_utem/services/service_manager.dart';
 import 'package:mi_utem/themes/theme.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';

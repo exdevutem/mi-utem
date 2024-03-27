@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:mi_utem/services_new/interfaces/controllers/calculator_controller.dart';
-import 'package:watch_it/watch_it.dart';
+import 'package:get/get.dart';
+import 'package:mi_utem/controllers/interfaces/calculator_controller.dart';
 
-class NotaFinalDisplayWidget extends StatelessWidget with WatchItMixin {
+class NotaFinalDisplayWidget extends StatelessWidget {
 
   const NotaFinalDisplayWidget({
     super.key,
@@ -10,16 +10,16 @@ class NotaFinalDisplayWidget extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final calculatedFinalGrade = watchValue((CalculatorController controller) => controller.calculatedFinalGrade);
+    CalculatorController _calculatorController = Get.find<CalculatorController>();
 
     return Column(
       children: [
-        Text(calculatedFinalGrade?.toStringAsFixed(1) ?? "--",
+        Obx(() => Text(_calculatorController.calculatedFinalGrade.value?.toStringAsFixed(1) ?? "--",
           style: TextStyle(
             fontSize: 40,
             fontWeight: FontWeight.bold,
           ),
-        )
+        )),
       ],
     );
   }

@@ -1,8 +1,8 @@
 
+import 'package:get/get.dart';
 import 'package:http_interceptor/http_interceptor.dart';
 import 'package:mi_utem/config/logger.dart';
-import 'package:mi_utem/services_new/interfaces/auth_service.dart';
-import 'package:watch_it/watch_it.dart';
+import 'package:mi_utem/services/interfaces/auth_service.dart';
 
 final httpClient = InterceptedClient.build(
   interceptors: [
@@ -30,7 +30,7 @@ class AuthInterceptor implements InterceptorContract {
     }
 
     if (!data.headers.containsKey('authorization') && !data.url.contains("/v1/auth/login") && !data.url.contains("/v1/auth/refresh")) { // No enviar token si es login o refresh
-      final user = await di.get<AuthService>().getUser();
+      final user = await Get.find<AuthService>().getUser();
       final token = user?.token;
       if (token != null) {
         logger.d("[AuthInterceptor]: Agregado token de autorización al request");
@@ -57,7 +57,7 @@ class ExpiredTokenRetryPolicy extends RetryPolicy {
     }
 
     logger.d("[ExpiredTokenRetryPolicy]: ${response.request?.method.name.toUpperCase()} ${response.request?.url} Recibió un 401, refrescando token...");
-    final _authService = di.get<AuthService>();
+    final _authService = Get.find<AuthService>();
     final currentToken = (await _authService.getUser())?.token;
     if(currentToken == null) {
       await _authService.login();

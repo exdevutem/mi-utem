@@ -25,7 +25,7 @@ class PermisoIngreso {
     this.fechaSolicitud,
   });
 
-  factory PermisoIngreso.fromJson(Map<String, dynamic> json) => PermisoIngreso(
+  factory PermisoIngreso.fromJson(Map<String, dynamic>? json) => json != null ? PermisoIngreso(
     id: json['id'],
     user: json.containsKey("usuario") ? User.fromJson(json['usuario']) : null,
     codigoQr: json['codigoQr'],
@@ -36,7 +36,7 @@ class PermisoIngreso {
     jornada: json['jornada'],
     vigencia: json['vigencia'],
     fechaSolicitud: DateTime.tryParse(json['fechaSolicitud']),
-  );
+  ) : PermisoIngreso();
 
   static List<PermisoIngreso> fromJsonList(List<dynamic>? json) => json != null ? json.map((it) => PermisoIngreso.fromJson(it)).toList() : [];
 }

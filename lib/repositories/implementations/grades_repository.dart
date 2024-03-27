@@ -4,7 +4,7 @@ import 'package:mi_utem/config/constants.dart';
 import 'package:mi_utem/config/http_clients.dart';
 import 'package:mi_utem/models/evaluacion/grades.dart';
 import 'package:mi_utem/models/exceptions/custom_exception.dart';
-import 'package:mi_utem/services_new/interfaces/repositories/grades_repository.dart';
+import 'package:mi_utem/repositories/interfaces/grades_repository.dart';
 
 class GradesRepositoryImplementation extends GradesRepository {
 

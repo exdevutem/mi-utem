@@ -12,28 +12,24 @@ class AsignaturaEstudiantesTab extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return asignatura == null
-        ? CustomErrorWidget(
-            title: "Ocurrió un error trayendo a los estudiantes",
-            error: '',
-          )
-        : ListView.separated(
-            itemCount: 0,
-            separatorBuilder: (context, index) => Divider(
-              height: 5,
-              indent: 20,
-              endIndent: 20,
-            ),
-            itemBuilder: (context, i) {
-              return ListTile(
-                onTap: () {
-                  AnalyticsService.logEvent(
-                    'asignatura_estudiante_tap',
-                  );
-                },
-              );
-            },
+  Widget build(BuildContext context) => asignatura == null ? CustomErrorWidget(
+    title: "Ocurrió un error trayendo a los estudiantes",
+    error: '',
+  ) : ListView.separated(
+    itemCount: 0,
+    separatorBuilder: (context, index) => Divider(
+      height: 5,
+      indent: 20,
+      endIndent: 20,
+    ),
+    itemBuilder: (context, i) {
+      return ListTile(
+        onTap: () {
+          AnalyticsService.logEvent(
+            'asignatura_estudiante_tap',
           );
-  }
+        },
+      );
+    },
+  );
 }

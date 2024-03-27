@@ -1,5 +1,3 @@
-
-
 class Rut {
   int rut;
 

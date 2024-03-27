@@ -1,20 +1,20 @@
 import 'dart:convert';
 
+import 'package:get/get.dart';
 import 'package:mi_utem/config/secure_storage.dart';
 import 'package:mi_utem/models/asignaturas/asignatura.dart';
 import 'package:mi_utem/models/evaluacion/grades.dart';
-import 'package:mi_utem/services_new/interfaces/repositories/asignaturas_repository.dart';
-import 'package:mi_utem/services_new/interfaces/auth_service.dart';
-import 'package:mi_utem/services_new/interfaces/carreras_service.dart';
-import 'package:mi_utem/services_new/interfaces/grades_service.dart';
-import 'package:mi_utem/services_new/interfaces/repositories/grades_repository.dart';
+import 'package:mi_utem/repositories/interfaces/asignaturas_repository.dart';
+import 'package:mi_utem/repositories/interfaces/grades_repository.dart';
+import 'package:mi_utem/services/interfaces/auth_service.dart';
+import 'package:mi_utem/services/interfaces/carreras_service.dart';
+import 'package:mi_utem/services/interfaces/grades_service.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
-import 'package:watch_it/watch_it.dart';
 
 class GradesServiceImplementation implements GradesService {
   static const savedGradesPrefix = 'savedGrades_';
   static const subscribedAsignaturasPrefix = 'subscribedAsignaturas_';
-  final _gradesRepository = di.get<GradesRepository>();
+  GradesRepository _gradesRepository = Get.find<GradesRepository>();
 
   @override
   Future<Grades?> getGrades(String carreraId, String asignaturaId, {bool forceRefresh = false, bool saveGrades = true}) async {
@@ -36,13 +36,17 @@ class GradesServiceImplementation implements GradesService {
 
   @override
   Future<Map<String, GradeChangeType>> lookForGradeUpdates() async {
-    final isLoggedIn = await di.get<AuthService>().isLoggedIn();
+    final isLoggedIn = await Get.find<AuthService>().isLoggedIn();
 
     if(!isLoggedIn) {
       return {};
     }
 
-    final carrera = watchValue((CarrerasService service) => service.selectedCarrera);
+    final carrerasService = Get.find<CarrerasService>();
+    if(carrerasService.selectedCarrera == null) {
+      await carrerasService.getCarreras();
+    }
+    final carrera = carrerasService.selectedCarrera;
     final carreraId = carrera?.id;
 
     if(carreraId == null) {
@@ -52,7 +56,7 @@ class GradesServiceImplementation implements GradesService {
     final subscribedAsignaturasJson = await secureStorage.read(key: '$subscribedAsignaturasPrefix$carreraId');
     List<Asignatura> subscribedAsignaturas;
     if(subscribedAsignaturasJson == null) {
-      subscribedAsignaturas = (await di.get<AsignaturasRepository>().getAsignaturas(carreraId)) ?? [];
+      subscribedAsignaturas = (await Get.find<AsignaturasRepository>().getAsignaturas(carreraId)) ?? [];
       await secureStorage.write(key: '$subscribedAsignaturasPrefix$carreraId', value: jsonEncode(subscribedAsignaturas.map((it) => it.toJson()).toList()));
     } else {
       subscribedAsignaturas = Asignatura.fromJsonList(jsonDecode(subscribedAsignaturasJson) as List<dynamic>);

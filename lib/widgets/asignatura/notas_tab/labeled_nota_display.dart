@@ -3,18 +3,19 @@ import 'package:flutter_masked_text/flutter_masked_text.dart';
 import 'package:mi_utem/themes/theme.dart';
 
 class LabeledNotaDisplayWidget extends StatefulWidget {
-  final String _label;
-  final num? _nota;
-  final String? _hint;
+  final String label;
+  final num? nota;
+  final String? hint;
 
-  LabeledNotaDisplayWidget({required String label, num? nota, String? hint})
-      : _label = label,
-        _nota = nota,
-        _hint = hint;
+  const LabeledNotaDisplayWidget({
+    super.key,
+    required this.label,
+    this.nota,
+    this.hint,
+  });
 
   @override
-  _LabeledNotaDisplayWidgetState createState() =>
-      _LabeledNotaDisplayWidgetState();
+  _LabeledNotaDisplayWidgetState createState() => _LabeledNotaDisplayWidgetState();
 }
 
 class _LabeledNotaDisplayWidgetState extends State<LabeledNotaDisplayWidget> {
@@ -22,14 +23,14 @@ class _LabeledNotaDisplayWidgetState extends State<LabeledNotaDisplayWidget> {
   Widget build(BuildContext context) {
     final notaController = MaskedTextController(
       mask: '0.0',
-      text: widget._nota?.toStringAsFixed(1) ?? "",
+      text: widget.nota?.toStringAsFixed(1) ?? "",
     );
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
-      children: <Widget>[
+      children: [
         Text(
-          widget._label,
+          widget.label,
           style: TextStyle(fontSize: 16),
         ),
         Container(
@@ -40,13 +41,10 @@ class _LabeledNotaDisplayWidgetState extends State<LabeledNotaDisplayWidget> {
             textAlign: TextAlign.center,
             enabled: false,
             decoration: InputDecoration(
-              hintText: widget._hint,
-              disabledBorder: MainTheme.theme.inputDecorationTheme.border!
-                  .copyWith(borderSide: BorderSide(color: Colors.transparent)),
+              hintText: widget.hint,
+              disabledBorder: MainTheme.theme.inputDecorationTheme.border!.copyWith(borderSide: BorderSide(color: Colors.transparent)),
             ),
-            keyboardType: TextInputType.numberWithOptions(
-              decimal: true,
-            ),
+            keyboardType: TextInputType.numberWithOptions(decimal: true),
           ),
         ),
       ],

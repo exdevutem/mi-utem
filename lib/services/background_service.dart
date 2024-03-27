@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:background_fetch/background_fetch.dart';
-import 'package:mi_utem/services_new/interfaces/grades_service.dart';
+import 'package:get/get.dart';
+import 'package:mi_utem/services/interfaces/grades_service.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
-import 'package:watch_it/watch_it.dart';
 
 class BackgroundController {
 // [Android-only] This "Headless Task" is run when the Android app is terminated with `enableHeadless: true`
@@ -39,7 +39,7 @@ class BackgroundService {
         requiredNetworkType: NetworkType.NONE,
       ),
       (String taskId) async {
-        await di.get<GradesService>().lookForGradeUpdates();
+        await Get.find<GradesService>().lookForGradeUpdates();
 
         BackgroundFetch.finish(taskId);
       },

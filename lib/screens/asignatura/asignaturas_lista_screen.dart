@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:mdi/mdi.dart';
 import 'package:mi_utem/models/asignaturas/asignatura.dart';
 import 'package:mi_utem/models/exceptions/custom_exception.dart';
 import 'package:mi_utem/screens/calculadora_notas_screen.dart';
+import 'package:mi_utem/services/interfaces/carreras_service.dart';
 import 'package:mi_utem/services/remote_config/remote_config.dart';
-import 'package:mi_utem/services_new/interfaces/repositories/asignaturas_repository.dart';
-import 'package:mi_utem/services_new/interfaces/carreras_service.dart';
+import 'package:mi_utem/repositories/interfaces/asignaturas_repository.dart';
 import 'package:mi_utem/widgets/asignatura/lista/lista_asignaturas.dart';
 import 'package:mi_utem/widgets/asignatura/lista/sin_asignaturas_mensaje.dart';
 import 'package:mi_utem/widgets/custom_app_bar.dart';
 import 'package:mi_utem/widgets/loading_indicator.dart';
 import 'package:mi_utem/widgets/pull_to_refresh.dart';
-import 'package:watch_it/watch_it.dart';
 
-class AsignaturasListaScreen extends StatefulWidget with WatchItStatefulWidgetMixin {
+class AsignaturasListaScreen extends StatefulWidget {
   const AsignaturasListaScreen({super.key});
 
   @override
@@ -21,7 +21,7 @@ class AsignaturasListaScreen extends StatefulWidget with WatchItStatefulWidgetMi
 }
 
 class _AsignaturasListaScreenState extends State<AsignaturasListaScreen> {
-  final _asignaturasService = di.get<AsignaturasRepository>();
+  final _asignaturasService = Get.find<AsignaturasRepository>();
 
   bool get _mostrarCalculadora => RemoteConfigService.calculadoraMostrar;
 
@@ -43,11 +43,12 @@ class _AsignaturasListaScreenState extends State<AsignaturasListaScreen> {
       },
       child: FutureBuilder<List<Asignatura>?>(
         future: () async {
-          final carrerasService = di.get<CarrerasService>();
-          final selectedCarrera = watchValue((CarrerasService service) => service.selectedCarrera);
-          if (selectedCarrera == null) {
+          final carrerasService = Get.find<CarrerasService>();
+          if (carrerasService.selectedCarrera == null) {
             await carrerasService.getCarreras();
           }
+
+          final selectedCarrera = carrerasService.selectedCarrera;
 
           return await _asignaturasService.getAsignaturas(selectedCarrera?.id);
         }(),

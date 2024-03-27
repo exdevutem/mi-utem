@@ -5,7 +5,7 @@ import 'package:mi_utem/config/http_clients.dart';
 import 'package:mi_utem/config/logger.dart';
 import 'package:mi_utem/models/asignaturas/asignatura.dart';
 import 'package:mi_utem/models/exceptions/custom_exception.dart';
-import 'package:mi_utem/services_new/interfaces/repositories/asignaturas_repository.dart';
+import 'package:mi_utem/repositories/interfaces/asignaturas_repository.dart';
 
 class AsignaturasRepositoryImplementation implements AsignaturasRepository {
 
