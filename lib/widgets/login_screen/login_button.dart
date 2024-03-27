@@ -4,7 +4,9 @@ import 'package:mi_utem/config/logger.dart';
 import 'package:mi_utem/models/exceptions/custom_exception.dart';
 import 'package:mi_utem/models/user/credential.dart';
 import 'package:mi_utem/repositories/interfaces/credentials_repository.dart';
+import 'package:mi_utem/repositories/interfaces/preferences_repository.dart';
 import 'package:mi_utem/screens/main_screen.dart';
+import 'package:mi_utem/screens/onboarding/welcome_screen.dart';
 import 'package:mi_utem/services/analytics_service.dart';
 import 'package:mi_utem/services/interfaces/auth_service.dart';
 import 'package:mi_utem/widgets/acerca/dialog/acerca_dialog.dart';
@@ -42,7 +44,7 @@ class _LoginButtonState extends State<LoginButton> {
   @override
   Widget build(BuildContext context) => TextButton(
     onPressed: () => _login(context),
-    child: Text("Iniciar"),
+    child: Text("Iniciar Sesión"),
   );
 
   Future<void> _login(BuildContext context) async {
@@ -98,11 +100,17 @@ class _LoginButtonState extends State<LoginButton> {
         AnalyticsService.setUser(user);
 
         Navigator.of(context).popUntil((route) => route.isFirst); // Esto elimina todas las pantallas anteriores
-        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => MainScreen())); // Y esto reemplaza la pantalla actual por la nueva, cosa de que no pueda "volver" al login a menos que cierre la sesión.
-
-        if(isFirstTime) {
-          showDialog(context: context, builder: (ctx) => AcercaDialog());
+        // Y esto reemplaza la pantalla actual por la nueva, cosa de que no pueda "volver" al login a menos que cierre la sesión.
+        PreferencesRepository preferencesRepository = Get.find<PreferencesRepository>();
+        if(await preferencesRepository.hasCompletedOnboarding()) {
+          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => MainScreen()));
+          if(isFirstTime) {
+            showDialog(context: context, builder: (ctx) => AcercaDialog());
+          }
+          return;
         }
+
+        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => WelcomeScreen()));
       } catch (e) {
         logger.e(e);
         Navigator.pop(context);

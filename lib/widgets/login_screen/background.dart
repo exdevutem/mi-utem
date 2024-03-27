@@ -5,9 +5,9 @@ class LoginBackground extends StatefulWidget {
   final Widget child;
 
   const LoginBackground({
-    Key? key,
+    super.key,
     required this.child,
-  }) : super(key: key);
+  });
 
   @override
   _LoginBackgroundState createState() => _LoginBackgroundState();
@@ -18,15 +18,14 @@ class _LoginBackgroundState extends State<LoginBackground> {
 
   @override
   void initState() {
-    _controller = VideoPlayerController.asset(
-      'assets/videos/login_bg.mp4',
-      videoPlayerOptions: VideoPlayerOptions(
-        mixWithOthers: true,
-      ),
+    _controller = VideoPlayerController.asset('assets/videos/login_bg.mp4',
+      videoPlayerOptions: VideoPlayerOptions(mixWithOthers: true),
     )..setVolume(0)
       ..play()
       ..setLooping(true)
-      ..initialize();
+      ..initialize().then((value) {
+        setState(() {}); // Esto debido a que hay veces que no inicia el video a menos que se haga un hot-reload
+      });
     super.initState();
   }
 
@@ -49,7 +48,7 @@ class _LoginBackgroundState extends State<LoginBackground> {
 
     return Stack(
       alignment: Alignment.center,
-      children: <Widget>[
+      children: [
         Container(
           decoration: backgroundDecoration,
         ),

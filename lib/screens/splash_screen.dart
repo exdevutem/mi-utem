@@ -6,11 +6,12 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:mi_utem/config/constants.dart';
 import 'package:mi_utem/config/http_clients.dart';
+import 'package:mi_utem/repositories/interfaces/preferences_repository.dart';
 import 'package:mi_utem/screens/login_screen/login_screen.dart';
 import 'package:mi_utem/screens/main_screen.dart';
+import 'package:mi_utem/screens/onboarding/welcome_screen.dart';
 import 'package:mi_utem/services/analytics_service.dart';
 import 'package:mi_utem/services/interfaces/auth_service.dart';
-import 'package:mi_utem/services/notification_service.dart';
 import 'package:mi_utem/widgets/loading_dialog.dart';
 import 'package:mi_utem/widgets/snackbar.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -90,7 +91,6 @@ class _SplashScreenState extends State<SplashScreen> {
                         );
                         return;
                       }
-                      await NotificationService.requestUserPermissionIfNecessary(context);
                       final isLoggedIn = await _authService.isLoggedIn();
                       if(!isLoggedIn) {
                         AnalyticsService.removeUser();
@@ -101,7 +101,9 @@ class _SplashScreenState extends State<SplashScreen> {
                         }
                       }
                       Navigator.popUntil(context, (route) => route.isFirst);
-                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (ctx) => isLoggedIn ? MainScreen() : LoginScreen()));
+
+                      final hasCompletedOnboarding = await Get.find<PreferencesRepository>().hasCompletedOnboarding();
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (ctx) => isLoggedIn ? (hasCompletedOnboarding ? MainScreen() : WelcomeScreen()) : LoginScreen()));
                     },
                   ),
                 ),

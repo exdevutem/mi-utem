@@ -22,7 +22,7 @@ import "package:mi_utem/widgets/pull_to_refresh.dart";
 import "package:mi_utem/widgets/quick_menu_section.dart";
 
 class MainScreen extends StatefulWidget {
-  MainScreen({
+  const MainScreen({
     super.key,
   });
 

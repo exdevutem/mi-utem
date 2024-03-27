@@ -67,8 +67,10 @@ class NotificationService {
     );
   }
 
+  static Future<bool> hasAllowedNotifications() async => await notifications.isNotificationAllowed();
+
   static Future<bool> requestUserPermissionIfNecessary(BuildContext context) async {
-    bool isAllowed = await notifications.isNotificationAllowed();
+    bool isAllowed = await hasAllowedNotifications();
     if (!isAllowed) {
       isAllowed = await showDialog(context: context, builder: (ctx) => CustomAlertDialog(
         titulo: "Activa las notificaciones",

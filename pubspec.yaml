@@ -100,4 +100,5 @@ flutter:
     - assets/animations/monito.flr
     - assets/animations/utem.flr
     - assets/images/sibutem.jpg
+    - assets/launcher_icons/prod/full_icon.png
     - .env

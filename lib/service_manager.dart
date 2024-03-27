@@ -11,6 +11,7 @@ import 'package:mi_utem/repositories/implementations/grades_repository.dart';
 import 'package:mi_utem/repositories/implementations/horario_repository.dart';
 import 'package:mi_utem/repositories/implementations/noticias_repository.dart';
 import 'package:mi_utem/repositories/implementations/permiso_ingreso_repository.dart';
+import 'package:mi_utem/repositories/implementations/preferences_repository.dart';
 import 'package:mi_utem/repositories/interfaces/asignaturas_repository.dart';
 import 'package:mi_utem/repositories/interfaces/auth_repository.dart';
 import 'package:mi_utem/repositories/interfaces/carreras_repository.dart';
@@ -19,6 +20,7 @@ import 'package:mi_utem/repositories/interfaces/grades_repository.dart';
 import 'package:mi_utem/repositories/interfaces/horario_repository.dart';
 import 'package:mi_utem/repositories/interfaces/noticias_repository.dart';
 import 'package:mi_utem/repositories/interfaces/permiso_ingreso_repository.dart';
+import 'package:mi_utem/repositories/interfaces/preferences_repository.dart';
 import 'package:mi_utem/services/implementations/auth_service.dart';
 import 'package:mi_utem/services/implementations/carreras_service.dart';
 import 'package:mi_utem/services/implementations/grades_service.dart';
@@ -27,7 +29,7 @@ import 'package:mi_utem/services/interfaces/carreras_service.dart';
 import 'package:mi_utem/services/interfaces/grades_service.dart';
 
 Future<void> registerServices() async {
-  /* Repositorios (Para conectarse a la REST Api */
+  /* Repositorios (Para conectarse a la REST Api o servicios locales) */
   Get.lazyPut<AuthRepository>(() => AuthRepositoryImplementation());
   Get.lazyPut<AsignaturasRepository>(() => AsignaturasRepositoryImplementation());
   Get.lazyPut<CredentialsRepository>(() => CredentialsRepositoryImplementation());
@@ -36,6 +38,8 @@ Future<void> registerServices() async {
   Get.lazyPut<PermisoIngresoRepository>(() => PermisoIngresoRepositoryImplementation());
   Get.lazyPut<NoticiasRepository>(() => NoticiasRepositoryImplementation());
   Get.lazyPut<HorarioRepository>(() => HorarioRepositoryImplementation());
+
+  Get.lazyPut<PreferencesRepository>(() => PreferencesRepositoryImplementation());
 
 
   /* Servicios (Para procesar datos REST) */

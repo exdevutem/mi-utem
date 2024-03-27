@@ -9,17 +9,19 @@ import 'package:mi_utem/models/user/credential.dart';
 import 'package:mi_utem/models/user/user.dart';
 import 'package:mi_utem/repositories/interfaces/auth_repository.dart';
 import 'package:mi_utem/repositories/interfaces/credentials_repository.dart';
+import 'package:mi_utem/repositories/interfaces/preferences_repository.dart';
 import 'package:mi_utem/screens/login_screen/login_screen.dart';
 import 'package:mi_utem/services/interfaces/auth_service.dart';
 import 'package:mi_utem/services/notification_service.dart';
 
 class AuthServiceImplementation implements AuthService {
 
+  PreferencesRepository _preferencesRepository = Get.find<PreferencesRepository>();
   AuthRepository _authRepository = Get.find<AuthRepository>();
   CredentialsRepository _credentialsService = Get.find<CredentialsRepository>();
 
   @override
-  Future<bool> isFirstTime() async => !(await secureStorage.containsKey(key: "last_login"));
+  Future<bool> isFirstTime() async => !(await _preferencesRepository.hasLastLogin());
 
   @override
   Future<bool> isLoggedIn({ bool forceRefresh = false }) async {
@@ -36,16 +38,16 @@ class AuthServiceImplementation implements AuthService {
       return false;
     }
 
-    final lastLogin = await secureStorage.read(key: "last_login");
-    if(lastLogin == null) {
+    final hasLastLogin = await _preferencesRepository.hasLastLogin();
+    if(!hasLastLogin) {
       logger.d("[AuthService#isLoggedIn]: no last login");
       return false;
     }
 
-    final lastLoginDate = DateTime.fromMillisecondsSinceEpoch(int.parse(lastLogin));
     final now = DateTime.now();
+    final lastLoginDate = await _preferencesRepository.getLastLogin() ?? now;
     final difference = now.difference(lastLoginDate);
-    if(difference.inMinutes < 5 && !forceRefresh) {
+    if(difference.inMinutes < 5 && now != lastLoginDate && !forceRefresh) {
       return true;
     }
 
@@ -55,7 +57,7 @@ class AuthServiceImplementation implements AuthService {
       final userJson = user.toJson();
       userJson["token"] = token;
       await setUser(User.fromJson(userJson));
-      await secureStorage.write(key: "last_login", value: "${DateTime.now().millisecondsSinceEpoch}");
+      _preferencesRepository.setLastLogin(DateTime.now());
       return true;
     } catch (e) {
       logger.e("[AuthService#isLoggedIn]: Error al refrescar token", e);
@@ -74,13 +76,16 @@ class AuthServiceImplementation implements AuthService {
     final user = await _authRepository.auth(credentials: credentials);
 
     await setUser(user);
-    await secureStorage.write(key: "last_login", value: "${DateTime.now().millisecondsSinceEpoch}");
+    _preferencesRepository.setLastLogin(DateTime.now());
   }
 
   @override
   Future<void> logout(BuildContext? context) async {
     setUser(null);
     _credentialsService.setCredentials(null);
+    _preferencesRepository.setOnboardingStep(null);
+    _preferencesRepository.setLastLogin(null);
+    _preferencesRepository.setAlias(null);
     
     if(context != null) {
       Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (ctx) => LoginScreen()));
