@@ -8,7 +8,7 @@ class LoadingIndicator extends StatelessWidget {
   final EdgeInsetsGeometry padding;
   final String? message;
 
-  LoadingIndicator({
+  const LoadingIndicator({
     this.color = const Color(0xFF009d9b),
     this.controller,
     this.padding = const EdgeInsets.all(20),
@@ -16,26 +16,24 @@ class LoadingIndicator extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 30),
-      child: Center(
-        child: Container(
-          padding: padding,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SpinKitDoubleBounce(
-                controller: controller,
-                color: color,
-                size: 40.0,
-              ),
-              if (message != null) Container(height: 10),
-              if (message != null) Text(message!),
-            ],
-          ),
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 30),
+    child: Center(
+      child: Padding(
+        padding: padding,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SpinKitDoubleBounce(
+              controller: controller,
+              color: color,
+              size: 40.0,
+            ),
+            if (message != null) const SizedBox(height: 10),
+            if (message != null) Text("$message"),
+          ],
         ),
       ),
-    );
-  }
+    ),
+  );
 }

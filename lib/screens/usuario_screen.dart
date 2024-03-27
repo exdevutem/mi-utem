@@ -2,240 +2,124 @@ import 'dart:core';
 
 import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:mi_utem/config/routes.dart';
-import 'package:mi_utem/models/asignatura.dart';
-import 'package:mi_utem/models/usuario.dart';
+import 'package:mi_utem/models/asignaturas/asignatura.dart';
+import 'package:mi_utem/models/user/user.dart';
 import 'package:mi_utem/services/docentes_service.dart';
-import 'package:mi_utem/services/perfil_service.dart';
 import 'package:mi_utem/services/review_service.dart';
+import 'package:mi_utem/services_new/interfaces/auth_service.dart';
 import 'package:mi_utem/widgets/custom_app_bar.dart';
 import 'package:mi_utem/widgets/custom_error_widget.dart';
 import 'package:mi_utem/widgets/image_view_screen.dart';
 import 'package:mi_utem/widgets/loading_dialog.dart';
 import 'package:mi_utem/widgets/loading_indicator.dart';
 import 'package:mi_utem/widgets/profile_photo.dart';
+import 'package:mi_utem/widgets/snackbar.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:watch_it/watch_it.dart';
 
 class UsuarioScreen extends StatefulWidget {
   final int tipo;
   final Map<String, dynamic>? query;
   final Asignatura? asignatura;
-  UsuarioScreen({Key? key, this.tipo = 0, this.query, this.asignatura})
-      : super(key: key);
+
+  UsuarioScreen({
+    super.key,
+    this.tipo = 0,
+    this.query,
+    this.asignatura,
+  });
 
   @override
   _UsuarioScreenState createState() => _UsuarioScreenState();
 }
 
 class _UsuarioScreenState extends State<UsuarioScreen> {
-  Future<Usuario>? _usuarioFuture;
-  Usuario? _usuario;
+  final _authService = di.get<AuthService>();
+
+  Future<User>? _userFuture;
+  User? _user;
 
   @override
   void initState() {
     ReviewService.addScreen("UsuarioScreen");
     super.initState();
-    _usuarioFuture = _getUsuario();
+    _userFuture = _getUsuario();
   }
 
-  Future<Usuario> _getUsuario() async {
+  Future<User> _getUsuario() async {
     try {
-      Usuario usuario;
+      User? user;
       if (widget.tipo == 2) {
         print(widget.query);
         if (widget.asignatura == null) {
-          usuario =
-              await DocentesService.traerUnDocente(widget.query!["nombre"]);
+          user = await DocentesService.traerUnDocente(widget.query!["nombre"]);
         } else {
-          usuario = await DocentesService.asignarUnDocente(
+          user = await DocentesService.asignarUnDocente(
               widget.query!["nombre"],
               widget.asignatura!.codigo,
               widget.asignatura!.nombre);
         }
 
         setState(() {
-          _usuario = usuario;
+          _user = user;
         });
       } else {
-        usuario = PerfilService.getLocalUsuario();
+        user = await _authService.getUser();
         setState(() {
-          _usuario = usuario;
+          _user = user;
         });
       }
 
-      return usuario;
+      if (user == null) {
+        throw "No se pudo obtener el usuario";
+      }
+
+      return user;
     } catch (e) {
       throw e;
     }
   }
 
   Future<void> _changeFoto(String imagen) async {
-    Get.dialog(
-      LoadingDialog(),
-      barrierDismissible: false,
-    );
+    showLoadingDialog(context);
 
     try {
-      Usuario usuario = await PerfilService.changeFoto(imagen);
-      Get.back();
-
-      setState(() {
-        _usuario = usuario;
-      });
-
-      return;
+      final user = await _authService.updateProfilePicture(imagen);
+      Navigator.pop(context);
+      setState(() => _user = user);
     } catch (e) {
-      Get.back();
+      Navigator.pop(context);
       print("Error cambiando la imagen ${e.toString()}");
-      Get.snackbar(
-        "Error",
-        "No se pudo cambiar la foto",
-        colorText: Colors.white,
-        backgroundColor: Get.theme.primaryColor,
-        snackPosition: SnackPosition.BOTTOM,
-        margin: EdgeInsets.all(20),
-      );
+      showErrorSnackbar(context, "No se pudo cambiar la foto.");
     }
   }
 
   List<Widget> get _datosPersonales {
     List<Widget> lista = [];
-    if (_usuario != null) {
-      if (_usuario!.nombre != null && _usuario!.nombre!.isNotEmpty) {
-        lista.add(ListTile(
-          title: Text(
-            "Nombre",
-            style: TextStyle(
-              color: Colors.grey,
-            ),
-          ),
-          subtitle: Text(
-            _usuario!.nombreCompleto!,
-            style: TextStyle(
-              color: Colors.grey[900],
-              fontSize: 18,
-            ),
-          ),
-        ));
-      } else {
-        if (_usuario!.nombres != null && _usuario!.nombres!.isNotEmpty) {
-          lista.add(
-            ListTile(
-              title: Text(
-                "Nombres",
-                style: TextStyle(
-                  color: Colors.grey,
-                ),
-              ),
-              subtitle: Text(
-                _usuario!.nombres!,
-                style: TextStyle(
-                  color: Colors.grey[900],
-                  fontSize: 18,
-                ),
-              ),
-            ),
-          );
-        }
+    if(_user == null) {
+      return lista;
+    }
 
-        if (_usuario!.apellidos != null && _usuario!.apellidos!.isNotEmpty) {
-          lista.add(Divider(height: 1));
-          lista.add(
-            ListTile(
-              title: Text(
-                "Apellidos",
-                style: TextStyle(
-                  color: Colors.grey,
-                ),
-              ),
-              subtitle: Text(
-                _usuario!.apellidos!,
-                style: TextStyle(
-                  color: Colors.grey[900],
-                  fontSize: 18,
-                ),
-              ),
-            ),
-          );
-        }
-      }
-
-      if (_usuario!.correoUtem != null && _usuario!.correoUtem!.isNotEmpty) {
-        lista.add(Divider(height: 1));
-        lista.add(ListTile(
-          title: Text(
-            "Correo",
-            style: TextStyle(
-              color: Colors.grey,
-            ),
+    if (_user?.nombreDisplayCapitalizado?.isEmpty == false) {
+      lista.add(ListTile(
+        title: Text("Nombre",
+          style: TextStyle(color: Colors.grey),
+        ),
+        subtitle: Text(_user!.nombreCompleto,
+          style: TextStyle(
+            color: Colors.grey[900],
+            fontSize: 18,
           ),
-          onLongPress: widget.tipo != 0
-              ? () async {
-                  await FlutterClipboard.copy(_usuario!.correoUtem!);
-                  Get.snackbar(
-                    "¡Copiado!",
-                    "Correo copiado al portapapeles",
-                    colorText: Colors.white,
-                    backgroundColor: Get.theme.primaryColor,
-                    snackPosition: SnackPosition.BOTTOM,
-                    margin: EdgeInsets.all(20),
-                  );
-                }
-              : null,
-          onTap: widget.tipo != 0
-              ? () async {
-                  await launchUrl(
-                    Uri.parse(
-                      "mailto:${_usuario!.correoUtem}",
-                    ),
-                  );
-                }
-              : null,
-          subtitle: Text(
-            _usuario!.correoUtem ?? "",
-            style: TextStyle(
-              color: Colors.grey[900],
-              fontSize: 18,
-            ),
-          ),
-        ));
-      }
-      if (_usuario!.correoPersonal != null &&
-          _usuario!.correoPersonal!.isNotEmpty) {
-        lista.add(Divider(height: 1));
+        ),
+      ));
+    } else {
+      if (_user?.nombres?.isEmpty == false) {
         lista.add(
           ListTile(
-            title: Text(
-              "Correo",
-              style: TextStyle(
-                color: Colors.grey,
-              ),
+            title: Text("Nombres",
+              style: TextStyle(color: Colors.grey),
             ),
-            onLongPress: widget.tipo != 0
-                ? () async {
-                    await FlutterClipboard.copy(_usuario!.correoPersonal!);
-                    Get.snackbar(
-                      "¡Copiado!",
-                      "Correo copiado al portapapeles",
-                      colorText: Colors.white,
-                      backgroundColor: Get.theme.primaryColor,
-                      snackPosition: SnackPosition.BOTTOM,
-                      margin: EdgeInsets.all(20),
-                    );
-                  }
-                : null,
-            onTap: widget.tipo != 0
-                ? () async {
-                    await launchUrl(
-                      Uri.parse(
-                        "mailto:${_usuario!.correoPersonal}",
-                      ),
-                    );
-                  }
-                : null,
-            subtitle: Text(
-              _usuario!.correoPersonal ?? "",
+            subtitle: Text(_user!.nombres!,
               style: TextStyle(
                 color: Colors.grey[900],
                 fontSize: 18,
@@ -245,24 +129,82 @@ class _UsuarioScreenState extends State<UsuarioScreen> {
         );
       }
 
-      if (widget.tipo == 0 && _usuario!.rut != null) {
+      if (_user?.apellidos?.isEmpty == false) {
         lista.add(Divider(height: 1));
-        lista.add(ListTile(
-          title: Text(
-            "RUT",
-            style: TextStyle(
-              color: Colors.grey,
+        lista.add(
+          ListTile(
+            title: Text("Apellidos",
+              style: TextStyle(color: Colors.grey),
+            ),
+            subtitle: Text(_user!.apellidos!,
+              style: TextStyle(
+                color: Colors.grey[900],
+                fontSize: 18,
+              ),
             ),
           ),
-          subtitle: Text(
-            _usuario!.rut!.formateado(true),
+        );
+      }
+    }
+
+    if (_user?.correoUtem?.isEmpty == false) {
+      lista.add(Divider(height: 1));
+      lista.add(ListTile(
+        title: Text("Correo Institucional",
+          style: TextStyle(color: Colors.grey),
+        ),
+        onLongPress: widget.tipo != 0 ? () async {
+          await FlutterClipboard.copy(_user!.correoUtem!);
+          showTextSnackbar(context, title: "¡Copiado!", message: "Correo copiado al portapapeles");
+        } : null,
+        onTap: widget.tipo != 0 ? () async {
+          await launchUrl(Uri.parse("mailto:${_user?.correoUtem ?? ""}"));
+        } : null,
+        subtitle: Text(_user!.correoUtem ?? "",
+          style: TextStyle(
+            color: Colors.grey[900],
+            fontSize: 18,
+          ),
+        ),
+      ));
+    }
+    if (_user?.correoPersonal?.isEmpty == false) {
+      lista.add(Divider(height: 1));
+      lista.add(
+        ListTile(
+          title: Text("Correo Personal",
+            style: TextStyle(color: Colors.grey),
+          ),
+          onLongPress: widget.tipo != 0 ? () async {
+            await FlutterClipboard.copy(_user!.correoPersonal!);
+            showTextSnackbar(context, title: "¡Copiado!", message: "Correo copiado al portapapeles");
+          } : null,
+          onTap: widget.tipo != 0 ? () async {
+            await launchUrl(Uri.parse("mailto:${_user?.correoPersonal ?? ""}"));
+          } : null,
+          subtitle: Text(_user!.correoPersonal!,
             style: TextStyle(
               color: Colors.grey[900],
               fontSize: 18,
             ),
           ),
-        ));
-      }
+        ),
+      );
+    }
+
+    if (widget.tipo == 0 && _user!.rut != null) {
+      lista.add(Divider(height: 1));
+      lista.add(ListTile(
+        title: Text("RUT",
+          style: TextStyle(color: Colors.grey),
+        ),
+        subtitle: Text("${_user!.rut}",
+          style: TextStyle(
+            color: Colors.grey[900],
+            fontSize: 18,
+          ),
+        ),
+      ));
     }
 
     return lista;
@@ -275,69 +217,64 @@ class _UsuarioScreenState extends State<UsuarioScreen> {
         title: Text(widget.tipo == 0 ? "Perfil" : widget.query!["nombre"]),
       ),
       body: FutureBuilder(
-        future: _usuarioFuture,
+        future: _userFuture,
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return CustomErrorWidget(
-                title: "Ocurrió un error al obtener el perfil",
-                error: snapshot.error);
-          } else {
-            if (snapshot.hasData) {
-              return SingleChildScrollView(
-                padding: EdgeInsets.symmetric(vertical: 20),
-                child: Stack(
-                  children: <Widget>[
-                    Container(
-                      alignment: Alignment.topCenter,
-                      margin: EdgeInsets.only(top: 80),
-                      child: Card(
-                        margin: EdgeInsets.all(20),
-                        child: ListView(
-                          padding: EdgeInsets.only(bottom: 10, top: 20),
-                          shrinkWrap: true,
-                          physics: ClampingScrollPhysics(),
-                          children: _datosPersonales,
-                        ),
-                      ),
-                    ),
-                    Center(
-                      child: ProfilePhoto(
-                          usuario: _usuario,
-                          radius: 60,
-                          editable: widget.tipo == 0,
-                          onImage: widget.tipo == 0
-                              ? (image) {
-                                  _changeFoto(image);
-                                }
-                              : null,
-                          onImageTap: (context, imageProvider) {
-                            Get.to(
-                              () => ImageViewScreen(
-                                imageProvider: imageProvider,
-                              ),
-                              routeName: Routes.imageView,
-                            );
-                          }),
-                    ),
-                  ],
-                ),
-              );
-            } else {
-              return Container(
-                padding: EdgeInsets.all(20),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      child: Center(
-                        child: LoadingIndicator(),
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            }
+              title: "Ocurrió un error al obtener el perfil",
+              error: snapshot.error,
+            );
           }
+
+          if (snapshot.hasData) {
+            return SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(vertical: 20),
+              child: Stack(
+                children: [
+                  Container(
+                    alignment: Alignment.topCenter,
+                    margin: const EdgeInsets.only(top: 80),
+                    child: Card(
+                      margin: const EdgeInsets.all(20),
+                      child: ListView(
+                        padding: const EdgeInsets.only(bottom: 10, top: 20),
+                        shrinkWrap: true,
+                        physics: const ClampingScrollPhysics(),
+                        children: _datosPersonales,
+                      ),
+                    ),
+                  ),
+                  Center(
+                    child: ProfilePhoto(
+                      user: _user,
+                      radius: 60,
+                      editable: widget.tipo == 0,
+                      onImage: widget.tipo == 0 ? _changeFoto : null,
+                      onImageTap: (context, imageProvider) {
+                        Navigator.push(context, MaterialPageRoute(builder: (ctx) => ImageViewScreen(
+                          imageProvider: imageProvider,
+                        )));
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }
+
+          return Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Expanded(
+                  child: Center(
+                    child: LoadingIndicator(),
+                  ),
+                ),
+              ],
+            ),
+          );
         },
       ),
     );

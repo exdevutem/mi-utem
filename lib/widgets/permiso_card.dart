@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:mi_utem/config/routes.dart';
-import 'package:mi_utem/models/permiso_covid.dart';
+import 'package:mi_utem/models/permiso_ingreso.dart';
+import 'package:mi_utem/screens/permiso_covid_screen.dart';
 import 'package:mi_utem/themes/theme.dart';
 
 class PermisoCard extends StatelessWidget {
   const PermisoCard({Key? key, required this.permiso}) : super(key: key);
 
-  final PermisoCovid permiso;
+  final PermisoIngreso permiso;
 
   @override
   Widget build(BuildContext context) {
@@ -19,9 +18,7 @@ class PermisoCard extends StatelessWidget {
         child: Material(
           color: Colors.transparent,
           child: InkWell(
-            onTap: () => Get.toNamed(
-              '${Routes.passBase}/${permiso.id}',
-            ),
+            onTap: () => Navigator.push(context, MaterialPageRoute(builder: (ctx) => PermisoCovidScreen(passId: "${permiso.id}"))),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -42,20 +39,17 @@ class PermisoCard extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(permiso.perfil!),
-                            Text(
-                              permiso.motivo!,
-                              style: Get.textTheme.bodyLarge!.copyWith(
+                            Text(permiso.motivo!,
+                              style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                                 color: MainTheme.primaryColor,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            if (permiso.campus != null)
-                              Text(
-                                "${permiso.campus ?? ''} (${permiso.campus!})",
-                                style: Get.textTheme.bodyMedium!.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
+                            if (permiso.campus != null)Text("${permiso.campus ?? ''} (${permiso.campus!})",
+                              style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                fontWeight: FontWeight.bold,
                               ),
+                            ),
                           ],
                         ),
                       ),
@@ -66,12 +60,9 @@ class PermisoCard extends StatelessWidget {
                 Container(
                   height: 40,
                   child: InkWell(
-                    onTap: () => Get.toNamed(
-                      '${Routes.passBase}/${permiso.id}',
-                    ),
+                    onTap: () => Navigator.push(context, MaterialPageRoute(builder: (ctx) => PermisoCovidScreen(passId: "${permiso.id}"))),
                     child: Center(
-                      child: Text(
-                        "Ver QR",
+                      child: Text("Ver QR",
                         style: TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.w700,

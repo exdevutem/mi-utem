@@ -42,35 +42,57 @@ platform :mobile do
     changelog
   end
 
-  lane :test do
-    puts("Testing Fastlane for mobile")
+  lane :test do |options|
+    skip_slack = false
+    skip_android_test = false
+    skip_ios_test = false
+
+    if options[:skip_slack]
+      skip_slack = options[:skip_slack]
+    end
+
+    if options[:skip_android_test]
+      skip_android_test = options[:skip_android_test]
+    end
+
+    if options[:skip_ios_test]
+      skip_ios_test = options[:skip_ios_test]
+    end
+
+    puts "Testing Fastlane for mobile"
 
     changelog = read_changelog
     emojified_changelog = emojify_changelog
-    
+
     changelog = translate_changelog(changelog: changelog)
     emojified_changelog = translate_changelog(changelog: emojified_changelog)
 
     puts "Changelog: #{changelog}"
     puts "Emojified Changelog: #{emojified_changelog}"
 
-    android_test
-    ios_test
+    unless skip_android_test
+      android_test
+    end
 
-    slack(
-      message: "Este es un mensaje de prueba desde Fastlane",
-      slack_url: ENV["SLACK_URL"],
-      channel: "#proy-mi-utem-bots",
-      default_payloads: [],
-      attachment_properties: {
-        fields: [
-          {
-            title: "Campo",
-            value: "Prueba"
+    unless skip_ios_test
+      ios_test
+    end
+
+    unless skip_slack
+        slack(
+          message: "Este es un mensaje de prueba desde Fastlane",
+          channel: "proy-mi-utem-bots",
+          default_payloads: [],
+          attachment_properties: {
+            fields: [
+              {
+                title: "Campo",
+                value: "Prueba"
+              },
+            ]
           },
-        ]
-      },
-    )
+        )
+    end
   end
 
   lane :upload do |options|
@@ -179,8 +201,7 @@ platform :mobile do
     unless skip_slack
       slack(
       message: "🚀 Se ha publicado la nueva versión #{build_name} (#{build_number})",
-      slack_url: ENV["SLACK_URL"],
-      channel: "#proy-mi-utem",
+      channel: "proy-mi-utem",
       default_payloads: [],
       attachment_properties: {
         fields: [

@@ -2,8 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import 'package:get/get.dart';
-
 class ProgressButton extends StatefulWidget {
   final Function callback;
 
@@ -34,32 +32,30 @@ class _ProgressButtonState extends State<ProgressButton>
   }
 
   @override
-  Widget build(BuildContext context) {
-    return PhysicalModel(
-        color: Get.theme.primaryColor,
-        borderRadius: BorderRadius.circular(30),
-        child: Container(
-          key: _globalKey,
-          height: 48.0,
-          width: _width,
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor:
-                  _state == 2 ? Colors.green : Get.theme.primaryColor,
-              padding: EdgeInsets.zero,
-            ),
-            child: buildButtonChild(),
-            onPressed: () {},
-            onFocusChange: (isPressed) {
-              setState(() {
-                if (_state == 0) {
-                  animateButton();
-                }
-              });
-            },
-          ),
-        ));
-  }
+  Widget build(BuildContext context) => PhysicalModel(
+    color: Theme.of(context).primaryColor,
+    borderRadius: BorderRadius.circular(30),
+    child: Container(
+      key: _globalKey,
+      height: 48.0,
+      width: _width,
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: _state == 2 ? Colors.green : Theme.of(context).primaryColor,
+          padding: EdgeInsets.zero,
+        ),
+        child: buildButtonChild(),
+        onPressed: () {},
+        onFocusChange: (isPressed) {
+          setState(() {
+            if (_state == 0) {
+              animateButton();
+            }
+          });
+        },
+      ),
+    ),
+  );
 
   void animateButton() {
     double initialWidth = _globalKey.currentContext!.size!.width;

@@ -4,26 +4,24 @@ import 'package:mi_utem/widgets/error_dialog.dart';
 
 class MonkeyErrorDialog extends StatelessWidget {
   const MonkeyErrorDialog({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
-  Widget build(BuildContext context) {
-    return ErrorDialog(
-      contenido: Container(
-        height: 100,
-        child: FlareActor(
-          "assets/animations/monito.flr",
-          alignment: Alignment.center,
-          fit: BoxFit.contain,
-          animation: "rascarse",
-        ),
+  Widget build(BuildContext context) => ErrorDialog(
+    contenido: Container(
+      height: 100,
+      child: FlareActor(
+        "assets/animations/monito.flr",
+        alignment: Alignment.center,
+        fit: BoxFit.contain,
+        animation: "rascarse",
       ),
-      mensaje: Text(
-        "Ops, parece que metimos la pata. Sólo queda esperar e intentarlo más tarde.",
-        textAlign: TextAlign.center,
-        style: TextStyle(fontSize: 20),
-      ),
-    );
-  }
+    ),
+    mensaje: Text(
+      "Ops, parece que metimos la pata. Sólo queda esperar e intentarlo más tarde.",
+      textAlign: TextAlign.center,
+      style: TextStyle(fontSize: 20),
+    ),
+  );
 }

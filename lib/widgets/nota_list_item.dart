@@ -1,11 +1,12 @@
+import 'package:extended_masked_text/extended_masked_text.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_masked_text/flutter_masked_text.dart';
-import 'package:get/get.dart';
-import 'package:mi_utem/controllers/calculator_controller.dart';
-import 'package:mi_utem/models/evaluacion.dart';
+import 'package:flutter/services.dart';
+import 'package:mi_utem/models/evaluacion/evaluacion.dart';
+import 'package:mi_utem/services_new/interfaces/controllers/calculator_controller.dart';
 import 'package:mi_utem/themes/theme.dart';
+import 'package:watch_it/watch_it.dart';
 
-class NotaListItem extends StatelessWidget {
+class NotaListItem extends StatelessWidget with WatchItMixin {
   final IEvaluacion evaluacion;
   final bool editable;
   final TextEditingController? gradeController;
@@ -13,25 +14,15 @@ class NotaListItem extends StatelessWidget {
   final Function(IEvaluacion)? onChanged;
   final Function()? onDelete;
 
-  NotaListItem({
-    Key? key,
+  const NotaListItem({
+    super.key,
     required this.evaluacion,
     this.editable = false,
     this.gradeController,
     this.percentageController,
     this.onChanged,
     this.onDelete,
-  }) : super(key: key);
-
-  final _controller = CalculatorController.to;
-
-  String get _suggestedGrade {
-    return _controller.suggestedGrade?.toStringAsFixed(1) ?? "0.0";
-  }
-
-  String? get _suggestedPercentage {
-    return _controller.suggestedPercentage?.toStringAsFixed(0);
-  }
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -46,16 +37,19 @@ class NotaListItem extends StatelessWidget {
 
     final showSuggestedGrade = editable;
 
-    final hintText = showSuggestedGrade ? _suggestedGrade : "--";
+    final suggestedGrade = watchValue((CalculatorController controller) => controller.suggestedGrade);
+    final suggestedPercentage = watchValue((CalculatorController controller) => controller.suggestedPercentage);
+
+
+    final hintText = showSuggestedGrade ? (suggestedGrade?.toStringAsFixed(0) ?? "--") : "--";
 
     return Flex(
       direction: Axis.horizontal,
       mainAxisSize: MainAxisSize.max,
-      children: <Widget>[
+      children: [
         Container(
           width: 90,
-          child: Text(
-            evaluacion.descripcion ?? "Nota",
+          child: Text(evaluacion.descripcion ?? "Nota",
             overflow: TextOverflow.ellipsis,
           ),
         ),
@@ -67,28 +61,47 @@ class NotaListItem extends StatelessWidget {
               controller: gradeController ?? defaultGradeController,
               enabled: editable,
               onChanged: (String value) {
-                final grade = double.tryParse(
-                  value.replaceAll(",", "."),
-                );
+                final grade = double.tryParse(value.replaceAll(",", "."));
 
                 final changedGrade = evaluacion.copyWith(nota: grade);
                 changedGrade.nota = grade;
 
                 onChanged?.call(changedGrade);
-
-                //_controller.changeGradeAt(widget.index, changedGrade);
               },
               textAlign: TextAlign.center,
               decoration: InputDecoration(
                 hintText: hintText,
-                disabledBorder:
-                    MainTheme.theme.inputDecorationTheme.border!.copyWith(
+                disabledBorder: MainTheme.theme.inputDecorationTheme.border!.copyWith(
                   borderSide: BorderSide(
                     color: Colors.transparent,
                   ),
                 ),
               ),
               keyboardType: TextInputType.numberWithOptions(decimal: true),
+              inputFormatters: [
+                TextInputFormatter.withFunction((prev, input) {
+                  final val = input.text;
+                  if(val.isEmpty) { // Si está vacío, no hacer nada
+                    return input;
+                  }
+
+                  final firstDigit = int.tryParse(val[0]);
+                  if(firstDigit != null && (firstDigit < 1 || firstDigit > 7)) { // Si el primer dígito es menor a 1 o mayor a 7, no hacer nada
+                    return prev;
+                  }
+
+                  if(val.length == 1) {
+                    return input;
+                  }
+
+                  final secondDigit = int.tryParse(val[1]);
+                  if(secondDigit != null && ((secondDigit < 0 || secondDigit > 9) || (firstDigit == 7 && secondDigit > 0)) || val.length > 3) { // Si el segundo dígito es menor a 0 o mayor a 9, o si el primer dígito es 7 y el segundo dígito es mayor a 0, no hacer nada
+                    return prev;
+                  }
+
+                  return input;
+                }),
+              ],
             ),
           ),
         ),
@@ -101,27 +114,40 @@ class NotaListItem extends StatelessWidget {
               textAlign: TextAlign.center,
               onChanged: (String value) {
                 final percentage = int.tryParse(value);
-
-                final changedGrade =
-                    evaluacion.copyWith(porcentaje: percentage);
+                final changedGrade = evaluacion.copyWith(porcentaje: percentage);
                 changedGrade.porcentaje = percentage;
-
                 onChanged?.call(changedGrade);
-
-                //_controller.changeGradeAt(widget.index, changedGrade);
               },
               enabled: editable,
               decoration: InputDecoration(
-                hintText: _suggestedPercentage ?? "Peso",
+                hintText: suggestedPercentage?.toStringAsFixed(0) ?? "Peso",
                 suffixText: "%",
-                disabledBorder:
-                    MainTheme.theme.inputDecorationTheme.border!.copyWith(
+                disabledBorder: MainTheme.theme.inputDecorationTheme.border!.copyWith(
                   borderSide: BorderSide(
                     color: Colors.transparent,
                   ),
                 ),
               ),
-              keyboardType: TextInputType.phone,
+              keyboardType: TextInputType.number,
+              inputFormatters: [
+                FilteringTextInputFormatter.digitsOnly,
+                LengthLimitingTextInputFormatter(3),
+                // Solo permitir números entre 0 y 100
+                TextInputFormatter.withFunction((prev, input) {
+                  final val = input.text;
+                  if(val.isEmpty) { // Si está vacío, no hacer nada
+                    return input;
+                  }
+
+                  final number = int.tryParse(val);
+                  if(number == null) { // Si no es un número, no hacer nada
+                    return prev;
+                  }
+
+                  return number > 100 ? prev : input;
+                }),
+
+              ],
             ),
           ),
         ),
@@ -130,11 +156,10 @@ class NotaListItem extends StatelessWidget {
           GestureDetector(
             onTap: () {
               onDelete?.call();
-              //_controller.removeGradeAt(widget.index);
             },
             child: Icon(
               Icons.delete,
-              color: Get.theme.primaryColor,
+              color: Theme.of(context).primaryColor,
             ),
           )
       ],

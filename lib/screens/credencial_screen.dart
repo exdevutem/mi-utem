@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 import 'package:mdi/mdi.dart';
-import 'package:mi_utem/controllers/carreras_controller.dart';
 import 'package:mi_utem/models/carrera.dart';
-import 'package:mi_utem/models/usuario.dart';
+import 'package:mi_utem/models/user/user.dart';
 import 'package:mi_utem/services/analytics_service.dart';
-import 'package:mi_utem/services/perfil_service.dart';
 import 'package:mi_utem/services/review_service.dart';
+import 'package:mi_utem/services_new/interfaces/auth_service.dart';
+import 'package:mi_utem/services_new/interfaces/carreras_service.dart';
 import 'package:mi_utem/widgets/credencial_card.dart';
 import 'package:mi_utem/widgets/custom_app_bar.dart';
 import 'package:mi_utem/widgets/custom_error_widget.dart';
 import 'package:mi_utem/widgets/flip_widget.dart';
 import 'package:mi_utem/widgets/loading_indicator.dart';
+import 'package:watch_it/watch_it.dart';
 
-class CredencialScreen extends StatefulWidget {
+class CredencialScreen extends StatefulWidget with WatchItStatefulWidgetMixin {
   CredencialScreen({
     Key? key,
   }) : super(key: key);
@@ -23,15 +24,12 @@ class CredencialScreen extends StatefulWidget {
 }
 
 class _CredencialScreenState extends State<CredencialScreen> {
-  Future? _future;
-  Usuario? _usuario;
   FlipController _flipController = FlipController();
 
   @override
   void initState() {
     ReviewService.addScreen("CredencialScreen");
     _secureScreen();
-    _future = _getData();
     super.initState();
   }
 
@@ -49,30 +47,16 @@ class _CredencialScreenState extends State<CredencialScreen> {
     super.dispose();
   }
 
-  Future _getData() async {
-    try {
-      Usuario usuario = PerfilService.getLocalUsuario();
-      setState(() {
-        _usuario = usuario;
-      });
-      return usuario;
-    } catch (e) {
-      throw e;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    Carrera? carreraActiva = CarrerasController.to.selectedCarrera.value;
+    Carrera? carreraActiva = watchValue((CarrerasService service) => service.selectedCarrera);
 
     return Scaffold(
       appBar: CustomAppBar(
-        title: Text("Credencial universitaria"),
+        title: const Text("Credencial universitaria"),
         actions: [
           IconButton(
-            icon: Icon(_flipController.actualFace == FlipController.front
-                ? Icons.info
-                : Mdi.accountCircle),
+            icon: Icon(_flipController.actualFace == FlipController.front ? Icons.info : Mdi.accountCircle),
             onPressed: () {
               _flipController.flip!();
             },
@@ -80,75 +64,87 @@ class _CredencialScreenState extends State<CredencialScreen> {
         ],
       ),
       backgroundColor: Colors.grey[200],
-      body: FutureBuilder(
-        future: _future,
+      body: FutureBuilder<User?>(
+        future: () async {
+          final user = await di.get<AuthService>().getUser();
+          if(carreraActiva == null) {
+            await di.get<CarrerasService>().getCarreras();
+          }
+
+          return user;
+        }(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return CustomErrorWidget(
-                title: "Ocurrió un error al generar tu crendencial",
-                error: snapshot.error);
-          } else {
-            if (snapshot.hasData) {
-              if (_usuario!.rut != null &&
-                  carreraActiva!.nombre != null &&
-                  carreraActiva.nombre!.isNotEmpty) {
-                return Center(
-                  child: SafeArea(
-                    child: CredencialCard(
-                      usuario: _usuario,
-                      carrera: carreraActiva,
-                      controller: _flipController,
-                      onFlip: (direction) => _onFlip(),
-                    ),
-                  ),
-                );
-              } else {
-                return Container(
-                  padding: EdgeInsets.all(20),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "😕",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 50,
-                        ),
-                      ),
-                      Container(height: 15),
-                      Text(
-                        "Ocurrió un error al generar tu credencial",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                        ),
-                      ),
-                      Container(height: 15),
-                      Text(
-                        snapshot.error.toString(),
-                        textAlign: TextAlign.center,
-                      ),
-                    ],
-                  ),
-                );
-              }
-            } else {
-              return Container(
-                padding: EdgeInsets.all(20),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      child: Center(
-                        child: LoadingIndicator(),
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            }
+              title: "Ocurrió un error al generar tu crendencial",
+              error: snapshot.error,
+            );
           }
+
+          final user = snapshot.data;
+
+          if (!snapshot.hasData) {
+            return Container(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Expanded(
+                    child: Center(
+                      child: LoadingIndicator(),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }
+
+          if (user == null) {
+            return CustomErrorWidget(
+              title: "Ocurrió un error al generar tu crendencial. Por favor, intenta nuevamente.",
+              error: snapshot.error,
+            );
+          }
+
+          if (user.rut != null && carreraActiva!.nombre != null && carreraActiva.nombre!.isNotEmpty) {
+            return Center(
+              child: SafeArea(
+                child: CredencialCard(
+                  user: user,
+                  carrera: carreraActiva,
+                  controller: _flipController,
+                  onFlip: (direction) => _onFlip(),
+                ),
+              ),
+            );
+          }
+
+          return Container(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text("😕",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 50,
+                  ),
+                ),
+                const SizedBox(height: 15),
+                const Text("Ocurrió un error al generar tu credencial",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                  ),
+                ),
+                const SizedBox(height: 15),
+                Text(snapshot.error.toString(),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+          );
         },
       ),
     );

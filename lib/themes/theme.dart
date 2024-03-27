@@ -24,118 +24,92 @@ class MainTheme {
   static double elevation = 0;
 
   static ThemeData get theme => ThemeData(
-        floatingActionButtonTheme: FloatingActionButtonThemeData(
-          backgroundColor: primaryColor,
-          disabledElevation: 0,
-          elevation: 0,
+    useMaterial3: false, // Cuando podamos hay que migrar a material 3.
+    floatingActionButtonTheme: FloatingActionButtonThemeData(
+      backgroundColor: primaryColor,
+      disabledElevation: 0,
+      elevation: 0,
+    ),
+    tabBarTheme: TabBarTheme(indicatorSize: TabBarIndicatorSize.tab),
+    disabledColor: disabledColor,
+    textButtonTheme: TextButtonThemeData(
+      style: ButtonStyle(
+        elevation: MaterialStateProperty.all(0),
+        backgroundColor: MaterialStateProperty.resolveWith((states) => states.any({MaterialState.disabled}.contains) ? disabledColor : primaryColor),
+        padding: MaterialStateProperty.all(
+          EdgeInsets.symmetric(vertical: 5, horizontal: 20),
         ),
-        tabBarTheme: TabBarTheme(indicatorSize: TabBarIndicatorSize.tab),
-        disabledColor: disabledColor,
-        textButtonTheme: TextButtonThemeData(
-          style: ButtonStyle(
-            elevation: MaterialStateProperty.all(0),
-            backgroundColor: MaterialStateProperty.resolveWith(
-              (states) {
-                const Set<MaterialState> interactiveStates = <MaterialState>{
-                  MaterialState.disabled,
-                };
-                return states.any(interactiveStates.contains)
-                    ? disabledColor
-                    : primaryColor;
-              },
-            ),
-            padding: MaterialStateProperty.all(
-              EdgeInsets.symmetric(vertical: 5, horizontal: 20),
-            ),
-            foregroundColor: MaterialStateProperty.all(Colors.white),
-            shape: MaterialStateProperty.all(
-              StadiumBorder(),
-            ),
+        foregroundColor: MaterialStateProperty.all(Colors.white),
+        shape: MaterialStateProperty.all(
+          StadiumBorder(),
+        ),
+      ),
+    ),
+    outlinedButtonTheme: OutlinedButtonThemeData(
+      style: ButtonStyle(
+        elevation: MaterialStateProperty.all(0),
+        side: MaterialStateProperty.resolveWith((states) => states.any({MaterialState.disabled}.contains) ? BorderSide(color: disabledColor!) : BorderSide(color: primaryColor)),
+        foregroundColor: MaterialStateProperty.resolveWith((states) => states.any({MaterialState.disabled}.contains) ? disabledColor : primaryColor),
+        padding: MaterialStateProperty.all(EdgeInsets.symmetric(vertical: 5, horizontal: 20)),
+        shape: MaterialStateProperty.all(
+          StadiumBorder(
+            side: BorderSide(width: 3),
           ),
         ),
-        outlinedButtonTheme: OutlinedButtonThemeData(
-          style: ButtonStyle(
-            elevation: MaterialStateProperty.all(0),
-            side: MaterialStateProperty.resolveWith(
-              (states) {
-                const Set<MaterialState> interactiveStates = <MaterialState>{
-                  MaterialState.disabled,
-                };
-                return states.any(interactiveStates.contains)
-                    ? BorderSide(color: disabledColor!)
-                    : BorderSide(color: primaryColor);
-              },
-            ),
-            foregroundColor: MaterialStateProperty.resolveWith(
-              (states) {
-                const Set<MaterialState> interactiveStates = <MaterialState>{
-                  MaterialState.disabled,
-                };
-                return states.any(interactiveStates.contains)
-                    ? disabledColor
-                    : primaryColor;
-              },
-            ),
-            padding: MaterialStateProperty.all(
-                EdgeInsets.symmetric(vertical: 5, horizontal: 20)),
-            shape: MaterialStateProperty.all(
-              StadiumBorder(
-                side: BorderSide(width: 3),
-              ),
-            ),
-          ),
+      ),
+    ),
+    buttonTheme: ButtonThemeData(
+      shape: const StadiumBorder(),
+      padding: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+      textTheme: ButtonTextTheme.normal,
+      disabledColor: disabledColor,
+    ),
+    cardTheme: CardTheme(
+      elevation: 0,
+      clipBehavior: Clip.antiAlias,
+      color: Colors.white,
+      margin: EdgeInsets.all(10),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15.0),
+        side: BorderSide(
+          color: Colors.grey,
+          width: 0.3,
+          style: BorderStyle.solid,
         ),
-        buttonTheme: ButtonThemeData(
-          shape: const StadiumBorder(),
-          padding: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
-          textTheme: ButtonTextTheme.normal,
-          disabledColor: disabledColor,
+      ),
+    ),
+    textTheme: textTheme,
+    appBarTheme: AppBarTheme(
+      color: primaryColor,
+      elevation: 0,
+      iconTheme: IconThemeData(color: Colors.white),
+      systemOverlayStyle: SystemUiOverlayStyle.light,
+    ),
+    inputDecorationTheme: InputDecorationTheme(
+      contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+      isDense: true,
+      hintStyle: TextStyle(color: Colors.grey[400]),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.all(
+          Radius.circular(15),
         ),
-        cardTheme: CardTheme(
-          elevation: 0,
-          clipBehavior: Clip.antiAlias,
-          color: Colors.white,
-          margin: EdgeInsets.all(10),
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15.0),
-              side: BorderSide(
-                color: Colors.grey,
-                width: 0.3,
-                style: BorderStyle.solid,
-              )),
-        ),
-        textTheme: textTheme,
-        appBarTheme: AppBarTheme(
-          color: primaryColor,
-          elevation: 0,
-          iconTheme: IconThemeData(color: Colors.white),
-          systemOverlayStyle: SystemUiOverlayStyle.light,
-        ),
-        inputDecorationTheme: InputDecorationTheme(
-          contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-          isDense: true,
-          hintStyle: TextStyle(color: Colors.grey[400]),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.all(
-              Radius.circular(15),
-            ),
-          ),
-        ),
-        primaryColor: primaryColor,
-        colorScheme: ColorScheme(
-          brightness: Brightness.light,
-          primary: primaryColor,
-          onPrimary: Colors.white,
-          secondary: primaryLightColor,
-          onSecondary: primaryDarkColor,
-          error: reprobadoColor,
-          onError: Colors.white,
-          background: lightGrey,
-          onBackground: darkGrey,
-          surface: lightGrey,
-          onSurface: darkGrey,
-        ),
-      );
+      ),
+    ),
+    primaryColor: primaryColor,
+    colorScheme: ColorScheme(
+      brightness: Brightness.light,
+      primary: primaryColor,
+      onPrimary: Colors.white,
+      secondary: primaryLightColor,
+      onSecondary: primaryDarkColor,
+      error: reprobadoColor,
+      onError: Colors.white,
+      background: lightGrey,
+      onBackground: darkGrey,
+      surface: lightGrey,
+      onSurface: darkGrey,
+    ),
+  );
 
   static TextTheme get textTheme => TextTheme(
         displayLarge: TextStyle(

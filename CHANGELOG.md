@@ -30,7 +30,14 @@ Tipos de cambios
 
 ### Changed
 
-- Se actualizan dependecias de Flutter
+- Se actualizan dependencias de Flutter
+- Se actualiza a enrutador nativo de flutter
+- Se mejora el rendimiento de la aplicación
+- Se ordenan clases y widgets
+
+### Removed
+
+- Dependencia GetX
 
 ## [2.11.9] - 2023-10-11Z
 

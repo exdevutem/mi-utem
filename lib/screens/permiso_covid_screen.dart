@@ -4,57 +4,84 @@ import 'package:barcode_image/barcode_image.dart';
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_uxcam/flutter_uxcam.dart';
-import 'package:get/get.dart';
 import 'package:image/image.dart' as dartImage;
 import 'package:intl/intl.dart';
-import 'package:mi_utem/config/routes.dart';
-import 'package:mi_utem/controllers/qr_pass_controller.dart';
-import 'package:mi_utem/models/permiso_covid.dart';
-import 'package:mi_utem/models/usuario.dart';
+import 'package:mi_utem/config/logger.dart';
+import 'package:mi_utem/models/exceptions/custom_exception.dart';
+import 'package:mi_utem/models/permiso_ingreso.dart';
+import 'package:mi_utem/models/user/user.dart';
+import 'package:mi_utem/services_new/interfaces/repositories/permiso_ingreso_repository.dart';
 import 'package:mi_utem/widgets/custom_app_bar.dart';
 import 'package:mi_utem/widgets/custom_error_widget.dart';
 import 'package:mi_utem/widgets/field_list_tile.dart';
 import 'package:mi_utem/widgets/image_view_screen.dart';
 import 'package:mi_utem/widgets/loading_indicator.dart';
 import 'package:mi_utem/widgets/profile_photo.dart';
+import 'package:mi_utem/widgets/pull_to_refresh.dart';
+import 'package:watch_it/watch_it.dart';
 
-class PermisoCovidScreen extends GetView<QrPassController> {
-  const PermisoCovidScreen({
-    Key? key,
-  }) : super(key: key);
+class PermisoCovidScreen extends StatefulWidget {
+  final String passId;
+
+  const PermisoCovidScreen({super.key, required this.passId});
 
   @override
-  String? get tag => Get.parameters[Routes.passParameter];
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: CustomAppBar(title: Text("Permiso de ingreso")),
-      body: controller.obx(
-        (pass) => SingleChildScrollView(
-          child: LoadedScreen(permiso: pass!),
-        ),
-        onLoading: Center(
-          child: LoadingIndicator(
-            message: "Esto tardará un poco, paciencia...",
-          ),
-        ),
-        onEmpty: Text('No data found'),
-        onError: (error) => CustomErrorWidget(),
-      ),
-    );
-  }
+  State<PermisoCovidScreen> createState() => _PermisoCovidScreenState();
 }
 
-class LoadedScreen extends StatelessWidget {
-  const LoadedScreen({
+class _PermisoCovidScreenState extends State<PermisoCovidScreen> {
+
+  @override
+  Widget build(BuildContext context) => Scaffold(
+    appBar: CustomAppBar(title: Text("Permiso de ingreso")),
+    body: PullToRefresh(
+      onRefresh: () async => setState(() {}),
+      child: FutureBuilder<PermisoIngreso?>(
+        future: di.get<PermisoIngresoRepository>().getDetallesPermiso(widget.passId),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            final error = snapshot.error is CustomException ? (snapshot.error as CustomException).message : "No sabemos lo que ocurrió. Por favor intenta más tarde.";
+            logger.e("Error al cargar permiso", snapshot.error);
+            return Center(
+              child: CustomErrorWidget(error: error),
+            );
+          }
+
+          final permiso = snapshot.data;
+          if(!snapshot.hasData) {
+            return Center(
+              child: LoadingIndicator(
+                message: "Esto tardará un poco, paciencia...",
+              ),
+            );
+          }
+
+          if(permiso == null) {
+            return const Center(
+              child: CustomErrorWidget(
+                title: "Permiso no encontrado",
+                emoji: "\u{1F914}",
+              ),
+            );
+          }
+
+          return SingleChildScrollView(child: QRCard(permiso: permiso));
+        },
+      ),
+    ),
+  );
+}
+
+
+class QRCard extends StatelessWidget {
+  const QRCard({
     Key? key,
     required this.permiso,
   }) : super(key: key);
 
-  final PermisoCovid permiso;
+  final PermisoIngreso permiso;
 
-  _openQr(String heroTag) {
+  _openQr(BuildContext context, String heroTag) {
     final image = dartImage.Image(500, 500);
 
     dartImage.fill(image, dartImage.getColor(255, 255, 255));
@@ -70,78 +97,71 @@ class LoadedScreen extends StatelessWidget {
 
     Uint8List data = Uint8List.fromList(dartImage.encodePng(image));
 
-    Get.to(
-      () => ImageViewScreen(
-        imageProvider: MemoryImage(data),
-        heroTag: heroTag,
-        occlude: true,
-      ),
-      routeName: Routes.imageView,
-    );
+    Navigator.push(context, MaterialPageRoute(builder: (ctx) => ImageViewScreen(
+      imageProvider: MemoryImage(data),
+      heroTag: heroTag,
+      occlude: true,
+    )));
   }
 
   @override
-  Widget build(BuildContext context) {
-    final f = new DateFormat('dd/MM/yyyy');
-    return Padding(
-      padding: const EdgeInsets.all(20.0),
-      child: Card(
-        child: Column(
-          children: [
-            UsuarioDetalle(
-              usuario: permiso.usuario!,
-            ),
-            Divider(thickness: 1, color: Color(0xFFFEEEEE)),
-            DetallesPermiso(
-              campus: permiso.campus,
-              dependencias: permiso.dependencia,
-              jornada: permiso.jornada,
-              vigencia: permiso.vigencia,
-              motivo: permiso.motivo,
-            ),
-            Divider(thickness: 1, color: Color(0xFFFEEEEE)),
-            Container(height: 20),
-            Center(
-              child: InkWell(
-                onTap: () => _openQr("qr_${permiso.codigoQr!}"),
-                child: Hero(
-                  tag: "qr_${permiso.codigoQr!}",
-                  child: Container(
-                    color: Colors.white,
-                    padding: EdgeInsets.all(10),
-                    child: OccludeWrapper(
-                      child: BarcodeWidget(
-                        barcode: Barcode.qrCode(),
-                        height: 200,
-                        width: 200,
-                        data: permiso.codigoQr!,
-                        drawText: false,
-                      ),
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.all(20.0),
+    child: Card(
+      child: Column(
+        children: [
+          UsuarioDetalle(
+            user: permiso.user!,
+          ),
+          Divider(thickness: 1, color: Color(0xFFFEEEEE)),
+          DetallesPermiso(
+            campus: permiso.campus,
+            dependencias: permiso.dependencia,
+            jornada: permiso.jornada,
+            vigencia: permiso.vigencia,
+            motivo: permiso.motivo,
+          ),
+          Divider(thickness: 1, color: Color(0xFFFEEEEE)),
+          Container(height: 20),
+          Center(
+            child: InkWell(
+              onTap: () => _openQr(context, "qr_${permiso.codigoQr!}"),
+              child: Hero(
+                tag: "qr_${permiso.codigoQr!}",
+                child: Container(
+                  color: Colors.white,
+                  padding: EdgeInsets.all(10),
+                  child: OccludeWrapper(
+                    child: BarcodeWidget(
+                      barcode: Barcode.qrCode(),
+                      height: 200,
+                      width: 200,
+                      data: permiso.codigoQr!,
+                      drawText: false,
                     ),
                   ),
                 ),
               ),
             ),
-            Container(height: 20),
-            Text(
-              "Permiso generado el ${f.format(permiso.fechaSolicitud!)}",
-              style: Get.textTheme.bodySmall,
-            ),
-            Container(height: 20),
-          ],
-        ),
+          ),
+          Container(height: 20),
+          Text("Permiso generado el ${DateFormat('dd/MM/yyyy').format(permiso.fechaSolicitud!)}",
+            style: Theme.of(context).textTheme.bodySmall,
+          ),
+          Container(height: 20),
+        ],
       ),
-    );
-  }
+    ),
+  );
 }
 
 class UsuarioDetalle extends StatelessWidget {
-  const UsuarioDetalle({
-    Key? key,
-    required this.usuario,
-  }) : super(key: key);
+  final User user;
 
-  final Usuario usuario;
+  const UsuarioDetalle({
+    super.key,
+    required this.user,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -149,21 +169,19 @@ class UsuarioDetalle extends StatelessWidget {
       padding: const EdgeInsets.all(20.0),
       child: Row(
         children: [
-          ProfilePhoto(usuario: usuario),
+          ProfilePhoto(user: user),
           Container(width: 10),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  usuario.nombre!,
+                Text(user.nombreCompletoCapitalizado,
                   maxLines: 2,
-                  style: Get.textTheme.bodyLarge,
+                  style: Theme.of(context).textTheme.bodyLarge,
                 ),
                 Container(height: 4),
-                Text(
-                  usuario.rut!.formateado(true),
-                  style: Get.textTheme.bodyMedium,
+                Text("${user.rut}",
+                  style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ],
             ),

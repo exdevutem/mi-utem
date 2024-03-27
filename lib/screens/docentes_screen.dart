@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:mi_utem/config/routes.dart';
-import 'package:mi_utem/models/usuario.dart';
+import 'package:mi_utem/models/user/user.dart';
 import 'package:mi_utem/screens/usuario_screen.dart';
 import 'package:mi_utem/services/docentes_service.dart';
 import 'package:mi_utem/utils/debounce.dart';
@@ -11,15 +9,17 @@ import 'package:mi_utem/widgets/loading_indicator.dart';
 import 'package:mi_utem/widgets/profile_photo.dart';
 
 class DocentesScreen extends StatefulWidget {
-  DocentesScreen({Key? key}) : super(key: key);
+  const DocentesScreen({
+    super.key,
+  });
 
   @override
   _DocentesScreenState createState() => _DocentesScreenState();
 }
 
 class _DocentesScreenState extends State<DocentesScreen> {
-  Future<List<Usuario>>? _futureDocentes;
-  late List<Usuario> _docentes;
+  Future<List<User>>? _futureDocentes;
+  late List<User> _docentes;
   late Debounce d;
 
   TextEditingController _controller = TextEditingController();
@@ -32,13 +32,13 @@ class _DocentesScreenState extends State<DocentesScreen> {
     });
   }
 
-  Future<List<Usuario>> _getDocentes(String nombre) async {
+  Future<List<User>> _getDocentes(String nombre) async {
     setState(() {
       _docentes = [];
       _futureDocentes = null;
       _futureDocentes = DocentesService.buscarDocentes(nombre);
     });
-    List<Usuario> docentes = await _futureDocentes!;
+    List<User> docentes = await _futureDocentes!;
     setState(() => _docentes = docentes);
     return docentes;
   }
@@ -58,100 +58,83 @@ class _DocentesScreenState extends State<DocentesScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
-        title: Text("Docentes"),
+        title: const Text("Docentes"),
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(vertical: 20),
+        padding: const EdgeInsets.symmetric(vertical: 20),
         child: Column(
           children: [
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 15),
+              padding: const EdgeInsets.symmetric(horizontal: 15),
               child: TextField(
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   hintText: "Escribe para buscar un docente",
                   prefixIcon: Icon(Icons.search),
                 ),
                 keyboardType: TextInputType.name,
-                onSubmitted: (query) {
-                  _search(query);
-                },
+                onSubmitted: _search,
                 textCapitalization: TextCapitalization.words,
                 textInputAction: TextInputAction.search,
                 controller: _controller,
-                onChanged: (query) {
-                  _search(query);
-                },
+                onChanged: _search,
               ),
             ),
-            Container(height: 20),
-            _futureDocentes != null
-                ? FutureBuilder<List<Usuario>>(
-                    future: _futureDocentes,
-                    builder: (context, snapshot) {
-                      if (snapshot.hasError) {
-                        return CustomErrorWidget(
-                          title: "Ocurrió un error al obtener los docentes",
-                          error: snapshot.error,
-                        );
-                      } else {
-                        if (snapshot.hasData && snapshot.data != null) {
-                          if (snapshot.data!.length > 0) {
-                            return ListView.separated(
-                              physics: ScrollPhysics(),
-                              shrinkWrap: true,
-                              separatorBuilder: (context, index) =>
-                                  Divider(height: 5, indent: 20, endIndent: 20),
-                              itemBuilder: (BuildContext context, int i) {
-                                Usuario docente = _docentes[i];
-                                return ListTile(
-                                  leading: ProfilePhoto(
-                                    usuario: docente,
-                                    radius: 20,
-                                    editable: false,
-                                  ),
-                                  title: Text(
-                                    docente.nombreCompleto!,
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                  subtitle: Text(docente.correoUtem ??
-                                      docente.correoPersonal ??
-                                      ""),
-                                  onTap: () async {
-                                    await Get.to(
-                                      () => UsuarioScreen(
-                                        tipo: 2,
-                                        query: {"nombre": docente.nombre},
-                                      ),
-                                      routeName: Routes.perfil,
-                                    );
-                                  },
-                                );
-                              },
-                              itemCount: _docentes.length,
-                            );
-                          } else {
-                            return CustomErrorWidget(
-                              emoji: "🤔",
-                              title:
-                                  "Parece que no se encontraron docentes que coincidan con tu búsqueda",
-                            );
-                          }
-                        } else {
-                          return Container(
-                            padding: EdgeInsets.all(20),
-                            child: Center(
-                              child: LoadingIndicator(),
-                            ),
-                          );
-                        }
-                      }
-                    },
-                  )
-                : CustomErrorWidget(
-                    emoji: "💅",
-                    title: "Escribe para buscar un docente",
-                  ),
+            const SizedBox(height: 20),
+            _futureDocentes != null ? FutureBuilder<List<User>>(
+              future: _futureDocentes,
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return CustomErrorWidget(
+                    title: "Ocurrió un error al obtener los docentes",
+                    error: snapshot.error,
+                  );
+                }
+
+                final listaDocentes = snapshot.data;
+
+                if(!snapshot.hasData || listaDocentes == null) {
+                  return const Padding(
+                    padding: EdgeInsets.all(20),
+                    child: Center(
+                      child: LoadingIndicator(),
+                    ),
+                  );
+                }
+
+                if (listaDocentes.isEmpty) {
+                  return const CustomErrorWidget(
+                    emoji: "\u{1F914}", // Emoji de cara pensando (mejor usar códigos unicode)
+                    title: "Parece que no se encontraron docentes que coincidan con tu búsqueda",
+                  );
+                }
+
+                return ListView.separated(
+                  physics: ScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: _docentes.length,
+                  separatorBuilder: (context, index) => const Divider(height: 5, indent: 20, endIndent: 20),
+                  itemBuilder: (BuildContext context, int i) {
+                    User docente = _docentes[i];
+                    return ListTile(
+                      leading: ProfilePhoto(
+                        user: docente,
+                        radius: 20,
+                        editable: false,
+                      ),
+                      title: Text(docente.nombreCompleto,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      subtitle: Text(docente.correoUtem ?? docente.correoPersonal ?? "N/N"),
+                      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (ctx) => UsuarioScreen(tipo: 2, query: {"nombre": docente.nombreDisplayCapitalizado}))),
+                    );
+                  },
+                );
+              },
+            ) : CustomErrorWidget(
+              emoji: "💅",
+              title: "Escribe para buscar un docente",
+            ),
           ],
         ),
       ),

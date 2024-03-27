@@ -1,7 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:mi_utem/config/routes.dart';
 import 'package:mi_utem/widgets/image_view_screen.dart';
 
 class DefaultNetworkImage extends StatelessWidget {
@@ -17,14 +15,9 @@ class DefaultNetworkImage extends StatelessWidget {
       height: double.infinity,
       width: double.infinity,
       child: CachedNetworkImage(
-        imageUrl: url ?? "",
+        imageUrl: "$url",
         imageBuilder: (context, imageProvider) => GestureDetector(
-          onTap: () async {
-            Get.to(
-              () => ImageViewScreen(imageProvider: imageProvider),
-              routeName: Routes.imageView,
-            );
-          },
+          onTap: () => Navigator.push(context, MaterialPageRoute(builder: (ctx) => ImageViewScreen(imageProvider: imageProvider))),
           child: Container(
             height: double.infinity,
             width: double.infinity,

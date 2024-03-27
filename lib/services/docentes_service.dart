@@ -1,21 +1,20 @@
 import 'package:dio/dio.dart';
-import 'package:http/http.dart' as http;
-
-import 'package:mi_utem/models/usuario.dart';
+import 'package:mi_utem/config/http_clients.dart';
+import 'package:mi_utem/models/user/user.dart';
 import 'package:mi_utem/utils/dio_docente_client.dart';
 
 class DocentesService {
   static final Dio _dio = DioDocenteClient.initDio;
 
-  static Future<String> generarImagenPerfil(Usuario usuario) async {
+  static Future<String> generarImagenPerfil(User user) async {
     String baseUrl = "https://mi.utem.cl/static/interdocs/fotos/";
     List<String> formatos = [".jpg", ".jpeg", ".png", ".gif"];
 
-    String imageUrl = "$baseUrl${usuario.rut!.numero}${formatos[0]}";
+    String imageUrl = "$baseUrl${user.rut?.rut}${formatos[0]}";
 
-    for (var formato in formatos) {
-      String actualImageUrl = "$baseUrl${usuario.rut!.numero}$formato";
-      final imageResponse = await http.head(Uri.parse(actualImageUrl));
+    for (final formato in formatos) {
+      String actualImageUrl = "$baseUrl${user.rut?.rut}$formato";
+      final imageResponse = await authClient.head(Uri.parse(actualImageUrl));
 
       if (imageResponse.statusCode == 200) {
         imageUrl = actualImageUrl;
@@ -26,7 +25,7 @@ class DocentesService {
     return imageUrl;
   }
 
-  static Future<List<Usuario>> buscarDocentes(String nombre) async {
+  static Future<List<User>> buscarDocentes(String nombre) async {
     String uri = "/docentes/buscar";
 
     try {
@@ -34,10 +33,10 @@ class DocentesService {
 
       Response response = await _dio.get(uri, queryParameters: data);
 
-      List<Usuario> usuarios = Usuario.fromJsonList(response.data["docentes"]);
-      List<Usuario> usuariosConFoto = [];
+      List<User> usuarios = User.fromJsonList(response.data["docentes"]);
+      List<User> usuariosConFoto = [];
       for (var usuario in usuarios) {
-        Usuario usuarioConFoto = usuario;
+        User usuarioConFoto = usuario;
 
         usuarioConFoto.fotoUrl = await generarImagenPerfil(usuario);
         usuariosConFoto.add(usuarioConFoto);
@@ -49,7 +48,7 @@ class DocentesService {
     }
   }
 
-  static Future<Usuario> traerUnDocente(String? nombre) async {
+  static Future<User> traerUnDocente(String? nombre) async {
     String uri = "/docentes/buscar";
 
     try {
@@ -57,20 +56,16 @@ class DocentesService {
 
       Response response = await _dio.get(uri, queryParameters: data);
 
-      Usuario usuario = Usuario.fromJson(response.data);
-
-      Usuario usuarioConFoto = usuario;
-      usuarioConFoto.fotoUrl = await generarImagenPerfil(usuario);
-
-      return usuarioConFoto;
+      User user = User.fromJson(response.data);
+      user.fotoUrl = await generarImagenPerfil(user);
+      return user;
     } on DioError catch (e) {
       print(e.message);
       throw e;
     }
   }
 
-  static Future<Usuario> asignarUnDocente(String? nombreDocente,
-      String? codigoAsignatura, String? nombreAsignatura) async {
+  static Future<User> asignarUnDocente(String? nombreDocente, String? codigoAsignatura, String? nombreAsignatura) async {
     String uri = "/docentes/asignar";
 
     try {
@@ -82,12 +77,9 @@ class DocentesService {
 
       Response response = await _dio.post(uri, data: data);
 
-      Usuario usuario = Usuario.fromJson(response.data);
-
-      Usuario usuarioConFoto = usuario;
-      usuarioConFoto.fotoUrl = await generarImagenPerfil(usuario);
-
-      return usuarioConFoto;
+      User user = User.fromJson(response.data);
+      user.fotoUrl = await generarImagenPerfil(user);
+      return user;
     } on DioError catch (e) {
       print(e.message);
       throw e;

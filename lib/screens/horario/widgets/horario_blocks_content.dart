@@ -1,9 +1,7 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:mi_utem/models/horario.dart';
 import 'package:mi_utem/themes/theme.dart';
-import 'package:mi_utem/widgets/bloque_ramo_card.dart';
+import 'package:mi_utem/widgets/horario/bloque_ramo_card.dart';
 
 class HorarioBlocksContent extends StatelessWidget {
   final Horario horario;
@@ -25,17 +23,13 @@ class HorarioBlocksContent extends StatelessWidget {
 
   List<TableRow> get _children {
     final rows = <TableRow>[];
-    for (int blockIndex = 0;
-        blockIndex < horario.horarioEnlazado.length;
-        blockIndex++) {
+    for (int blockIndex = 0; blockIndex < horario.horarioEnlazado.length; blockIndex++) {
       final currentRow = <Widget>[];
 
       if ((blockIndex % 2) == 0) {
         List<BloqueHorario> bloquePorDias = horario.horarioEnlazado[blockIndex];
         for (num dia = 0; dia < bloquePorDias.length; dia++) {
           BloqueHorario block = horario.horarioEnlazado[blockIndex][dia as int];
-          log(block.asignatura?.nombre.toString() ?? "aaa");
-
           currentRow.add(
             ClassBlockCard(
               block: block,

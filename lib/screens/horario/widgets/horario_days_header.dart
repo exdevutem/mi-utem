@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:mi_utem/controllers/horario_controller.dart';
 import 'package:mi_utem/models/horario.dart';
+import 'package:mi_utem/services_new/interfaces/controllers/horario_controller.dart';
 import 'package:mi_utem/themes/theme.dart';
-import 'package:mi_utem/widgets/bloque_dias_card.dart';
+import 'package:mi_utem/widgets/horario/bloque_dias_card.dart';
+import 'package:watch_it/watch_it.dart';
 
 class HorarioDaysHeader extends StatelessWidget {
-  final HorarioController? controller;
   final Horario horario;
   final double height;
   final double dayWidth;
@@ -16,7 +16,6 @@ class HorarioDaysHeader extends StatelessWidget {
 
   const HorarioDaysHeader({
     Key? key,
-    this.controller,
     required this.horario,
     required this.height,
     required this.dayWidth,
@@ -34,11 +33,10 @@ class HorarioDaysHeader extends StatelessWidget {
             .entries
             .map(
               (entry) => BloqueDiasCard(
-                day: entry.value!,
+                day: entry.value,
                 height: height,
                 width: dayWidth,
-                active: showActiveDay &&
-                    entry.key == controller?.indexOfCurrentDayStartingAtMonday,
+                active: showActiveDay && entry.key == di.get<HorarioController>().indexOfCurrentDayStartingAtMonday,
                 backgroundColor: backgroundColor,
               ),
             )
