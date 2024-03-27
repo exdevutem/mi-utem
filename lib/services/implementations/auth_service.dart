@@ -50,7 +50,7 @@ class AuthServiceImplementation implements AuthService {
     }
 
     try {
-      final token = _authRepository.refresh(token: userToken, credentials: credentials);
+      final token = await _authRepository.refresh(token: userToken, credentials: credentials);
 
       final userJson = user.toJson();
       userJson["token"] = token;
