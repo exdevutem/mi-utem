@@ -17,19 +17,17 @@ import 'package:mi_utem/widgets/snackbar.dart';
 
 class LoginButton extends StatefulWidget {
 
-  final TextEditingController _correoController;
-  final TextEditingController _contraseniaController;
+  final TextEditingController correoController;
+  final TextEditingController contraseniaController;
 
-  final GlobalKey<FormState> _formKey;
+  final GlobalKey<FormState> formKey;
 
   LoginButton({
-    required TextEditingController correoController,
-    required TextEditingController contraseniaController,
-    required GlobalKey<FormState> formKey,
-  }) :
-    _correoController = correoController,
-    _contraseniaController = contraseniaController,
-    _formKey = formKey;
+    super.key,
+    required this.correoController,
+    required this.contraseniaController,
+    required this.formKey,
+  });
 
   @override
   _LoginButtonState createState() => _LoginButtonState();
@@ -48,8 +46,8 @@ class _LoginButtonState extends State<LoginButton> {
   );
 
   Future<void> _login(BuildContext context) async {
-    final correo = widget._correoController.text;
-    final contrasenia = widget._contraseniaController.text;
+    final correo = widget.correoController.text;
+    final contrasenia = widget.contraseniaController.text;
 
     if (correo == "error@utem.cl") {
       showDialog(context: context, builder: (ctx) => MonkeyErrorDialog());
@@ -62,7 +60,7 @@ class _LoginButtonState extends State<LoginButton> {
       return;
     }
 
-    if(widget._formKey.currentState?.validate() == false) {
+    if(widget.formKey.currentState?.validate() == false) {
       return;
     }
 

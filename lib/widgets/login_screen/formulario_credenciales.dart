@@ -4,10 +4,14 @@ import 'package:mi_utem/widgets/login_text_form_field.dart';
 
 class FormularioCredenciales extends StatefulWidget {
 
-  final TextEditingController _correoController;
-  final TextEditingController _contraseniaController;
+  final TextEditingController correoController;
+  final TextEditingController contraseniaController;
 
-  FormularioCredenciales({ required TextEditingController correoController, required TextEditingController contraseniaController }) : _contraseniaController = contraseniaController, _correoController = correoController;
+  const FormularioCredenciales({
+    super.key,
+    required this.correoController,
+    required this.contraseniaController,
+  });
 
   @override
   State<StatefulWidget> createState() => _FormularioCredencialesState();
@@ -17,10 +21,11 @@ class _FormularioCredencialesState extends State<FormularioCredenciales> {
 
   @override
   Widget build(BuildContext context) => AutofillGroup(
+    onDisposeAction: AutofillContextAction.commit,
     child: Column(
       children: [
         LoginTextFormField(
-          controller: widget._correoController,
+          controller: widget.correoController,
           hintText: 'usuario@utem.cl',
           labelText: 'Usuario/Correo UTEM',
           textCapitalization: TextCapitalization.none,
@@ -39,7 +44,7 @@ class _FormularioCredencialesState extends State<FormularioCredenciales> {
           },
         ),
         LoginTextFormField(
-          controller: widget._contraseniaController,
+          controller: widget.contraseniaController,
           hintText: '• • • • • • • • •',
           labelText: 'Contraseña',
           textCapitalization: TextCapitalization.none,
