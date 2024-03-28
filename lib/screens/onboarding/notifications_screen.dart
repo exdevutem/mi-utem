@@ -45,10 +45,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const Spacer(),
-                GestureDetector(
-                  onTap: () => setState(() => _hasAllowedNotifications = !_hasAllowedNotifications),
-                  child: Icon(Icons.notifications_active_outlined, size: 100, color: Colors.white),
-                ),
+                Icon(Icons.notifications_active_outlined, size: 100, color: Colors.white),
                 const SizedBox(height: 50),
                 Column(
                   children: [

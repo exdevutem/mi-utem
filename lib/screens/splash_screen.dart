@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:mi_utem/config/constants.dart';
 import 'package:mi_utem/config/http_clients.dart';
+import 'package:mi_utem/config/logger.dart';
 import 'package:mi_utem/repositories/interfaces/preferences_repository.dart';
 import 'package:mi_utem/screens/login_screen/login_screen.dart';
 import 'package:mi_utem/screens/main_screen.dart';
@@ -17,7 +18,9 @@ import 'package:mi_utem/widgets/snackbar.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 class SplashScreen extends StatefulWidget {
-  SplashScreen({Key? key}) : super(key: key);
+  const SplashScreen({
+    super.key,
+  });
 
   @override
   _SplashScreenState createState() => _SplashScreenState();

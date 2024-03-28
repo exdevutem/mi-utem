@@ -50,11 +50,11 @@ class UpdateService {
     } */
 
   Future<void> _checkAndPerformUpdate() async {
-    if (Platform.isAndroid) {
-      final AppUpdateInfo appUpdateInfo = await InAppUpdate.checkForUpdate();
-      if (appUpdateInfo.immediateUpdateAllowed) {
-        await InAppUpdate.performImmediateUpdate();
-      }
-    }
+    // if (Platform.isAndroid) {
+    //   final AppUpdateInfo appUpdateInfo = await InAppUpdate.checkForUpdate();
+    //   if (appUpdateInfo.immediateUpdateAllowed) {
+    //     await InAppUpdate.performImmediateUpdate();
+    //   }
+    // }
   }
 }

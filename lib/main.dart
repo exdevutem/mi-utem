@@ -28,17 +28,14 @@ void main() async {
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   await Firebase.initializeApp();
   await RemoteConfigService.initialize();
+  await registerServices();
   await NotificationService.initialize();
   await BackgroundService.initAndStart();
-  await registerServices();
-  await SentryFlutter.init(
-    (options) {
-      options.dsn = Constants.sentryDsn;
-      options.attachScreenshot = true;
-      options.tracesSampleRate = 1.0;
-    },
-    appRunner: () => runApp(MiUtem()),
-  );
+  await SentryFlutter.init((options) {
+    options.dsn = Constants.sentryDsn;
+    options.attachScreenshot = true;
+    options.tracesSampleRate = 1.0;
+  }, appRunner: () => runApp(MiUtem()));
 }
 
 class MiUtem extends StatefulWidget {
