@@ -23,6 +23,7 @@ Aplicación multiplataforma hecha por estudiantes de la [Universidad Tecnológic
 |   |-- utils (Utilidades de la aplicación)
 |   |-- widgets (Widgets de la aplicación)
 |-- main.dart (Punto de entrada de la aplicación)
+|-- service_manager.dart (Registra los servicios de la aplicación)
 ```
 
 ## Créditos
