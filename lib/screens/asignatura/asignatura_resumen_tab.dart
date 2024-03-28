@@ -37,40 +37,38 @@ class AsignaturaResumenTab extends StatelessWidget {
                   ),
                 ),
                 GestureDetector(
-                    child: FieldListTile(
-                      title: "Docente",
-                      value: asignatura.docente?.split(" ").where((element) => int.tryParse(element) == null).join(" ").replaceAll("- ", "") ?? "Sin docente", // Se filtran enteros, al parecer hay algunos textos que incluyen un identificador.
-                    ),
-                    onTap: () async {
-                      // TODO: Mostrar perfil del docente.
-                    },
+                  child: FieldListTile(
+                    title: "Docente",
+                    value: asignatura.docente?.split(" ").where((element) => int.tryParse(element) == null).join(" ").replaceAll("- ", "") ?? "Sin docente", // Se filtran enteros, al parecer hay algunos textos que incluyen un identificador.
                   ),
+                  onTap: () async {
+                    // TODO: Mostrar perfil del docente.
+                  },
+                ),
                 if (asignatura.seccion?.isNotEmpty == true) ...[
-                    Divider(height: 5, indent: 20, endIndent: 20),
-                    FieldListTile(
-                      title: "Sección",
-                      value: asignatura.seccion.toString(),
-                    ),
-                  ],
+                  Divider(height: 5, indent: 20, endIndent: 20),
+                  FieldListTile(
+                    title: "Sección",
+                    value: asignatura.seccion.toString(),
+                  ),
+                ],
                 Divider(height: 5, indent: 20, endIndent: 20),
                 FieldListTile(
-                    title: "Código Asignatura",
-                    value: asignatura.codigo,
-                  ),
+                  title: "Código Asignatura",
+                  value: asignatura.codigo,
+                ),
                 if (asignatura.tipoAsignatura != null) ...[
-                    Divider(height: 5, indent: 20, endIndent: 20),
-                    FieldListTile(
-                      title: "Tipo de Asignatura",
-                      value: asignatura.tipoAsignatura,
-                    ),
-                    Divider(height: 5, indent: 20, endIndent: 20),
-                  ],
-                Divider(height: 5, indent: 20, endIndent: 20),
-                FieldListTile(
-                    title: "Intentos",
-                    value: "${asignatura.intentos}",
+                  Divider(height: 5, indent: 20, endIndent: 20),
+                  FieldListTile(
+                    title: "Tipo de Asignatura",
+                    value: asignatura.tipoAsignatura,
                   ),
-
+                  Divider(height: 5, indent: 20, endIndent: 20),
+                ],
+                FieldListTile(
+                  title: "Intentos",
+                  value: "${asignatura.intentos}",
+                ),
                 Divider(height: 5),
 
                 Container(

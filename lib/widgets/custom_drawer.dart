@@ -4,7 +4,9 @@ import 'package:badges/badges.dart' as badge;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mdi/mdi.dart';
+import 'package:mi_utem/models/pair.dart';
 import 'package:mi_utem/models/user/user.dart';
+import 'package:mi_utem/repositories/interfaces/preferences_repository.dart';
 import 'package:mi_utem/screens/asignatura/asignaturas_lista_screen.dart';
 import 'package:mi_utem/screens/credencial_screen.dart';
 import 'package:mi_utem/screens/horario/horario_screen.dart';
@@ -50,6 +52,7 @@ class CustomDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final _authService = Get.find<AuthService>();
+    final _preferencesRepository = Get.find<PreferencesRepository>();
 
     return Drawer(
       semanticLabel: "Abrir menú",
@@ -60,11 +63,17 @@ class CustomDrawer extends StatelessWidget {
               minHeight: constraints.maxHeight,
               maxHeight: double.infinity,
             ),
-            child: FutureBuilder(
-              future: _authService.getUser(),
-              builder: (context, AsyncSnapshot<User?> snapshot) {
-                User? user = snapshot.data;
-                if(user == null) {
+            child: FutureBuilder<Pair<String?, User?>>(
+              future: () async {
+                final user = await _authService.getUser();
+                final alias = await _preferencesRepository.getAlias();
+                return Pair(alias, user);
+              }(),
+              builder: (context, snapshot) {
+                final pair = snapshot.data;
+                String? alias = pair?.a;
+                User? user = pair?.b;
+                if(!snapshot.hasData || snapshot.hasError || user == null) {
                   return Container();
                 }
 
@@ -75,7 +84,7 @@ class CustomDrawer extends StatelessWidget {
                     children: [
                       UserAccountsDrawerHeader(
                         accountEmail: Text(user.correoUtem ?? user.correoPersonal ?? ""),
-                        accountName: Text(user.nombreCompleto,
+                        accountName: Text(alias ?? user.nombreCompleto,
                           style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w500,

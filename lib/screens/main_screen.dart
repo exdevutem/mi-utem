@@ -8,6 +8,7 @@ import "package:flutter_markdown/flutter_markdown.dart";
 import "package:get/get.dart";
 import "package:mi_utem/config/logger.dart";
 import "package:mi_utem/models/user/user.dart";
+import "package:mi_utem/repositories/interfaces/preferences_repository.dart";
 import "package:mi_utem/services/interfaces/auth_service.dart";
 import "package:mi_utem/services/interfaces/grades_service.dart";
 import "package:mi_utem/services/remote_config/remote_config.dart";
@@ -34,7 +35,9 @@ class _MainScreenState extends State<MainScreen> {
 
   List<IBanner> _banners = const [];
   User? _user;
+  String? _alias;
   final _authService = Get.find<AuthService>();
+  final _preferencesRepository = Get.find<PreferencesRepository>();
 
   @override
   void initState() {
@@ -55,6 +58,7 @@ class _MainScreenState extends State<MainScreen> {
 
     loadData();
 
+    _preferencesRepository.getAlias().then((alias) => setState(() => _alias = alias));
     _authService.getUser().then((user) => setState(() => _user = user));
   }
 
@@ -67,7 +71,7 @@ class _MainScreenState extends State<MainScreen> {
 
   String get _greetingText {
     List<dynamic> texts = jsonDecode(RemoteConfigService.greetings);
-    return texts[Random().nextInt(texts.length)].replaceAll("%name", _user?.primerNombre ?? "N/N");
+    return texts[Random().nextInt(texts.length)].replaceAll("%name", _alias ?? _user?.primerNombre ?? "N/N");
   }
 
   @override

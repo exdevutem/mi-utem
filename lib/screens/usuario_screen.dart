@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mi_utem/models/asignaturas/asignatura.dart';
 import 'package:mi_utem/models/user/user.dart';
+import 'package:mi_utem/repositories/interfaces/preferences_repository.dart';
 import 'package:mi_utem/services/docentes_service.dart';
 import 'package:mi_utem/services/interfaces/auth_service.dart';
 import 'package:mi_utem/services/review_service.dart';
@@ -35,9 +36,11 @@ class UsuarioScreen extends StatefulWidget {
 
 class _UsuarioScreenState extends State<UsuarioScreen> {
   final _authService = Get.find<AuthService>();
+  final _preferencesRepository = Get.find<PreferencesRepository>();
 
   Future<User>? _userFuture;
   User? _user;
+  String? _alias;
 
   @override
   void initState() {
@@ -54,19 +57,16 @@ class _UsuarioScreenState extends State<UsuarioScreen> {
         if (widget.asignatura == null) {
           user = await DocentesService.traerUnDocente(widget.query!["nombre"]);
         } else {
-          user = await DocentesService.asignarUnDocente(
-              widget.query!["nombre"],
-              widget.asignatura!.codigo,
-              widget.asignatura!.nombre);
+          user = await DocentesService.asignarUnDocente(widget.query!["nombre"], widget.asignatura!.codigo, widget.asignatura!.nombre);
         }
 
-        setState(() {
-          _user = user;
-        });
+        setState(() => _user = user);
       } else {
         user = await _authService.getUser();
+        final alias = await _preferencesRepository.getAlias();
         setState(() {
           _user = user;
+          _alias = alias;
         });
       }
 
@@ -145,6 +145,23 @@ class _UsuarioScreenState extends State<UsuarioScreen> {
           ),
         );
       }
+    }
+
+    if(_alias != null) {
+      lista.add(Divider(height: 1));
+      lista.add(
+        ListTile(
+          title: Text("Alias",
+            style: TextStyle(color: Colors.grey),
+          ),
+          subtitle: Text(_alias!,
+            style: TextStyle(
+              color: Colors.grey[900],
+              fontSize: 18,
+            ),
+          ),
+        ),
+      );
     }
 
     if (_user?.correoUtem?.isEmpty == false) {
