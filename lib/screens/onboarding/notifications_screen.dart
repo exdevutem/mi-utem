@@ -90,10 +90,10 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
 
                 FilledButton(
                   onPressed: () async {
-                    await _preferencesRepository.setOnboardingStep("complete");
                     if(!context.mounted) {
                       return;
                     }
+                    await _preferencesRepository.setOnboardingStep("complete");
                     Navigator.popUntil(context, (route) => route.isFirst);
                     Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => MainScreen()));
                   },
