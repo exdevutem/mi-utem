@@ -94,6 +94,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                     if(!context.mounted) {
                       return;
                     }
+                    Navigator.popUntil(context, (route) => route.isFirst);
                     Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => MainScreen()));
                   },
                   style: ElevatedButton.styleFrom(
