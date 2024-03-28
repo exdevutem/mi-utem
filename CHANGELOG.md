@@ -28,16 +28,22 @@ Tipos de cambios
 
 ## [Unreleased]
 
+### Added
+- Se agrega "apodo" para permitir a los usuarios tener un nombre más personalizado.
+- Se agregó lista de estudiantes al resumen de asignatura.
+- Se agregó modal de usuario para tener una vista previa y pequeña del perfil del usuario.
+
 ### Changed
 
-- Se actualizan dependencias de Flutter
-- Se actualiza a enrutador nativo de flutter
-- Se mejora el rendimiento de la aplicación
-- Se ordenan clases y widgets
+- Se actualizan dependencias de Flutter.
+- Se actualiza a enrutador nativo de flutter.
+- Se mejora el rendimiento de la aplicación.
+- Se ordenan clases y widgets.
 
 ### Removed
 
 - Dependencia GetX
+- Lista de estudiantes de las pestañas de asignatura.
 
 ## [2.11.9] - 2023-10-11Z
 
