@@ -5,7 +5,7 @@ class CustomException implements Exception {
   final String message;
   final String? error;
   final int? statusCode;
-  final int? internalCode;
+  final double? internalCode;
 
   CustomException({
     this.message = 'Ocurrió un error inesperado. Por favor, inténtalo nuevamente.',
@@ -20,7 +20,7 @@ class CustomException implements Exception {
     message: json['mensaje'] as String,
     error: json['error'] as String?,
     statusCode: json['codigoHttp'] as int?,
-    internalCode: json['codigoInterno'] as int?,
+    internalCode: json['codigoInterno'] as double?,
   );
 
   toJson() => {

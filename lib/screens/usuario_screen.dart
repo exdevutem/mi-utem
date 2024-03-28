@@ -53,7 +53,6 @@ class _UsuarioScreenState extends State<UsuarioScreen> {
     try {
       User? user;
       if (widget.tipo == 2) {
-        print(widget.query);
         if (widget.asignatura == null) {
           user = await DocentesService.traerUnDocente(widget.query!["nombre"]);
         } else {

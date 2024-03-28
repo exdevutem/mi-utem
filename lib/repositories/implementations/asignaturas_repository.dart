@@ -31,8 +31,12 @@ class AsignaturasRepositoryImplementation implements AsignaturasRepository {
   }
 
   @override
-  Future<Asignatura?> getDetalleAsignatura(String? asignaturaId, {bool forceRefresh = false}) async {
-    final response = await authClient.get(Uri.parse('$apiUrl/v1/asignaturas/$asignaturaId'));
+  Future<Asignatura?> getDetalleAsignatura(Asignatura? asignatura, {bool forceRefresh = false}) async {
+    if(asignatura == null) {
+      return null;
+    }
+
+    final response = await authClient.get(Uri.parse('$apiUrl/v1/asignaturas/${asignatura.codigo}'));
 
     final json = jsonDecode(response.body);
     if(response.statusCode != 200) {
@@ -44,7 +48,11 @@ class AsignaturasRepositoryImplementation implements AsignaturasRepository {
       throw CustomException.custom(response.reasonPhrase);
     }
 
-    return Asignatura.fromJson(json as Map<String, dynamic>);
+    // Por ahora solo se actualizan los estudiantes
+    return Asignatura.fromJson({
+      ...asignatura.toJson(),
+      'estudiantes': json['estudiantes'],
+    });
   }
 
 }

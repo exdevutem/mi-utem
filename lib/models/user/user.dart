@@ -39,26 +39,20 @@ class User {
     this.fotoUrl
   });
 
-  static List<User> fromJsonList(List<dynamic>? list) {
-    if(list == null) {
-      return [];
-    }
-
-    return list.map((json) => User.fromJson(json as Map<String, dynamic>)).toList();
-  }
+  static List<User> fromJsonList(List<dynamic>? list)  => list != null ? list.map((json) => User.fromJson(json as Map<String, dynamic>)).toList() : [];
 
   factory User.fromJson(Map<String, dynamic> json) => User(
-      token: json['token'],
-      rut: Rut.fromString("${json['rut']}"),
-      correoPersonal: json['correoPersonal'],
-      correoUtem: json['correoUtem'],
-      fotoBase64: json['fotoBase64'],
-      perfiles: ((json['perfiles'] as List<dynamic>?) ?? []).map((it) => it.toString()).toList(),
-      nombreCompleto: json['nombreCompleto'],
-      nombres: json['nombres'],
-      apellidos: json['apellidos'],
-      username: json['username'],
-      fotoUrl: json['fotoUrl']
+    token: json['token'],
+    rut: json.containsKey('rut') ? Rut.fromString("${json['rut']}") : null,
+    correoPersonal: json['correoPersonal'],
+    correoUtem: json['correoUtem'],
+    fotoBase64: json['fotoBase64'],
+    perfiles: ((json['perfiles'] as List<dynamic>?) ?? []).map((it) => it.toString()).toList(),
+    nombreCompleto: json['nombreCompleto'],
+    nombres: json['nombres'],
+    apellidos: json['apellidos'],
+    username: json['username'],
+    fotoUrl: json['fotoUrl'],
   );
 
   Map<String, dynamic> toJson() => {

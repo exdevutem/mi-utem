@@ -5,6 +5,6 @@ abstract class AsignaturasRepository {
   /* Obtiene las asignaturas */
   Future<List<Asignatura>?> getAsignaturas(String? carreraId, {bool forceRefresh = false});
 
-  /* Obtiene el detalle de una asignatura */
-  Future<Asignatura?> getDetalleAsignatura(String? asignaturaId, {bool forceRefresh = false});
+  /* Obtiene los detalles faltantes de la asignatura */
+  Future<Asignatura?> getDetalleAsignatura(Asignatura? asignatura, {bool forceRefresh = false});
 }
