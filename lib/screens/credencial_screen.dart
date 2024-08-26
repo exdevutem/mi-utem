@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:mdi/mdi.dart';
+import 'package:mi_utem/core/models/user/user.dart';
+import 'package:mi_utem/core/services/auth_service.dart';
 import 'package:mi_utem/models/carrera.dart';
 import 'package:mi_utem/models/pair.dart';
-import 'package:mi_utem/models/user/user.dart';
 import 'package:mi_utem/services/analytics_service.dart';
-import 'package:mi_utem/services/auth_service.dart';
 import 'package:mi_utem/services/carreras_service.dart';
 import 'package:mi_utem/services/review_service.dart';
 import 'package:mi_utem/widgets/credencial/credencial_card.dart';
@@ -75,7 +75,7 @@ class _CredencialScreenState extends State<CredencialScreen> {
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return CustomErrorWidget(
-            title: "Ocurrió un error al generar tu crendencial",
+            title: "Ocurrió un error al generar tu credencial",
             error: snapshot.error,
           );
         }
@@ -98,7 +98,7 @@ class _CredencialScreenState extends State<CredencialScreen> {
           );
         }
 
-        if (user == null || user.rut == null || carreraActiva == null || carreraActiva.nombre == null) {
+        if (user == null || carreraActiva == null || carreraActiva.nombre == null) {
           return CustomErrorWidget(
             title: "Ocurrió un error al generar tu credencial. Por favor, intenta nuevamente.",
             error: snapshot.error,

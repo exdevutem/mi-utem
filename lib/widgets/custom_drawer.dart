@@ -4,21 +4,22 @@ import 'package:badges/badges.dart' as badge;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mdi/mdi.dart';
+import 'package:mi_utem/core/services/auth_service.dart';
 import 'package:mi_utem/models/pair.dart';
 import 'package:mi_utem/models/preferencia.dart';
-import 'package:mi_utem/models/user/user.dart';
 import 'package:mi_utem/screens/acerca_screen.dart';
 import 'package:mi_utem/screens/asignatura/asignaturas_lista_screen.dart';
 import 'package:mi_utem/screens/credencial_screen.dart';
 import 'package:mi_utem/screens/horario/horario_screen.dart';
 import 'package:mi_utem/screens/main_screen.dart';
 import 'package:mi_utem/screens/perfil/perfil_screen.dart';
-import 'package:mi_utem/services/auth_service.dart';
 import 'package:mi_utem/services/remote_config/remote_config.dart';
 import 'package:mi_utem/services/review_service.dart';
 import 'package:mi_utem/themes/theme.dart';
 import 'package:mi_utem/utils/utils.dart';
 import 'package:mi_utem/widgets/profile_photo.dart';
+
+import '../core/models/user/user.dart';
 
 class CustomDrawer extends StatelessWidget {
 
@@ -80,16 +81,16 @@ class CustomDrawer extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       UserAccountsDrawerHeader(
-                        accountEmail: Text(user.correoUtem ?? user.correoPersonal ?? ""),
-                        accountName: Text(alias ?? user.nombreCompleto,
+                        accountEmail: Text(user.persona.correoUtem),
+                        accountName: Text(alias ?? user.persona.nombreCompleto,
                           style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
                         currentAccountPicture: ProfilePhoto(
-                          fotoUrl: user.fotoUrl,
-                          iniciales: user.iniciales,
+                          base64Data: user.persona.fotoUrl,
+                          iniciales: user.persona.iniciales,
                           radius: 30,
                         ),
                         decoration: BoxDecoration(

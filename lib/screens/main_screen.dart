@@ -6,12 +6,12 @@ import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:flutter_markdown/flutter_markdown.dart";
 import "package:get/get.dart";
+import "package:mi_utem/core/models/user/user.dart";
+import "package:mi_utem/core/services/auth_service.dart";
 import "package:mi_utem/models/novedades/ibanner.dart";
 import "package:mi_utem/models/preferencia.dart";
-import "package:mi_utem/models/user/user.dart";
 import "package:mi_utem/repositories/noticias_repository.dart";
 import "package:mi_utem/repositories/permiso_ingreso_repository.dart";
-import "package:mi_utem/services/auth_service.dart";
 import "package:mi_utem/services/grades_service.dart";
 import "package:mi_utem/services/remote_config/remote_config.dart";
 import "package:mi_utem/services/review_service.dart";
@@ -100,7 +100,7 @@ class _MainScreenState extends State<MainScreen> {
                   width: double.infinity,
                   child: FutureBuilder<String?>(
                     future: Preferencia.apodo.get(defaultValue: "N/N"),
-                    initialData: _user?.primerNombre ?? "N/N",
+                    initialData: _user?.persona.primerNombre ?? "N/N",
                     builder: (ctx, snapshot) => MarkdownBody(
                       data: _greetingText.replaceAll("%name", snapshot.data ?? "N/N"),
                       styleSheet: MarkdownStyleSheet(

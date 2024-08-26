@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
-import 'package:mi_utem/services/auth_service.dart';
+import 'package:mi_utem/core/services/auth_service.dart';
 import 'package:mi_utem/utils/http/http_client.dart';
 
 class AuthInterceptor extends QueuedInterceptor {
@@ -52,7 +52,7 @@ class AuthInterceptor extends QueuedInterceptor {
 
     /* Forzar el refresco de la token de autenticación */
     try {
-      await _authService.isLoggedIn(forceRefresh: true);
+      await _authService.login(forceRefresh: true);
       final token = (await _authService.getUser())?.token;
 
       if(token == null) {

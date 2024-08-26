@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:mi_utem/controllers/auth/login_action.dart';
 import 'package:mi_utem/repositories/credentials_repository.dart';
 import 'package:mi_utem/services/update_service.dart';
 import 'package:mi_utem/widgets/login_screen/creditos_app.dart';
 import 'package:mi_utem/widgets/login_screen/formulario_credenciales.dart';
-import 'package:mi_utem/widgets/login_screen/login_button.dart';
 
 class LoginForm extends StatefulWidget {
   final BoxConstraints constraints;
@@ -85,10 +85,9 @@ class _LoginFormState extends State<LoginForm> {
                 correoController: _correoController,
                 contraseniaController: _contraseniaController,
               ),
-              LoginButton(
-                correoController: _correoController,
-                contraseniaController: _contraseniaController,
-                formKey: _formKey,
+              TextButton(
+                onPressed: () => login(context: context, formKey: _formKey, correoController: _correoController, contraseniaController: _contraseniaController),
+                child: Text("Iniciar Sesión"),
               ),
               Container(height: widget.constraints.maxHeight * 0.1),
               const CreditosApp(),

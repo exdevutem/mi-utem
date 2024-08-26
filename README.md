@@ -23,6 +23,24 @@ Aplicación multiplataforma hecha por estudiantes de la [Universidad Tecnológic
 |-- service_manager.dart (Registra los servicios de la aplicación)
 ```
 
+
+### Ejecución de la App
+
+Podrás encontrar la configuración en `./vscode/launch.json`. Pero estos son los comandos para ejecutar la app en Android e iOS:
+
+Primero debes encontrar el dispositivo:
+```bash
+flutter devices
+```
+
+```bash
+# El ambiente puede ser 'dev' o 'prod'
+# El device_id es el identificador del dispositivo que se obtiene con el comando 'flutter devices'
+flutter run -d <device_id> --flavor <environment>
+```
+
+
+
 ### Construcción de la app
 
 Para construir la app utilizamos fastlane.

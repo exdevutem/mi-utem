@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:mi_utem/config/logger.dart';
 import 'package:mi_utem/controllers/calculator_controller.dart';
 import 'package:mi_utem/controllers/horario_controller.dart';
+import 'package:mi_utem/core/services/auth_service.dart';
 import 'package:mi_utem/repositories/asignaturas_repository.dart';
 import 'package:mi_utem/repositories/auth_repository.dart';
 import 'package:mi_utem/repositories/carreras_repository.dart';
@@ -13,7 +14,6 @@ import 'package:mi_utem/repositories/grades_repository.dart';
 import 'package:mi_utem/repositories/horario_repository.dart';
 import 'package:mi_utem/repositories/noticias_repository.dart';
 import 'package:mi_utem/repositories/permiso_ingreso_repository.dart';
-import 'package:mi_utem/services/auth_service.dart';
 import 'package:mi_utem/services/carreras_service.dart';
 import 'package:mi_utem/services/grades_service.dart';
 

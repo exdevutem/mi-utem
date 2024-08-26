@@ -12,6 +12,7 @@ import 'package:mi_utem/widgets/snackbar.dart';
 
 class ProfilePhoto extends StatefulWidget {
   final double radius;
+  final String? base64Data;
   final String? fotoUrl;
   final String iniciales;
   final Function(BuildContext, ImageProvider)? onImageTap;
@@ -24,6 +25,7 @@ class ProfilePhoto extends StatefulWidget {
   ProfilePhoto({
     super.key,
     required this.iniciales,
+    this.base64Data,
     this.fotoUrl,
     this.onTap,
     this.onImageTap,
@@ -49,7 +51,7 @@ class _ProfilePhotoState extends State<ProfilePhoto> {
       children: [
         FutureBuilder<String?>(
           // future: Get.find<PreferencesRepository>().getProfilePicture(),
-          initialData: null,
+          initialData: widget.base64Data,
           builder: (ctx, snapshot) => CircularProfileAvatar(snapshot.data != null ? '' : (widget.fotoUrl ?? ""),
             child: snapshot.data != null ? Image.memory(Base64Decoder().convert(snapshot.data!)) : null,
             onTap: () => widget.onTap != null && widget.onImageTap == null ? widget.onTap : null,

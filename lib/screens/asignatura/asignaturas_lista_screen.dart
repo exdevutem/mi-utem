@@ -53,12 +53,12 @@ class _AsignaturasListaScreenState extends State<AsignaturasListaScreen> {
           final carrera = await Get.find<CarrerasService>().getCarreras();
           if(carrera == null) {
             _forceRefresh = false;
-            throw CustomException.custom("No pudimos cargar los datos de tu carrera.");
+            throw CustomException.custom(message: "No pudimos cargar los datos de tu carrera.");
           }
           final asignaturas = await _asignaturasService.getAsignaturas(carrera.id, forceRefresh: _forceRefresh);
           if(asignaturas == null) {
             _forceRefresh = false;
-            throw CustomException.custom("No pudimos cargar las asignaturas.");
+            throw CustomException.custom(message: "No pudimos cargar las asignaturas.");
           }
           _forceRefresh = false;
           asignaturas.forEach((asignatura) => Get.find<GradesRepository>().getGrades(carreraId: carrera.id, asignaturaId: asignatura.id));

@@ -3,8 +3,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_uxcam/flutter_uxcam.dart';
+import 'package:mi_utem/core/models/user/user.dart';
 import 'package:mi_utem/models/carrera.dart';
-import 'package:mi_utem/models/user/user.dart';
 import 'package:mi_utem/services/remote_config/remote_config.dart';
 import 'package:mi_utem/themes/theme.dart';
 import 'package:mi_utem/widgets/flip_widget.dart';
@@ -39,8 +39,8 @@ class CredencialCard extends StatelessWidget {
             Container(
               margin: EdgeInsets.only(top: altoBanner - 40),
               child: ProfilePhoto(
-                fotoUrl: user?.fotoUrl,
-                iniciales: user?.iniciales ?? "N/N",
+                fotoUrl: user?.persona.fotoUrl,
+                iniciales: user?.persona.iniciales ?? "N/N",
                 radius: 50,
                 borderWidth: 5,
               ),
@@ -74,7 +74,7 @@ class CredencialCard extends StatelessWidget {
               color: Colors.white,
               child: Column(
                 children: [
-                  Text(user?.nombreCompleto ?? "N/N",
+                  Text(user?.persona.nombreCompleto ?? "N/N",
                     maxLines: 2,
                     style: TextStyle(
                       fontSize: 18,
@@ -84,7 +84,7 @@ class CredencialCard extends StatelessWidget {
                     textAlign: TextAlign.center,
                   ),
                   OccludeWrapper(
-                    child: Text(user?.rut?.toString() ?? "Sin RUT",
+                    child: Text(user?.persona.rut.toString() ?? "Sin RUT",
                       style: TextStyle(fontSize: 18),
                       textAlign: TextAlign.center,
                     ),
@@ -120,7 +120,7 @@ class CredencialCard extends StatelessWidget {
                         child: OccludeWrapper(
                           child: BarcodeWidget(
                             barcode: Barcode.code39(),
-                            data: "${user?.rut}",
+                            data: "${user?.persona.rut}",
                             width: 200,
                             height: 50,
                             drawText: false,

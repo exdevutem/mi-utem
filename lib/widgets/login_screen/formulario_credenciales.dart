@@ -19,6 +19,8 @@ class FormularioCredenciales extends StatefulWidget {
 
 class _FormularioCredencialesState extends State<FormularioCredenciales> {
 
+  final _passwordFocusNode = FocusNode();
+
   @override
   Widget build(BuildContext context) => AutofillGroup(
     onDisposeAction: AutofillContextAction.commit,
@@ -42,6 +44,7 @@ class _FormularioCredencialesState extends State<FormularioCredenciales> {
               return 'Debe ingresar un correo UTEM';
             }
           },
+          onSubmitted: (_) => FocusScope.of(context).requestFocus(_passwordFocusNode),
         ),
         LoginTextFormField(
           controller: widget.contraseniaController,
@@ -51,6 +54,7 @@ class _FormularioCredencialesState extends State<FormularioCredenciales> {
           icon: Icons.lock,
           obscureText: true,
           autofillHints: [AutofillHints.password],
+          focusNode: _passwordFocusNode,
           validator: (String value) {
             if (value.isEmpty) {
               return 'Debe ingresar una contraseña';
@@ -60,4 +64,10 @@ class _FormularioCredencialesState extends State<FormularioCredenciales> {
       ],
     ),
   );
+
+  @override
+  void dispose() {
+    _passwordFocusNode.dispose();
+    super.dispose();
+  }
 }

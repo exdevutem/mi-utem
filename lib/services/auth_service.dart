@@ -103,19 +103,6 @@ class AuthService {
     return credential;
   }
 
-  Future<User?> updateProfilePicture(String image) async {
-    final user = await getUser();
-    if(user == null) {
-      return null;
-    }
-
-    final _fotoUrl = _authRepository.updateProfilePicture(image: image);
-    final jsonUser = user.toJson();
-    jsonUser["fotoUrl"] = _fotoUrl;
-    await setUser(User.fromJson(jsonUser));
-    return user;
-  }
-
   Future<void> saveFCMToken() async {
     final user = await this.getUser();
     if(user == null) {

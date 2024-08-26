@@ -1,15 +1,14 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class LoginTextFormField extends StatefulWidget {
-  LoginTextFormField({
-    Key? key,
+  const LoginTextFormField({
+    super.key,
     this.hintText,
     this.labelText,
     this.icon,
     this.onSaved,
+    this.onSubmitted,
     this.obscureText = false,
     this.validator,
     this.textCapitalization,
@@ -17,17 +16,19 @@ class LoginTextFormField extends StatefulWidget {
     this.controller,
     this.inputFormatters,
     this.autofillHints,
-  }) : super(key: key);
+    this.focusNode,
+  });
 
   final String? hintText, labelText;
   final TextInputType? keyboardType;
   final TextCapitalization? textCapitalization;
   final IconData? icon;
-  final Function? onSaved, validator;
+  final Function? onSaved, validator, onSubmitted;
   final bool obscureText;
   final TextEditingController? controller;
   final List<TextInputFormatter>? inputFormatters;
   final List<String>? autofillHints;
+  final FocusNode? focusNode;
 
   @override
   _LoginTextFormFieldState createState() => _LoginTextFormFieldState();
@@ -35,20 +36,18 @@ class LoginTextFormField extends StatefulWidget {
 
 class _LoginTextFormFieldState extends State<LoginTextFormField> {
   FocusNode? _focusNode;
-  late TextEditingController _controller =
-      widget.controller ?? TextEditingController();
+  late TextEditingController _controller = widget.controller ?? TextEditingController();
   bool _error = false;
 
   @override
   void initState() {
     super.initState();
-    _focusNode = new FocusNode();
-    _focusNode!.addListener(() => setState(() {}));
+    _focusNode = widget.focusNode ?? new FocusNode();
+    _focusNode?.addListener(() => setState(() {}));
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Padding(
+  Widget build(BuildContext context) => Padding(
       padding: EdgeInsets.only(bottom: 20),
       child: TextFormField(
         style: TextStyle(color: Colors.white),
@@ -71,24 +70,18 @@ class _LoginTextFormFieldState extends State<LoginTextFormField> {
               borderRadius: BorderRadius.circular(25),
               borderSide: BorderSide(color: Colors.red, width: 2)),
           contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 20),
-          labelStyle: TextStyle(
-              color: _focusNode!.hasFocus
-                  ? Theme.of(context).primaryColor
-                  : (_error ? Theme.of(context).colorScheme.error : Color(0x80FFFFFF))),
+          labelStyle: TextStyle(color: _focusNode!.hasFocus ? Theme.of(context).primaryColor : (_error ? Theme.of(context).colorScheme.error : Color(0x80FFFFFF))),
           errorStyle: TextStyle(color: Colors.red),
           hintStyle: TextStyle(color: Color(0x80FFFFFF)),
-          prefixIcon: Icon(widget.icon,
-              color: _focusNode!.hasFocus
-                  ? Theme.of(context).primaryColor
-                  : (_error ? Theme.of(context).colorScheme.error : Colors.white)),
+          prefixIcon: Icon(widget.icon, color: _focusNode!.hasFocus ? Theme.of(context).primaryColor : (_error ? Theme.of(context).colorScheme.error : Colors.white)),
           hintText: widget.hintText,
           labelText: widget.labelText,
         ),
         focusNode: _focusNode,
         keyboardType: widget.keyboardType,
-        onSaved: (String? value) => widget.onSaved!(value),
+        onSaved: (String? value) => widget.onSaved?.call(value),
+        onFieldSubmitted: (String value) => widget.onSubmitted?.call(value),
         validator: (String? value) {
-          log("validator");
           String? errorMsg = widget.validator?.call(value);
 
           if (errorMsg != null) {
@@ -96,10 +89,7 @@ class _LoginTextFormFieldState extends State<LoginTextFormField> {
           }
           return errorMsg;
         },
-        onTapOutside: (event){
-          FocusScope.of(context).unfocus();
-        },
+        onTapOutside: (event) => FocusScope.of(context).unfocus(),
       ),
     );
-  }
 }

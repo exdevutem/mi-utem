@@ -9,7 +9,7 @@ class HeadersInterceptor extends Interceptor {
     final info = await PackageInfo.fromPlatform();
 
     headers['User-Agent'] = 'App/MiUTEM v${info.version} (${info.buildNumber})';
-    if(options.data != null) {
+    if(options.data != null && !options.headers.containsKey('Content-Type')) {
       headers['Content-Type'] = 'application/json';
     }
     options.headers = headers;

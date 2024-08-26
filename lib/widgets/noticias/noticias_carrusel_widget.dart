@@ -33,7 +33,7 @@ class NoticiasCarruselWidget extends StatelessWidget {
         future: Get.find<NoticiasRepository>().getNoticias(),
         builder: (context, AsyncSnapshot<List<Noticia>> snapshot) {
           if (snapshot.hasError) {
-            final error = snapshot.error is CustomException ? (snapshot.error as CustomException) : CustomException.custom("No pudimos obtener las noticias.");
+            final error = snapshot.error is CustomException ? (snapshot.error as CustomException) : CustomException.custom(message: "No pudimos obtener las noticias.");
             logger.d("[NoticiasCarruselWidget] ${error.message} (${error.statusCode})", snapshot.error, snapshot.stackTrace);
 
             return CustomErrorWidget(

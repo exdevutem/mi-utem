@@ -2,11 +2,11 @@
 import 'package:background_fetch/background_fetch.dart';
 import 'package:get/get.dart';
 import 'package:mi_utem/config/logger.dart';
+import 'package:mi_utem/core/services/auth_service.dart';
 import 'package:mi_utem/repositories/asignaturas_repository.dart';
 import 'package:mi_utem/repositories/carreras_repository.dart';
 import 'package:mi_utem/repositories/horario_repository.dart';
 import 'package:mi_utem/repositories/permiso_ingreso_repository.dart';
-import 'package:mi_utem/services/auth_service.dart';
 import 'package:mi_utem/services/carreras_service.dart';
 import 'package:mi_utem/services/grades_service.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
@@ -60,8 +60,9 @@ class BackgroundService {
     logger.d("[BackgroundFetch]: Se ejecutó la tarea '$taskId' (${now.toIso8601String()})");
 
     // Refresca el token de autenticación
-    bool loggedIn = await Get.find<AuthService>().isLoggedIn(forceRefresh: true);
-    if(!loggedIn) {
+    try {
+      await Get.find<AuthService>().login(forceRefresh: true);
+    } catch (_) {
       logger.d("[BackgroundFetch]: No se pudo refrescar el token de autenticación");
       BackgroundFetch.finish(taskId);
       return;

@@ -1,10 +1,10 @@
 import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mi_utem/core/models/user/user.dart';
+import 'package:mi_utem/core/services/auth_service.dart';
 import 'package:mi_utem/models/exceptions/custom_exception.dart';
 import 'package:mi_utem/models/preferencia.dart';
-import 'package:mi_utem/models/user/user.dart';
-import 'package:mi_utem/services/auth_service.dart';
 import 'package:mi_utem/widgets/custom_app_bar.dart';
 import 'package:mi_utem/widgets/custom_error_widget.dart';
 import 'package:mi_utem/widgets/image/image_view_screen.dart';
@@ -76,7 +76,7 @@ class _PerfilScreenState extends State<PerfilScreen> {
                         title: Text("Nombre",
                           style: TextStyle(color: Colors.grey),
                         ),
-                        subtitle: Text("${user.nombreCompletoCapitalizado}",
+                        subtitle: Text("${user.persona.nombreCompletoCapitalizado}",
                           style: TextStyle(
                             color: Colors.grey[900],
                             fontSize: 18,
@@ -100,48 +100,48 @@ class _PerfilScreenState extends State<PerfilScreen> {
                         title: Text("RUT",
                           style: TextStyle(color: Colors.grey),
                         ),
-                        subtitle: Text("${user.rut}",
+                        subtitle: Text("${user.persona.rut}",
                           style: TextStyle(
                             color: Colors.grey[900],
                             fontSize: 18,
                           ),
                         ),
                         onLongPress: () async {
-                          await FlutterClipboard.copy(user.rut.toString());
+                          await FlutterClipboard.copy(user.persona.rut.toString());
                           showTextSnackbar(context, title: "¡Copiado!", message: "Rut copiado al portapapeles");
                         },
                       ),
-                      if(user.correoUtem != null) Divider(height: 1),
-                      if(user.correoUtem != null) ListTile(
+                      Divider(height: 1),
+                      ListTile(
                         title: Text("Correo Institucional",
                           style: TextStyle(color: Colors.grey),
                         ),
-                        subtitle: Text("${user.correoUtem}",
+                        subtitle: Text("${user.persona.correoUtem}",
                           style: TextStyle(
                             color: Colors.grey[900],
                             fontSize: 18,
                           ),
                         ),
-                        onTap: () => launchUrl(Uri.parse("mailto:${user.correoUtem}")),
+                        onTap: () => launchUrl(Uri.parse("mailto:${user.persona.correoUtem}")),
                         onLongPress: () async {
-                          await FlutterClipboard.copy(user.correoUtem!);
+                          await FlutterClipboard.copy(user.persona.correoUtem!);
                           showTextSnackbar(context, title: "¡Copiado!", message: "Correo copiado al portapapeles");
                         },
                       ),
-                      if(user.correoPersonal != null) Divider(height: 1),
-                      if(user.correoPersonal != null) ListTile(
+                      Divider(height: 1),
+                      ListTile(
                         title: Text("Correo Personal",
                           style: TextStyle(color: Colors.grey),
                         ),
-                        subtitle: Text("${user.correoPersonal}",
+                        subtitle: Text("${user.persona.correoPersonal}",
                           style: TextStyle(
                             color: Colors.grey[900],
                             fontSize: 18,
                           ),
                         ),
-                        onTap: () => launchUrl(Uri.parse("mailto:${user.correoPersonal}")),
+                        onTap: () => launchUrl(Uri.parse("mailto:${user.persona.correoPersonal}")),
                         onLongPress: () async {
-                          await FlutterClipboard.copy(user.correoPersonal!);
+                          await FlutterClipboard.copy(user.persona.correoPersonal!);
                           showTextSnackbar(context, title: "¡Copiado!", message: "Correo copiado al portapapeles");
                         },
                       ),
@@ -151,8 +151,8 @@ class _PerfilScreenState extends State<PerfilScreen> {
               ),
               Center(
                 child: ProfilePhoto(
-                  fotoUrl: user.fotoUrl,
-                  iniciales: user.iniciales,
+                  fotoUrl: user.persona.fotoUrl,
+                  iniciales: user.persona.iniciales,
                   radius: 60,
                   editable: false,
                   onImage: (imagenBase64) async {
