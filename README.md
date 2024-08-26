@@ -39,7 +39,25 @@ flutter devices
 flutter run -d <device_id> --flavor <environment>
 ```
 
+<details>
+<summary>Ejemplo</summary>
 
+Para encontrar los dispositivos:
+```bash
+➜  mi-utem git:(dev) ✗ flutter devices
+3 connected devices:
+
+iPhone 15 Pro Max (mobile) • AE78D3A0-3711-4350-BB8A-EC81E1C2E2C3 • ios            • com.apple.CoreSimulator.SimRuntime.iOS-17-5 (simulator)
+macOS (desktop)            • macos                                • darwin-arm64   • macOS 14.6.1 23G93 darwin-arm64
+Chrome (web)               • chrome                               • web-javascript • Google Chrome 127.0.6533.120
+```
+
+En este caso el ID del iPhone 15 es `AE78D3A0-3711-4350-BB8A-EC81E1C2E2C3`. Para ejecutarlo en iOS usaríamos:
+```bash
+flutter run -d AE78D3A0-3711-4350-BB8A-EC81E1C2E2C3 --flavor dev
+``` 
+
+</details>
 
 ### Construcción de la app
 
