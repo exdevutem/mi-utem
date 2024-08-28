@@ -4,9 +4,10 @@ import 'package:badges/badges.dart' as badge;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mdi/mdi.dart';
+import 'package:mi_utem/core/models/preferencia.dart';
+import 'package:mi_utem/core/models/user/estudiante.dart';
 import 'package:mi_utem/core/services/auth_service.dart';
-import 'package:mi_utem/models/pair.dart';
-import 'package:mi_utem/models/preferencia.dart';
+import 'package:mi_utem/core/utils/utils.dart';
 import 'package:mi_utem/screens/acerca_screen.dart';
 import 'package:mi_utem/screens/asignatura/asignaturas_lista_screen.dart';
 import 'package:mi_utem/screens/credencial_screen.dart';
@@ -16,10 +17,7 @@ import 'package:mi_utem/screens/perfil/perfil_screen.dart';
 import 'package:mi_utem/services/remote_config/remote_config.dart';
 import 'package:mi_utem/services/review_service.dart';
 import 'package:mi_utem/themes/theme.dart';
-import 'package:mi_utem/utils/utils.dart';
 import 'package:mi_utem/widgets/profile_photo.dart';
-
-import '../core/models/user/user.dart';
 
 class CustomDrawer extends StatelessWidget {
 
@@ -61,16 +59,10 @@ class CustomDrawer extends StatelessWidget {
               minHeight: constraints.maxHeight,
               maxHeight: double.infinity,
             ),
-            child: FutureBuilder<Pair<String?, User?>>(
-              future: () async {
-                final user = await _authService.getUser();
-                final apodo = await Preferencia.apodo.get();
-                return Pair(apodo, user);
-              }(),
+            child: FutureBuilder<Estudiante?>(
+              future: _authService.login(),
               builder: (context, snapshot) {
-                final pair = snapshot.data;
-                String? alias = pair?.a;
-                User? user = pair?.b;
+                Estudiante? user = snapshot.data;
                 if(!snapshot.hasData || snapshot.hasError || user == null) {
                   return Container();
                 }
@@ -81,16 +73,20 @@ class CustomDrawer extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       UserAccountsDrawerHeader(
-                        accountEmail: Text(user.persona.correoUtem),
-                        accountName: Text(alias ?? user.persona.nombreCompleto,
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
+                        accountEmail: Text(user.correoUtem),
+                        accountName: FutureBuilder<String?>(
+                          future: Preferencia.apodo.get(),
+                          initialData: user.nombreCompletoCapitalizado,
+                          builder: (ctx, snapshot) => Text(snapshot.data ?? 'N/N',
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
                         ),
                         currentAccountPicture: ProfilePhoto(
-                          base64Data: user.persona.fotoUrl,
-                          iniciales: user.persona.iniciales,
+                          base64Data: user.fotoUrl,
+                          iniciales: user.iniciales,
                           radius: 30,
                         ),
                         decoration: BoxDecoration(

@@ -1,8 +1,9 @@
-import 'package:mi_utem/models/user/user.dart';
+
+import 'package:mi_utem/core/models/user/persona/persona.dart';
 
 class DocentesService {
 
-  static Future<String> generarImagenPerfil(User user) async {
+  static Future<String> generarImagenPerfil(Persona user) async {
     // String baseUrl = "https://mi.utem.cl/static/interdocs/fotos/";
     // List<String> formatos = [".jpg", ".jpeg", ".png", ".gif"];
     //
@@ -23,7 +24,7 @@ class DocentesService {
     throw Exception("Not implemented");
   }
 
-  static Future<List<User>> buscarDocentes(String nombre) async {
+  static Future<List<Persona>> buscarDocentes(String nombre) async {
     // String uri = "/docentes/buscar";
     //
     // try {
@@ -48,7 +49,7 @@ class DocentesService {
     return [];
   }
 
-  static Future<User> traerUnDocente(String? nombre) async {
+  static Future<Persona> traerUnDocente(String? nombre) async {
     // String uri = "/docentes/buscar";
     //
     // try {
@@ -67,7 +68,7 @@ class DocentesService {
     throw Exception("Not implemented");
   }
 
-  static Future<User> asignarUnDocente(String? nombreDocente, String? codigoAsignatura, String? nombreAsignatura) async {
+  static Future<Persona> asignarUnDocente(String? nombreDocente, String? codigoAsignatura, String? nombreAsignatura) async {
     // String uri = "/docentes/asignar";
     //
     // try {

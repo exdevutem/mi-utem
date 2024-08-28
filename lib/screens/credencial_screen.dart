@@ -2,12 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:mdi/mdi.dart';
-import 'package:mi_utem/core/models/user/user.dart';
+import 'package:mi_utem/core/models/user/estudiante.dart';
 import 'package:mi_utem/core/services/auth_service.dart';
-import 'package:mi_utem/models/carrera.dart';
-import 'package:mi_utem/models/pair.dart';
 import 'package:mi_utem/services/analytics_service.dart';
-import 'package:mi_utem/services/carreras_service.dart';
 import 'package:mi_utem/services/review_service.dart';
 import 'package:mi_utem/widgets/credencial/credencial_card.dart';
 import 'package:mi_utem/widgets/custom_app_bar.dart';
@@ -62,16 +59,8 @@ class _CredencialScreenState extends State<CredencialScreen> {
       ],
     ),
     backgroundColor: Colors.grey[200],
-    body: FutureBuilder<Pair<User?, Carrera?>>(
-      future: () async {
-        final authService = Get.find<AuthService>();
-        final carrerasService = Get.find<CarrerasService>();
-
-        final user = await authService.getUser();
-        final carrera = await carrerasService.getCarreras();
-
-        return Pair(user, carrera);
-      }(),
+    body: FutureBuilder<Estudiante?>(
+      future: Get.find<AuthService>().login(),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return CustomErrorWidget(
@@ -80,9 +69,7 @@ class _CredencialScreenState extends State<CredencialScreen> {
           );
         }
 
-        final pair = snapshot.data;
-        final user = pair?.a;
-        final carreraActiva = pair?.b;
+        final estudiante = snapshot.data;
 
         if (!snapshot.hasData) {
           return Padding(
@@ -98,53 +85,23 @@ class _CredencialScreenState extends State<CredencialScreen> {
           );
         }
 
-        if (user == null || carreraActiva == null || carreraActiva.nombre == null) {
+        if (estudiante == null) {
           return CustomErrorWidget(
             title: "Ocurrió un error al generar tu credencial. Por favor, intenta nuevamente.",
             error: snapshot.error,
           );
         }
 
-        if (carreraActiva.nombre?.isNotEmpty == true) {
-          return Center(
-            child: SafeArea(
-              child: CredencialCard(
-                user: user,
-                carrera: carreraActiva,
-                controller: _flipController,
-                onFlip: (_) {
-                  AnalyticsService.logEvent("credencial_flip");
-                  setState(() {});
-                },
-              ),
+        return Center(
+          child: SafeArea(
+            child: CredencialCard(
+              user: estudiante,
+              controller: _flipController,
+              onFlip: (_) {
+                AnalyticsService.logEvent("credencial_flip");
+                setState(() {});
+              },
             ),
-          );
-        }
-
-        return Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text("😕",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 50,
-                ),
-              ),
-              const SizedBox(height: 15),
-              const Text("Ocurrió un error al generar tu credencial",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
-                ),
-              ),
-              const SizedBox(height: 15),
-              Text(snapshot.error.toString(),
-                textAlign: TextAlign.center,
-              ),
-            ],
           ),
         );
       },

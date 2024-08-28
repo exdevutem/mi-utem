@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:mi_utem/models/noticia.dart';
+import 'package:mi_utem/core/models/noticia.dart';
 import 'package:mi_utem/services/analytics_service.dart';
 import 'package:mi_utem/widgets/loading/loading_indicator.dart';
 import 'package:mi_utem/widgets/snackbar.dart';

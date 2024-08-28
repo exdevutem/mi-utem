@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mi_utem/controllers/calculator_controller.dart';
-import 'package:mi_utem/models/evaluacion/evaluacion.dart';
+import 'package:mi_utem/core/models/evaluacion/evaluacion.dart';
 import 'package:mi_utem/services/analytics_service.dart';
 import 'package:mi_utem/widgets/calculadora_notas/nota_list_item.dart';
 

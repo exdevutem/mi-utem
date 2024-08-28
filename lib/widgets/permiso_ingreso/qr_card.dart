@@ -6,18 +6,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_uxcam/flutter_uxcam.dart';
 import 'package:image/image.dart' as dartImage;
 import 'package:intl/intl.dart';
-import 'package:mi_utem/models/permiso_ingreso.dart';
+import 'package:mi_utem/core/models/permiso_ingreso.dart';
 import 'package:mi_utem/widgets/image/image_view_screen.dart';
 import 'package:mi_utem/widgets/permiso_ingreso/detalles_permiso.dart';
 import 'package:mi_utem/widgets/permiso_ingreso/usuario_detalle.dart';
 
 class QRCard extends StatelessWidget {
+  final PermisoIngreso permiso;
+
   const QRCard({
     super.key,
     required this.permiso,
   });
 
-  final PermisoIngreso permiso;
 
   _openQr(BuildContext context, String heroTag) {
     final image = dartImage.Image(500, 500);
@@ -48,8 +49,8 @@ class QRCard extends StatelessWidget {
     child: Card(
       child: Column(
         children: [
-          UsuarioDetalle(
-            user: permiso.user!,
+          PersonaDetalle(
+            estudiante: permiso.persona!,
           ),
           Divider(thickness: 1, color: Color(0xFFFEEEEE)),
           DetallesPermiso(

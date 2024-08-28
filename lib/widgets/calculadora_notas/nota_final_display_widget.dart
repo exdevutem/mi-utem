@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mi_utem/controllers/calculator_controller.dart';
-import 'package:mi_utem/utils/utils.dart';
+import 'package:mi_utem/core/utils/utils.dart';
 
 class NotaFinalDisplayWidget extends StatelessWidget {
 

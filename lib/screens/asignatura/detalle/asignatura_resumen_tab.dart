@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mi_utem/models/asignaturas/asignatura.dart';
+import 'package:mi_utem/core/models/asignaturas/asignatura.dart';
 import 'package:mi_utem/screens/asignatura/detalle/asignatura_estudiantes_tab.dart';
 import 'package:mi_utem/utils/string_utils.dart';
 import 'package:mi_utem/widgets/field_list_tile.dart';

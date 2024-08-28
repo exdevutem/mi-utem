@@ -4,11 +4,9 @@ import 'dart:developer';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:awesome_notifications_fcm/awesome_notifications_fcm.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:mi_utem/core/models/asignaturas/asignatura.dart';
+import 'package:mi_utem/core/models/carrera.dart';
 import 'package:mi_utem/main.dart';
-import 'package:mi_utem/models/asignaturas/asignatura.dart';
-import 'package:mi_utem/models/carrera.dart';
-import 'package:mi_utem/repositories/grades_repository.dart';
 import 'package:mi_utem/screens/asignatura/detalle/asignatura_detalle_screen.dart';
 import 'package:mi_utem/services/analytics_service.dart';
 
@@ -56,11 +54,11 @@ class NotificationController {
         final carrera = Carrera.fromJson(jsonDecode(carreraPayload));
         final asignatura = Asignatura.fromJson(jsonDecode(asignaturaJsonString));
         try { // Intenta actualizar las notas.
-          asignatura.grades = await Get.find<GradesRepository>().getGrades(carreraId: carrera.id, asignaturaId: asignatura.id, forceRefresh: true);
+          // asignatura.grades = await Get.find<GradesRepository>().getGrades(carreraId: carrera.id, asignaturaId: asignatura.id, forceRefresh: true); // TODO: Fix
+
         } catch(_){}
 
         navigatorKey.currentState?.push(MaterialPageRoute(builder: (ctx) => AsignaturaDetalleScreen(
-          carrera: carrera,
           asignatura: asignatura,
         )));
       }

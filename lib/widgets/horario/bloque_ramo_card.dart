@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mi_utem/models/horario.dart';
-import 'package:mi_utem/repositories/asignaturas_repository.dart';
-import 'package:mi_utem/repositories/grades_repository.dart';
+import 'package:mi_utem/core/models/horario.dart';
+import 'package:mi_utem/core/services/asignaturas_service.dart';
+import 'package:mi_utem/core/services/grades_service.dart';
 import 'package:mi_utem/screens/asignatura/detalle/asignatura_detalle_screen.dart';
 import 'package:mi_utem/services/analytics_service.dart';
-import 'package:mi_utem/services/carreras_service.dart';
 import 'package:mi_utem/widgets/horario/bloque_clase.dart';
 import 'package:mi_utem/widgets/horario/bloque_vacio.dart';
 import 'package:mi_utem/widgets/horario/modals/asignatura_vista_previa_modal.dart';
 import 'package:mi_utem/widgets/loading/loading_dialog.dart';
+import 'package:mi_utem/widgets/snackbar.dart';
 
 class ClassBlockCard extends StatelessWidget {
   final BloqueHorario? block;
@@ -46,13 +46,13 @@ class ClassBlockCard extends StatelessWidget {
 
   _onTap(BloqueHorario block, BuildContext context) async {
     showLoadingDialog(context);
-    final carrera = await Get.find<CarrerasService>().getCarreras();
-    final asignatura = (await Get.find<AsignaturasRepository>().getAsignaturas(carrera?.id))?.firstWhereOrNull((asignatura) => asignatura.id == block.asignatura?.id || asignatura.codigo == block.asignatura?.codigo);
-    final grades = await Get.find<GradesRepository>().getGrades(carreraId: carrera?.id, asignaturaId: asignatura?.id);
-    if(carrera == null || asignatura == null) {
+    final asignatura = (await Get.find<AsignaturasService>().getAsignaturas()).firstWhereOrNull((asignatura) => asignatura.id == block.asignatura?.id || asignatura.codigo == block.asignatura?.codigo);
+    if(asignatura == null) {
       Navigator.pop(context);
+      showErrorSnackbar(context, 'No se pudo cargar la asignatura. Intenta más tarde.');
       return;
     }
+    final grades = await Get.find<GradesService>().getGrades(asignatura.id);
 
     AnalyticsService.logEvent("horario_class_block_tap", parameters: {
       "asignatura": asignatura.nombre,
@@ -60,17 +60,16 @@ class ClassBlockCard extends StatelessWidget {
     });
     Navigator.pop(context);
     Navigator.push(context, MaterialPageRoute(builder: (ctx) => AsignaturaDetalleScreen(
-      carrera: carrera,
       asignatura: asignatura.copyWith(grades: grades),
     )));
   }
 
   _onLongPress(BloqueHorario block, BuildContext context) async {
     showLoadingDialog(context);
-    final carrera = await Get.find<CarrerasService>().getCarreras();
-    final asignatura = (await Get.find<AsignaturasRepository>().getAsignaturas(carrera?.id))?.firstWhereOrNull((asignatura) => asignatura.id == block.asignatura?.id || asignatura.codigo == block.asignatura?.codigo);
-    if(carrera == null || asignatura == null) {
+    final asignatura = (await Get.find<AsignaturasService>().getAsignaturas()).firstWhereOrNull((asignatura) => asignatura.id == block.asignatura?.id || asignatura.codigo == block.asignatura?.codigo);
+    if(asignatura == null) {
       Navigator.pop(context);
+      showErrorSnackbar(context, 'No se pudo cargar la asignatura. Intenta más tarde.');
       return;
     }
 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mi_utem/models/asignaturas/asignatura.dart';
-import 'package:mi_utem/models/evaluacion/evaluacion.dart';
+import 'package:mi_utem/core/models/asignaturas/asignatura.dart';
+import 'package:mi_utem/core/models/evaluacion/evaluacion.dart';
 import 'package:mi_utem/widgets/asignatura/notas_tab/nota_list_item.dart';
 import 'package:mi_utem/widgets/asignatura/notas_tab/notas_display.dart';
 import 'package:mi_utem/widgets/custom_error_widget.dart';

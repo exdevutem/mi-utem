@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mi_utem/controllers/horario_controller.dart';
-import 'package:mi_utem/models/horario.dart';
+import 'package:mi_utem/core/models/horario.dart';
 import 'package:mi_utem/themes/theme.dart';
 
 class BloqueClase extends StatelessWidget {

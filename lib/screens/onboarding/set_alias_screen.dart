@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mi_utem/models/preferencia.dart';
+import 'package:mi_utem/core/models/preferencia.dart';
 import 'package:mi_utem/screens/main_screen.dart';
 import 'package:mi_utem/screens/onboarding/notifications_screen.dart';
 import 'package:mi_utem/themes/theme.dart';

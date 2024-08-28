@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mi_utem/config/logger.dart';
-import 'package:mi_utem/models/exceptions/custom_exception.dart';
-import 'package:mi_utem/models/permiso_ingreso.dart';
-import 'package:mi_utem/repositories/permiso_ingreso_repository.dart';
+import 'package:mi_utem/core/models/exceptions/custom_exception.dart';
+import 'package:mi_utem/core/models/permiso_ingreso.dart';
+import 'package:mi_utem/core/services/permisos_service.dart';
 import 'package:mi_utem/widgets/custom_app_bar.dart';
 import 'package:mi_utem/widgets/custom_error_widget.dart';
 import 'package:mi_utem/widgets/loading/loading_indicator.dart';
@@ -24,18 +24,18 @@ class PermisoCovidScreen extends StatefulWidget {
 
 class _PermisoCovidScreenState extends State<PermisoCovidScreen> {
 
-  final PermisoIngresoRepository _permisoIngresoRepository = Get.find<PermisoIngresoRepository>();
+  final PermisosService _permisosService = Get.find<PermisosService>();
 
   @override
   Widget build(BuildContext context) => Scaffold(
     appBar: CustomAppBar(title: Text("Permiso de ingreso")),
     body: SafeArea(child: PullToRefresh(
       onRefresh: () async {
-        await _permisoIngresoRepository.getDetallesPermiso(widget.passId, forceRefresh: true);
+        await _permisosService.getDetallesPermiso(widget.passId, forceRefresh: true);
         setState(() {});
       },
-      child: FutureBuilder<PermisoIngreso?>(
-        future: _permisoIngresoRepository.getDetallesPermiso(widget.passId),
+      child: FutureBuilder<PermisoIngreso>(
+        future: _permisosService.getDetallesPermiso(widget.passId),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             final error = snapshot.error is CustomException ? (snapshot.error as CustomException).message : "No sabemos lo que ocurrió. Por favor intenta más tarde.";

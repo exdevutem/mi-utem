@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:mi_utem/controllers/auth/login_action.dart';
 import 'package:mi_utem/widgets/login_screen/login_text_form_field.dart';
 
 class FormularioCredenciales extends StatefulWidget {
 
+  final GlobalKey<FormState> formKey;
   final TextEditingController correoController;
   final TextEditingController contraseniaController;
 
   const FormularioCredenciales({
     super.key,
+    required this.formKey,
     required this.correoController,
     required this.contraseniaController,
   });
@@ -60,7 +63,8 @@ class _FormularioCredencialesState extends State<FormularioCredenciales> {
               return 'Debe ingresar una contraseña';
             }
           },
-        )
+          onSubmitted: (_) => login(context: context, formKey: widget.formKey, correoController: widget.correoController, contraseniaController: widget.contraseniaController),
+        ),
       ],
     ),
   );

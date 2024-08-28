@@ -1,6 +1,6 @@
 import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
-import 'package:mi_utem/models/user/persona.dart';
+import 'package:mi_utem/core/models/user/persona/persona.dart';
 import 'package:mi_utem/widgets/profile_photo.dart';
 import 'package:mi_utem/widgets/snackbar.dart';
 import 'package:url_launcher/url_launcher.dart';

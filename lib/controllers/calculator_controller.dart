@@ -1,7 +1,7 @@
 import 'package:extended_masked_text/extended_masked_text.dart';
 import 'package:get/get.dart';
-import 'package:mi_utem/models/evaluacion/evaluacion.dart';
-import 'package:mi_utem/models/evaluacion/grades.dart';
+import 'package:mi_utem/core/models/evaluacion/evaluacion.dart';
+import 'package:mi_utem/core/models/evaluacion/grades.dart';
 
 class CalculatorController {
   static const maxPercentage = 100;

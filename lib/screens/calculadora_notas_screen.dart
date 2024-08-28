@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mi_utem/controllers/calculator_controller.dart';
-import 'package:mi_utem/models/evaluacion/grades.dart';
+import 'package:mi_utem/core/models/evaluacion/grades.dart';
 import 'package:mi_utem/widgets/calculadora_notas/display_notas_widget.dart';
 import 'package:mi_utem/widgets/calculadora_notas/editar_notas_widget.dart';
 import 'package:mi_utem/widgets/custom_app_bar.dart';

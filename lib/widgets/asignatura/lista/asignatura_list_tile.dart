@@ -1,19 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:mi_utem/models/asignaturas/asignatura.dart';
-import 'package:mi_utem/models/carrera.dart';
-import 'package:mi_utem/repositories/grades_repository.dart';
+import 'package:mi_utem/core/models/asignaturas/asignatura.dart';
 import 'package:mi_utem/screens/asignatura/detalle/asignatura_detalle_screen.dart';
 import 'package:mi_utem/themes/theme.dart';
 import 'package:mi_utem/widgets/loading/loading_dialog.dart';
 
 class AsignaturaListTile extends StatefulWidget {
-  final Carrera carrera;
   final Asignatura asignatura;
 
   const AsignaturaListTile({
     super.key,
-    required this.carrera,
     required this.asignatura,
   });
 
@@ -37,11 +32,10 @@ class _AsignaturaListTileState extends State<AsignaturaListTile> {
       child: InkWell(
         onTap: () async {
           showLoadingDialog(context);
-          final grades = await Get.find<GradesRepository>().getGrades(carreraId: widget.carrera.id, asignaturaId: asignatura.id);
+          // final grades = await Get.find<GradesRepository>().getGrades(carreraId: widget.carrera.id, asignaturaId: asignatura.id);
           Navigator.pop(context);
           Navigator.push(context, MaterialPageRoute(builder: (ctx) => AsignaturaDetalleScreen(
-            carrera: widget.carrera,
-            asignatura: asignatura.copyWith(grades: grades),
+            asignatura: asignatura//.copyWith(grades: grades),
           )));
         },
         child: Container(

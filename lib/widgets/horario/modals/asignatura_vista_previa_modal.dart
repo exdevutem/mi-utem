@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mi_utem/models/asignaturas/asignatura.dart';
-import 'package:mi_utem/models/horario.dart';
+import 'package:mi_utem/core/models/asignaturas/asignatura.dart';
+import 'package:mi_utem/core/models/horario.dart';
 import 'package:mi_utem/widgets/modals/persona_modal.dart';
 
 class AsignaturaVistaPreviaModal extends StatelessWidget {

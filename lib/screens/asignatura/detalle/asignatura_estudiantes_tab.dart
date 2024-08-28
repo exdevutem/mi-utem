@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mi_utem/models/asignaturas/asignatura.dart';
-import 'package:mi_utem/models/exceptions/custom_exception.dart';
-import 'package:mi_utem/models/user/user.dart';
-import 'package:mi_utem/repositories/asignaturas_repository.dart';
+import 'package:mi_utem/core/models/asignaturas/asignatura.dart';
+import 'package:mi_utem/core/models/exceptions/custom_exception.dart';
+import 'package:mi_utem/core/models/user/estudiante.dart';
+import 'package:mi_utem/core/services/asignaturas_service.dart';
 import 'package:mi_utem/services/analytics_service.dart';
 import 'package:mi_utem/widgets/asignatura/modals/user_modal.dart';
 import 'package:mi_utem/widgets/custom_app_bar.dart';
@@ -27,7 +27,7 @@ class AsignaturaEstudiantesTab extends StatefulWidget {
 class _AsignaturaEstudiantesTabState extends State<AsignaturaEstudiantesTab> {
 
   bool _forceRefresh = false;
-  AsignaturasRepository _asignaturasRepository = Get.find<AsignaturasRepository>();
+  AsignaturasService _asignaturasService = Get.find<AsignaturasService>();
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -36,11 +36,12 @@ class _AsignaturaEstudiantesTabState extends State<AsignaturaEstudiantesTab> {
     ),
     body: SafeArea(child: PullToRefresh(
       onRefresh: () async => setState(() => _forceRefresh = true),
-      child: FutureBuilder<List<User>?>(
+      child: FutureBuilder<List<Estudiante>?>(
         future: () async {
-          final estudiantes = await _asignaturasRepository.getEstudiantesAsignatura(widget.asignatura, forceRefresh: _forceRefresh);
-          _forceRefresh = false;
-          return estudiantes;
+          // final estudiantes = await _asignaturasRepository.getEstudiantesAsignatura(widget.asignatura, forceRefresh: _forceRefresh);
+          // _forceRefresh = false;
+          // return estudiantes;
+          return null;
         }(),
         builder: (ctx, snapshot) {
           if(snapshot.connectionState == ConnectionState.waiting) {
@@ -59,7 +60,7 @@ class _AsignaturaEstudiantesTabState extends State<AsignaturaEstudiantesTab> {
             );
           }
 
-          List<User>? estudiantes = snapshot.data;
+          List<Estudiante>? estudiantes = snapshot.data;
           if(snapshot.hasError || !snapshot.hasData || estudiantes == null) {
             return Center(
               child: SingleChildScrollView(

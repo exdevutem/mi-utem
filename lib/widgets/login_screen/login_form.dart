@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:mi_utem/controllers/auth/login_action.dart';
-import 'package:mi_utem/repositories/credentials_repository.dart';
+import 'package:mi_utem/core/repositories/secure_storage_repository.dart';
 import 'package:mi_utem/services/update_service.dart';
 import 'package:mi_utem/widgets/login_screen/creditos_app.dart';
 import 'package:mi_utem/widgets/login_screen/formulario_credenciales.dart';
@@ -24,8 +24,7 @@ class _LoginFormState extends State<LoginForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _correoController = TextEditingController();
   final TextEditingController _contraseniaController = TextEditingController();
-
-  final _credentialService = Get.find<CredentialsRepository>();
+  final SecureStorageRepository _secureStorageRepository = Get.find<SecureStorageRepository>();
 
   @override
   void initState() {
@@ -39,12 +38,12 @@ class _LoginFormState extends State<LoginForm> {
 
     UpdateService();
 
-    _credentialService.getCredentials().then((credential){
+    _secureStorageRepository.getCredentials().then((credential){
       if(credential == null) {
         return;
       }
 
-      _correoController.text = credential.email;
+      _correoController.text = credential.username;
       _contraseniaController.text = credential.password;
     });
 
@@ -66,7 +65,7 @@ class _LoginFormState extends State<LoginForm> {
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Container(height: widget.constraints.maxHeight * 0.1),
+              SizedBox(height: widget.constraints.maxHeight * 0.1),
               Expanded(
                 child: SafeArea(
                   child: Column(
@@ -80,8 +79,9 @@ class _LoginFormState extends State<LoginForm> {
                   ),
                 ),
               ),
-              Container(height: widget.constraints.maxHeight * 0.1),
+              SizedBox(height: widget.constraints.maxHeight * 0.1),
               FormularioCredenciales(
+                formKey: _formKey,
                 correoController: _correoController,
                 contraseniaController: _contraseniaController,
               ),
@@ -89,7 +89,7 @@ class _LoginFormState extends State<LoginForm> {
                 onPressed: () => login(context: context, formKey: _formKey, correoController: _correoController, contraseniaController: _contraseniaController),
                 child: Text("Iniciar Sesión"),
               ),
-              Container(height: widget.constraints.maxHeight * 0.1),
+              SizedBox(height: widget.constraints.maxHeight * 0.1),
               const CreditosApp(),
             ],
           ),

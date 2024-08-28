@@ -2,14 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mdi/mdi.dart';
 import 'package:mi_utem/config/logger.dart';
-import 'package:mi_utem/models/asignaturas/asignatura.dart';
-import 'package:mi_utem/models/carrera.dart';
-import 'package:mi_utem/models/exceptions/custom_exception.dart';
-import 'package:mi_utem/models/pair.dart';
-import 'package:mi_utem/repositories/asignaturas_repository.dart';
-import 'package:mi_utem/repositories/grades_repository.dart';
+import 'package:mi_utem/core/models/asignaturas/asignatura.dart';
+import 'package:mi_utem/core/models/exceptions/custom_exception.dart';
+import 'package:mi_utem/core/services/asignaturas_service.dart';
 import 'package:mi_utem/screens/calculadora_notas_screen.dart';
-import 'package:mi_utem/services/carreras_service.dart';
 import 'package:mi_utem/services/remote_config/remote_config.dart';
 import 'package:mi_utem/widgets/asignatura/lista/lista_asignaturas.dart';
 import 'package:mi_utem/widgets/asignatura/lista/sin_asignaturas_mensaje.dart';
@@ -29,7 +25,7 @@ class AsignaturasListaScreen extends StatefulWidget {
 
 class _AsignaturasListaScreenState extends State<AsignaturasListaScreen> {
 
-  final _asignaturasService = Get.find<AsignaturasRepository>();
+  final _asignaturasService = Get.find<AsignaturasService>();
   bool _forceRefresh = false;
 
   bool get _mostrarCalculadora => RemoteConfigService.calculadoraMostrar;
@@ -48,21 +44,11 @@ class _AsignaturasListaScreenState extends State<AsignaturasListaScreen> {
     ),
     body: SafeArea(child: PullToRefresh(
       onRefresh: () async => setState(() => _forceRefresh = true),
-      child: FutureBuilder<Pair<Carrera?, List<Asignatura>?>>(
+      child: FutureBuilder<List<Asignatura>>(
         future: () async {
-          final carrera = await Get.find<CarrerasService>().getCarreras();
-          if(carrera == null) {
-            _forceRefresh = false;
-            throw CustomException.custom(message: "No pudimos cargar los datos de tu carrera.");
-          }
-          final asignaturas = await _asignaturasService.getAsignaturas(carrera.id, forceRefresh: _forceRefresh);
-          if(asignaturas == null) {
-            _forceRefresh = false;
-            throw CustomException.custom(message: "No pudimos cargar las asignaturas.");
-          }
+          final asignaturas = await _asignaturasService.getAsignaturas(forceRefresh: _forceRefresh);
           _forceRefresh = false;
-          asignaturas.forEach((asignatura) => Get.find<GradesRepository>().getGrades(carreraId: carrera.id, asignaturaId: asignatura.id));
-          return Pair(carrera, asignaturas);
+          return asignaturas;
         }(),
         builder: (context, snapshot) {
           if(snapshot.hasError) {
@@ -75,15 +61,12 @@ class _AsignaturasListaScreenState extends State<AsignaturasListaScreen> {
             return _loadingWidget();
           }
 
-          final datos = snapshot.data;
-          final carrera = datos?.a;
-          final asignaturas = datos?.b;
-          if(carrera == null || asignaturas == null) {
+          final asignaturas = snapshot.data;
+          if(asignaturas == null) {
             return _errorWidget("No encontramos asignaturas. Por favor intenta más tarde.");
           }
 
           return ListaAsignaturas(
-            carrera: carrera,
             asignaturas: asignaturas,
           );
         },

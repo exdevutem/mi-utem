@@ -3,8 +3,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_uxcam/flutter_uxcam.dart';
-import 'package:mi_utem/core/models/user/user.dart';
-import 'package:mi_utem/models/carrera.dart';
+import 'package:get/get.dart';
+import 'package:mi_utem/core/models/carrera.dart';
+import 'package:mi_utem/core/models/user/estudiante.dart';
+import 'package:mi_utem/core/services/carrera_service.dart';
 import 'package:mi_utem/services/remote_config/remote_config.dart';
 import 'package:mi_utem/themes/theme.dart';
 import 'package:mi_utem/widgets/flip_widget.dart';
@@ -13,15 +15,13 @@ import 'package:simple_gesture_detector/simple_gesture_detector.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class CredencialCard extends StatelessWidget {
-  final User? user;
-  final Carrera? carrera;
+  final Estudiante? user;
   final FlipController? controller;
   final Function(SwipeDirection?)? onFlip;
 
   CredencialCard({
     super.key,
     required this.user,
-    required this.carrera,
     this.controller,
     this.onFlip
   });
@@ -39,8 +39,8 @@ class CredencialCard extends StatelessWidget {
             Container(
               margin: EdgeInsets.only(top: altoBanner - 40),
               child: ProfilePhoto(
-                fotoUrl: user?.persona.fotoUrl,
-                iniciales: user?.persona.iniciales ?? "N/N",
+                fotoUrl: user?.fotoUrl,
+                iniciales: user?.iniciales ?? "N/N",
                 radius: 50,
                 borderWidth: 5,
               ),
@@ -74,7 +74,7 @@ class CredencialCard extends StatelessWidget {
               color: Colors.white,
               child: Column(
                 children: [
-                  Text(user?.persona.nombreCompleto ?? "N/N",
+                  Text(user?.nombreCompleto ?? "N/N",
                     maxLines: 2,
                     style: TextStyle(
                       fontSize: 18,
@@ -84,7 +84,7 @@ class CredencialCard extends StatelessWidget {
                     textAlign: TextAlign.center,
                   ),
                   OccludeWrapper(
-                    child: Text(user?.persona.rut.toString() ?? "Sin RUT",
+                    child: Text(user?.rut.toString() ?? "Sin RUT",
                       style: TextStyle(fontSize: 18),
                       textAlign: TextAlign.center,
                     ),
@@ -92,13 +92,20 @@ class CredencialCard extends StatelessWidget {
                   Spacer(),
                   Divider(height: 1),
                   Spacer(),
-                  Text(("${carrera?.nombre}".isEmpty ? "Sin carrera" : "${carrera?.nombre}"),
-                    maxLines: 3,
-                    style: TextStyle(
-                      color: MainTheme.primaryDarkColor,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    textAlign: TextAlign.center,
+                  FutureBuilder<Carrera>(
+                    future: Get.find<CarreraService>().getCarrera(),
+                    builder: (ctx, snapshot) {
+                      final carrera = snapshot.data;
+
+                      return Text(("${carrera?.nombre}".isEmpty ? "Sin carrera" : "${carrera?.nombre}"),
+                        maxLines: 3,
+                        style: TextStyle(
+                          color: MainTheme.primaryDarkColor,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.center,
+                      );
+                    },
                   ),
                   const Spacer(),
                   Column(
@@ -120,7 +127,7 @@ class CredencialCard extends StatelessWidget {
                         child: OccludeWrapper(
                           child: BarcodeWidget(
                             barcode: Barcode.code39(),
-                            data: "${user?.persona.rut}",
+                            data: "${user?.rut}",
                             width: 200,
                             height: 50,
                             drawText: false,

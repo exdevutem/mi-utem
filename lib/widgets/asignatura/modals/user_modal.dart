@@ -1,12 +1,12 @@
 import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
-import 'package:mi_utem/models/user/user.dart';
+import 'package:mi_utem/core/models/user/estudiante.dart';
 import 'package:mi_utem/widgets/profile_photo.dart';
 import 'package:mi_utem/widgets/snackbar.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class UserModal extends StatelessWidget {
-  final User user;
+  final Estudiante user;
 
   const UserModal({
     super.key,
@@ -49,13 +49,13 @@ class UserModal extends StatelessWidget {
                     style: TextStyle(color: Colors.grey),
                   ),
                   onLongPress: () async {
-                    await FlutterClipboard.copy(user.correoUtem!);
+                    await FlutterClipboard.copy(user.correoUtem);
                     showTextSnackbar(context, title: "¡Copiado!", message: "Correo copiado al portapapeles");
                   },
                   onTap: () async {
-                    await launchUrl(Uri.parse("mailto:${user.correoUtem ?? ""}"));
+                    await launchUrl(Uri.parse("mailto:${user.correoUtem}"));
                   },
-                  subtitle: Text(user.correoUtem!,
+                  subtitle: Text(user.correoUtem,
                     style: TextStyle(
                       color: Colors.grey[900],
                       fontSize: 18,

@@ -6,13 +6,13 @@ import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:flutter_markdown/flutter_markdown.dart";
 import "package:get/get.dart";
-import "package:mi_utem/core/models/user/user.dart";
+import "package:mi_utem/controllers/grades/grade_update_handler.dart";
+import "package:mi_utem/core/models/novedades/ibanner.dart";
+import 'package:mi_utem/core/models/preferencia.dart';
+import "package:mi_utem/core/models/user/estudiante.dart";
 import "package:mi_utem/core/services/auth_service.dart";
-import "package:mi_utem/models/novedades/ibanner.dart";
-import "package:mi_utem/models/preferencia.dart";
-import "package:mi_utem/repositories/noticias_repository.dart";
-import "package:mi_utem/repositories/permiso_ingreso_repository.dart";
-import "package:mi_utem/services/grades_service.dart";
+import 'package:mi_utem/core/services/noticias_service.dart';
+import "package:mi_utem/core/services/permisos_service.dart";
 import "package:mi_utem/services/remote_config/remote_config.dart";
 import "package:mi_utem/services/review_service.dart";
 import "package:mi_utem/widgets/custom_app_bar.dart";
@@ -35,7 +35,7 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
 
   List<IBanner> _banners = const [];
-  User? _user;
+  Estudiante? _user;
   final _authService = Get.find<AuthService>();
 
   @override
@@ -57,15 +57,15 @@ class _MainScreenState extends State<MainScreen> {
 
     loadData(forceRefresh: false);
 
-    _authService.getUser().then((user) => setState(() => _user = user));
+    _authService.login().then((user) => setState(() => _user = user));
   }
 
   Future<void> loadData({ bool forceRefresh = true }) async {
     if(forceRefresh) {
       await RemoteConfigService.update();
     }
-    await Get.find<PermisoIngresoRepository>().getPermisos(forceRefresh: forceRefresh); // Forzar re-descarga de los permisos
-    await Get.find<NoticiasRepository>().getNoticias(forceRefresh: forceRefresh); // Forzar re-descarga de las noticias
+    await Get.find<PermisosService>().getPermisos(forceRefresh: forceRefresh); // Forzar re-descarga de los permisos
+    await Get.find<NoticiasService>().getNoticias(forceRefresh: forceRefresh); // Forzar re-descarga de las noticias
     setState(() => _banners = RemoteConfigService.banners); // Actualizar los banners y se re-renderiza
   }
 
@@ -79,7 +79,7 @@ class _MainScreenState extends State<MainScreen> {
     appBar: CustomAppBar(title: Text("Inicio")),
     drawer: CustomDrawer(),
     floatingActionButton: kDebugMode ? FloatingActionButton(
-      onPressed: () => Get.find<GradesService>().lookForGradeUpdates(),
+      onPressed: () => Get.find<GradeUpdateHandler>().lookForGradeUpdates(),
       tooltip: "Probar notificaciones de notas",
       child: Icon(Icons.notifications,
         color: Colors.white,
@@ -100,7 +100,7 @@ class _MainScreenState extends State<MainScreen> {
                   width: double.infinity,
                   child: FutureBuilder<String?>(
                     future: Preferencia.apodo.get(defaultValue: "N/N"),
-                    initialData: _user?.persona.primerNombre ?? "N/N",
+                    initialData: _user?.primerNombre ?? "N/N",
                     builder: (ctx, snapshot) => MarkdownBody(
                       data: _greetingText.replaceAll("%name", snapshot.data ?? "N/N"),
                       styleSheet: MarkdownStyleSheet(

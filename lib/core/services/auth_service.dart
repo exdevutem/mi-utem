@@ -1,54 +1,52 @@
-import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:mi_utem/core/models/user/user.dart';
+import 'package:mi_utem/core/models/exceptions/custom_exception.dart';
+import 'package:mi_utem/core/models/preferencia.dart';
+import 'package:mi_utem/core/models/user/estudiante.dart';
+import 'package:mi_utem/core/repositories/secure_storage_repository.dart';
 import 'package:mi_utem/core/utils/constants.dart';
-import 'package:mi_utem/models/exceptions/custom_exception.dart';
-import 'package:mi_utem/models/preferencia.dart';
-import 'package:mi_utem/models/user/credential.dart';
-import 'package:mi_utem/repositories/credentials_repository.dart';
+import 'package:mi_utem/core/utils/http/functions.dart';
 import 'package:mi_utem/screens/login_screen/login_screen.dart';
 import 'package:mi_utem/services/notification_service.dart';
-import 'package:mi_utem/utils/http/http_client.dart';
 
 class AuthService {
 
-  final httpClient = HttpClient.httpClient;
-  final CredentialsRepository _credentialsService = Get.find<CredentialsRepository>();
+  final SecureStorageRepository _secureStorageRepository = Get.find<SecureStorageRepository>();
 
   Future<bool> isFirstTime() async => (await Preferencia.lastLogin.exists()) == false;
 
-  Future<bool> isLoggedIn() async => (await getUser()) != null;
+  Future<bool> isLoggedIn() async => (await _secureStorageRepository.getEstudiante()) != null;
 
-  Future<User> login({ bool forceRefresh = false }) async {
-    final credentials = await _getCredential();
+  Future<Estudiante> login({ bool forceRefresh = false }) async {
+    final credentials = await _secureStorageRepository.getCredentials();
     if(credentials == null) {
       logger.d("[AuthService#isLoggedIn]: No se encontraron credenciales.");
       throw CustomException.custom();
     }
 
-    final user = await getUser();
-    if (user != null && !forceRefresh) {
-      return user;
+    Estudiante? estudiante = await _secureStorageRepository.getEstudiante();
+    if (estudiante != null && !forceRefresh) {
+      return estudiante;
     }
 
     try {
-      final response = await httpClient.post("$sigaServiceUri/autenticacion/login/", data: 'username=${Uri.encodeFull(credentials.email)}&password=${Uri.encodeFull(credentials.password)}', options: Options(
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        }
-      ));
+      final response = await sigaClientRequest("autenticacion/login/",
+        method: 'POST',
+        data: credentials.toFormUrlEncoded(),
+        forceRefresh: forceRefresh,
+        contentType: Headers.formUrlEncodedContentType,
+      );
 
       if(response.statusCode != 200 || response.data['status_code'] != 200) {
         throw CustomException.custom(message: "No logramos autenticarte.");
       }
 
-      final user = User.fromJson(response.data['response'] as Map<String, dynamic>);
-      await setUser(user);
-      return user;
+      estudiante = Estudiante.fromJson(response.data['response'] as Map<String, dynamic>);
+      await _secureStorageRepository.setEstudiante(estudiante);
+      await Preferencia.lastLogin.set(DateTime.now().toIso8601String());
+      return estudiante;
     } on DioError catch (e) {
       if(e.response?.statusCode == 401) {
         throw CustomException(message: "Credenciales incorrectas. Por favor intenta nuevamente.", statusCode: 401);
@@ -60,9 +58,73 @@ class AuthService {
     }
   }
 
+  /* Obtiene un token activo, si está expirado el actual, obtiene uno nuevo */
+  Future<String> activeToken() async {
+    Estudiante estudiante = await login();
+    if(estudiante.isTokenExpired()) {
+      estudiante = await login(forceRefresh: true);
+    }
+
+    if(estudiante.isTokenExpired()) {
+      throw CustomException.custom(message: "No se pudo obtener un token válido. Por favor intenta más tarde.");
+    }
+
+    return estudiante.token;
+  }
+
+  /* Obtiene un token activo, de la api de ExDev */
+  Future<String> activeTokenExdev({ bool forceRefresh = false}) async {
+    try {
+      final credentials = await Get.find<SecureStorageRepository>().getCredentials();
+      if(credentials == null) {
+        throw CustomException.custom(message: 'No se han ingresado credenciales');
+      }
+
+      final authResponse = await authClientRequest('auth',
+        method: 'POST',
+        data: {
+          'correo': credentials.username,
+          'contrasenia': credentials.password,
+        },
+        contentType: Headers.jsonContentType,
+        forceRefresh: forceRefresh,
+      );
+
+      final token = authResponse.data['token'] as String?;
+      if(token == null) {
+        logger.e('Error al obtener token para obtener permisos');
+        throw CustomException.custom(message: 'Error al obtener permisos. Por favor intenta más tarde.');
+      }
+
+      // Validar token al realizar solicitud a carreras.
+      await authClientRequest('carreras',
+        headers: {
+          'Authorization': 'Bearer $token'
+        },
+        contentType: Headers.jsonContentType,
+        forceRefresh: forceRefresh,
+      );
+
+      return token;
+    } on DioError catch (e) {
+      logger.e('Error al autenticar para obtener permisos', [e]);
+      final data = e.response?.data ?? {
+        'mensaje': 'Error al obtener permisos.',
+        'codigoHttp': 500,
+      };
+
+      throw CustomException.fromJson(data);
+    } catch (e) {
+      logger.e('Error al autenticar para obtener permisos', [e]);
+      throw CustomException.custom(message: 'Error al obtener permisos. Por favor intenta más tarde.');
+    }
+  }
+
   Future<void> logout({ BuildContext? context}) async {
-    await setUser(null);
-    await _credentialsService.setCredentials(null);
+    await _secureStorageRepository.setEstudiante(null);
+    await _secureStorageRepository.setCredentials(null);
+    await Preferencia.onboardingStep.delete();
+
     if(context != null) {
       Navigator.popUntil(context, (route) => route.isFirst);
       Navigator.pushReplacement(context, CupertinoPageRoute(builder: (ctx) => LoginScreen()));
@@ -70,7 +132,7 @@ class AuthService {
   }
 
   Future<void> saveFCMToken() async {
-    final user = await getUser();
+    final user = await _secureStorageRepository.getEstudiante();
     if(user == null) {
       return;
     }
@@ -92,7 +154,7 @@ class AuthService {
     }
 
     try {
-      usersCollection.doc(user.persona.rut.rut.toString()).set({
+      usersCollection.doc(user.rut.rut.toString()).set({
         'fcmTokens': FieldValue.arrayUnion([fcmToken]),
       }, SetOptions(merge: true));
     } catch (e) {
@@ -133,24 +195,4 @@ class AuthService {
     }
   }
 
-  Future<User?> getUser() async {
-    final data = await secureStorage.read(key: "user");
-    if(data == null || data == "null") {
-      return null;
-    }
-
-    return User.fromJson(jsonDecode(data) as Map<String, dynamic>);
-  }
-
-  Future<void> setUser(User? user) async => await secureStorage.write(key: "user", value: user.toString());
-
-  Future<Credentials?> _getCredential() async {
-    final hasCredential = await _credentialsService.hasCredentials();
-    final credential = await _credentialsService.getCredentials();
-    if(!hasCredential || credential == null) {
-      return null;
-    }
-
-    return credential;
-  }
 }

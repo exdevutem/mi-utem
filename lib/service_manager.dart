@@ -4,52 +4,43 @@ import 'package:crypto/crypto.dart';
 import 'package:get/get.dart';
 import 'package:mi_utem/config/logger.dart';
 import 'package:mi_utem/controllers/calculator_controller.dart';
+import 'package:mi_utem/controllers/grades/grade_update_handler.dart';
 import 'package:mi_utem/controllers/horario_controller.dart';
+import 'package:mi_utem/core/repositories/secure_storage_repository.dart';
+import 'package:mi_utem/core/services/asignaturas_service.dart';
 import 'package:mi_utem/core/services/auth_service.dart';
-import 'package:mi_utem/repositories/asignaturas_repository.dart';
-import 'package:mi_utem/repositories/auth_repository.dart';
-import 'package:mi_utem/repositories/carreras_repository.dart';
-import 'package:mi_utem/repositories/credentials_repository.dart';
-import 'package:mi_utem/repositories/grades_repository.dart';
-import 'package:mi_utem/repositories/horario_repository.dart';
-import 'package:mi_utem/repositories/noticias_repository.dart';
-import 'package:mi_utem/repositories/permiso_ingreso_repository.dart';
-import 'package:mi_utem/services/carreras_service.dart';
-import 'package:mi_utem/services/grades_service.dart';
+import 'package:mi_utem/core/services/carrera_service.dart';
+import 'package:mi_utem/core/services/noticias_service.dart';
+import 'package:mi_utem/core/services/permisos_service.dart';
 
 Future<void> registerServices() async {
-  /* Repositorios (Para conectarse a la REST Api o servicios locales) */
-  Get.lazyPut(() => AuthRepository());
-  Get.lazyPut(() => AsignaturasRepository());
-  Get.lazyPut(() => CredentialsRepository(), fenix: true);
-  Get.lazyPut(() => CarrerasRepository());
-  Get.lazyPut(() => GradesRepository());
-  Get.lazyPut(() => PermisoIngresoRepository(), fenix: true);
-  Get.lazyPut(() => NoticiasRepository());
-  Get.lazyPut(() => HorarioRepository(), fenix: true);
+  /* Repositorios (Para conectarse a servicios locales) */
+  Get.lazyPut(() => SecureStorageRepository(), fenix: true);
+
+  Get.lazyPut(() => NoticiasService());
 
   /* Servicios (Para procesar datos REST) */
   Get.lazyPut(() => AuthService());
-  Get.lazyPut(() => CarrerasService());
-  Get.lazyPut(() => GradesService());
+  Get.lazyPut(() => AsignaturasService());
+  Get.lazyPut(() => CarreraService());
+  Get.lazyPut(() => PermisosService());
 
   /* Controladores (Para procesar datos de interfaz) */
   Get.lazyPut(() => HorarioController(), fenix: true);
   Get.lazyPut(() => CalculatorController(), fenix: true);
 
-  final credentialsRepository = Get.find<CredentialsRepository>();
-  if(!await credentialsRepository.hasCredentials()) {
+  /* Handlers, para administrar algunas cosas de la app */
+  Get.lazyPut(() => GradeUpdateHandler());
+
+  final secureStorageRepository = Get.find<SecureStorageRepository>();
+  String? username = (await secureStorageRepository.getCredentials())?.username;
+  if(username == null) {
     return;
   }
 
-  String? email = (await credentialsRepository.getCredentials())?.email;
-  if(email == null) {
-    return;
+  if(!username.contains("@")) {
+    username += "@utem.cl";
   }
 
-  if(!email.contains("@")) {
-    email += "@utem.cl";
-  }
-
-  logger.d("[ServiceManager]: ID de usuario: ${md5.convert(utf8.encode(email)).toString()} ($email)");
+  logger.d("[ServiceManager]: ID de usuario: ${md5.convert(utf8.encode(username)).toString()} ($username)");
 }

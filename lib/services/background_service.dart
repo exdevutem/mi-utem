@@ -2,13 +2,12 @@
 import 'package:background_fetch/background_fetch.dart';
 import 'package:get/get.dart';
 import 'package:mi_utem/config/logger.dart';
+import 'package:mi_utem/controllers/grades/grade_update_handler.dart';
+import 'package:mi_utem/core/services/asignaturas_service.dart';
 import 'package:mi_utem/core/services/auth_service.dart';
-import 'package:mi_utem/repositories/asignaturas_repository.dart';
-import 'package:mi_utem/repositories/carreras_repository.dart';
-import 'package:mi_utem/repositories/horario_repository.dart';
-import 'package:mi_utem/repositories/permiso_ingreso_repository.dart';
-import 'package:mi_utem/services/carreras_service.dart';
-import 'package:mi_utem/services/grades_service.dart';
+import 'package:mi_utem/core/services/carrera_service.dart';
+import 'package:mi_utem/core/services/horario_service.dart';
+import 'package:mi_utem/core/services/permisos_service.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 final _backgroundFetchConfig = BackgroundFetchConfig(
@@ -90,10 +89,7 @@ class BackgroundService {
 
   static Future<DateTime> refrescarHorario(DateTime now) async {
     try {
-      final carreraId = (await Get.find<CarrerasService>().getCarreras())?.id;
-      if(carreraId != null) {
-        await Get.find<HorarioRepository>().getHorario(carreraId, forceRefresh: true);
-      }
+      await Get.find<HorarioService>().getHorario(forceRefresh: true);
     } catch(_){}
     logger.d("[BackgroundFetch]: Se refrescó el horario, tomó ${DateTime.now().difference(now).inMilliseconds} ms");
     now = DateTime.now();
@@ -102,13 +98,10 @@ class BackgroundService {
 
   static Future<DateTime> refrescarAsignaturasYEstudiantes(DateTime now) async {
     try {
-      final carreraId = (await Get.find<CarrerasService>().getCarreras())?.id;
-      if(carreraId != null) {
-        AsignaturasRepository asignaturasRepository = Get.find<AsignaturasRepository>();
-        final asignaturas = await asignaturasRepository.getAsignaturas(carreraId, forceRefresh: true) ?? [];
-        for(final asignatura in asignaturas) {
-          await asignaturasRepository.getEstudiantesAsignatura(asignatura, forceRefresh: true);
-        }
+      AsignaturasService asignaturasService = Get.find<AsignaturasService>();
+      final asignaturas = await asignaturasService.getAsignaturas(forceRefresh: true);
+      for(final asignatura in asignaturas) {
+        // await asignaturasService.getEstudiantesAsignatura(asignatura, forceRefresh: true); // TODO: Obtener usuarios
       }
     } catch(_){}
     logger.d("[BackgroundFetch]: Se refrescaron los datos de las carreras y asignaturas, tomó ${DateTime.now().difference(now).inMilliseconds} ms");
@@ -118,7 +111,7 @@ class BackgroundService {
 
   static Future<DateTime> refrescarPermisos(DateTime now) async {
     try {
-      PermisoIngresoRepository permisoIngresoRepository = Get.find<PermisoIngresoRepository>();
+      PermisosService permisoIngresoRepository = Get.find<PermisosService>();
       final permisos = await permisoIngresoRepository.getPermisos(forceRefresh: true);
       for(final permiso in permisos) {
         final id = permiso.id;
@@ -132,14 +125,14 @@ class BackgroundService {
   }
 
   static Future<DateTime> notificarCambiosNotas(DateTime now) async {
-    await Get.find<GradesService>().lookForGradeUpdates();
+    await Get.find<GradeUpdateHandler>().lookForGradeUpdates();
     logger.d("[BackgroundFetch]: Se revisaron las notas, tomó ${DateTime.now().difference(now).inMilliseconds} ms");
     now = DateTime.now();
     return now;
   }
 
   static Future<DateTime> refrescarCarreras(DateTime now) async {
-    await Get.find<CarrerasRepository>().getCarreras(forceRefresh: true);
+    await Get.find<CarreraService>().getCarrera(forceRefresh: true);
     logger.d("[BackgroundFetch]: Se refrescaron las carreras, tomó ${DateTime.now().difference(now).inMilliseconds} ms");
     now = DateTime.now();
     return now;

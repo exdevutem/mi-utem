@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mi_utem/models/novedades/ibanner.dart';
+import 'package:mi_utem/core/models/novedades/ibanner.dart';
 import 'package:mi_utem/widgets/main_screen/novedades/banner.dart';
 
 class BannersSection extends StatelessWidget {

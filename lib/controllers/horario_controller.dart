@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:mi_utem/models/asignaturas/asignatura.dart';
-import 'package:mi_utem/models/horario.dart';
-import 'package:mi_utem/repositories/horario_repository.dart';
+import 'package:mi_utem/core/models/asignaturas/asignatura.dart';
+import 'package:mi_utem/core/models/horario.dart';
+import 'package:mi_utem/core/services/horario_service.dart';
+import 'package:mi_utem/core/utils/utils.dart';
 import 'package:mi_utem/screens/horario/widgets/horario_main_scroller.dart';
-import 'package:mi_utem/services/carreras_service.dart';
 import 'package:mi_utem/services/remote_config/remote_config.dart';
-import 'package:mi_utem/utils/utils.dart';
 import 'package:vector_math/vector_math_64.dart' as vector;
 
 class HorarioController {
@@ -73,12 +72,7 @@ class HorarioController {
   }
 
   Future<Horario?> getHorario({ bool forceRefresh = false }) async {
-    final carreraId = (await Get.find<CarrerasService>().getCarreras(forceRefresh: forceRefresh))?.id;
-    if(carreraId == null) {
-      return null;
-    }
-
-    final horario = await Get.find<HorarioRepository>().getHorario(carreraId, forceRefresh: forceRefresh);
+    final horario = await Get.find<HorarioService>().getHorario(forceRefresh: forceRefresh);
     if(horario != null) _setRandomColorsByHorario(horario);
     return horario;
   }

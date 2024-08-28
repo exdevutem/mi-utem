@@ -1,10 +1,10 @@
 import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mi_utem/core/models/user/user.dart';
+import 'package:mi_utem/core/models/exceptions/custom_exception.dart';
+import 'package:mi_utem/core/models/preferencia.dart';
+import 'package:mi_utem/core/models/user/estudiante.dart';
 import 'package:mi_utem/core/services/auth_service.dart';
-import 'package:mi_utem/models/exceptions/custom_exception.dart';
-import 'package:mi_utem/models/preferencia.dart';
 import 'package:mi_utem/widgets/custom_app_bar.dart';
 import 'package:mi_utem/widgets/custom_error_widget.dart';
 import 'package:mi_utem/widgets/image/image_view_screen.dart';
@@ -38,8 +38,8 @@ class _PerfilScreenState extends State<PerfilScreen> {
     appBar: CustomAppBar(
       title: Text("Perfil"),
     ),
-    body: SafeArea(child: FutureBuilder<User?>(
-      future: Get.find<AuthService>().getUser(),
+    body: SafeArea(child: FutureBuilder<Estudiante?>(
+      future: Get.find<AuthService>().login(),
       builder: (ctx, snapshot) {
         if(snapshot.connectionState == ConnectionState.waiting) {
           return LoadingIndicator.centeredDefault();
@@ -76,7 +76,7 @@ class _PerfilScreenState extends State<PerfilScreen> {
                         title: Text("Nombre",
                           style: TextStyle(color: Colors.grey),
                         ),
-                        subtitle: Text("${user.persona.nombreCompletoCapitalizado}",
+                        subtitle: Text("${user.nombreCompletoCapitalizado}",
                           style: TextStyle(
                             color: Colors.grey[900],
                             fontSize: 18,
@@ -100,14 +100,14 @@ class _PerfilScreenState extends State<PerfilScreen> {
                         title: Text("RUT",
                           style: TextStyle(color: Colors.grey),
                         ),
-                        subtitle: Text("${user.persona.rut}",
+                        subtitle: Text("${user.rut}",
                           style: TextStyle(
                             color: Colors.grey[900],
                             fontSize: 18,
                           ),
                         ),
                         onLongPress: () async {
-                          await FlutterClipboard.copy(user.persona.rut.toString());
+                          await FlutterClipboard.copy(user.rut.toString());
                           showTextSnackbar(context, title: "¡Copiado!", message: "Rut copiado al portapapeles");
                         },
                       ),
@@ -116,15 +116,15 @@ class _PerfilScreenState extends State<PerfilScreen> {
                         title: Text("Correo Institucional",
                           style: TextStyle(color: Colors.grey),
                         ),
-                        subtitle: Text("${user.persona.correoUtem}",
+                        subtitle: Text("${user.correoUtem}",
                           style: TextStyle(
                             color: Colors.grey[900],
                             fontSize: 18,
                           ),
                         ),
-                        onTap: () => launchUrl(Uri.parse("mailto:${user.persona.correoUtem}")),
+                        onTap: () => launchUrl(Uri.parse("mailto:${user.correoUtem}")),
                         onLongPress: () async {
-                          await FlutterClipboard.copy(user.persona.correoUtem!);
+                          await FlutterClipboard.copy(user.correoUtem);
                           showTextSnackbar(context, title: "¡Copiado!", message: "Correo copiado al portapapeles");
                         },
                       ),
@@ -133,15 +133,15 @@ class _PerfilScreenState extends State<PerfilScreen> {
                         title: Text("Correo Personal",
                           style: TextStyle(color: Colors.grey),
                         ),
-                        subtitle: Text("${user.persona.correoPersonal}",
+                        subtitle: Text("${user.correoPersonal}",
                           style: TextStyle(
                             color: Colors.grey[900],
                             fontSize: 18,
                           ),
                         ),
-                        onTap: () => launchUrl(Uri.parse("mailto:${user.persona.correoPersonal}")),
+                        onTap: () => launchUrl(Uri.parse("mailto:${user.correoPersonal}")),
                         onLongPress: () async {
-                          await FlutterClipboard.copy(user.persona.correoPersonal!);
+                          await FlutterClipboard.copy(user.correoPersonal);
                           showTextSnackbar(context, title: "¡Copiado!", message: "Correo copiado al portapapeles");
                         },
                       ),
@@ -151,8 +151,8 @@ class _PerfilScreenState extends State<PerfilScreen> {
               ),
               Center(
                 child: ProfilePhoto(
-                  fotoUrl: user.persona.fotoUrl,
-                  iniciales: user.persona.iniciales,
+                  base64Data: user.fotoUrl,
+                  iniciales: user.iniciales,
                   radius: 60,
                   editable: false,
                   onImage: (imagenBase64) async {
