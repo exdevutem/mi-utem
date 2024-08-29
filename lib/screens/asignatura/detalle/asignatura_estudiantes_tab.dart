@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mi_utem/core/models/asignaturas/asignatura.dart';
 import 'package:mi_utem/core/models/exceptions/custom_exception.dart';
-import 'package:mi_utem/core/models/user/estudiante.dart';
+import 'package:mi_utem/core/models/user/persona/persona.dart';
 import 'package:mi_utem/core/services/asignaturas_service.dart';
 import 'package:mi_utem/services/analytics_service.dart';
 import 'package:mi_utem/widgets/asignatura/modals/user_modal.dart';
@@ -13,11 +13,11 @@ import 'package:mi_utem/widgets/pull_to_refresh.dart';
 
 
 class AsignaturaEstudiantesTab extends StatefulWidget {
-  final Asignatura? asignatura;
+  final Asignatura asignatura;
 
   const AsignaturaEstudiantesTab({
     super.key,
-    this.asignatura,
+    required this.asignatura,
   });
 
   @override
@@ -36,12 +36,11 @@ class _AsignaturaEstudiantesTabState extends State<AsignaturaEstudiantesTab> {
     ),
     body: SafeArea(child: PullToRefresh(
       onRefresh: () async => setState(() => _forceRefresh = true),
-      child: FutureBuilder<List<Estudiante>?>(
+      child: FutureBuilder<List<PersonaUtem>?>(
         future: () async {
-          // final estudiantes = await _asignaturasRepository.getEstudiantesAsignatura(widget.asignatura, forceRefresh: _forceRefresh);
-          // _forceRefresh = false;
-          // return estudiantes;
-          return null;
+          final estudiantes = await _asignaturasService.getEstudiantes(widget.asignatura, forceRefresh: _forceRefresh);
+          _forceRefresh = false;
+          return estudiantes;
         }(),
         builder: (ctx, snapshot) {
           if(snapshot.connectionState == ConnectionState.waiting) {
@@ -60,7 +59,7 @@ class _AsignaturaEstudiantesTabState extends State<AsignaturaEstudiantesTab> {
             );
           }
 
-          List<Estudiante>? estudiantes = snapshot.data;
+          List<PersonaUtem>? estudiantes = snapshot.data;
           if(snapshot.hasError || !snapshot.hasData || estudiantes == null) {
             return Center(
               child: SingleChildScrollView(
@@ -82,14 +81,14 @@ class _AsignaturaEstudiantesTabState extends State<AsignaturaEstudiantesTab> {
             ),
             itemBuilder: (context, i)  => ListTile(
               title: Text(estudiantes[i].nombreCompletoCapitalizado),
-              subtitle: Text(estudiantes[i].correoUtem ?? ''),
+              subtitle: Text(estudiantes[i].correoUtem),
               onTap: () {
                 AnalyticsService.logEvent('asignatura_estudiante_tap', parameters: {
-                  'asignatura': widget.asignatura?.codigo,
+                  'asignatura': widget.asignatura.codigo,
                   'estudiante': estudiantes[i].correoUtem,
                 });
-                showModalBottomSheet(context: context, builder: (ctx) => UserModal(
-                  user: estudiantes[i],
+                showModalBottomSheet(context: context, builder: (ctx) => PersonaUtemModal(
+                  personaUtem: estudiantes[i],
                 ));
               },
             ),

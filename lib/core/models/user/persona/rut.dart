@@ -1,7 +1,7 @@
 class Rut {
-  int rut;
+  int  rut;
 
-  get dv => _calcularDV();
+  String get dv => _calcularDV();
 
   Rut(this.rut);
 

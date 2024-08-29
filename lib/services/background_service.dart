@@ -101,7 +101,7 @@ class BackgroundService {
       AsignaturasService asignaturasService = Get.find<AsignaturasService>();
       final asignaturas = await asignaturasService.getAsignaturas(forceRefresh: true);
       for(final asignatura in asignaturas) {
-        // await asignaturasService.getEstudiantesAsignatura(asignatura, forceRefresh: true); // TODO: Obtener usuarios
+        await asignaturasService.getEstudiantes(asignatura, forceRefresh: true);
       }
     } catch(_){}
     logger.d("[BackgroundFetch]: Se refrescaron los datos de las carreras y asignaturas, tomó ${DateTime.now().difference(now).inMilliseconds} ms");

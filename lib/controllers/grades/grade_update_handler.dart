@@ -56,7 +56,7 @@ class GradeUpdateHandler {
       }
 
       try {
-        final updatedGrades = await Get.find<GradesService>().getGrades(asignaturaId, forceRefresh: true);
+        final updatedGrades = await Get.find<GradesService>().getGrades(asignatura, forceRefresh: true);
 
         final changeType = await this.compareGrades(asignaturaId, updatedGrades);
         await this.saveGrades(asignaturaId, updatedGrades);

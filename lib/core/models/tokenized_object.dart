@@ -1,11 +1,8 @@
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 
-class TokenizedUser {
-  final String token;
+mixin TokenizedObject {
 
-  TokenizedUser({
-    required this.token,
-  });
+  String get token;
 
   JWT? decodeToken() => JWT.tryDecode(token);
 

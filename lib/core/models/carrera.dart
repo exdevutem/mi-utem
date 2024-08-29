@@ -14,7 +14,7 @@ class Carrera {
     id: json['carrera_id'],
     nombre: capitalize(json['nombre_carrera']),
     estado: capitalize(json['situacion_academica']).trim(),
-    codigo: json['codigo_carrera'] as String,
+    codigo: (json['codigo_carrera'] as int?)?.toString(),
   );
 
   static List<Carrera> fromJsonList(dynamic json) => json != null ? (json as List).map((it) => Carrera.fromJson(it)).toList() : [];

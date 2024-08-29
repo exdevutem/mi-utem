@@ -3,7 +3,7 @@ import 'package:gradient_widgets/gradient_widgets.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:mi_utem/screens/asignatura/asignaturas_lista_screen.dart';
 import 'package:mi_utem/screens/calculadora_notas_screen.dart';
-import 'package:mi_utem/screens/credencial_screen.dart';
+import 'package:mi_utem/screens/credencial/credencial_screen.dart';
 import 'package:mi_utem/screens/horario/horario_screen.dart';
 
 class QuickMenuCard extends StatelessWidget {

@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:mdi/mdi.dart';
+import 'package:mi_utem/config/logger.dart';
 import 'package:mi_utem/core/models/asignaturas/asignatura.dart';
 import 'package:mi_utem/core/models/asignaturas/detalles/navigation_tab.dart';
+import 'package:mi_utem/core/services/grades_service.dart';
 import 'package:mi_utem/screens/asignatura/detalle/asignatura_notas_tab.dart';
 import 'package:mi_utem/screens/asignatura/detalle/asignatura_resumen_tab.dart';
+import 'package:mi_utem/screens/calculadora_notas_screen.dart';
 import 'package:mi_utem/services/remote_config/remote_config.dart';
 import 'package:mi_utem/services/review_service.dart';
 import 'package:mi_utem/widgets/custom_app_bar.dart';
@@ -42,8 +46,9 @@ class _AsignaturaDetalleScreenState extends State<AsignaturaDetalleScreen> {
         child: AsignaturaNotasTab(
           asignatura: asignatura,
           onRefresh: () async {
-            // final grades = await Get.find<GradesRepository>().getGrades(carreraId: widget.carrera.id, asignaturaId: this.asignatura.id, forceRefresh: true);
-            // setState(() => this.asignatura = asignatura.copyWith(grades: grades));
+            final grades = await Get.find<GradesService>().getGrades(this.asignatura, forceRefresh: true);
+            logger.d('Refresh ${asignatura.nombre}', [grades]);
+            setState(() => this.asignatura = asignatura.copyWith(grades: grades));
           },
         ),
         initial: true,
@@ -74,9 +79,8 @@ class _AsignaturaDetalleScreenState extends State<AsignaturaDetalleScreen> {
   }
 
   _onTapCalculadora() async {
-    // TODO: migrar a nuevos modelos y servicios
-    // final grades = await Get.find<GradesRepository>().getGrades(carreraId: widget.carrera.id, asignaturaId: asignatura.id);
-    // Navigator.push(context, MaterialPageRoute(builder: (ctx) => CalculadoraNotasScreen(grades: grades)));
+    final grades = await Get.find<GradesService>().getGrades(asignatura);
+    Navigator.push(context, MaterialPageRoute(builder: (ctx) => CalculadoraNotasScreen(grades: grades)));
   }
 }
 

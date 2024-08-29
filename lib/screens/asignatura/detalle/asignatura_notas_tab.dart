@@ -21,10 +21,21 @@ class AsignaturaNotasTab extends StatelessWidget {
   Widget build(BuildContext context) {
     final grades = asignatura.grades;
     final notasParciales = asignatura.grades?.notasParciales;
+
     if(grades == null || notasParciales == null || notasParciales.isEmpty) {
-      return const CustomErrorWidget(
-        emoji: "🤔",
-        title: "Parece que aún no hay notas ni ponderadores",
+      return PullToRefresh(
+        onRefresh: onRefresh,
+        child: Center(
+          child: ListView(
+            shrinkWrap: true,
+            children: [
+              CustomErrorWidget(
+                emoji: "🤔",
+                title: "Parece que aún no hay notas ni ponderadores",
+              ),
+            ],
+          ),
+        ),
       );
     }
 
@@ -51,7 +62,7 @@ class AsignaturaNotasTab extends StatelessWidget {
                 itemCount: notasParciales.length,
               ),
             ),
-          ),
+          )
         ],
       ),
     );

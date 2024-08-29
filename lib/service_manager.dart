@@ -10,6 +10,8 @@ import 'package:mi_utem/core/repositories/secure_storage_repository.dart';
 import 'package:mi_utem/core/services/asignaturas_service.dart';
 import 'package:mi_utem/core/services/auth_service.dart';
 import 'package:mi_utem/core/services/carrera_service.dart';
+import 'package:mi_utem/core/services/grades_service.dart';
+import 'package:mi_utem/core/services/horario_service.dart';
 import 'package:mi_utem/core/services/noticias_service.dart';
 import 'package:mi_utem/core/services/permisos_service.dart';
 
@@ -17,12 +19,14 @@ Future<void> registerServices() async {
   /* Repositorios (Para conectarse a servicios locales) */
   Get.lazyPut(() => SecureStorageRepository(), fenix: true);
 
-  Get.lazyPut(() => NoticiasService());
 
   /* Servicios (Para procesar datos REST) */
   Get.lazyPut(() => AuthService());
   Get.lazyPut(() => AsignaturasService());
   Get.lazyPut(() => CarreraService());
+  Get.lazyPut(() => GradesService());
+  Get.lazyPut(() => HorarioService());
+  Get.lazyPut(() => NoticiasService());
   Get.lazyPut(() => PermisosService());
 
   /* Controladores (Para procesar datos de interfaz) */

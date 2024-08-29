@@ -52,7 +52,7 @@ class ClassBlockCard extends StatelessWidget {
       showErrorSnackbar(context, 'No se pudo cargar la asignatura. Intenta más tarde.');
       return;
     }
-    final grades = await Get.find<GradesService>().getGrades(asignatura.id);
+    final grades = await Get.find<GradesService>().getGrades(asignatura);
 
     AnalyticsService.logEvent("horario_class_block_tap", parameters: {
       "asignatura": asignatura.nombre,

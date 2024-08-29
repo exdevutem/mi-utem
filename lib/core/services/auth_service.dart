@@ -73,7 +73,7 @@ class AuthService {
   }
 
   /* Obtiene un token activo, de la api de ExDev */
-  Future<String> activeTokenExdev({ bool forceRefresh = false}) async {
+  Future<String> activeTokenExdev() async {
     try {
       final credentials = await Get.find<SecureStorageRepository>().getCredentials();
       if(credentials == null) {
@@ -87,7 +87,7 @@ class AuthService {
           'contrasenia': credentials.password,
         },
         contentType: Headers.jsonContentType,
-        forceRefresh: forceRefresh,
+        forceRefresh: true,
       );
 
       final token = authResponse.data['token'] as String?;
@@ -102,7 +102,7 @@ class AuthService {
           'Authorization': 'Bearer $token'
         },
         contentType: Headers.jsonContentType,
-        forceRefresh: forceRefresh,
+        forceRefresh: true,
       );
 
       return token;
@@ -154,7 +154,7 @@ class AuthService {
     }
 
     try {
-      usersCollection.doc(user.rut.rut.toString()).set({
+      usersCollection.doc(user.rut?.rut.toString()).set({
         'fcmTokens': FieldValue.arrayUnion([fcmToken]),
       }, SetOptions(merge: true));
     } catch (e) {

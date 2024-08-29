@@ -4,9 +4,10 @@ import 'package:get/get.dart';
 import 'package:mdi/mdi.dart';
 import 'package:mi_utem/core/models/user/estudiante.dart';
 import 'package:mi_utem/core/services/auth_service.dart';
+import 'package:mi_utem/screens/credencial/widgets/credencial_front.dart';
+import 'package:mi_utem/screens/credencial/widgets/credencial_rear.dart';
 import 'package:mi_utem/services/analytics_service.dart';
 import 'package:mi_utem/services/review_service.dart';
-import 'package:mi_utem/widgets/credencial/credencial_card.dart';
 import 'package:mi_utem/widgets/custom_app_bar.dart';
 import 'package:mi_utem/widgets/custom_error_widget.dart';
 import 'package:mi_utem/widgets/flip_widget.dart';
@@ -94,13 +95,17 @@ class _CredencialScreenState extends State<CredencialScreen> {
 
         return Center(
           child: SafeArea(
-            child: CredencialCard(
-              user: estudiante,
-              controller: _flipController,
-              onFlip: (_) {
-                AnalyticsService.logEvent("credencial_flip");
-                setState(() {});
-              },
+            child: AspectRatio(
+              aspectRatio: 53.98 / 85.60,
+              child: FlipWidget(
+                front: CredencialFront(estudiante: estudiante),
+                back: const CredencialRear(),
+                controller: _flipController,
+                onFlip: (_) {
+                  AnalyticsService.logEvent("credencial_flip");
+                  setState(() {});
+                },
+              ),
             ),
           ),
         );

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:mi_utem/core/models/evaluacion/evaluacion.dart';
 
 class Grades {
@@ -26,4 +28,7 @@ class Grades {
     'nota_presentacion': notaPresentacion,
     'nota_examen': notaExamen,
   };
+
+  @override
+  String toString() => jsonEncode(toJson());
 }

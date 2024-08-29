@@ -4,8 +4,9 @@ import 'dart:developer';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:awesome_notifications_fcm/awesome_notifications_fcm.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:mi_utem/core/models/asignaturas/asignatura.dart';
-import 'package:mi_utem/core/models/carrera.dart';
+import 'package:mi_utem/core/services/grades_service.dart';
 import 'package:mi_utem/main.dart';
 import 'package:mi_utem/screens/asignatura/detalle/asignatura_detalle_screen.dart';
 import 'package:mi_utem/services/analytics_service.dart';
@@ -51,11 +52,9 @@ class NotificationController {
       final carreraPayload = payload?['carrera'];
       if (asignaturaJsonString != null && carreraPayload != null) {
         AnalyticsService.logEvent('notification_tap_grade_change');
-        final carrera = Carrera.fromJson(jsonDecode(carreraPayload));
         final asignatura = Asignatura.fromJson(jsonDecode(asignaturaJsonString));
         try { // Intenta actualizar las notas.
-          // asignatura.grades = await Get.find<GradesRepository>().getGrades(carreraId: carrera.id, asignaturaId: asignatura.id, forceRefresh: true); // TODO: Fix
-
+          asignatura.grades = await Get.find<GradesService>().getGrades(asignatura, forceRefresh: true);
         } catch(_){}
 
         navigatorKey.currentState?.push(MaterialPageRoute(builder: (ctx) => AsignaturaDetalleScreen(

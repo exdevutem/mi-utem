@@ -10,7 +10,7 @@ import 'package:mi_utem/core/services/auth_service.dart';
 import 'package:mi_utem/core/utils/utils.dart';
 import 'package:mi_utem/screens/acerca_screen.dart';
 import 'package:mi_utem/screens/asignatura/asignaturas_lista_screen.dart';
-import 'package:mi_utem/screens/credencial_screen.dart';
+import 'package:mi_utem/screens/credencial/credencial_screen.dart';
 import 'package:mi_utem/screens/horario/horario_screen.dart';
 import 'package:mi_utem/screens/main_screen.dart';
 import 'package:mi_utem/screens/perfil/perfil_screen.dart';

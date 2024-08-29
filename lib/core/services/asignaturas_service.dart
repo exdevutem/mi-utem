@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 import 'package:mi_utem/core/models/asignaturas/asignatura.dart';
 import 'package:mi_utem/core/models/exceptions/custom_exception.dart';
+import 'package:mi_utem/core/models/user/persona/persona.dart';
 import 'package:mi_utem/core/services/auth_service.dart';
 import 'package:mi_utem/core/services/carrera_service.dart';
 import 'package:mi_utem/core/utils/constants.dart';
@@ -36,6 +37,32 @@ class AsignaturasService {
       throw CustomException.fromSiga(data);
     } catch(e) {
       logger.e('Error al obtener asignaturas', [e]);
+      rethrow;
+    }
+  }
+
+  Future<List<PersonaUtem>> getEstudiantes(Asignatura asignatura, { bool forceRefresh = false }) async {
+    try {
+      final token = await Get.find<AuthService>().activeTokenExdev();
+      final response = await authClientRequest('asignaturas/${asignatura.codigo}',
+        contentType: Headers.jsonContentType,
+        forceRefresh: forceRefresh,
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      final data = response.data as Map<String, dynamic>;
+      if(!data.containsKey('estudiantes')) {
+        throw CustomException.custom(
+          message: 'Error al obtener estudiantes de asignatura. Por favor intenta nuevamente.',
+          statusCode: 500,
+        );
+      }
+
+      return (data['estudiantes'] as List<dynamic>).map<PersonaUtem>((e) => PersonaUtem.fromJson(e)).toList();
+    } catch (e) {
+      logger.e('Error al obtener estudiantes de asignatura', [e]);
       rethrow;
     }
   }

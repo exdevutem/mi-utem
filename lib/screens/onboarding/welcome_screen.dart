@@ -4,6 +4,7 @@ import 'package:mi_utem/core/models/preferencia.dart';
 import 'package:mi_utem/core/services/asignaturas_service.dart';
 import 'package:mi_utem/core/services/carrera_service.dart';
 import 'package:mi_utem/core/services/horario_service.dart';
+import 'package:mi_utem/core/services/permisos_service.dart';
 import 'package:mi_utem/screens/main_screen.dart';
 import 'package:mi_utem/screens/onboarding/set_alias_screen.dart';
 import 'package:mi_utem/themes/theme.dart';
@@ -33,7 +34,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     // Aprovechamos de utilizar el tiempo que tarde en el onboarding para pre-cargar algunos datos
     Get.find<CarreraService>().getCarrera(forceRefresh: true).then((_) {
         Get.find<HorarioService>().getHorario(forceRefresh: true);
-        // Get.find<PermisoIngresoRepository>().getPermisos(forceRefresh: true);
+        Get.find<PermisosService>().getPermisos(forceRefresh: true);
         Get.find<AsignaturasService>().getAsignaturas(forceRefresh: true);
     });
     super.initState();

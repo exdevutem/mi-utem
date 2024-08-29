@@ -1,16 +1,16 @@
 import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
-import 'package:mi_utem/core/models/user/estudiante.dart';
+import 'package:mi_utem/core/models/user/persona/persona.dart';
 import 'package:mi_utem/widgets/profile_photo.dart';
 import 'package:mi_utem/widgets/snackbar.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class UserModal extends StatelessWidget {
-  final Estudiante user;
+class PersonaUtemModal extends StatelessWidget {
+  final PersonaUtem personaUtem;
 
-  const UserModal({
+  const PersonaUtemModal({
     super.key,
-    required this.user,
+    required this.personaUtem,
   });
 
   @override
@@ -33,10 +33,10 @@ class UserModal extends StatelessWidget {
                     style: TextStyle(color: Colors.grey),
                   ),
                   onLongPress: () async {
-                    await FlutterClipboard.copy(user.nombreCompleto);
+                    await FlutterClipboard.copy(personaUtem.nombreCompleto);
                     showTextSnackbar(context, title: "¡Copiado!", message: "Correo copiado al portapapeles");
                   },
-                  subtitle: Text(user.nombreCompletoCapitalizado,
+                  subtitle: Text(personaUtem.nombreCompletoCapitalizado,
                     style: TextStyle(
                       color: Colors.grey[900],
                       fontSize: 18,
@@ -49,13 +49,13 @@ class UserModal extends StatelessWidget {
                     style: TextStyle(color: Colors.grey),
                   ),
                   onLongPress: () async {
-                    await FlutterClipboard.copy(user.correoUtem);
+                    await FlutterClipboard.copy(personaUtem.correoUtem);
                     showTextSnackbar(context, title: "¡Copiado!", message: "Correo copiado al portapapeles");
                   },
                   onTap: () async {
-                    await launchUrl(Uri.parse("mailto:${user.correoUtem}"));
+                    await launchUrl(Uri.parse("mailto:${personaUtem.correoUtem}"));
                   },
-                  subtitle: Text(user.correoUtem,
+                  subtitle: Text(personaUtem.correoUtem,
                     style: TextStyle(
                       color: Colors.grey[900],
                       fontSize: 18,
@@ -68,8 +68,8 @@ class UserModal extends StatelessWidget {
         ),
         Center(
           child: ProfilePhoto(
-            fotoUrl: user.fotoUrl,
-            iniciales: user.iniciales,
+            fotoUrl: personaUtem.fotoUrl,
+            iniciales: personaUtem.iniciales,
             radius: 60,
             editable: false,
           ),

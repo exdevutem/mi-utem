@@ -5,30 +5,25 @@ class REvaluacion {
   num? porcentaje;
   num? nota;
 
-  static const porcentajeKey = "porcentaje";
-  static const descripcionKey = "descripcion";
-  static const notaKey = "nota";
-
   REvaluacion({
     this.descripcion,
     this.porcentaje,
     this.nota,
   });
 
-  factory REvaluacion.fromJson(Map<String, dynamic>? json) =>
-      json != null ? REvaluacion(
-        porcentaje: json[porcentajeKey],
-        descripcion: json[descripcionKey],
-        nota: json[notaKey],
-      ) : REvaluacion();
+  factory REvaluacion.fromJson(Map<String, dynamic> json) => REvaluacion(
+    porcentaje: json['ponderador'],
+    descripcion: json['descripcion'],
+    nota: json['nota'],
+  );
 
   static List<REvaluacion> fromJsonList(List<dynamic>? json) =>
       json?.map((it) => REvaluacion.fromJson(it)).toList() ?? [];
 
   Map<String, dynamic> toJson() => {
-    porcentajeKey: porcentaje,
-    descripcionKey: descripcion,
-    notaKey: nota,
+    'ponderador': porcentaje,
+    'descripcion': descripcion,
+    'nota': nota,
   };
 
   @override
@@ -39,15 +34,11 @@ class IEvaluacion extends REvaluacion {
   bool editable;
 
   IEvaluacion({
+    super.porcentaje,
+    super.descripcion,
+    super.nota,
     this.editable = false,
-    String? descripcion,
-    num? porcentaje,
-    num? nota,
-  }) : super(
-    descripcion: descripcion,
-    porcentaje: porcentaje,
-    nota: nota,
-  );
+  });
 
   factory IEvaluacion.fromRemote(REvaluacion evaluacion) => IEvaluacion(
     descripcion: evaluacion.descripcion,

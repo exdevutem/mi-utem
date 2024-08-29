@@ -2,31 +2,25 @@ import 'dart:convert';
 
 import 'package:mi_utem/core/models/tokenized_object.dart';
 import 'package:mi_utem/core/models/user/perfil.dart';
+import 'package:mi_utem/core/models/user/persona/persona.dart';
 import 'package:mi_utem/core/models/user/persona/rut.dart';
-import 'package:mi_utem/utils/string_utils.dart';
 
-class Estudiante extends TokenizedUser {
+class Estudiante extends PersonaUtem with TokenizedObject {
 
-  final Rut rut;
-  final String nombreCompleto;
+  final String token;
   final String correoPersonal;
-  final String correoUtem;
   final String fotoUrl;
   final List<Perfil> perfiles;
 
   Estudiante({
-    required super.token,
-    required this.rut,
-    required this.nombreCompleto,
+    required this.token,
+    required super.rut,
+    required super.nombreCompleto,
+    required super.correoUtem,
     required this.correoPersonal,
-    required this.correoUtem,
     required this.fotoUrl,
     required this.perfiles,
   });
-
-  String get nombreCompletoCapitalizado => capitalize(nombreCompleto.trim());
-  String get primerNombre => nombreCompletoCapitalizado.split(' ')[0];
-  String get iniciales => nombreCompletoCapitalizado.split(' ').map((it) => it[0]).join('');
 
   factory Estudiante.fromJson(Map<String, dynamic> json) {
     final datosPersona = json['datos_persona'];
@@ -45,7 +39,7 @@ class Estudiante extends TokenizedUser {
   Map<String, dynamic> toJson() => {
     'token': token,
     'datos_persona': {
-      'rut': rut.rut,
+      'rut': rut?.rut,
       'nombre_completo': nombreCompleto,
       'correo_personal': correoPersonal,
       'correo_utem': correoUtem,

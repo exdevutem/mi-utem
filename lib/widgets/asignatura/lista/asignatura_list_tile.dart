@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:mi_utem/core/models/asignaturas/asignatura.dart';
+import 'package:mi_utem/core/services/grades_service.dart';
 import 'package:mi_utem/screens/asignatura/detalle/asignatura_detalle_screen.dart';
 import 'package:mi_utem/themes/theme.dart';
 import 'package:mi_utem/widgets/loading/loading_dialog.dart';
@@ -32,10 +34,10 @@ class _AsignaturaListTileState extends State<AsignaturaListTile> {
       child: InkWell(
         onTap: () async {
           showLoadingDialog(context);
-          // final grades = await Get.find<GradesRepository>().getGrades(carreraId: widget.carrera.id, asignaturaId: asignatura.id);
+          final grades = await Get.find<GradesService>().getGrades(asignatura);
           Navigator.pop(context);
           Navigator.push(context, MaterialPageRoute(builder: (ctx) => AsignaturaDetalleScreen(
-            asignatura: asignatura//.copyWith(grades: grades),
+            asignatura: asignatura.copyWith(grades: grades),
           )));
         },
         child: Container(
@@ -45,7 +47,7 @@ class _AsignaturaListTileState extends State<AsignaturaListTile> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("${asignatura.nombre}",
+              Text(asignatura.nombre,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 style: MainTheme.theme.textTheme.titleMedium,
@@ -56,8 +58,8 @@ class _AsignaturaListTileState extends State<AsignaturaListTile> {
                 mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("${asignatura.codigo}"),
-                  Text("${asignatura.tipoHora}"),
+                  Text(asignatura.codigo),
+                  Text(asignatura.tipoHora),
                 ],
               )
             ],
