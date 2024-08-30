@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:dio_http_cache/dio_http_cache.dart';
-import 'package:mi_utem/config/constants.dart';
 import 'package:mi_utem/core/models/preferencia.dart';
 import 'package:mi_utem/core/utils/constants.dart';
 import 'package:mi_utem/core/utils/http/http_client.dart';
@@ -25,11 +24,15 @@ Future<Response> sigaClientRequest(String path, {
   Options? options,
   bool forceRefresh = false,
   Duration? ttl = const Duration(days: 7),
-}) async => await HttpClient.httpClient.request("$sigaServiceUri/$path",
+  Map<String, dynamic>? extra,
+  Map<String, dynamic>? queryParameters,
+  Map<String, dynamic>? sigaParams,
+}) async => await HttpClient.authClientSiga.request("$sigaServiceUri/$path",
   data: data,
+  queryParameters: queryParameters,
   options: options ?? buildCacheOptions(ttl ?? Duration(days: 7),
     forceRefresh: forceRefresh,
-    primaryKey: 'miutem',
+    primaryKey: 'api_siga.miutem',
     subKey: path,
     maxStale: const Duration(days: 14),
     options: Options(
@@ -37,9 +40,14 @@ Future<Response> sigaClientRequest(String path, {
       headers: headers,
       contentType: contentType,
       responseType: responseType,
+      extra: {
+        'sigaParams': sigaParams,
+        ...extra ?? {},
+      },
     ),
   ),
 );
+
 /// Función para realizar solicitudes mediante el httpClient a la api de exdev.
 /// Esta función además genera un [CacheOptions] con opciones personalizadas por defecto.
 /// También esta función utiliza `$apiUrl/v1/` como prefijo.
@@ -59,8 +67,11 @@ Future<Response> authClientRequest(String path, {
   Options? options,
   bool forceRefresh = false,
   Duration? ttl = const Duration(days: 7),
-}) async => await HttpClient.httpClient.request("$apiUrl/v1/$path",
+  Map<String, dynamic>? extra,
+  Map<String, dynamic>? queryParameters,
+}) async => await HttpClient.authClientExDev.request("$apiUrl/v1/$path",
   data: data,
+  queryParameters: queryParameters,
   options: options ?? buildCacheOptions(ttl ?? Duration(days: 7),
     forceRefresh: forceRefresh,
     primaryKey: 'api_exdev.miutem',
@@ -71,6 +82,7 @@ Future<Response> authClientRequest(String path, {
       headers: headers,
       contentType: contentType,
       responseType: responseType,
+      extra: extra,
     ),
   ),
 );

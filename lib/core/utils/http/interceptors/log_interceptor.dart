@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:mi_utem/config/logger.dart';
+import 'package:mi_utem/core/utils/constants.dart';
 
 InterceptorsWrapper logInterceptor = InterceptorsWrapper(
   onRequest: (RequestOptions options, RequestInterceptorHandler handler) {

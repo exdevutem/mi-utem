@@ -7,7 +7,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_uxcam/flutter_uxcam.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:mi_utem/config/constants.dart';
+import 'package:mi_utem/core/utils/constants.dart';
 import 'package:mi_utem/screens/splash_screen.dart';
 import 'package:mi_utem/service_manager.dart';
 import 'package:mi_utem/services/background_service.dart';

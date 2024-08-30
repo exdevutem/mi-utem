@@ -71,9 +71,9 @@ class HorarioController {
     _setScrollControllerListeners();
   }
 
-  Future<Horario?> getHorario({ bool forceRefresh = false }) async {
+  Future<Horario> getHorario({ bool forceRefresh = false }) async {
     final horario = await Get.find<HorarioService>().getHorario(forceRefresh: forceRefresh);
-    if(horario != null) _setRandomColorsByHorario(horario);
+    _setRandomColorsByHorario(horario);
     return horario;
   }
 

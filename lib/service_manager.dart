@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:crypto/crypto.dart';
 import 'package:get/get.dart';
-import 'package:mi_utem/config/logger.dart';
 import 'package:mi_utem/controllers/calculator_controller.dart';
 import 'package:mi_utem/controllers/grades/grade_update_handler.dart';
 import 'package:mi_utem/controllers/horario_controller.dart';
@@ -14,6 +13,7 @@ import 'package:mi_utem/core/services/grades_service.dart';
 import 'package:mi_utem/core/services/horario_service.dart';
 import 'package:mi_utem/core/services/noticias_service.dart';
 import 'package:mi_utem/core/services/permisos_service.dart';
+import 'package:mi_utem/core/utils/constants.dart';
 
 Future<void> registerServices() async {
   /* Repositorios (Para conectarse a servicios locales) */

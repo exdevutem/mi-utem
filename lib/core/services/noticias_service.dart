@@ -10,7 +10,7 @@ class NoticiasService {
   final _httpClient = Dio(BaseOptions(baseUrl: "https://noticias.utem.cl"))..interceptors.addAll([
     HeadersInterceptor(),
     logInterceptor,
-    HttpClient.cacheManager.interceptor,
+    HttpClient.cacheManagerExDev.interceptor,
   ]);
 
   Future<List<Noticia>> getNoticias({ bool forceRefresh = false }) async {

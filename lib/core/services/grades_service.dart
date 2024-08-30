@@ -1,27 +1,26 @@
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
-import 'package:mi_utem/config/logger.dart';
 import 'package:mi_utem/core/models/asignaturas/asignatura.dart';
 import 'package:mi_utem/core/models/evaluacion/grades.dart';
 import 'package:mi_utem/core/models/exceptions/custom_exception.dart';
-import 'package:mi_utem/core/services/auth_service.dart';
 import 'package:mi_utem/core/services/carrera_service.dart';
+import 'package:mi_utem/core/utils/constants.dart';
 import 'package:mi_utem/core/utils/http/functions.dart';
 
 class GradesService {
 
   Future<Grades> getGrades(Asignatura asignatura, { forceRefresh = false }) async {
     try {
-      final token = await Get.find<AuthService>().activeToken();
       final carrera = await Get.find<CarreraService>().getCarrera();
       final response = await sigaClientRequest('estudiante/asignaturas/notas/',
         method: 'POST',
-        data: 'token=$token&carrera_id=${carrera.id}&seccion_id=${asignatura.id}',
+        sigaParams: {
+          'carrera_id': carrera.id,
+          'seccion_id': asignatura.id,
+        },
         contentType: Headers.formUrlEncodedContentType,
         forceRefresh: forceRefresh,
       );
-
-      logger.d('getGrades(${asignatura.nombre})', [response.data]);
 
       if(response.data['status_code'] != 200) {
         throw CustomException.fromSiga(response.data);

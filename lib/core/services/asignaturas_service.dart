@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:mi_utem/core/models/asignaturas/asignatura.dart';
 import 'package:mi_utem/core/models/exceptions/custom_exception.dart';
 import 'package:mi_utem/core/models/user/persona/persona.dart';
-import 'package:mi_utem/core/services/auth_service.dart';
 import 'package:mi_utem/core/services/carrera_service.dart';
 import 'package:mi_utem/core/utils/constants.dart';
 import 'package:mi_utem/core/utils/http/functions.dart';
@@ -12,11 +11,12 @@ class AsignaturasService {
   
   Future<List<Asignatura>> getAsignaturas({ bool forceRefresh = false}) async {
     try {
-      final token = await Get.find<AuthService>().activeToken();
       final carrera = await Get.find<CarreraService>().getCarrera();
       final response = await sigaClientRequest('estudiante/asignaturas/',
         method: 'POST',
-        data: 'token=$token&carrera_id=${carrera.id}',
+        sigaParams: {
+          'carrera_id': carrera.id,
+        },
         forceRefresh: forceRefresh,
         contentType: Headers.formUrlEncodedContentType,
       );
@@ -43,13 +43,9 @@ class AsignaturasService {
 
   Future<List<PersonaUtem>> getEstudiantes(Asignatura asignatura, { bool forceRefresh = false }) async {
     try {
-      final token = await Get.find<AuthService>().activeTokenExdev();
       final response = await authClientRequest('asignaturas/${asignatura.codigo}',
         contentType: Headers.jsonContentType,
         forceRefresh: forceRefresh,
-        headers: {
-          'Authorization': 'Bearer $token',
-        },
       );
 
       final data = response.data as Map<String, dynamic>;

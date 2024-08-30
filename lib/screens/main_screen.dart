@@ -13,6 +13,7 @@ import "package:mi_utem/core/models/user/estudiante.dart";
 import "package:mi_utem/core/services/auth_service.dart";
 import 'package:mi_utem/core/services/noticias_service.dart';
 import "package:mi_utem/core/services/permisos_service.dart";
+import "package:mi_utem/core/utils/http/http_client.dart";
 import "package:mi_utem/services/remote_config/remote_config.dart";
 import "package:mi_utem/services/review_service.dart";
 import "package:mi_utem/widgets/custom_app_bar.dart";
@@ -63,6 +64,7 @@ class _MainScreenState extends State<MainScreen> {
   Future<void> loadData({ bool forceRefresh = true }) async {
     if(forceRefresh) {
       await RemoteConfigService.update();
+      await HttpClient.clearCache();
     }
     await Get.find<PermisosService>().getPermisos(forceRefresh: forceRefresh); // Forzar re-descarga de los permisos
     await Get.find<NoticiasService>().getNoticias(forceRefresh: forceRefresh); // Forzar re-descarga de las noticias

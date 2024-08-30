@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mdi/mdi.dart';
-import 'package:mi_utem/config/logger.dart';
 import 'package:mi_utem/core/models/asignaturas/asignatura.dart';
 import 'package:mi_utem/core/models/exceptions/custom_exception.dart';
 import 'package:mi_utem/core/services/asignaturas_service.dart';
+import 'package:mi_utem/core/utils/constants.dart';
 import 'package:mi_utem/screens/calculadora_notas_screen.dart';
 import 'package:mi_utem/services/remote_config/remote_config.dart';
 import 'package:mi_utem/widgets/asignatura/lista/lista_asignaturas.dart';

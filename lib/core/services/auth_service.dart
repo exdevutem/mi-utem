@@ -34,9 +34,12 @@ class AuthService {
     try {
       final response = await sigaClientRequest("autenticacion/login/",
         method: 'POST',
-        data: credentials.toFormUrlEncoded(),
         forceRefresh: forceRefresh,
         contentType: Headers.formUrlEncodedContentType,
+        extra: {
+          'noToken': true,
+        },
+        sigaParams: credentials.toJson(),
       );
 
       if(response.statusCode != 200 || response.data['status_code'] != 200) {
@@ -73,7 +76,7 @@ class AuthService {
   }
 
   /* Obtiene un token activo, de la api de ExDev */
-  Future<String> activeTokenExdev() async {
+  Future<String> activeTokenExdev({ bool forceRefresh = false }) async {
     try {
       final credentials = await Get.find<SecureStorageRepository>().getCredentials();
       if(credentials == null) {
@@ -87,7 +90,10 @@ class AuthService {
           'contrasenia': credentials.password,
         },
         contentType: Headers.jsonContentType,
-        forceRefresh: true,
+        forceRefresh: forceRefresh,
+        extra: {
+          'noToken': true,
+        },
       );
 
       final token = authResponse.data['token'] as String?;
@@ -97,12 +103,16 @@ class AuthService {
       }
 
       // Validar token al realizar solicitud a carreras.
+      logger.d('test');
       await authClientRequest('carreras',
         headers: {
           'Authorization': 'Bearer $token'
         },
         contentType: Headers.jsonContentType,
         forceRefresh: true,
+        extra: {
+          'noToken': true,
+        },
       );
 
       return token;

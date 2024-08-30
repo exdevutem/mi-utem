@@ -2,7 +2,6 @@
 import 'dart:convert';
 
 import 'package:get/get.dart';
-import 'package:mi_utem/config/secure_storage.dart';
 import 'package:mi_utem/core/models/asignaturas/asignatura.dart';
 import 'package:mi_utem/core/models/carrera.dart';
 import 'package:mi_utem/core/models/evaluacion/grades.dart';
@@ -10,6 +9,7 @@ import 'package:mi_utem/core/services/asignaturas_service.dart';
 import 'package:mi_utem/core/services/auth_service.dart';
 import 'package:mi_utem/core/services/carrera_service.dart';
 import 'package:mi_utem/core/services/grades_service.dart';
+import 'package:mi_utem/core/utils/constants.dart';
 import 'package:mi_utem/services/notification_service.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
@@ -31,13 +31,15 @@ class GradeUpdateHandler {
       return {};
     }
 
-    final carrera = await Get.find<CarreraService>().getCarrera();
-    final carreraId = carrera.id;
-
-    if(carreraId == null) {
+    Carrera carrera;
+    try {
+      carrera = await Get.find<CarreraService>().getCarrera();
+    } catch(e) {
+      Sentry.captureException(e);
       return {};
     }
 
+    final carreraId = carrera.id;
     final subscribedAsignaturasJson = await secureStorage.read(key: '$subscribedAsignaturasPrefix$carreraId');
     List<Asignatura> subscribedAsignaturas;
     if(subscribedAsignaturasJson == null) {

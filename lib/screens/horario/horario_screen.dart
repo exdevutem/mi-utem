@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:mi_utem/controllers/horario_controller.dart';
 import 'package:mi_utem/core/models/exceptions/custom_exception.dart';
 import 'package:mi_utem/core/models/horario.dart';
+import 'package:mi_utem/core/utils/constants.dart';
 import 'package:mi_utem/screens/horario/widgets/horario_main_scroller.dart';
 import 'package:mi_utem/services/analytics_service.dart';
 import 'package:mi_utem/services/review_service.dart';
@@ -44,6 +45,7 @@ class _HorarioScreenState extends State<HorarioScreen> {
     return FutureBuilder<Horario?>(
       future: () async {
         _moveViewportToCurrentTime();
+        logger.d('Loading horario screen with forceRefresh: $_forceRefresh');
         final data = await horarioController.getHorario(forceRefresh: _forceRefresh);
         _forceRefresh = false;
         return data;

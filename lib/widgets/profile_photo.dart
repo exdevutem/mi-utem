@@ -5,7 +5,7 @@ import 'dart:typed_data';
 import 'package:circular_profile_avatar/circular_profile_avatar.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:mi_utem/config/logger.dart';
+import 'package:mi_utem/core/utils/constants.dart';
 import 'package:mi_utem/themes/theme.dart';
 import 'package:mi_utem/widgets/image/imagen_editor_modal.dart';
 import 'package:mi_utem/widgets/snackbar.dart';

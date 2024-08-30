@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:in_app_review/in_app_review.dart';
-import 'package:mi_utem/config/logger.dart';
+import 'package:mi_utem/core/utils/constants.dart';
 import 'package:mi_utem/widgets/dialogs/custom_alert_dialog.dart';
 
 class ReviewService {
