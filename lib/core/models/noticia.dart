@@ -11,5 +11,5 @@ class Noticia {
     link: "https://noticias.utem.cl/?p=${json['id']}",
   );
 
-  static List<Noticia> fromJsonList(List<dynamic> json) => json.map((e) => Noticia.fromJson(e)).toList();
+  static List<Noticia> fromJsonList(List<dynamic> json) => json.where((json) => ((json['yoast_head_json']['og_image'] as List<dynamic>? ?? [])).isNotEmpty).map((e) => Noticia.fromJson(e)).toList();
 }

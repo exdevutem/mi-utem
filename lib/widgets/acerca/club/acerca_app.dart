@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:mi_utem/core/utils/http/http_client.dart';
 import 'package:mi_utem/services/remote_config/remote_config.dart';
+import 'package:mi_utem/widgets/snackbar.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 class AcercaApp extends StatelessWidget {
@@ -52,6 +54,17 @@ class AcercaApp extends StatelessWidget {
                     .replaceAll("%compilacion", data.buildNumber == data.version ? "1" : data.buildNumber)
                     .replaceAll("%paquete", data.packageName)
                     .replaceAll("%nombre", data.appName),
+              ),
+              const SizedBox(height: 20),
+              Center(
+                child: TextButton(
+                  onPressed: () async {
+                    await HttpClient.clearCache();
+
+                    showTextSnackbar(context, title: 'Listo!', message: 'Se ha limpiado el cache!');
+                  },
+                  child: Text('Limpiar Cache'),
+                ),
               ),
             ],
           ),

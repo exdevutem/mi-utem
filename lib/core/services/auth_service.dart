@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:get/get.dart';
+import 'package:get/get.dart' hide Response;
 import 'package:mi_utem/core/models/exceptions/custom_exception.dart';
 import 'package:mi_utem/core/models/preferencia.dart';
 import 'package:mi_utem/core/models/user/estudiante.dart';
@@ -77,13 +77,16 @@ class AuthService {
 
   /* Obtiene un token activo, de la api de ExDev */
   Future<String> activeTokenExdev({ bool forceRefresh = false }) async {
-    try {
-      final credentials = await Get.find<SecureStorageRepository>().getCredentials();
-      if(credentials == null) {
-        throw CustomException.custom(message: 'No se han ingresado credenciales');
-      }
+    final credentials = await Get.find<SecureStorageRepository>().getCredentials();
+    if(credentials == null) {
+      throw CustomException(message: 'No se han ingresado credenciales');
+    }
 
-      final authResponse = await authClientRequest('auth',
+    logger.d('activeTokenExdev: Obteniendo token activo');
+
+    Response authResponse;
+    try {
+      authResponse = await authClientRequest('auth',
         method: 'POST',
         data: {
           'correo': credentials.username,
@@ -95,39 +98,28 @@ class AuthService {
           'noToken': true,
         },
       );
-
-      final token = authResponse.data['token'] as String?;
-      if(token == null) {
-        logger.e('Error al obtener token para obtener permisos');
-        throw CustomException.custom(message: 'Error al obtener permisos. Por favor intenta más tarde.');
-      }
-
-      // Validar token al realizar solicitud a carreras.
-      logger.d('test');
-      await authClientRequest('carreras',
-        headers: {
-          'Authorization': 'Bearer $token'
-        },
-        contentType: Headers.jsonContentType,
-        forceRefresh: true,
-        extra: {
-          'noToken': true,
-        },
-      );
-
-      return token;
     } on DioError catch (e) {
-      logger.e('Error al autenticar para obtener permisos', [e]);
+      logger.e('Error al autenticar para obtener token', [e]);
       final data = e.response?.data ?? {
-        'mensaje': 'Error al obtener permisos.',
+        'mensaje': 'Error al obtener token.',
         'codigoHttp': 500,
       };
 
       throw CustomException.fromJson(data);
     } catch (e) {
-      logger.e('Error al autenticar para obtener permisos', [e]);
-      throw CustomException.custom(message: 'Error al obtener permisos. Por favor intenta más tarde.');
+      logger.e('Error al autenticar para obtener token', [e]);
+      throw CustomException.custom(message: 'Error al obtener token. Por favor intenta más tarde.');
     }
+
+    logger.d('activeTokenExdev: Token obtenido');
+
+    final token = authResponse.data['token'] as String?;
+    if(token == null) {
+      logger.e('Error al obtener token para ExDev', [authResponse.data]);
+      throw CustomException.custom(message: 'Error al obtener token. Por favor intenta más tarde.');
+    }
+
+    return token;
   }
 
   Future<void> logout({ BuildContext? context}) async {

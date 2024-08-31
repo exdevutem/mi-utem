@@ -1,11 +1,14 @@
 import 'package:dio/dio.dart';
+import 'package:dio_http_cache/dio_http_cache.dart';
 import 'package:get/get.dart';
 import 'package:mi_utem/core/services/auth_service.dart';
 import 'package:mi_utem/core/utils/constants.dart';
 import 'package:mi_utem/core/utils/http/http_client.dart';
 
-final authInterceptorSiga = InterceptorsWrapper(
-  onRequest: (RequestOptions options, RequestInterceptorHandler handler) async {
+class AuthInterceptorSiga extends QueuedInterceptor {
+
+  @override
+  void onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
     final data = options.extra['sigaParams'] ?? {};
     if((options.extra['noToken'] as bool?) != true) {
       try {
@@ -18,24 +21,31 @@ final authInterceptorSiga = InterceptorsWrapper(
 
     options.data = (data as Map<dynamic, dynamic>).entries.map((e) => '${e.key}=${Uri.encodeFull(e.value.toString())}').join('&');
 
+    logger.d('AuthInterceptorSiga: ${options.method} ${options.uri}', [options.headers]);
     return handler.next(options);
-  },
-);
+  }
+}
 
-final authInterceptorExDev = QueuedInterceptorsWrapper(
-  onRequest: (RequestOptions options, RequestInterceptorHandler handler) async {
+class AuthInterceptorExDev extends QueuedInterceptor {
+
+  @override
+  void onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
+    logger.d('AuthInterceptorExDev#onRequest', [options.uri, !options.headers.containsKey("Authorization") && options._retryCountExDev < 3 && (options.extra['noToken'] as bool?) != true]);
     if(!options.headers.containsKey("Authorization") && options._retryCountExDev < 3 && (options.extra['noToken'] as bool?) != true) {
       try {
-        final token = await Get.find<AuthService>().activeTokenExdev();
+        final token = await Get.find<AuthService>().activeTokenExdev(forceRefresh: options.extra[DIO_CACHE_KEY_FORCE_REFRESH] ?? false);
         options._setAuthHeader(token);
       } catch(e) {
         logger.e('Error al obtener token de exdev', [e]);
       }
     }
 
+    logger.d('AuthInterceptorExDev: ${options.method} ${options.uri}', [options.headers]);
     return handler.next(options);
-  },
-  onError: (DioError err, ErrorInterceptorHandler handler) async {
+  }
+
+  @override
+  void onError(DioError err, ErrorInterceptorHandler handler) async {
     if (err.response?.statusCode != 401) {
       return handler.next(err);
     }
@@ -47,7 +57,7 @@ final authInterceptorExDev = QueuedInterceptorsWrapper(
     }
 
     err.requestOptions._retryCountExDev = attempt;
-    await Future.delayed(const Duration(milliseconds: 250));
+    await Future.delayed(const Duration(milliseconds: 500));
 
     /* Forzar el refresco de la token de autenticación */
     try {
@@ -61,7 +71,7 @@ final authInterceptorExDev = QueuedInterceptorsWrapper(
       return handler.next(DioError(requestOptions: options, error: e));
     }
   }
-);
+}
 
 extension AuthRequestExDevOptions on RequestOptions {
 

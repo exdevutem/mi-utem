@@ -23,9 +23,6 @@ class PermisosService {
 
       logger.e('Error al obtener permisos', [e]);
       throw CustomException.fromSiga(data);
-    } catch (e) {
-      logger.e('Error al obtener permisos', [e]);
-      throw CustomException.custom(message: 'Error al obtener permisos');
     }
   }
 

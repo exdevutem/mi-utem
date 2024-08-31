@@ -56,7 +56,7 @@ class _MainScreenState extends State<MainScreen> {
     ReviewService.addScreen("MainScreen");
     ReviewService.checkAndRequestReview(context);
 
-    loadData(forceRefresh: false);
+    // loadData(forceRefresh: false);
 
     _authService.login().then((user) => setState(() => _user = user));
   }

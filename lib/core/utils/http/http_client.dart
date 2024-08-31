@@ -32,12 +32,12 @@ class HttpClient {
   ]);
 
   static final Dio authClientSiga = httpClient..interceptors.addAll([
-    authInterceptorSiga,
+    AuthInterceptorSiga(),
     cacheManagerSiga.interceptor,
   ]);
 
   static final Dio authClientExDev = httpClient..interceptors.addAll([
-    authInterceptorExDev,
+    AuthInterceptorExDev(),
     cacheManagerExDev.interceptor,
   ]);
 
